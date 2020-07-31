@@ -1,0 +1,94 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
+class RolesAndPermissionsSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        $collection = collect([
+            ['name' => 'locations', 'order' => 1],
+            ['name' => 'departments', 'order' => 2],
+            ['name' => 'sections', 'order' => 3],
+            ['name' => 'designations', 'order' => 4],
+            ['name' => 'employees', 'order' => 5],
+            ['name' => 'fabric categories', 'order' => 11],
+            ['name' => 'fabrics', 'order' => 12],
+            ['name' => 'fabric purchase orders', 'order' => 13],
+            ['name' => 'fabric purchase items', 'order' => 14],
+            ['name' => 'fabric receive items', 'order' => 15],
+            ['name' => 'material categories', 'order' => 21],
+            ['name' => 'materials', 'order' => 22],
+            ['name' => 'asset categories', 'order' => 31],
+            ['name' => 'assets', 'order' => 32],
+            ['name' => 'service categories', 'order' => 41],
+            ['name' => 'services', 'order' => 42],
+            ['name' => 'suppliers', 'order' => 51],
+            ['name' => 'providers', 'order' => 52],
+            ['name' => 'users', 'order' => 100],
+            ['name' => 'roles', 'order' => 200],
+            ['name' => 'floors', 'order' => 300],
+            ['name' => 'styles', 'order' => 400],
+            ['name' => 'units', 'order' => 500],
+            // ... // List all your Models you want to have Permissions for.
+        ]);
+
+        $collection->each(function ($item, $key) {
+            // create permissions for each collection item
+            Permission::updateOrCreate(['name' => 'view ' .$item['name'] ],['group' => $item['name'], 'name' => 'view ' . $item['name'], 'group_order' => $item['order']]);
+            Permission::updateOrCreate(['name' => 'view any ' .$item['name'] ],['group' => $item['name'], 'name' => 'view any ' . $item['name'], 'group_order' => $item['order']]);
+            Permission::updateOrCreate(['name' => 'create ' .$item['name'] ],['group' => $item['name'], 'name' => 'create ' . $item['name'], 'group_order' => $item['order']]);
+            Permission::updateOrCreate(['name' => 'update ' .$item['name'] ],['group' => $item['name'], 'name' => 'update ' . $item['name'], 'group_order' => $item['order']]);
+            Permission::updateOrCreate(['name' => 'delete ' .$item['name'] ],['group' => $item['name'], 'name' => 'delete ' . $item['name'], 'group_order' => $item['order']]);
+            Permission::updateOrCreate(['name' => 'restore ' .$item['name'] ],['group' => $item['name'], 'name' => 'restore ' . $item['name'], 'group_order' => $item['order']]);
+            Permission::updateOrCreate(['name' => 'force delete ' .$item['name'] ],['group' => $item['name'], 'name' => 'force delete ' . $item['name'], 'group_order' => $item['order']]);
+        });
+
+            //Exceptional Permissions
+            Permission::updateOrCreate(['name' => 'view permissions'],['group' => 'permissions', 'name' => 'view permissions', 'group_order' => 250]);
+            Permission::updateOrCreate(['name' => 'view any permissions'],['group' => 'permissions', 'name' => 'view any permissions', 'group_order' => 250]);
+            Permission::updateOrCreate(['name' => 'assign permissions'],['group' => 'permissions', 'name' => 'assign permissions', 'group_order' => 250]);
+
+
+        //Super Admin Permissions
+        $superAdminCollection = collect([
+            ['name' => 'activity logs', 'order' => 600],
+            ['name' => 'settings', 'order' => 700],
+        ]);
+
+        $superAdminCollection->each(function ($item, $key) {
+            // create permissions for each collection item
+            Permission::updateOrCreate(['name' => 'view ' .$item['name'] ],['group' => 'super admin', 'name' => 'view ' . $item['name'], 'group_order' => $item['order']]);
+            Permission::updateOrCreate(['name' => 'view any ' .$item['name'] ],['group' => 'super admin', 'name' => 'view any ' . $item['name'], 'group_order' => $item['order']]);
+        });
+
+        //Only For Super Admin Permissions
+        Permission::updateOrCreate(['name' => 'view all locations data'],['group' => 'super admin', 'name' => 'view all locations data', 'group_order' => 1000]);
+        Permission::updateOrCreate(['name' => 'view any locations data'],['group' => 'super admin', 'name' => 'view any locations data', 'group_order' => 1000]);
+        Permission::updateOrCreate(['name' => 'create all locations data'],['group' => 'super admin', 'name' => 'create all locations data', 'group_order' => 1000]);
+        Permission::updateOrCreate(['name' => 'update all locations data'],['group' => 'super admin', 'name' => 'update all locations data', 'group_order' => 1000]);
+        Permission::updateOrCreate(['name' => 'delete all locations data'],['group' => 'super admin', 'name' => 'delete all locations data', 'group_order' => 1000]);
+        Permission::updateOrCreate(['name' => 'restore all locations data'],['group' => 'super admin', 'name' => 'restore all locations data', 'group_order' => 1000]);
+        Permission::updateOrCreate(['name' => 'force delete all locations data'],['group' => 'super admin', 'name' => 'force delete all locations data', 'group_order' => 1000]);
+
+        // Create a Super-Admin Role and assign all Permissions
+        $role = Role::updateOrCreate(['name' => 'super-admin'], ['name' => 'super-admin', 'display_name' => 'Super Admin']);
+        $role->givePermissionTo(Permission::all());
+
+        // Give User Super-Admin Role
+        $user = App\Models\User::whereEmail('admin@easystore.com')->first(); // Change this to your email.
+        if(!$user->hasRole('super-admin')){
+            $user->assignRole('super-admin');
+        }
+    }
+}
