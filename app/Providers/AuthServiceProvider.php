@@ -41,10 +41,13 @@ use App\Models\FabricPurchaseItem;
 use App\Policies\DepartmentPolicy;
 use App\Policies\PermissionPolicy;
 use App\Models\FabricPurchaseOrder;
+use App\Models\MaterialReceiveItem;
 use App\Policies\ActivityLogPolicy;
 use App\Policies\DesignationPolicy;
+use App\Models\MaterialPurchaseItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Models\MaterialPurchaseOrder;
 use App\Policies\AssetCategoryPolicy;
 use App\Policies\FabricCategoryPolicy;
 use Spatie\Activitylog\Models\Activity;
@@ -52,6 +55,9 @@ use App\Policies\MaterialCategoryPolicy;
 use App\Policies\FabricReceiveItemPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
 use App\Policies\FabricPurchaseOrderPolicy;
+use App\Policies\MaterialReceiveItemPolicy;
+use App\Policies\MaterialPurchaseItemPolicy;
+use App\Policies\MaterialPurchaseOrderPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -63,30 +69,33 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
-        Location::class           => LocationPolicy::class,
-        Department::class         => DepartmentPolicy::class,
-        Section::class            => SectionPolicy::class,
-        Designation::class        => DesignationPolicy::class,
-        Employee::class           => EmployeePolicy::class,
-        FabricCategory::class     => FabricCategoryPolicy::class,
-        Fabric::class             => FabricPolicy::class,
-        FabricPurchaseOrder::class=> FabricPurchaseOrderPolicy::class,
-        FabricPurchaseItem::class => FabricPurchaseItemPolicy::class,
-        FabricReceiveItem::class  => FabricReceiveItemPolicy::class,
-        MaterialCategory::class   => MaterialCategoryPolicy::class,
-        Material::class           => MaterialPolicy::class,
-        AssetCategory::class      => AssetCategoryPolicy::class,
-        Asset::class              => AssetPolicy::class,
-        Supplier::class           => SupplierPolicy::class,
-        Provider::class           => ProviderPolicy::class,
-        Permission::class         => PermissionPolicy::class,
-        Role::class               => RolePolicy::class,
-        User::class               => UserPolicy::class,
-        Floor::class              => FloorPolicy::class,
-        Style::class              => StylePolicy::class,
-        Unit::class               => UnitPolicy::class,
-        Activity::class           => ActivityLogPolicy::class,
-        Setting::class            => SettingPolicy::class,
+        Location::class              => LocationPolicy::class,
+        Department::class            => DepartmentPolicy::class,
+        Section::class               => SectionPolicy::class,
+        Designation::class           => DesignationPolicy::class,
+        Employee::class              => EmployeePolicy::class,
+        FabricCategory::class        => FabricCategoryPolicy::class,
+        Fabric::class                => FabricPolicy::class,
+        FabricPurchaseOrder::class   => FabricPurchaseOrderPolicy::class,
+        FabricPurchaseItem::class    => FabricPurchaseItemPolicy::class,
+        FabricReceiveItem::class     => FabricReceiveItemPolicy::class,
+        MaterialCategory::class      => MaterialCategoryPolicy::class,
+        Material::class              => MaterialPolicy::class,
+        MaterialPurchaseOrder::class => MaterialPurchaseOrderPolicy::class,
+        MaterialPurchaseItem::class  => MaterialPurchaseItemPolicy::class,
+        MaterialReceiveItem::class   => MaterialReceiveItemPolicy::class,
+        AssetCategory::class         => AssetCategoryPolicy::class,
+        Asset::class                 => AssetPolicy::class,
+        Supplier::class              => SupplierPolicy::class,
+        Provider::class              => ProviderPolicy::class,
+        Permission::class            => PermissionPolicy::class,
+        Role::class                  => RolePolicy::class,
+        User::class                  => UserPolicy::class,
+        Floor::class                 => FloorPolicy::class,
+        Style::class                 => StylePolicy::class,
+        Unit::class                  => UnitPolicy::class,
+        Activity::class              => ActivityLogPolicy::class,
+        Setting::class               => SettingPolicy::class,
     ];
 
     /**

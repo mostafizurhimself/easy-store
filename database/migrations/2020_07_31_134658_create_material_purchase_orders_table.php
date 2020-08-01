@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFabricPurchaseOrdersTable extends Migration
+class CreateMaterialPurchaseOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateFabricPurchaseOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create('fabric_purchase_orders', function (Blueprint $table) {
+        Schema::create('material_purchase_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable()->index('fabric_po_number_index');;
+            $table->string('readable_id')->nullable()->index('material_po_number_index');
             $table->bigInteger('location_id')->unsigned()->nullable();
-            $table->date('date')->index('purchase_fabric_date_index');
+            $table->date('date')->index('purchase_material_date_index');
             $table->bigInteger('supplier_id')->unsigned();
             $table->double('total_purchase_amount')->default(0);
             $table->double('total_receive_amount')->default(0);
@@ -37,6 +37,6 @@ class CreateFabricPurchaseOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('purchase_fabrics');
+        Schema::dropIfExists('material_purchase_orders');
     }
 }

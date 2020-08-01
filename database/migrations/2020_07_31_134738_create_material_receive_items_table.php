@@ -1,11 +1,10 @@
 <?php
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFabricReceiveItemsTable extends Migration
+class CreateMaterialReceiveItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +13,12 @@ class CreateFabricReceiveItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('fabric_receive_items', function (Blueprint $table) {
+        Schema::create('material_receive_items', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable()->index('fabric_ri_number_index');
+            $table->string('readable_id')->nullable()->index('material_ri_number_index');
             $table->date('date');
             $table->bigInteger('purchase_order_id')->unsigned();
-            $table->bigInteger('fabric_id')->unsigned();
+            $table->bigInteger('material_id')->unsigned();
             $table->bigInteger('purchase_item_id')->unsigned();
             $table->string('reference')->nullable();
             $table->double('quantity')->default(0);
@@ -29,9 +28,9 @@ class CreateFabricReceiveItemsTable extends Migration
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('purchase_order_id')->references('id')->on('fabric_purchase_orders');
-            $table->foreign('fabric_id')->references('id')->on('fabrics');
-            $table->foreign('purchase_item_id')->references('id')->on('fabric_purchase_items');
+            $table->foreign('purchase_order_id')->references('id')->on('material_purchase_orders');
+            $table->foreign('material_id')->references('id')->on('materials');
+            $table->foreign('purchase_item_id')->references('id')->on('material_purchase_items');
         });
     }
 
@@ -42,6 +41,6 @@ class CreateFabricReceiveItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('receive_item_fabrics');
+        Schema::dropIfExists('material_receive_items');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFabricPurchaseItemsTable extends Migration
+class CreateAssetPurchaseItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateFabricPurchaseItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('fabric_purchase_items', function (Blueprint $table) {
+        Schema::create('asset_purchase_items', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable()->index('fabric_pi_number_index');
+            $table->string('readable_id')->nullable()->index('asset_pi_number_index');
             $table->bigInteger('purchase_order_id')->unsigned();
-            $table->bigInteger('fabric_id')->unsigned();
+            $table->bigInteger('asset_id')->unsigned();
             $table->double('purchase_quantity')->default(0);
             $table->double('receive_quantity')->default(0);
             $table->double('purchase_rate')->default(0);
@@ -26,8 +26,8 @@ class CreateFabricPurchaseItemsTable extends Migration
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('purchase_order_id')->references('id')->on('fabric_purchase_orders');
-            $table->foreign('fabric_id')->references('id')->on('fabrics');
+            $table->foreign('purchase_order_id')->references('id')->on('asset_purchase_orders');
+            $table->foreign('asset_id')->references('id')->on('assets');
         });
     }
 
@@ -38,6 +38,6 @@ class CreateFabricPurchaseItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('purchase_item_fabrics');
+        Schema::dropIfExists('asset_purchase_items');
     }
 }

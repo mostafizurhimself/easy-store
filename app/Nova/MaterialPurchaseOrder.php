@@ -16,18 +16,17 @@ use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
-use App\Nova\Actions\FabricPurchaseOrders\Recalculate;
-use App\Nova\Actions\FabricPurchaseOrders\ConfirmPurchase;
+use App\Nova\Actions\MaterialPurchaseOrders\Recalculate;
+use App\Nova\Actions\MaterialPurchaseOrders\ConfirmPurchase;
 
-class FabricPurchaseOrder extends Resource
+class MaterialPurchaseOrder extends Resource
 {
-    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\Models\FabricPurchaseOrder';
+    public static $model = 'App\Models\MaterialPurchaseOrder';
 
     /**
      * The side nav menu order.
@@ -41,9 +40,9 @@ class FabricPurchaseOrder extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">04</span>Fabrics Section';
+    public static $group = '<span class="hidden">05</span>Material Section';
 
-    /**
+        /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
@@ -108,6 +107,7 @@ class FabricPurchaseOrder extends Resource
     public function fields(Request $request)
     {
         return [
+
             RouterLink::make('PO Number', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
@@ -149,9 +149,9 @@ class FabricPurchaseOrder extends Resource
             Trix::make('Note')
                 ->nullable(),
 
-            HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\FabricPurchaseItem'),
+            HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\MaterialPurchaseItem'),
 
-            HasMany::make('Receive Items', 'receiveItems', 'App\Nova\FabricReceiveItem'),
+            HasMany::make('Receive Items', 'receiveItems', 'App\Nova\MaterialReceiveItem'),
         ];
     }
 
@@ -197,7 +197,6 @@ class FabricPurchaseOrder extends Resource
     public function actions(Request $request)
     {
         return [
-
             (new Recalculate)->canSee(function($request){
                 return $request->user()->isSuperAdmin();
             })->canRun(function($request){
