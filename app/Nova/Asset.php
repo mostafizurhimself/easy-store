@@ -52,6 +52,13 @@ class Asset extends Resource
     public static $group = '<span class="hidden">06</span>Asset Section';
 
     /**
+     * The side nav menu order.
+     *
+     * @var int
+     */
+    public static $priority = 2;
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string

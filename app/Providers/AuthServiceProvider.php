@@ -30,13 +30,16 @@ use App\Models\FabricCategory;
 use App\Policies\FabricPolicy;
 use App\Policies\SectionPolicy;
 use App\Policies\SettingPolicy;
+use App\Models\AssetReceiveItem;
 use App\Models\MaterialCategory;
 use App\Policies\EmployeePolicy;
 use App\Policies\LocationPolicy;
 use App\Policies\MaterialPolicy;
 use App\Policies\ProviderPolicy;
 use App\Policies\SupplierPolicy;
+use App\Models\AssetPurchaseItem;
 use App\Models\FabricReceiveItem;
+use App\Models\AssetPurchaseOrder;
 use App\Models\FabricPurchaseItem;
 use App\Policies\DepartmentPolicy;
 use App\Policies\PermissionPolicy;
@@ -51,8 +54,11 @@ use App\Models\MaterialPurchaseOrder;
 use App\Policies\AssetCategoryPolicy;
 use App\Policies\FabricCategoryPolicy;
 use Spatie\Activitylog\Models\Activity;
+use App\Policies\AssetReceiveItemPolicy;
 use App\Policies\MaterialCategoryPolicy;
+use App\Policies\AssetPurchaseItemPolicy;
 use App\Policies\FabricReceiveItemPolicy;
+use App\Policies\AssetPurchaseOrderPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
 use App\Policies\FabricPurchaseOrderPolicy;
 use App\Policies\MaterialReceiveItemPolicy;
@@ -86,6 +92,9 @@ class AuthServiceProvider extends ServiceProvider
         MaterialReceiveItem::class   => MaterialReceiveItemPolicy::class,
         AssetCategory::class         => AssetCategoryPolicy::class,
         Asset::class                 => AssetPolicy::class,
+        AssetPurchaseOrder::class    => AssetPurchaseOrderPolicy::class,
+        AssetPurchaseItem::class     => AssetPurchaseItemPolicy::class,
+        AssetReceiveItem::class      => AssetReceiveItemPolicy::class,
         Supplier::class              => SupplierPolicy::class,
         Provider::class              => ProviderPolicy::class,
         Permission::class            => PermissionPolicy::class,

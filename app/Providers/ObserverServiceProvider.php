@@ -8,9 +8,11 @@ use App\Models\Employee;
 use App\Models\Material;
 use App\Models\Provider;
 use App\Models\Supplier;
+use App\Models\AssetReceiveItem;
 use App\Observers\AssetObserver;
-use App\Observers\FabricObserver;
+use App\Models\AssetPurchaseItem;
 use App\Models\FabricReceiveItem;
+use App\Observers\FabricObserver;
 use App\Models\FabricPurchaseItem;
 use App\Models\MaterialReceiveItem;
 use App\Observers\EmployeeObserver;
@@ -19,10 +21,12 @@ use App\Observers\ProviderObserver;
 use App\Observers\SupplierObserver;
 use App\Models\MaterialPurchaseItem;
 use Illuminate\Support\ServiceProvider;
+use App\Observers\AssetReceiveItemObserver;
+use App\Observers\AssetPurchaseItemObserver;
 use App\Observers\FabricReceiveItemObserver;
 use App\Observers\FabricPurchaseItemObserver;
-use App\Observers\MaterialPurchaseItemObserver;
 use App\Observers\MaterialReceiveItemObserver;
+use App\Observers\MaterialPurchaseItemObserver;
 
 class ObserverServiceProvider extends ServiceProvider
 {
@@ -53,5 +57,7 @@ class ObserverServiceProvider extends ServiceProvider
         FabricReceiveItem::observe(FabricReceiveItemObserver::class);
         MaterialPurchaseItem::observe(MaterialPurchaseItemObserver::class);
         MaterialReceiveItem::observe(MaterialReceiveItemObserver::class);
+        AssetPurchaseItem::observe(AssetPurchaseItemObserver::class);
+        AssetReceiveItem::observe(AssetReceiveItemObserver::class);
     }
 }
