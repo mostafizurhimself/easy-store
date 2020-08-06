@@ -10,7 +10,7 @@ use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ConfirmDistribution extends Action
+class ConfirmFabricDistribution extends Action
 {
     use InteractsWithQueue, Queueable;
 
