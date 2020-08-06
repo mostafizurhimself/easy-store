@@ -13,10 +13,14 @@ trait HasReadableIdWithDate
          *
          * @return void
          */
-        static::created(function($model){
-            $last = self::all()->last()->readableId;
+        static::creating(function($model){
+            $last = null;
+
+            if(self::all()->last()){
+                $last = self::all()->last()->readableId;
+            }
+
             $model->readableId = Helper::generateReadableIdWithDate($last, self::readableIdPrefix(), self::$readableIdLength);
-            $model->save();
         });
     }
 

@@ -88,9 +88,29 @@ class Location extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function employees()
+    {
+       return $this->hasMany(Employee::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function fabricCategories()
     {
        return $this->hasMany(FabricCategory::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function fabrics()
+    {
+       return $this->hasMany(Fabric::class);
     }
 
     /**
@@ -108,8 +128,28 @@ class Location extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function materials()
+    {
+       return $this->hasMany(Material::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function assetCategories()
     {
        return $this->hasMany(AssetCategory::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function assets()
+    {
+       return $this->hasMany(Asset::class);
     }
 }

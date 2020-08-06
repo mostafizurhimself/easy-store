@@ -65,6 +65,19 @@ class AjaxController extends Controller
     }
 
     /**
+     * Get the location wise employees
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function employeesViaLocation(Location $location)
+    {
+        return $location->employees->map(function($employee) {
+            return [ 'value' => $employee->id, 'display' => $employee->readableId ];
+        });
+    }
+
+    /**
      * Get the location wise fabric categories
      *
      * @param \App\Models\Location
@@ -74,6 +87,19 @@ class AjaxController extends Controller
     {
         return $location->fabricCategories->map(function($category) {
             return [ 'value' => $category->id, 'display' => $category->name ];
+        });
+    }
+
+    /**
+     * Get the location wise fabrics
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function fabricsViaLocation(Location $location)
+    {
+        return $location->fabrics->map(function($fabric) {
+            return [ 'value' => $fabric->id, 'display' => $fabric->code ];
         });
     }
 
@@ -91,6 +117,19 @@ class AjaxController extends Controller
     }
 
     /**
+     * Get the location wise materials
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function materialsViaLocation(Location $location)
+    {
+        return $location->materials->map(function($material) {
+            return [ 'value' => $material->id, 'display' => $material->code ];
+        });
+    }
+
+    /**
      * Get the location wise asset categories
      *
      * @param \App\Models\Location
@@ -100,6 +139,19 @@ class AjaxController extends Controller
     {
         return $location->assetCategories->map(function($category) {
             return [ 'value' => $category->id, 'display' => $category->name ];
+        });
+    }
+
+    /**
+     * Get the location wise assets
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function assetsViaLocation(Location $location)
+    {
+        return $location->assets->map(function($asset) {
+            return [ 'value' => $asset->id, 'display' => $asset->code ];
         });
     }
 }

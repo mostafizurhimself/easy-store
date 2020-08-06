@@ -47,9 +47,13 @@ class Material extends Resource
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
-     * @var string
+     * @return string
      */
-    public static $title = 'name';
+    public function title()
+    {
+        return $this->code;
+    }
+
 
     /**
      * Get the search result subtitle for the resource.

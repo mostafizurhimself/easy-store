@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DistributionStatus;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -25,6 +26,12 @@ class Fabric extends Model implements HasMedia
      */
     protected $with = ['unit'];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $append = ['stock'];
 
     /**
      * Add all attributes that are not listed in $guarded for log
@@ -78,9 +85,19 @@ class Fabric extends Model implements HasMedia
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function variations()
+    public function distributions()
     {
-       return $this->hasMany(FabricVariation::class, 'fabric_id');
+       return $this->hasMany(FabricDistribution::class);
+    }
+
+    /**
+     * Get the remaining stock attribute of the item
+     *
+     * @return double
+     */
+    public function getStockAttribute()
+    {
+        return $this->quantity - $this->distributions()->draft()->sum('quantity');
     }
 
 }

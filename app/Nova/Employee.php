@@ -81,7 +81,7 @@ class Employee extends Resource
      * @var string
      */
     public function title(){
-        return $this->fullName;
+        return $this->readableId;
     }
 
     /**

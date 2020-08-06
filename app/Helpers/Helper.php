@@ -28,18 +28,19 @@ class Helper
         $value = 1;
 
         //Set the prefix with date
-        $prefix = $prefix.Carbon::now()->format('ymd');
+        $finalPrefix = $prefix.Carbon::now()->format('ymd');
 
         //Parse the last value
-        $lastValue = intval(substr($last, 9, $length));
+        $lastValue = intval(substr($last, strlen($finalPrefix), $length));
 
         //Parse the last month
-        $lastMonth = intval(substr($last, 5, 2));
+        $lastMonth = intval(substr($last, (strlen($prefix) + 2), 2));
 
+        //Set the value
         if($lastMonth == Carbon::now()->month){
             $value = $lastValue + 1;
         }
 
-        return $this->generateReadableId($value, $prefix, $length);  // POF20071300001
+        return $this->generateReadableId($value, $finalPrefix, $length);  // POF20071300001
     }
 }

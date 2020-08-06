@@ -30,9 +30,9 @@ class CreateEmployeesTable extends Migration
             $table->date('joining_date')->nullable();
             $table->date('resign_date')->nullable();
             $table->double('salary')->default(0);
-            $table->enum('gender', \App\Enums\Gender::toArray());
-            $table->enum('marital_status', \App\Enums\MaritalStatus::toArray());
-            $table->enum('blood_group', \App\Enums\BloodGroup::toArray());
+            $table->enum('gender', \App\Enums\Gender::toArray())->nullable();
+            $table->enum('marital_status', \App\Enums\MaritalStatus::toArray())->nullable();
+            $table->enum('blood_group', \App\Enums\BloodGroup::toArray())->nullable();
             $table->string('nationality')->nullable();
             $table->string('status');
             $table->timestamps();
