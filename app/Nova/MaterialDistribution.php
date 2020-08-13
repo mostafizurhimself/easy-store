@@ -19,9 +19,9 @@ use App\Rules\DistributionQuantityRule;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use Titasgailius\SearchRelations\SearchesRelations;
-use App\Nova\Actions\FabricDistributions\ConfirmDistribution;
+use App\Nova\Actions\MaterialDistributions\ConfirmDistribution;
 
-class FabricDistribution extends Resource
+class MaterialDistribution extends Resource
 {
     use SearchesRelations;
     /**
@@ -29,14 +29,14 @@ class FabricDistribution extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\FabricDistribution';
+    public static $model = 'App\Models\MaterialDistribution';
 
     /**
      * The group associated with the resource.
      *
      * @return string
      */
-    public static $group = '<span class="hidden">04</span>Fabrics Section';
+    public static $group = '<span class="hidden">05</span>Material Section';
 
     /**
      * The icon of the resource.
@@ -81,7 +81,7 @@ class FabricDistribution extends Resource
      */
     public static $searchRelations = [
         'location' => ['name'],
-        'fabric' => ['code', 'name'],
+        'material'   => ['code', 'name'],
         'receiver' => ['readable_id', 'first_name', 'last_name'],
     ];
 
@@ -127,10 +127,10 @@ class FabricDistribution extends Resource
                     'label' => $this->readableId,
                 ]),
 
-            BelongsTo::make('Fabric')
+            BelongsTo::make('Material')
                     ->exceptOnForms(),
 
-            BelongsTo::make('Fabric')
+            BelongsTo::make('Material')
                 ->onlyOnForms()
                 ->hideWhenCreating(function($request){
                     if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
@@ -144,9 +144,9 @@ class FabricDistribution extends Resource
                     return false;
                 }),
 
-            AjaxSelect::make('Fabric', 'fabric_id')
+            AjaxSelect::make('Material', 'material_id')
                 ->rules('required')
-                ->get('/locations/{location}/fabrics')
+                ->get('/locations/{location}/materials')
                 ->parent('location')
                 ->onlyOnForms()
                 ->showOnCreating(function($request){
@@ -161,15 +161,15 @@ class FabricDistribution extends Resource
                     return false;
                 }),
 
-            Text::make('Fabrics Name', function(){
-                return $this->fabric->name;
+            Text::make('Material Name', function(){
+                return $this->material->name;
             })
             ->exceptOnForms()
             ->hideFromIndex(),
 
             Number::make('Quantity')
-                ->creationRules(new DistributionQuantityRule(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric')))
-                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'), $this->resource->quantity))
+                ->creationRules(new DistributionQuantityRule(\App\Nova\MaterialDistribution::uriKey(), $request->get('material_id') ?? $request->get('material')))
+                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\MaterialDistribution::uriKey(), !empty($request->get('material_id')) ?? $request->get('material'), $this->resource->quantity))
                 ->rules('required', 'numeric', 'min:1')
                 ->onlyOnForms(),
 

@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Nova\Actions\FabricDistributions;
+namespace App\Nova\Actions\MaterialDistributions;
 
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
-use App\Enums\DistributionStatus;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ConfirmFabricDistribution extends Action
+class ConfirmDistribution extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -33,7 +32,7 @@ class ConfirmFabricDistribution extends Action
         foreach($models as $model){
 
             //Decrease the item quantity
-            $model->fabric->decrement('quantity', $model->quantity);
+            $model->material->decrement('quantity', $model->quantity);
 
             //Update the distribution status
             $model->status = DistributionStatus::CONFIRMED();

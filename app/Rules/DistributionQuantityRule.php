@@ -3,9 +3,10 @@
 namespace App\Rules;
 
 use App\Models\Fabric;
+use App\Models\Material;
 use Illuminate\Contracts\Validation\Rule;
 
-class DistributeQuantityRule implements Rule
+class DistributionQuantityRule implements Rule
 {
     /**
      * @var mixed
@@ -21,6 +22,10 @@ class DistributeQuantityRule implements Rule
     {
         if($uriKey == \App\Nova\FabricDistribution::uriKey()){
             $this->item = Fabric::find($itemId);
+        }
+
+        if($uriKey == \App\Nova\MaterialDistribution::uriKey()){
+            $this->item = Material::find($itemId);
         }
     }
 

@@ -20,7 +20,7 @@ class CreateMaterialReceiveItemsTable extends Migration
             $table->bigInteger('purchase_order_id')->unsigned();
             $table->bigInteger('material_id')->unsigned();
             $table->bigInteger('purchase_item_id')->unsigned();
-            $table->string('reference')->nullable();
+            $table->string('reference')->nullable()->index('material_receive_reference_index');
             $table->double('quantity')->default(0);
             $table->double('rate')->default(0);
             $table->double('amount')->default(0);

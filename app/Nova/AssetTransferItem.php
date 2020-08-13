@@ -2,29 +2,21 @@
 
 namespace App\Nova;
 
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use App\Enums\PurchaseStatus;
-use Laravel\Nova\Fields\Date;
+use App\Enums\TransferStatus;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
-use Laravel\Nova\Fields\Markdown;
-use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
-use Easystore\RouterLink\RouterLink;
-use App\Rules\ReceiveQuantityRuleForUpdate;
+use App\Rules\TransferQuantityRule;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
-use App\Nova\Actions\FabricReceiveItems\ConfirmReceiveItem;
+use App\Rules\TransferQuantityRuleForUpdate;
+use App\Traits\WithOutLocation;
 
-class FabricReceiveItem extends Resource
+class AssetTransferItem extends Resource
 {
     use WithOutLocation;
     /**
@@ -32,14 +24,33 @@ class FabricReceiveItem extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\FabricReceiveItem';
+    public static $model = 'App\Models\AssetTransferItem';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'readable_id';
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
+
+    /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+        return "Transfer Items";
+    }
 
     /**
      * Indicates if the resource should be globally searchable.
@@ -66,28 +77,20 @@ class FabricReceiveItem extends Resource
         return [
             // ID::make()->sortable(),
 
-            BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\FabricPurchaseOrder")
+            BelongsTo::make('TI Number', 'transferOrder', "App\Nova\AssetTransferOrder")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Fabric')
-                ->hideWhenCreating()
-                ->readonly(),
-
-            Date::make('Date')
-                ->rules('required')
-                ->default(function($request){
-                    return Carbon::now();
-                }),
+            BelongsTo::make('Asset'),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
-                ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\FabricPurchaseItem::uriKey(), $this->resource->purchaseItemId, $this->resource->quantity))
+                ->creationRules(new TransferQuantityRule(\App\Nova\AssetTransferItem::uriKey(), $request->get('asset')))
+                ->updateRules(new TransferQuantityRuleForUpdate(\App\Nova\AssetTransferItem::uriKey(), $request->get('asset'), $this->resource->quantity))
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unit;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unit;
+            })
                 ->exceptOnForms(),
 
             Currency::make('Rate')
@@ -98,24 +101,12 @@ class FabricReceiveItem extends Resource
                 ->currency('BDT')
                 ->exceptOnForms(),
 
-            Text::make("Reference")
-                ->hideFromIndex()
-                ->rules('nullable', 'string', 'max:200'),
-
-            Files::make('Attachments', 'receive-item-attachments')
-                ->hideFromIndex(),
-
-            Trix::make('Note')
-                ->rules('nullable', 'string', 'max:500'),
-
             Badge::make('Status')->map([
-                    PurchaseStatus::DRAFT()->getValue()     => 'warning',
-                    PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'success',
-                    PurchaseStatus::RECEIVED()->getValue()  => 'success',
-                    PurchaseStatus::BILLED()->getValue()    => 'danger',
-                ])
-                ->label(function(){
+                TransferStatus::DRAFT()->getValue()     => 'warning',
+                TransferStatus::CONFIRMED()->getValue() => 'info',
+                TransferStatus::RECEIVED()->getValue()  => 'success',
+            ])
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -164,9 +155,28 @@ class FabricReceiveItem extends Resource
      */
     public function actions(Request $request)
     {
-        return [
-            new ConfirmReceiveItem,
-        ];
+        return [];
+    }
+
+    /**
+     * Build a "relatable" query for the given resource.
+     *
+     * This query determines which instances of the model may be attached to other resources.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableAssets(NovaRequest $request, $query)
+    {
+        $transfer = \App\Models\AssetTransferOrder::find($request->viaResourceId);
+        try {
+            $assetId = $request->findResourceOrFail()->assetId;
+        } catch (\Throwable $th) {
+            $assetId = null;
+        }
+        return $query->where('location_id', $transfer->locationId)
+            ->whereNotIn('id', $transfer->assetIds($assetId));
     }
 
     /**
@@ -178,7 +188,7 @@ class FabricReceiveItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -190,10 +200,10 @@ class FabricReceiveItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }

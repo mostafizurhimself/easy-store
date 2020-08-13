@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAssetPurchaseOrdersTable extends Migration
+class CreateAssetTransferOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,19 @@ class CreateAssetPurchaseOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create('asset_purchase_orders', function (Blueprint $table) {
+        Schema::create('asset_transfer_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable()->index('asset_po_number_index');;
+            $table->string('readable_id')->nullable()->index('asset_to_number_index');
             $table->bigInteger('location_id')->unsigned()->nullable();
-            $table->date('date')->index('asset_purchase_date_index');
-            $table->bigInteger('supplier_id')->unsigned();
-            $table->double('total_purchase_amount')->default(0);
-            $table->double('total_receive_amount')->default(0);
+            $table->date('date')->index('asset_transfer_date_index');
+            $table->double('total_amount')->default(0);
             $table->text('note')->nullable();
+            $table->bigInteger('receiver_id')->unsigned()->nullable();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');
-            $table->foreign('supplier_id')->references('id')->on('suppliers');
+            $table->foreign('receiver_id')->references('id')->on('locations');
         });
     }
 
@@ -37,6 +36,6 @@ class CreateAssetPurchaseOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asset_purchase_orders');
+        Schema::dropIfExists('asset_transfer_orders');
     }
 }

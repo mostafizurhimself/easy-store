@@ -216,7 +216,30 @@ class Employee extends Resource
 
                     NovaBelongsToDepend::make('Location')
                         ->placeholder('Choose an option') // Add this just if you want to customize the placeholder
-                        ->options(\App\Models\Location::all()),
+                        ->options(\App\Models\Location::all())
+                        ->showOnCreating(function ($request) {
+                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })->showOnUpdating(function ($request) {
+                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })
+                        ->showOnDetail(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })
+                        ->showOnIndex(function ($request) {
+                            if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
                     BelongsTo::make('Department')
                         ->onlyOnDetail(),
@@ -235,7 +258,37 @@ class Employee extends Resource
                                 return [ 'id' => $designation->id, 'name' => $department . $section . $designation->name ];
                             });
                         })
-                        ->dependsOn('Location'),
+                        ->onlyOnForms()
+                        ->dependsOn('Location')
+                        ->showOnCreating(function ($request) {
+                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })->showOnUpdating(function ($request) {
+                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
+
+                    BelongsTo::make('Designation')
+                        ->exceptOnForms(),
+
+                    BelongsTo::make('Designation')
+                        ->onlyOnForms()
+                        ->nullable()
+                        ->hideWhenCreating(function ($request) {
+                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })->hideWhenUpdating(function ($request) {
+                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
                     Date::make('Joining Date')
                         ->rules('required')

@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
+use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
@@ -25,6 +26,7 @@ use App\Nova\Actions\MaterialReceiveItems\ConfirmReceiveItem;
 
 class MaterialReceiveItem extends Resource
 {
+    use WithOutLocation;
     /**
      * The model the resource corresponds to.
      *

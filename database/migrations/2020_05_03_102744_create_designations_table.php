@@ -20,6 +20,7 @@ class CreateDesignationsTable extends Migration
             $table->bigInteger('department_id')->unsigned()->nullable();
             $table->bigInteger('section_id')->unsigned()->nullable();
             $table->string('name')->index('designation_name_index');
+            $table->string('code')->nullable()->index('designation_code_index');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');

@@ -102,7 +102,7 @@ class Location extends Resource
     {
         return [
 
-            RouterLink::make('Supplier Id', 'id')
+            RouterLink::make('Location Id', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
                 ]),

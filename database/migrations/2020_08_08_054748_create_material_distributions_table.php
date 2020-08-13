@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFabricDistributionsTable extends Migration
+class CreateMaterialDistributionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateFabricDistributionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('fabric_distributions', function (Blueprint $table) {
+        Schema::create('material_distributions', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable()->index('fabric_fd_number_index');
+            $table->string('readable_id')->nullable()->index('material_md_number_index');
             $table->bigInteger('location_id')->unsigned()->nullable();
-            $table->bigInteger('fabric_id')->unsigned();
+            $table->bigInteger('material_id')->unsigned();
             $table->double('quantity')->default(0);
             $table->double('rate')->default(0);
             $table->double('amount')->default(0);
@@ -27,7 +27,7 @@ class CreateFabricDistributionsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');
-            $table->foreign('fabric_id')->references('id')->on('fabrics');
+            $table->foreign('material_id')->references('id')->on('materials');
             $table->foreign('receiver_id')->references('id')->on('employees');
         });
     }
@@ -39,6 +39,6 @@ class CreateFabricDistributionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fabric_distributions');
+        Schema::dropIfExists('material_distributions');
     }
 }

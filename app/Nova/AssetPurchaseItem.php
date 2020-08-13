@@ -9,6 +9,7 @@ use App\Enums\PurchaseStatus;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Number;
+use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
@@ -16,6 +17,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class AssetPurchaseItem extends Resource
 {
+    use WithOutLocation;
     /**
      * The model the resource corresponds to.
      *
@@ -170,7 +172,7 @@ class AssetPurchaseItem extends Resource
     {
         $purchase = \App\Models\AssetPurchaseOrder::find($request->viaResourceId);
         try {
-            $assetId = $request->findResourceOrFail()->AssetId;
+            $assetId = $request->findResourceOrFail()->assetId;
         } catch (\Throwable $th) {
            $assetId = null;
         }

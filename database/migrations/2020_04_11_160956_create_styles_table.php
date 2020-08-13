@@ -16,8 +16,8 @@ class CreateStylesTable extends Migration
         Schema::create('styles', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('location_id')->unsigned();
-            $table->string('name')->nullable();
-            $table->string('code')->unique();
+            $table->string('name')->nullable()->index('style_name_index');
+            $table->string('code')->unique()->index('style_code_index');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');

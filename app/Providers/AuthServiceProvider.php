@@ -40,6 +40,7 @@ use App\Policies\SupplierPolicy;
 use App\Models\AssetPurchaseItem;
 use App\Models\FabricReceiveItem;
 use App\Models\AssetPurchaseOrder;
+use App\Models\FabricDistribution;
 use App\Models\FabricPurchaseItem;
 use App\Policies\DepartmentPolicy;
 use App\Policies\PermissionPolicy;
@@ -47,6 +48,7 @@ use App\Models\FabricPurchaseOrder;
 use App\Models\MaterialReceiveItem;
 use App\Policies\ActivityLogPolicy;
 use App\Policies\DesignationPolicy;
+use App\Models\MaterialDistribution;
 use App\Models\MaterialPurchaseItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -59,9 +61,11 @@ use App\Policies\MaterialCategoryPolicy;
 use App\Policies\AssetPurchaseItemPolicy;
 use App\Policies\FabricReceiveItemPolicy;
 use App\Policies\AssetPurchaseOrderPolicy;
+use App\Policies\FabricDistributionPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
 use App\Policies\FabricPurchaseOrderPolicy;
 use App\Policies\MaterialReceiveItemPolicy;
+use App\Policies\MaterialDistributionPolicy;
 use App\Policies\MaterialPurchaseItemPolicy;
 use App\Policies\MaterialPurchaseOrderPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -85,11 +89,13 @@ class AuthServiceProvider extends ServiceProvider
         FabricPurchaseOrder::class   => FabricPurchaseOrderPolicy::class,
         FabricPurchaseItem::class    => FabricPurchaseItemPolicy::class,
         FabricReceiveItem::class     => FabricReceiveItemPolicy::class,
+        FabricDistribution::class    => FabricDistributionPolicy::class,
         MaterialCategory::class      => MaterialCategoryPolicy::class,
         Material::class              => MaterialPolicy::class,
         MaterialPurchaseOrder::class => MaterialPurchaseOrderPolicy::class,
         MaterialPurchaseItem::class  => MaterialPurchaseItemPolicy::class,
         MaterialReceiveItem::class   => MaterialReceiveItemPolicy::class,
+        MaterialDistribution::class  => MaterialDistributionPolicy::class,
         AssetCategory::class         => AssetCategoryPolicy::class,
         Asset::class                 => AssetPolicy::class,
         AssetPurchaseOrder::class    => AssetPurchaseOrderPolicy::class,

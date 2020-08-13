@@ -51,7 +51,7 @@ class ReceiveQuantityRuleForUpdate implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $this->purchaseItem->remainingQuantity >= $value - $this->previousQuantity  ;
+        return $this->purchaseItem->remainingQuantity >= $value - $this->previousQuantity;
     }
 
     /**

@@ -38,10 +38,10 @@ class Asset extends Resource
      */
     public static function newModel()
     {
-            $model = static::$model;
-            $model = new $model;
-            $model->status= ActiveStatus::ACTIVE();
-            return $model;
+        $model = static::$model;
+        $model = new $model;
+        $model->status = ActiveStatus::ACTIVE();
+        return $model;
     }
 
     /**
@@ -65,7 +65,7 @@ class Asset extends Resource
      */
     public function title()
     {
-        return $this->code;
+        return $this->name;
     }
 
 
@@ -76,8 +76,8 @@ class Asset extends Resource
      */
     public function subtitle()
     {
-        $subtitle = "Code: ".$this->code;
-        $subtitle.= " Location: ".$this->location->name;
+        $subtitle = "Code: " . $this->code;
+        $subtitle .= " Location: " . $this->location->name;
 
         return $subtitle;
     }
@@ -109,7 +109,7 @@ class Asset extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-box-open';
+        return 'fas fa-box-open';
     }
 
     /**
@@ -124,7 +124,30 @@ class Asset extends Resource
             ID::make()->sortable(),
 
             BelongsTo::make('Location')
-                ->searchable(),
+                ->searchable()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnDetail(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnIndex(function ($request) {
+                    if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             Text::make('Name')
                 ->sortable()
@@ -150,7 +173,7 @@ class Asset extends Resource
                     Rule::unique('assets', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
 
-            Images::make('Image', 'material-image')
+            Images::make('Image', 'asset-image')
                 ->croppable(true)
                 ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
                 ->hideFromIndex(),
@@ -170,8 +193,8 @@ class Asset extends Resource
                 ->hideFromIndex(),
 
             Text::make('Opening Quantity')
-                ->displayUsing(function(){
-                    return $this->openingQuantity ." ".$this->unit->name;
+                ->displayUsing(function () {
+                    return $this->openingQuantity . " " . $this->unit->name;
                 })
                 ->onlyOnDetail(),
 
@@ -181,14 +204,14 @@ class Asset extends Resource
                 ->hideFromIndex(),
 
             Text::make('Alert Quantity')
-                ->displayUsing(function(){
-                    return $this->alertQuantity ." ".$this->unit->name;
+                ->displayUsing(function () {
+                    return $this->alertQuantity . " " . $this->unit->name;
                 })
                 ->onlyOnDetail(),
 
             Text::make('Quantity')
-                ->displayUsing(function(){
-                    return $this->quantity ." ".$this->unit->name;
+                ->displayUsing(function () {
+                    return $this->quantity . " " . $this->unit->name;
                 })
                 ->exceptOnForms(),
 
@@ -199,7 +222,35 @@ class Asset extends Resource
             AjaxSelect::make('Category', 'category_id')
                 ->rules('required')
                 ->get('/locations/{location}/asset-categories')
-                ->parent('location'),
+                ->parent('location')->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Category', 'category', 'App\Nova\AssetCategory')
+                ->exceptOnForms(),
+
+            BelongsTo::make('Category', 'category', 'App\Nova\AssetCategory')
+                ->onlyOnForms()
+                ->hideWhenCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             BelongsToManyField::make('Suppliers', 'suppliers', 'App\Nova\Supplier')
                 ->hideFromIndex(),
@@ -210,10 +261,10 @@ class Asset extends Resource
                 ->onlyOnForms(),
 
             Badge::make('Status')->map([
-                    ActiveStatus::ACTIVE()->getValue()   => 'success',
-                    ActiveStatus::INACTIVE()->getValue() => 'danger',
-                ])
-                ->label(function(){
+                ActiveStatus::ACTIVE()->getValue()   => 'success',
+                ActiveStatus::INACTIVE()->getValue() => 'danger',
+            ])
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -262,7 +313,7 @@ class Asset extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UpdateOpeningQuantity)->canSee(function($request){
+            (new UpdateOpeningQuantity)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update assets');
             })->onlyOnDetail(),
         ];

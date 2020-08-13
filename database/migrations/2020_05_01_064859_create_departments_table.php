@@ -19,6 +19,7 @@ class CreateDepartmentsTable extends Migration
             $table->string('readable_id')->nullable();
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->string('name')->index('department_name_index');
+            $table->string('code')->nullable()->index('department_code_index');
             $table->boolean('active');
             $table->timestamps();
             $table->softDeletes();

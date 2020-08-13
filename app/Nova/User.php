@@ -42,10 +42,10 @@ class User extends Resource
      */
     public static function newModel()
     {
-            $model = static::$model;
-            $var = new $model;
-            $var->active= true;
-            return $var;
+        $model = static::$model;
+        $var = new $model;
+        $var->active = true;
+        return $var;
     }
 
     /**
@@ -129,7 +129,30 @@ class User extends Resource
                         ->rules('required', 'max:255'),
 
                     BelongsTo::make('Location')
-                        ->searchable(),
+                        ->searchable()
+                        ->showOnCreating(function ($request) {
+                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })->showOnUpdating(function ($request) {
+                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })
+                        ->showOnDetail(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })
+                        ->showOnIndex(function ($request) {
+                            if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
                     Email::make('Email')
                         ->alwaysClickable()
@@ -146,44 +169,44 @@ class User extends Resource
                     PasswordConfirmation::make('Password Confirmation'),
 
                     Images::make('Profile Picture', 'avatar') // second parameter is the media collection name
-                            ->croppable(true)
-                            ->hideFromIndex()
-                            ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png'),
+                        ->croppable(true)
+                        ->hideFromIndex()
+                        ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png'),
 
                     Boolean::make('Active'),
                 ],
                 'Permissions' => [
-                      //Permissions for super-admin
-                        PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
-                                        ->withGroups()
-                                        ->options(Permission::all()->sortBy('group_order')->map(function ($permission, $key) {
-                                                return [
-                                                    'group'  => __(Str::title($permission->group)),
-                                                    'option' => $permission->name,
-                                                    'label'  => __(Str::title($permission->name)),
-                                                ];
-                                        })
-                                        ->groupBy('group')
-                                        ->toArray())
-                                        ->canSee(function($request){
-                                            return $request->user()->isSuperAdmin();
-                                        })
-                                        ->hideFromIndex(),
+                    //Permissions for super-admin
+                    PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
+                        ->withGroups()
+                        ->options(Permission::all()->sortBy('group_order')->map(function ($permission, $key) {
+                            return [
+                                'group'  => __(Str::title($permission->group)),
+                                'option' => $permission->name,
+                                'label'  => __(Str::title($permission->name)),
+                            ];
+                        })
+                            ->groupBy('group')
+                            ->toArray())
+                        ->canSee(function ($request) {
+                            return $request->user()->isSuperAdmin();
+                        })
+                        ->hideFromIndex(),
 
-                        //Permission for other users.
-                        PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
-                                        ->withGroups()
-                                        ->options(Permission::where('group', '!=', Permission::SUPER_ADMIN_GROUP)->get()->sortBy('group_order')->map(function ($permission, $key) {
-                                                return [
-                                                    'group'  => __(Str::title($permission->group)),
-                                                    'option' => $permission->name,
-                                                    'label'  => __(Str::title($permission->name)),
-                                                ];
-                                        })->groupBy('group')->toArray())
-                                        ->canSee(function($request){
-                                            return $request->user()->hasPermissionTo('assign permissions') && !$request->user()->isSuperAdmin();
-                                        })
-                                        ->hideFromIndex(),
+                    //Permission for other users.
+                    PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
+                        ->withGroups()
+                        ->options(Permission::where('group', '!=', Permission::SUPER_ADMIN_GROUP)->get()->sortBy('group_order')->map(function ($permission, $key) {
+                            return [
+                                'group'  => __(Str::title($permission->group)),
+                                'option' => $permission->name,
+                                'label'  => __(Str::title($permission->name)),
+                            ];
+                        })->groupBy('group')->toArray())
+                        ->canSee(function ($request) {
+                            return $request->user()->hasPermissionTo('assign permissions') && !$request->user()->isSuperAdmin();
+                        })
+                        ->hideFromIndex(),
                 ],
             ]))->withToolbar(),
 
@@ -237,13 +260,12 @@ class User extends Resource
     public function actions(Request $request)
     {
         return [
-            (new MakeAsActive)->canSee(function($request){
+            (new MakeAsActive)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update users');
             })->onlyOnIndex(),
-            (new MakeAsInactive)->canSee(function($request){
+            (new MakeAsInactive)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update users');
             })->onlyOnIndex(),
         ];
     }
-
 }

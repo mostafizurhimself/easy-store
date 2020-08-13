@@ -27,16 +27,20 @@ class RolesAndPermissionsSeeder extends Seeder
             ['name' => 'fabric purchase orders', 'order' => 13],
             ['name' => 'fabric purchase items', 'order' => 14],
             ['name' => 'fabric receive items', 'order' => 15],
+            ['name' => 'fabric distributions', 'order' => 16],
             ['name' => 'material categories', 'order' => 21],
             ['name' => 'materials', 'order' => 22],
             ['name' => 'material purchase orders', 'order' => 23],
             ['name' => 'material purchase items', 'order' => 24],
             ['name' => 'material receive items', 'order' => 25],
+            ['name' => 'material distributions', 'order' => 26],
             ['name' => 'asset categories', 'order' => 31],
             ['name' => 'assets', 'order' => 32],
             ['name' => 'asset purchase orders', 'order' => 33],
             ['name' => 'asset purchase items', 'order' => 34],
             ['name' => 'asset receive items', 'order' => 35],
+            ['name' => 'asset transfer orders', 'order' => 36],
+            ['name' => 'asset transfer items', 'order' => 37],
             ['name' => 'service categories', 'order' => 41],
             ['name' => 'services', 'order' => 42],
             ['name' => 'suppliers', 'order' => 51],
@@ -79,13 +83,13 @@ class RolesAndPermissionsSeeder extends Seeder
         });
 
         //Only For Super Admin Permissions
-        Permission::updateOrCreate(['name' => 'view all locations data'],['group' => 'super admin', 'name' => 'view all locations data', 'group_order' => 1000]);
-        Permission::updateOrCreate(['name' => 'view any locations data'],['group' => 'super admin', 'name' => 'view any locations data', 'group_order' => 1000]);
-        Permission::updateOrCreate(['name' => 'create all locations data'],['group' => 'super admin', 'name' => 'create all locations data', 'group_order' => 1000]);
-        Permission::updateOrCreate(['name' => 'update all locations data'],['group' => 'super admin', 'name' => 'update all locations data', 'group_order' => 1000]);
-        Permission::updateOrCreate(['name' => 'delete all locations data'],['group' => 'super admin', 'name' => 'delete all locations data', 'group_order' => 1000]);
-        Permission::updateOrCreate(['name' => 'restore all locations data'],['group' => 'super admin', 'name' => 'restore all locations data', 'group_order' => 1000]);
-        Permission::updateOrCreate(['name' => 'force delete all locations data'],['group' => 'super admin', 'name' => 'force delete all locations data', 'group_order' => 1000]);
+        Permission::updateOrCreate(['name' => 'view all locations data'],['group' => 'super admin', 'name' => 'view all locations data', 'group_order' => 1001]);
+        Permission::updateOrCreate(['name' => 'view any locations data'],['group' => 'super admin', 'name' => 'view any locations data', 'group_order' => 1002]);
+        Permission::updateOrCreate(['name' => 'create all locations data'],['group' => 'super admin', 'name' => 'create all locations data', 'group_order' => 1003]);
+        Permission::updateOrCreate(['name' => 'update all locations data'],['group' => 'super admin', 'name' => 'update all locations data', 'group_order' => 1004]);
+        Permission::updateOrCreate(['name' => 'delete all locations data'],['group' => 'super admin', 'name' => 'delete all locations data', 'group_order' => 1005]);
+        Permission::updateOrCreate(['name' => 'restore all locations data'],['group' => 'super admin', 'name' => 'restore all locations data', 'group_order' => 1006]);
+        Permission::updateOrCreate(['name' => 'force delete all locations data'],['group' => 'super admin', 'name' => 'force delete all locations data', 'group_order' => 1007]);
 
         // Create a Super-Admin Role and assign all Permissions
         $role = Role::updateOrCreate(['name' => 'super-admin'], ['name' => 'super-admin', 'display_name' => 'Super Admin']);

@@ -72,5 +72,26 @@ class Asset extends Model implements HasMedia
         return $this->belongsToMany( Supplier::class);
     }
 
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transferItems()
+    {
+       return $this->hasMany(AssetTransferItem::class);
+    }
+
+    /**
+     * Get the remaining stock attribute of the item
+     *
+     * @return double
+     */
+    public function getStockAttribute()
+    {
+        return $this->quantity - $this->transferItems()->draft()->sum('quantity');
+    }
+
+
 
 }

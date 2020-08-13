@@ -29,10 +29,10 @@ class Section extends Resource
      */
     public static function newModel()
     {
-            $model = static::$model;
-            $var = new $model;
-            $var->active= true;
-            return $var;
+        $model = static::$model;
+        $var = new $model;
+        $var->active = true;
+        return $var;
     }
 
     /**
@@ -56,7 +56,7 @@ class Section extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-th-large';
+        return 'fas fa-th-large';
     }
 
     /**
@@ -73,7 +73,7 @@ class Section extends Resource
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name} Floor: {$this->floor->name}";
+        return "Location: {$this->location->name} Floor: {$this->floor->name}";
     }
 
     /**
@@ -118,21 +118,98 @@ class Section extends Resource
                 ]),
 
             BelongsTo::make('Location')
-                ->searchable(),
+                ->searchable()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnDetail(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnIndex(function ($request) {
+                    if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             AjaxSelect::make('Department', 'department_id')
                 ->rules('required')
                 ->get('/locations/{location}/departments')
-                ->parent('location'),
+                ->parent('location')
+                ->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
 
             BelongsTo::make('Department')
                 ->exceptOnForms(),
+
+            BelongsTo::make('Department')
+                ->onlyOnForms()
+                ->hideWhenCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
 
             AjaxSelect::make('Floor', 'floor_id')
                 ->rules('required')
                 ->get('/locations/{location}/floors')
-                ->parent('location'),
+                ->parent('location')
+                ->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Floor')
+                ->onlyOnForms()
+                ->hideWhenCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
 
             BelongsTo::make('Floor')
                 ->exceptOnForms(),

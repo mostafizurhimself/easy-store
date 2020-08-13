@@ -123,7 +123,30 @@ class Fabric extends Resource
             ID::make()->sortable(),
 
             BelongsTo::make('Location')
-            ->searchable(),
+                ->searchable()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnDetail(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnIndex(function ($request) {
+                    if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             Text::make('Name')
                 ->sortable()
@@ -134,9 +157,6 @@ class Fabric extends Resource
                 ->updateRules([
                     Rule::unique('fabrics', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
-
-            BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')
-                ->onlyOnIndex(),
 
             Text::make('Code')
                 ->sortable()
@@ -198,7 +218,36 @@ class Fabric extends Resource
             AjaxSelect::make('Category', 'category_id')
                 ->rules('required')
                 ->get('/locations/{location}/fabric-categories')
-                ->parent('location'),
+                ->parent('location')
+                ->onlyOnForms()
+                ->showOnCreating(function($request){
+                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function($request){
+                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')
+                ->exceptOnForms(),
+
+            BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')
+                ->onlyOnForms()
+                ->hideWhenCreating(function($request){
+                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function($request){
+                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                }),
 
             BelongsToManyField::make('Suppliers', 'suppliers', 'App\Nova\Supplier')
                 ->hideFromIndex(),

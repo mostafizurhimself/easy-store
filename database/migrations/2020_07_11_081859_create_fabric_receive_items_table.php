@@ -21,7 +21,7 @@ class CreateFabricReceiveItemsTable extends Migration
             $table->bigInteger('purchase_order_id')->unsigned();
             $table->bigInteger('fabric_id')->unsigned();
             $table->bigInteger('purchase_item_id')->unsigned();
-            $table->string('reference')->nullable();
+            $table->string('reference')->nullable()->index('fabric_receive_reference_index');
             $table->double('quantity')->default(0);
             $table->double('rate')->default(0);
             $table->double('amount')->default(0);

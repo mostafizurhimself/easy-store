@@ -120,7 +120,30 @@ class MaterialPurchaseOrder extends Resource
                 }),
 
             BelongsTo::make('Location')
-                ->searchable(),
+                ->searchable()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnDetail(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnIndex(function ($request) {
+                    if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             BelongsTo::make('Supplier')
                 ->searchable(),

@@ -56,7 +56,7 @@ class AssetCategory extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-network-wired';
+        return 'fas fa-network-wired';
     }
 
     /**
@@ -66,7 +66,7 @@ class AssetCategory extends Resource
      */
     public static function label()
     {
-      return "Categories";
+        return "Categories";
     }
 
     /**
@@ -81,7 +81,30 @@ class AssetCategory extends Resource
             ID::make()->sortable(),
 
             BelongsTo::make('Location')
-                ->searchable(),
+                ->searchable()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnDetail(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnIndex(function ($request) {
+                    if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             Text::make('Name')
                 ->sortable()

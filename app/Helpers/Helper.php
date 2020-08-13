@@ -28,7 +28,7 @@ class Helper
         $value = 1;
 
         //Set the prefix with date
-        $finalPrefix = $prefix.Carbon::now()->format('ymd');
+        $finalPrefix = $prefix.Carbon::now()->format('ym');
 
         //Parse the last value
         $lastValue = intval(substr($last, strlen($finalPrefix), $length));
@@ -41,6 +41,6 @@ class Helper
             $value = $lastValue + 1;
         }
 
-        return $this->generateReadableId($value, $finalPrefix, $length);  // POF20071300001
+        return $this->generateReadableId($value, $finalPrefix, $length);  // POF200700001
     }
 }

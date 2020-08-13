@@ -42,15 +42,22 @@ class Designation extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-id-card-alt';
+        return 'fas fa-id-card-alt';
     }
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
-     * @var string
+     * @return string
      */
-    public static $title = 'name';
+    public function title()
+    {
+        $title  = $this->department ? $this->department->name." >> " : "";
+        $title .= $this->section ? $this->section->name." >> " : "";
+        $title .= $this->name;
+
+        return $title;
+    }
 
     /**
      * Get the search result subtitle for the resource.
@@ -59,7 +66,7 @@ class Designation extends Resource
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
@@ -77,9 +84,9 @@ class Designation extends Resource
      * @var array
      */
     public static $searchRelations = [
-        'location' => ['name'],
+        'location'   => ['name'],
         'department' => ['name'],
-        'section' => ['name'],
+        'section'    => ['name'],
     ];
 
     /**
@@ -98,35 +105,110 @@ class Designation extends Resource
                 ->rules('required', 'string', 'max:45')
                 ->creationRules([
                     Rule::unique('designations', 'name')->where('location_id', request()->get('location'))
-                                                        ->where('department_id', request()->get('department_id'))
-                                                        ->where('section_id', request()->get('section_id'))
+                        ->where('department_id', request()->get('department_id'))
+                        ->where('section_id', request()->get('section_id'))
                 ])
                 ->updateRules([
                     Rule::unique('designations', 'name')->where('location_id', request()->get('location'))
-                                                        ->where('department_id', request()->get('department_id'))
-                                                        ->where('section_id', request()->get('section_id'))
-                                                        ->ignore($this->resource->id)
+                        ->where('department_id', request()->get('department_id'))
+                        ->where('section_id', request()->get('section_id'))
+                        ->ignore($this->resource->id)
                 ]),
-
 
             BelongsTo::make('Location')
                 ->searchable()
-                ->showCreateRelationButton(),
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnDetail(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnIndex(function ($request) {
+                    if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
 
             AjaxSelect::make('Department', 'department_id')
                 ->get('/locations/{location}/departments')
-                ->parent('location'),
+                ->parent('location')
+                ->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             BelongsTo::make('Department')
                 ->exceptOnForms(),
 
+            BelongsTo::make('Department')
+                ->onlyOnForms()
+                ->nullable()
+                ->hideWhenCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
             AjaxSelect::make('Section', 'section_id')
                 ->get('/departments/{department_id}/sections')
-                ->parent('department_id'),
+                ->parent('department_id')
+                ->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             BelongsTo::make('Section')
-                    ->exceptOnForms()
+                ->exceptOnForms(),
+
+            BelongsTo::make('Section')
+                ->onlyOnForms()
+                ->nullable()
+                ->hideWhenCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
         ];
     }

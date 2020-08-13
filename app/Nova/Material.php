@@ -38,10 +38,10 @@ class Material extends Resource
      */
     public static function newModel()
     {
-            $model = static::$model;
-            $model = new $model;
-            $model->status= ActiveStatus::ACTIVE();
-            return $model;
+        $model = static::$model;
+        $model = new $model;
+        $model->status = ActiveStatus::ACTIVE();
+        return $model;
     }
 
     /**
@@ -62,8 +62,8 @@ class Material extends Resource
      */
     public function subtitle()
     {
-        $subtitle = "Code: ".$this->code;
-        $subtitle.= " Location: ".$this->location->name;
+        $subtitle = "Code: " . $this->code;
+        $subtitle .= " Location: " . $this->location->name;
 
         return $subtitle;
     }
@@ -89,7 +89,7 @@ class Material extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-boxes';
+        return 'fas fa-boxes';
     }
 
     /**
@@ -123,7 +123,30 @@ class Material extends Resource
             ID::make()->sortable(),
 
             BelongsTo::make('Location')
-                ->searchable(),
+                ->searchable()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnDetail(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })
+                ->showOnIndex(function ($request) {
+                    if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             Text::make('Name')
                 ->sortable()
@@ -134,9 +157,6 @@ class Material extends Resource
                 ->updateRules([
                     Rule::unique('materials', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
-
-            BelongsTo::make('Category', 'category', 'App\Nova\MaterialCategory')
-                ->onlyOnIndex(),
 
             Text::make('Code')
                 ->sortable()
@@ -169,8 +189,8 @@ class Material extends Resource
                 ->hideFromIndex(),
 
             Text::make('Opening Quantity')
-                ->displayUsing(function(){
-                    return $this->openingQuantity ." ".$this->unit->name;
+                ->displayUsing(function () {
+                    return $this->openingQuantity . " " . $this->unit->name;
                 })
                 ->onlyOnDetail(),
 
@@ -180,14 +200,14 @@ class Material extends Resource
                 ->hideFromIndex(),
 
             Text::make('Alert Quantity')
-                ->displayUsing(function(){
-                    return $this->alertQuantity ." ".$this->unit->name;
+                ->displayUsing(function () {
+                    return $this->alertQuantity . " " . $this->unit->name;
                 })
                 ->onlyOnDetail(),
 
             Text::make('Quantity')
-                ->displayUsing(function(){
-                    return $this->quantity ." ".$this->unit->name;
+                ->displayUsing(function () {
+                    return $this->quantity . " " . $this->unit->name;
                 })
                 ->exceptOnForms(),
 
@@ -198,7 +218,36 @@ class Material extends Resource
             AjaxSelect::make('Category', 'category_id')
                 ->rules('required')
                 ->get('/locations/{location}/material-categories')
-                ->parent('location'),
+                ->parent('location')
+                ->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Category', 'category', 'App\Nova\MaterialCategory')
+                ->exceptOnForms(),
+
+            BelongsTo::make('Category', 'category', 'App\Nova\MaterialCategory')
+                ->onlyOnForms()
+                ->hideWhenCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             BelongsToManyField::make('Suppliers', 'suppliers', 'App\Nova\Supplier')
                 ->hideFromIndex(),
@@ -209,10 +258,10 @@ class Material extends Resource
                 ->onlyOnForms(),
 
             Badge::make('Status')->map([
-                    ActiveStatus::ACTIVE()->getValue()   => 'success',
-                    ActiveStatus::INACTIVE()->getValue() => 'danger',
-                ])
-                ->label(function(){
+                ActiveStatus::ACTIVE()->getValue()   => 'success',
+                ActiveStatus::INACTIVE()->getValue() => 'danger',
+            ])
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -262,7 +311,7 @@ class Material extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UpdateOpeningQuantity)->canSee(function($request){
+            (new UpdateOpeningQuantity)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update materials');
             })->onlyOnDetail(),
         ];
