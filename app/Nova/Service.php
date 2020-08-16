@@ -17,11 +17,10 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
-use App\Nova\Actions\Assets\UpdateOpeningQuantity;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
 
-class Asset extends Resource
+class Service extends Resource
 {
     use SearchesRelations;
     /**
@@ -29,27 +28,14 @@ class Asset extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\Asset';
-
-    /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel()
-    {
-        $model = static::$model;
-        $model = new $model;
-        $model->status = ActiveStatus::ACTIVE();
-        return $model;
-    }
+    public static $model = 'App\Models\Service';
 
     /**
      * The group associated with the resource.
      *
      * @return string
      */
-    public static $group = '<span class="hidden">06</span>Asset Section';
+    public static $group = '<span class="hidden">07</span>Service Section';
 
     /**
      * The side nav menu order.
@@ -61,13 +47,9 @@ class Asset extends Resource
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
-     * @return string
+     * @var string
      */
-    public function title()
-    {
-        return $this->name;
-    }
-
+    public static $title = 'name';
 
     /**
      * Get the search result subtitle for the resource.
@@ -101,7 +83,6 @@ class Asset extends Resource
         'category' => ['name'],
     ];
 
-
     /**
      * The icon of the resource.
      *
@@ -109,7 +90,7 @@ class Asset extends Resource
      */
     public static function icon()
     {
-        return 'fas fa-box-open';
+        return 'fas fa-briefcase';
     }
 
     /**
@@ -153,10 +134,10 @@ class Asset extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('assets', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('services', 'name')->where('location_id', request()->get('location'))
                 ])
                 ->updateRules([
-                    Rule::unique('assets', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('services', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
 
             Text::make('Code')
@@ -164,13 +145,13 @@ class Asset extends Resource
                 ->help('If you want to generate code automatically, leave the field blank.')
                 ->rules('nullable', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('assets', 'code')->where('location_id', request()->get('location'))
+                    Rule::unique('services', 'code')->where('location_id', request()->get('location'))
                 ])
                 ->updateRules([
-                    Rule::unique('assets', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('services', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
 
-            Images::make('Image', 'asset-image')
+            Images::make('Image', 'service-image')
                 ->croppable(true)
                 ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
                 ->hideFromIndex(),
@@ -183,32 +164,21 @@ class Asset extends Resource
                 ->currency('BDT')
                 ->rules('required', 'numeric', 'min:0'),
 
-            Number::make('Opening Quantity')
-                ->rules('required', 'numeric', 'min:0')
-                ->hideWhenUpdating()
-                ->hideFromDetail()
-                ->hideFromIndex(),
-
-            Text::make('Opening Quantity')
+            Text::make('Dispatch')
                 ->displayUsing(function () {
-                    return $this->openingQuantity . " " . $this->unit->name;
+                    return $this->totalDispatchQuantity . " " . $this->unit->name;
                 })
                 ->onlyOnDetail(),
 
-            Number::make('Alert Quantity')
-                ->onlyOnForms()
-                ->rules('required', 'numeric', 'min:0')
-                ->hideFromIndex(),
-
-            Text::make('Alert Quantity')
+            Text::make('Receive')
                 ->displayUsing(function () {
-                    return $this->alertQuantity . " " . $this->unit->name;
+                    return $this->totalReceiveQuantity . " " . $this->unit->name;
                 })
                 ->onlyOnDetail(),
 
-            Text::make('Quantity')
+            Text::make('Remaining')
                 ->displayUsing(function () {
-                    return $this->quantity . " " . $this->unit->name;
+                    return $this->totalRemainingQuantity . " " . $this->unit->name;
                 })
                 ->exceptOnForms(),
 
@@ -218,7 +188,7 @@ class Asset extends Resource
 
             AjaxSelect::make('Category', 'category_id')
                 ->rules('required')
-                ->get('/locations/{location}/asset-categories')
+                ->get('/locations/{location}/service-categories')
                 ->parent('location')->onlyOnForms()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -232,10 +202,10 @@ class Asset extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\AssetCategory')
+            BelongsTo::make('Category', 'category', 'App\Nova\ServiceCategory')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\AssetCategory')
+            BelongsTo::make('Category', 'category', 'App\Nova\ServiceCategory')
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -249,11 +219,12 @@ class Asset extends Resource
                     return false;
                 }),
 
-            BelongsToManyField::make('Suppliers', 'suppliers', 'App\Nova\Supplier')
+            BelongsToManyField::make('Providers', 'providers', 'App\Nova\Provider')
                 ->hideFromIndex(),
 
             Select::make('Status')
                 ->options(ActiveStatus::titleCaseOptions())
+                ->default(ActiveStatus::ACTIVE())
                 ->rules('required')
                 ->onlyOnForms(),
 
@@ -309,10 +280,6 @@ class Asset extends Resource
      */
     public function actions(Request $request)
     {
-        return [
-            (new UpdateOpeningQuantity)->canSee(function ($request) {
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update assets');
-            })->onlyOnDetail(),
-        ];
+        return [];
     }
 }

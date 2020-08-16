@@ -32,5 +32,7 @@ Route::group(['middleware' => 'nova'], function () {
     Route::get('locations/{location}/materials', 'AjaxController@materialsViaLocation');
     Route::get('locations/{location}/asset-categories', 'AjaxController@assetCategoriesViaLocation');
     Route::get('locations/{location}/assets', 'AjaxController@assetsViaLocation');
+    Route::get('locations/{location}/service-categories', 'AjaxController@serviceCategoriesViaLocation');
+    Route::get('locations/{location}/services', 'AjaxController@servicesViaLocation');
 
 });

@@ -154,4 +154,30 @@ class AjaxController extends Controller
             return [ 'value' => $asset->id, 'display' => $asset->code ];
         });
     }
+
+    /**
+     * Get the location wise service categories
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function serviceCategoriesViaLocation(Location $location)
+    {
+        return $location->serviceCategories->map(function($category) {
+            return [ 'value' => $category->id, 'display' => $category->name ];
+        });
+    }
+
+    /**
+     * Get the location wise services
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function servicesViaLocation(Location $location)
+    {
+        return $location->services->map(function($service) {
+            return [ 'value' => $service->id, 'display' => $service->code ];
+        });
+    }
 }

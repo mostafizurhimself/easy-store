@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Facades\Settings;
+use App\Nova\Service;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
 use Illuminate\Database\Eloquent\Model;
@@ -151,5 +152,25 @@ class Location extends Model
     public function assets()
     {
        return $this->hasMany(Asset::class);
+    }
+
+      /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function serviceCategories()
+    {
+       return $this->hasMany(ServiceCategory::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function services()
+    {
+       return $this->hasMany(Service::class);
     }
 }

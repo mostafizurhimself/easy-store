@@ -10,6 +10,7 @@ use App\Models\Floor;
 use App\Models\Style;
 use App\Models\Fabric;
 use App\Models\Section;
+use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Employee;
 use App\Models\Location;
@@ -28,7 +29,9 @@ use App\Policies\FloorPolicy;
 use App\Policies\StylePolicy;
 use App\Models\FabricCategory;
 use App\Policies\FabricPolicy;
+use App\Models\ServiceCategory;
 use App\Policies\SectionPolicy;
+use App\Policies\ServicePolicy;
 use App\Policies\SettingPolicy;
 use App\Models\AssetReceiveItem;
 use App\Models\MaterialCategory;
@@ -38,8 +41,10 @@ use App\Policies\MaterialPolicy;
 use App\Policies\ProviderPolicy;
 use App\Policies\SupplierPolicy;
 use App\Models\AssetPurchaseItem;
+use App\Models\AssetTransferItem;
 use App\Models\FabricReceiveItem;
 use App\Models\AssetPurchaseOrder;
+use App\Models\AssetTransferOrder;
 use App\Models\FabricDistribution;
 use App\Models\FabricPurchaseItem;
 use App\Policies\DepartmentPolicy;
@@ -55,12 +60,15 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\MaterialPurchaseOrder;
 use App\Policies\AssetCategoryPolicy;
 use App\Policies\FabricCategoryPolicy;
+use App\Policies\ServiceCategoryPolicy;
 use Spatie\Activitylog\Models\Activity;
 use App\Policies\AssetReceiveItemPolicy;
 use App\Policies\MaterialCategoryPolicy;
 use App\Policies\AssetPurchaseItemPolicy;
+use App\Policies\AssetTransferItemPolicy;
 use App\Policies\FabricReceiveItemPolicy;
 use App\Policies\AssetPurchaseOrderPolicy;
+use App\Policies\AssetTransferOrderPolicy;
 use App\Policies\FabricDistributionPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
 use App\Policies\FabricPurchaseOrderPolicy;
@@ -101,6 +109,10 @@ class AuthServiceProvider extends ServiceProvider
         AssetPurchaseOrder::class    => AssetPurchaseOrderPolicy::class,
         AssetPurchaseItem::class     => AssetPurchaseItemPolicy::class,
         AssetReceiveItem::class      => AssetReceiveItemPolicy::class,
+        AssetTransferOrder::class    => AssetTransferOrderPolicy::class,
+        AssetTransferItem::class     => AssetTransferItemPolicy::class,
+        ServiceCategory::class       => ServiceCategoryPolicy::class,
+        Service::class               => ServicePolicy::class,
         Supplier::class              => SupplierPolicy::class,
         Provider::class              => ProviderPolicy::class,
         Permission::class            => PermissionPolicy::class,
