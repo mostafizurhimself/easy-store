@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Facades\Settings;
-use App\Nova\Service;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
 use Illuminate\Database\Eloquent\Model;

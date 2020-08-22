@@ -177,7 +177,7 @@ class AjaxController extends Controller
     public function servicesViaLocation(Location $location)
     {
         return $location->services->map(function($service) {
-            return [ 'value' => $service->id, 'display' => $service->code ];
+            return [ 'value' => $service->id, 'display' => $service->name ];
         });
     }
 }

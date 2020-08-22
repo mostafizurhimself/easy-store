@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Illuminate\Support\Str;
 use Laravel\Nova\Resource as NovaResource;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Inspheric\NovaDefaultable\HasDefaultableFields;
@@ -84,5 +85,26 @@ abstract class Resource extends NovaResource
     public static function relatableQuery(NovaRequest $request, $query)
     {
         return parent::relatableQuery($request, $query);
+    }
+
+
+    /**
+     * Get the displayable singular label of the resource.
+     *
+     * @return string
+     */
+    public static function singularLabel()
+    {
+        return Str::singular(static::label());
+    }
+
+    /**
+     * Get the text for the create resource button.
+     *
+     * @return string|null
+     */
+    public static function createButtonLabel()
+    {
+        return __('Create :resource', ['resource' => static::singularLabel()]);
     }
 }

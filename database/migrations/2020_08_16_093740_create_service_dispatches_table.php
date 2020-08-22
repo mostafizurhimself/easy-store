@@ -16,11 +16,16 @@ class CreateServiceDispatchesTable extends Migration
         Schema::create('service_dispatches', function (Blueprint $table) {
             $table->id();
             $table->string('readable_id')->nullable();
-            $table->bigInteger('location_id')->unsigned()->nullable();
-
+            $table->bigInteger('service_id')->unsigned();
+            $table->bigInteger('invoice_id')->unsigned()->nullable();
+            $table->double('quantity')->default(0);
+            $table->double('rate')->default(0);
+            $table->double('amount')->default(0);
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('location_id')->references('id')->on('locations');
+            $table->foreign('service_id')->references('id')->on('services');
+            $table->foreign('invoice_id')->references('id')->on('service_dispatch_invoices');
         });
     }
 
