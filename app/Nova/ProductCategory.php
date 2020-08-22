@@ -10,21 +10,21 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class ServiceCategory extends Resource
+class ProductCategory extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\Models\ServiceCategory';
+    public static $model = \App\Models\ProductCategory::class;
 
     /**
      * The group associated with the resource.
      *
      * @return string
      */
-    public static $group = '<span class="hidden">07</span>Service Section';
+    public static $group = '<span class="hidden">08</span>Product Section';
 
     /**
      * The side nav menu order.
@@ -41,13 +41,24 @@ class ServiceCategory extends Resource
     public static $title = 'name';
 
     /**
-     * The columns that should be searched.
+     * Get the search result subtitle for the resource.
      *
-     * @var array
+     * @return string
      */
-    public static $search = [
-        'name',
-    ];
+    public function subtitle()
+    {
+      return "Location: {$this->location->name}";
+    }
+
+    /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+      return "Categories";
+    }
 
     /**
      * The icon of the resource.
@@ -60,14 +71,13 @@ class ServiceCategory extends Resource
     }
 
     /**
-     * Get the displayable label of the resource.
+     * The columns that should be searched.
      *
-     * @return string
+     * @var array
      */
-    public static function label()
-    {
-        return "Categories";
-    }
+    public static $search = [
+        'name',
+    ];
 
     /**
      * Get the fields displayed by the resource.
@@ -78,10 +88,10 @@ class ServiceCategory extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make(__('ID'), 'id')->sortable(),
 
             BelongsTo::make('Location')
-                ->searchable()
+                // ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -110,10 +120,10 @@ class ServiceCategory extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:45')
                 ->creationRules([
-                    Rule::unique('service_categories', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('product_categories', 'name')->where('location_id', request()->get('location'))
                 ])
                 ->updateRules([
-                    Rule::unique('service_categories', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('product_categories', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
 
             Textarea::make('Description')

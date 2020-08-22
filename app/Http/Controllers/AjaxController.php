@@ -180,4 +180,30 @@ class AjaxController extends Controller
             return [ 'value' => $service->id, 'display' => $service->name ];
         });
     }
+
+    /**
+     * Get the location wise service categories
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function productCategoriesViaLocation(Location $location)
+    {
+        return $location->productCategories->map(function($category) {
+            return [ 'value' => $category->id, 'display' => $category->name ];
+        });
+    }
+
+    /**
+     * Get the location wise products
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function productsViaLocation(Location $location)
+    {
+        return $location->products->map(function($product) {
+            return [ 'value' => $product->id, 'display' => $product->name ];
+        });
+    }
 }

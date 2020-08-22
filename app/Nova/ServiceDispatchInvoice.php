@@ -15,10 +15,13 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceDispatchInvoices\ConfirmInvoice;
 
 class ServiceDispatchInvoice extends Resource
 {
+
+    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
@@ -58,6 +61,17 @@ class ServiceDispatchInvoice extends Resource
     public static $search = [
         'readable_id',
     ];
+
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'location' => ['name'],
+        'provider' => ['name'],
+    ];
+
 
     /**
      * Get the displayable label of the resource.

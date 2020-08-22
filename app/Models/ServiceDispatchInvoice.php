@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Traits\HasReadableIdWithDate;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class ServiceDispatchInvoice extends Model
 {
-    use LogsActivity, HasReadableIdWithDate;
+    use LogsActivity, HasReadableIdWithDate, SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.

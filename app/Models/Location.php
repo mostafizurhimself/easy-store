@@ -153,7 +153,7 @@ class Location extends Model
        return $this->hasMany(Asset::class);
     }
 
-      /**
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -171,5 +171,25 @@ class Location extends Model
     public function services()
     {
        return $this->hasMany(Service::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productCategories()
+    {
+       return $this->hasMany(ProductCategory::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function products()
+    {
+       return $this->hasMany(Product::class);
     }
 }

@@ -17,10 +17,10 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
-use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\Products\UpdateOpeningQuantity;
 
-class Service extends Resource
+class Product extends Resource
 {
     use SearchesRelations;
 
@@ -29,14 +29,14 @@ class Service extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\Service';
+    public static $model = \App\Models\Product::class;
 
     /**
      * The group associated with the resource.
      *
      * @return string
      */
-    public static $group = '<span class="hidden">07</span>Service Section';
+    public static $group = '<span class="hidden">08</span>Product Section';
 
     /**
      * The side nav menu order.
@@ -50,20 +50,7 @@ class Service extends Resource
      *
      * @var string
      */
-    public static $title = 'name';
-
-    /**
-     * Get the search result subtitle for the resource.
-     *
-     * @return string
-     */
-    public function subtitle()
-    {
-        $subtitle = "Code: " . $this->code;
-        $subtitle .= " Location: " . $this->location->name;
-
-        return $subtitle;
-    }
+    public static $title = 'code';
 
     /**
      * The columns that should be searched.
@@ -71,7 +58,7 @@ class Service extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'code'
+        'code',
     ];
 
     /**
@@ -84,6 +71,7 @@ class Service extends Resource
         'category' => ['name'],
     ];
 
+
     /**
      * The icon of the resource.
      *
@@ -91,7 +79,7 @@ class Service extends Resource
      */
     public static function icon()
     {
-        return 'fas fa-briefcase';
+      return 'fas fa-box';
     }
 
     /**
@@ -103,7 +91,7 @@ class Service extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make(__('ID'), 'id')->sortable(),
 
             BelongsTo::make('Location')
                 // ->searchable()
@@ -135,10 +123,10 @@ class Service extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('services', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('products', 'name')->where('location_id', request()->get('location'))
                 ])
                 ->updateRules([
-                    Rule::unique('services', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('products', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
 
             Text::make('Code')
@@ -146,13 +134,13 @@ class Service extends Resource
                 ->help('If you want to generate code automatically, leave the field blank.')
                 ->rules('nullable', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('services', 'code')->where('location_id', request()->get('location'))
+                    Rule::unique('products', 'code')->where('location_id', request()->get('location'))
                 ])
                 ->updateRules([
-                    Rule::unique('services', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('products', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
 
-            Images::make('Image', 'service-image')
+            Images::make('Image', 'product-image')
                 ->croppable(true)
                 ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
                 ->hideFromIndex(),
@@ -161,25 +149,45 @@ class Service extends Resource
                 ->nullable()
                 ->rules('max:500'),
 
-            Currency::make('Rate')
+            Currency::make('Cost Price')
                 ->currency('BDT')
                 ->rules('required', 'numeric', 'min:0'),
 
-            Text::make('Dispatch')
+            Currency::make('Sale Price')
+                ->currency('BDT')
+                ->rules('required', 'numeric', 'min:0'),
+
+            Number::make('Vat')
+                ->rules('numeric', 'min:0')
+                ->hideFromIndex()
+                ->default(0.00),
+
+            Number::make('Opening Quantity')
+                ->rules('required', 'numeric', 'min:0')
+                ->hideWhenUpdating()
+                ->hideFromDetail()
+                ->hideFromIndex(),
+
+            Text::make('Opening Quantity')
                 ->displayUsing(function () {
-                    return $this->totalDispatchQuantity . " " . $this->unit->name;
+                    return $this->openingQuantity . " " . $this->unit->name;
                 })
                 ->onlyOnDetail(),
 
-            Text::make('Receive')
+            Number::make('Alert Quantity')
+                ->onlyOnForms()
+                ->rules('required', 'numeric', 'min:0')
+                ->hideFromIndex(),
+
+            Text::make('Alert Quantity')
                 ->displayUsing(function () {
-                    return $this->totalReceiveQuantity . " " . $this->unit->name;
+                    return $this->alertQuantity . " " . $this->unit->name;
                 })
                 ->onlyOnDetail(),
 
-            Text::make('Remaining')
+            Text::make('Quantity')
                 ->displayUsing(function () {
-                    return $this->totalRemainingQuantity . " " . $this->unit->name;
+                    return $this->quantity . " " . $this->unit->name;
                 })
                 ->exceptOnForms(),
 
@@ -189,7 +197,7 @@ class Service extends Resource
 
             AjaxSelect::make('Category', 'category_id')
                 ->rules('required')
-                ->get('/locations/{location}/service-categories')
+                ->get('/locations/{location}/product-categories')
                 ->parent('location')->onlyOnForms()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -203,10 +211,10 @@ class Service extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\ServiceCategory')
+            BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\ServiceCategory')
+            BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -220,14 +228,11 @@ class Service extends Resource
                     return false;
                 }),
 
-            BelongsToManyField::make('Providers', 'providers', 'App\Nova\Provider')
-                ->hideFromIndex(),
-
             Select::make('Status')
                 ->options(ActiveStatus::titleCaseOptions())
-                ->default(ActiveStatus::ACTIVE())
                 ->rules('required')
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->default(ActiveStatus::ACTIVE()),
 
             Badge::make('Status')->map([
                 ActiveStatus::ACTIVE()->getValue()   => 'success',
@@ -236,7 +241,6 @@ class Service extends Resource
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
-
         ];
     }
 
@@ -281,6 +285,10 @@ class Service extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new UpdateOpeningQuantity)->canSee(function ($request) {
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update products');
+            })->onlyOnDetail(),
+        ];
     }
 }
