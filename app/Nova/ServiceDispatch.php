@@ -91,7 +91,7 @@ class ServiceDispatch extends Resource
                 ->exceptOnForms(),
 
             Trix::make('Description')
-                ->rules('nullable', 'string', 'max:500'),
+                ->rules('nullable', 'max:500'),
 
         ];
     }

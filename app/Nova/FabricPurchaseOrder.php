@@ -170,7 +170,7 @@ class FabricPurchaseOrder extends Resource
 
 
             Trix::make('Note')
-                ->nullable(),
+                ->rules('nullable', 'max:500'),
 
             HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\FabricPurchaseItem'),
 

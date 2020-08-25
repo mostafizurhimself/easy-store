@@ -2,40 +2,50 @@
 
 namespace App\Nova;
 
+use Carbon\Carbon;
+use App\Enums\OutputStatus;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Style extends Resource
+class ProductOutput extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\Models\Style';
+    public static $model = \App\Models\ProductOutput::class;
+
+    /**
+     * The group associated with the resource.
+     *
+     * @return string
+     */
+    public static $group = '<span class="hidden">08</span>Product Section';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'code';
+    public static $title = 'id';
 
     /**
-     * Get the search result subtitle for the resource.
+     * The columns that should be searched.
      *
-     * @return string
+     * @var array
      */
-    public function subtitle()
-    {
-        return "Name: ". Str::title($this->name);
-    }
+    public static $search = [
+        'id',
+    ];
 
     /**
      * The icon of the resource.
@@ -44,17 +54,18 @@ class Style extends Resource
      */
     public static function icon()
     {
-        return 'fas fa-tags';
+      return 'fas fa-share-square';
     }
 
     /**
-     * The columns that should be searched.
+     * Get the displayable label of the resource.
      *
-     * @var array
+     * @return string
      */
-    public static $search = [
-        'name', 'code'
-    ];
+    public static function label()
+    {
+      return "Outputs";
+    }
 
     /**
      * Get the fields displayed by the resource.
@@ -65,7 +76,11 @@ class Style extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable()->onlyOnIndex(),
+            ID::make(__('ID'), 'id')->sortable(),
+
+            Date::make('Date')
+                ->rules('required')
+                ->default(Carbon::now()),
 
             BelongsTo::make('Location')
                 // ->searchable()
@@ -93,17 +108,37 @@ class Style extends Resource
                     return false;
                 }),
 
-            Text::make('Name')
-                ->rules('required', 'max:45', 'string'),
+            BelongsTo::make('Style', 'style', 'App\Nova\Style')
+                ->showCreateRelationButton(),
 
-            Text::make('Code')
-                ->rules('required', 'max:45', 'string')
-                ->creationRules('unique:styles,code')
-                ->updateRules('unique:styles,code,{{resourceId}}'),
-
-            Currency::make('Rate')
-                ->currency('BDT')
+            Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0'),
+
+            Currency::make('rate')
+                ->currency("BDT")
+                ->exceptOnForms(),
+
+            Currency::make('Amount')
+                ->currency("BDT")
+                ->exceptOnForms(),
+
+            Trix::make('Note')
+                ->rules('nullable', 'max:500'),
+
+            Badge::make('Status')->map([
+                    OutputStatus::DRAFT()->getValue()        => 'warning',
+                    OutputStatus::CONFIRMED()->getValue()    => 'info',
+                    OutputStatus::ADD_TO_STOCK()->getValue() => 'success',
+                ])
+                ->label(function(){
+                    return Str::title(Str::of($this->status)->replace('_', " "));
+                }),
+
+            BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')
+                ->showCreateRelationButton(),
+
+            BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')
+                ->nullable(),
         ];
     }
 
@@ -149,40 +184,5 @@ class Style extends Resource
     public function actions(Request $request)
     {
         return [];
-    }
-
-    /**
-     * Get the URI key for the resource.
-     *
-     * @return string
-     */
-    public static function uriKey()
-    {
-        return 'custom-styles';
-    }
-
-    /**
-     * Return the location to redirect the user after creation.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Laravel\Nova\Resource  $resource
-     * @return string
-     */
-    public static function redirectAfterCreate(NovaRequest $request, $resource)
-    {
-        return '/resources/'.static::uriKey();
-    }
-
-
-    /**
-     * Return the location to redirect the user after update.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Laravel\Nova\Resource  $resource
-     * @return string
-     */
-    public static function redirectAfterUpdate(NovaRequest $request, $resource)
-    {
-        return '/resources/'.static::uriKey();
     }
 }

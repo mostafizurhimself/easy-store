@@ -16,6 +16,7 @@ class EmployeeObserver
     {
         $employee->department_id = $employee->designation->department ? $employee->designation->department->id : null ;
         $employee->section_id = $employee->designation->section ? $employee->designation->section->id : null ;
+        $employee->sub_section_id = $employee->designation->subSection ? $employee->designation->subSection->id : null ;
     }
 
     /**

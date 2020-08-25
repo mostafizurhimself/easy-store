@@ -18,6 +18,7 @@ class CreateStylesTable extends Migration
             $table->bigInteger('location_id')->unsigned();
             $table->string('name')->nullable()->index('style_name_index');
             $table->string('code')->unique()->index('style_code_index');
+            $table->double('rate')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');

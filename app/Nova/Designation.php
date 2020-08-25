@@ -33,7 +33,7 @@ class Designation extends Resource
      *
      * @var int
      */
-    public static $priority = 4;
+    public static $priority = 5;
 
     /**
      * The icon of the resource.
@@ -116,7 +116,7 @@ class Designation extends Resource
                 ]),
 
             BelongsTo::make('Location')
-                ->searchable()
+                // ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;

@@ -140,7 +140,7 @@ class ServiceDispatchInvoice extends Resource
                 }),
 
             Trix::make('Description')
-                ->rules('nullable', 'string', 'max:500'),
+                ->rules('nullable', 'max:500'),
 
             Currency::make('Total Amount')
                 ->currency('BDT')

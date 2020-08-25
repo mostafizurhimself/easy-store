@@ -189,7 +189,7 @@ class MaterialDistribution extends Resource
                 ->hideFromIndex(),
 
             Trix::make('Description')
-                ->rules('nullable', 'string', 'max:500'),
+                ->rules('nullable', 'max:500'),
 
             BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")
                 ->exceptOnForms(),

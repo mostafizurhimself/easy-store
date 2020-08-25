@@ -2,48 +2,38 @@
 
 namespace App\Nova;
 
-use App\Enums\ActiveStatus;
-use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Trix;
-use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Illuminate\Validation\Rule;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
-use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
 
-class Service extends Resource
+class SubSection extends Resource
 {
     use SearchesRelations;
-
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\Models\Service';
+    public static $model = \App\Models\SubSection::class;
 
     /**
      * The group associated with the resource.
      *
      * @return string
      */
-    public static $group = '<span class="hidden">07</span>Service Section';
+    public static $group = '<span class="hidden">03</span>Organization';
 
     /**
      * The side nav menu order.
      *
      * @var int
      */
-    public static $priority = 2;
+    public static $priority = 4;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -59,10 +49,17 @@ class Service extends Resource
      */
     public function subtitle()
     {
-        $subtitle = "Code: " . $this->code;
-        $subtitle .= " Location: " . $this->location->name;
+        return "Location: {$this->location->name}";
+    }
 
-        return $subtitle;
+    /**
+     * The icon of the resource.
+     *
+     * @return string
+     */
+    public static function icon()
+    {
+        return 'fas fa-th';
     }
 
     /**
@@ -71,7 +68,7 @@ class Service extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'code'
+        'name',
     ];
 
     /**
@@ -81,18 +78,8 @@ class Service extends Resource
      */
     public static $searchRelations = [
         'location' => ['name'],
-        'category' => ['name'],
+        'section' => ['name'],
     ];
-
-    /**
-     * The icon of the resource.
-     *
-     * @return string
-     */
-    public static function icon()
-    {
-        return 'fas fa-briefcase';
-    }
 
     /**
      * Get the fields displayed by the resource.
@@ -103,7 +90,17 @@ class Service extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make(__('ID'), 'id')->sortable(),
+
+            Text::make('Name')
+                ->sortable()
+                ->rules('required', 'string', 'max:45')
+                ->creationRules([
+                    Rule::unique('sections', 'name')->where('location_id', request()->get('location'))
+                ])
+                ->updateRules([
+                    Rule::unique('sections', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                ]),
 
             BelongsTo::make('Location')
                 // ->searchable()
@@ -131,65 +128,12 @@ class Service extends Resource
                     return false;
                 }),
 
-            Text::make('Name')
-                ->sortable()
-                ->rules('required', 'string', 'max:100')
-                ->creationRules([
-                    Rule::unique('services', 'name')->where('location_id', request()->get('location'))
-                ])
-                ->updateRules([
-                    Rule::unique('services', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
-                ]),
 
-            Text::make('Code')
-                ->sortable()
-                ->help('If you want to generate code automatically, leave the field blank.')
-                ->rules('nullable', 'string', 'max:100')
-                ->creationRules([
-                    Rule::unique('services', 'code')->where('location_id', request()->get('location'))
-                ])
-                ->updateRules([
-                    Rule::unique('services', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
-                ]),
-
-            Images::make('Image', 'service-image')
-                ->croppable(true)
-                ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
-                ->hideFromIndex(),
-
-            Trix::make('Description')
-                ->rules('nullable', 'max:500'),
-
-            Currency::make('Rate')
-                ->currency('BDT')
-                ->rules('required', 'numeric', 'min:0'),
-
-            Text::make('Dispatch')
-                ->displayUsing(function () {
-                    return $this->totalDispatchQuantity . " " . $this->unit->name;
-                })
-                ->onlyOnDetail(),
-
-            Text::make('Receive')
-                ->displayUsing(function () {
-                    return $this->totalReceiveQuantity . " " . $this->unit->name;
-                })
-                ->onlyOnDetail(),
-
-            Text::make('Remaining')
-                ->displayUsing(function () {
-                    return $this->totalRemainingQuantity . " " . $this->unit->name;
-                })
-                ->exceptOnForms(),
-
-            BelongsTo::make('Unit')
-                ->hideFromIndex()
-                ->showCreateRelationButton(),
-
-            AjaxSelect::make('Category', 'category_id')
+            AjaxSelect::make('Section', 'section_id')
                 ->rules('required')
-                ->get('/locations/{location}/service-categories')
-                ->parent('location')->onlyOnForms()
+                ->get('/locations/{location}/sections')
+                ->parent('location')
+                ->onlyOnForms()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -202,10 +146,11 @@ class Service extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\ServiceCategory')
+
+            BelongsTo::make('Section')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\ServiceCategory')
+            BelongsTo::make('Section')
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -218,24 +163,6 @@ class Service extends Resource
                     }
                     return false;
                 }),
-
-            BelongsToManyField::make('Providers', 'providers', 'App\Nova\Provider')
-                ->hideFromIndex(),
-
-            Select::make('Status')
-                ->options(ActiveStatus::titleCaseOptions())
-                ->default(ActiveStatus::ACTIVE())
-                ->rules('required')
-                ->onlyOnForms(),
-
-            Badge::make('Status')->map([
-                ActiveStatus::ACTIVE()->getValue()   => 'success',
-                ActiveStatus::INACTIVE()->getValue() => 'danger',
-            ])
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
-
         ];
     }
 

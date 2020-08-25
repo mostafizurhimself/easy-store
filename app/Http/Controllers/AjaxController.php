@@ -49,6 +49,19 @@ class AjaxController extends Controller
     }
 
     /**
+     * Get the department wise sections
+     *
+     * @param \App\Models\Department
+     * @return array
+     */
+    public function sectionsViaLocation(Location $location)
+    {
+        return $location->sections->map(function($section) {
+            return [ 'value' => $section->id, 'display' => $section->name ];
+        });
+    }
+
+    /**
      * Get the location wise designations
      *
      * @param \App\Models\Location

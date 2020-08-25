@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Designation extends Model
 {
-    use LogsActivity;
+    use LogsActivity, SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.
@@ -42,4 +43,13 @@ class Designation extends Model
        return $this->belongsTo(Section::class);
     }
 
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function subSections()
+    {
+       return $this->belongsTo(SubSection::class);
+    }
 }

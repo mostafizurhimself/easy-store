@@ -146,8 +146,7 @@ class Product extends Resource
                 ->hideFromIndex(),
 
             Trix::make('Description')
-                ->nullable()
-                ->rules('max:500'),
+                ->rules('nullable', 'max:500'),
 
             Currency::make('Cost Price')
                 ->currency('BDT')

@@ -5,7 +5,7 @@ namespace App\Models;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Section extends Model
+class ProductOutput extends Model
 {
     use LogsActivity, SoftDeletes;
 
@@ -24,13 +24,20 @@ class Section extends Model
     protected static $logUnguarded = true;
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['date'];
+
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function department()
+    public function style()
     {
-       return $this->belongsTo(Department::class);
+       return $this->belongsTo(Style::class);
     }
 
     /**
@@ -41,6 +48,16 @@ class Section extends Model
     public function floor()
     {
        return $this->belongsTo(Floor::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function employee()
+    {
+       return $this->belongsTo(Employee::class);
     }
 
 }

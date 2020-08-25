@@ -149,7 +149,7 @@ class AssetTransferOrder extends Resource
                 ->exceptOnForms(),
 
             Trix::make('Note')
-                ->nullable(),
+                ->rules('nullable', 'max:500'),
 
             // BelongsTo::make('Receiver', 'receiver', "App\Nova\Location"),
 

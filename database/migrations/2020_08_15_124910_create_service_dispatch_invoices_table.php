@@ -17,7 +17,7 @@ class CreateServiceDispatchInvoicesTable extends Migration
             $table->id();
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->string('readable_id')->nullable()->index('service_dispatch_invoice_number_index');
-            $table->date('date')->nullable();
+            $table->date('date')->index('service_dispatch_invoice_date_index');
             $table->double('total_amount')->default(0);
             $table->text('description')->nullable();
             $table->bigInteger('provider_id')->unsigned();

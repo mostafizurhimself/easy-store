@@ -5,7 +5,7 @@ namespace App\Models;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Section extends Model
+class SubSection extends Model
 {
     use LogsActivity, SoftDeletes;
 
@@ -28,19 +28,9 @@ class Section extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function department()
+    public function section()
     {
-       return $this->belongsTo(Department::class);
-    }
-
-    /**
-     * Determines one-to-many relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function floor()
-    {
-       return $this->belongsTo(Floor::class);
+       return $this->belongsTo(Section::class);
     }
 
 }

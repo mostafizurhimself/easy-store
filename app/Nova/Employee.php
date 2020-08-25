@@ -63,7 +63,7 @@ class Employee extends Resource
      *
      * @var int
      */
-    public static $priority = 5;
+    public static $priority = 6;
 
     /**
      * The icon of the resource.

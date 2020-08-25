@@ -106,7 +106,7 @@ class FabricReceiveItem extends Resource
                 ->hideFromIndex(),
 
             Trix::make('Note')
-                ->rules('nullable', 'string', 'max:500'),
+                ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
                     PurchaseStatus::DRAFT()->getValue()     => 'warning',

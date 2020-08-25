@@ -24,13 +24,16 @@ use App\Policies\RolePolicy;
 use App\Policies\UnitPolicy;
 use App\Policies\UserPolicy;
 use App\Models\AssetCategory;
+use App\Models\ProductOutput;
 use App\Policies\AssetPolicy;
 use App\Policies\FloorPolicy;
 use App\Policies\StylePolicy;
 use App\Models\FabricCategory;
 use App\Policies\FabricPolicy;
+use App\Models\ProductCategory;
 use App\Models\ServiceCategory;
 use App\Models\ServiceDispatch;
+use App\Policies\ProductPolicy;
 use App\Policies\SectionPolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\SettingPolicy;
@@ -60,8 +63,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\MaterialPurchaseOrder;
 use App\Policies\AssetCategoryPolicy;
+use App\Policies\ProductOutputPolicy;
 use App\Models\ServiceDispatchInvoice;
 use App\Policies\FabricCategoryPolicy;
+use App\Policies\ProductCategoryPolicy;
 use App\Policies\ServiceCategoryPolicy;
 use App\Policies\ServiceDispatchPolicy;
 use Spatie\Activitylog\Models\Activity;
@@ -119,6 +124,9 @@ class AuthServiceProvider extends ServiceProvider
         Service::class                => ServicePolicy::class,
         ServiceDispatchInvoice::class => ServiceDispatchInvoicePolicy::class,
         ServiceDispatch::class        => ServiceDispatchPolicy::class,
+        ProductCategory::class        => ProductCategoryPolicy::class,
+        Product::class                => ProductPolicy::class,
+        ProductOutput::class          => ProductOutputPolicy::class,
         Supplier::class               => SupplierPolicy::class,
         Provider::class               => ProviderPolicy::class,
         Permission::class             => PermissionPolicy::class,

@@ -19,6 +19,7 @@ class CreateEmployeesTable extends Migration
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->bigInteger('department_id')->unsigned()->nullable();
             $table->bigInteger('section_id')->unsigned()->nullable();
+            $table->bigInteger('sub_section_id')->unsigned()->nullable();
             $table->bigInteger('designation_id')->unsigned()->nullable();
             $table->string('first_name')->index('employee_first_name_index');
             $table->string('last_name')->nullable()->index('employee_last_name_index');
@@ -40,6 +41,7 @@ class CreateEmployeesTable extends Migration
             $table->foreign('location_id')->references('id')->on('locations');
             $table->foreign('department_id')->references('id')->on('departments');
             $table->foreign('section_id')->references('id')->on('sections');
+            $table->foreign('sub_section_id')->references('id')->on('sub_sections');
             $table->foreign('designation_id')->references('id')->on('designations');
         });
     }

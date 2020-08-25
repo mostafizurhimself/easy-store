@@ -175,8 +175,7 @@ class Fabric extends Resource
                 ->hideFromIndex(),
 
             Trix::make('Description')
-                ->nullable()
-                ->rules('max:500'),
+                ->rules('nullable', 'max:500'),
 
             Currency::make('Rate')
                 ->currency('BDT')
