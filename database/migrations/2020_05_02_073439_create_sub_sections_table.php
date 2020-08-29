@@ -17,12 +17,14 @@ class CreateSubSectionsTable extends Migration
             $table->id();
             $table->string('readable_id')->nullable();
             $table->bigInteger('location_id')->unsigned()->nullable();
+            $table->bigInteger('department_id')->unsigned();
             $table->bigInteger('section_id')->unsigned();
             $table->string('name')->index('sub_section_name_index');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');
             $table->foreign('section_id')->references('id')->on('sections');
+            $table->foreign('department_id')->references('id')->on('departments');
         });
     }
 

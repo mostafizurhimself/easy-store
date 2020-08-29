@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Section;
 use App\Models\Location;
 use App\Models\Department;
 use App\Models\Designation;
@@ -9,18 +10,6 @@ use Illuminate\Http\Request;
 
 class AjaxController extends Controller
 {
-    /**
-     * Get the location wise departments
-     *
-     * @param \App\Models\Location
-     * @return array
-     */
-    public function departmentsViaLocation(Location $location)
-    {
-        return $location->departments->map(function($department) {
-            return [ 'value' => $department->id, 'display' => $department->name ];
-        });
-    }
 
     /**
      * Get the location wise floors
@@ -32,6 +21,19 @@ class AjaxController extends Controller
     {
         return $location->floors->map(function($floor) {
             return [ 'value' => $floor->id, 'display' => $floor->name ];
+        });
+    }
+
+    /**
+     * Get the location wise floors
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function stylesViaLocation(Location $location)
+    {
+        return $location->styles->map(function($style) {
+            return [ 'value' => $style->id, 'display' => $style->code ];
         });
     }
 
@@ -49,15 +51,41 @@ class AjaxController extends Controller
     }
 
     /**
-     * Get the department wise sections
+     * Get the location wise departments
      *
-     * @param \App\Models\Department
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function departmentsViaLocation(Location $location)
+    {
+        return $location->departments->map(function($department) {
+            return [ 'value' => $department->id, 'display' => $department->name ];
+        });
+    }
+
+    /**
+     * Get the location wise sections
+     *
+     * @param \App\Models\Location
      * @return array
      */
     public function sectionsViaLocation(Location $location)
     {
         return $location->sections->map(function($section) {
             return [ 'value' => $section->id, 'display' => $section->name ];
+        });
+    }
+
+    /**
+     * Get the section wise sub_sections
+     *
+     * @param \App\Models\Section
+     * @return array
+     */
+    public function subSectionsViaSection(Section $section)
+    {
+        return $section->subSections->map(function($subSection) {
+            return [ 'value' => $subSection->id, 'display' => $subSection->name ];
         });
     }
 

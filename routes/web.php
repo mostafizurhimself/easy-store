@@ -21,10 +21,12 @@ Route::get('/', function () {
 
 Route::group(['middleware' => 'nova'], function () {
 
-    Route::get('locations/{location}/departments', 'AjaxController@departmentsViaLocation');
     Route::get('locations/{location}/floors', 'AjaxController@floorsViaLocation');
+    Route::get('locations/{location}/styles', 'AjaxController@stylesViaLocation');
+    Route::get('locations/{location}/departments', 'AjaxController@departmentsViaLocation');
     Route::get('departments/{department}/sections', 'AjaxController@sectionsViaDepartment');
     Route::get('locations/{location}/sections', 'AjaxController@sectionsViaLocation');
+    Route::get('sections/{section}/sub-sections', 'AjaxController@subSectionsViaSection');
     Route::get('locations/{location}/designations', 'AjaxController@designationsViaLocation');
     Route::get('locations/{location}/employees', 'AjaxController@employeesViaLocation');
     Route::get('locations/{location}/fabric-categories', 'AjaxController@fabricCategoriesViaLocation');

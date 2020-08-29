@@ -94,6 +94,7 @@ class Section extends Resource
         'location' => ['name'],
         'department' => ['name'],
         'floor' => ['name'],
+        'employee' => ['readable_id'],
     ];
 
     /**
@@ -213,6 +214,42 @@ class Section extends Resource
 
             BelongsTo::make('Floor')
                 ->exceptOnForms(),
+
+
+            AjaxSelect::make('Section Incharge', 'employee_id')
+                ->rules('nullable')
+                ->get('/locations/{location}/employees')
+                ->parent('location')
+                ->onlyOnForms()
+                ->showOnCreating(function($request){
+                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function($request){
+                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Section Incharge', 'employee', 'App\Nova\Employee')
+                ->exceptOnForms(),
+
+            BelongsTo::make('Section Incharge', 'employee', 'App\Nova\Employee')
+                ->onlyOnForms()
+                ->nullable()
+                ->hideWhenCreating(function($request){
+                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function($request){
+                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                }),
 
             Boolean::make('Active'),
         ];

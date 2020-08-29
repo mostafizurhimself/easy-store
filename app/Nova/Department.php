@@ -5,6 +5,7 @@ namespace App\Nova;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use NovaAjaxSelect\AjaxSelect;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BelongsTo;
@@ -91,6 +92,7 @@ class Department extends Resource
      */
     public static $searchRelations = [
         'location' => ['name'],
+        'employee' => ['readable_id'],
     ];
 
     /**
@@ -139,6 +141,42 @@ class Department extends Resource
                     }
                     return false;
                 }),
+
+            AjaxSelect::make('Department Head', 'employee_id')
+                ->rules('nullable')
+                ->get('/locations/{location}/employees')
+                ->parent('location')
+                ->onlyOnForms()
+                ->showOnCreating(function($request){
+                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function($request){
+                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Department Head', 'employee', 'App\Nova\Employee')
+                ->exceptOnForms(),
+
+            BelongsTo::make('Department Head', 'employee', 'App\Nova\Employee')
+                ->onlyOnForms()
+                ->nullable()
+                ->hideWhenCreating(function($request){
+                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function($request){
+                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                }),
+
 
             Boolean::make('Active'),
         ];

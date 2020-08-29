@@ -68,9 +68,29 @@ class Location extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function sections()
+    {
+       return $this->hasMany(Section::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function floors()
     {
        return $this->hasMany(Floor::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function styles()
+    {
+       return $this->hasMany(Style::class);
     }
 
     /**

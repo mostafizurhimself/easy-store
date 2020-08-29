@@ -79,6 +79,7 @@ class SubSection extends Resource
     public static $searchRelations = [
         'location' => ['name'],
         'section' => ['name'],
+        'employee' => ['readable_id'],
     ];
 
     /**
@@ -129,9 +130,8 @@ class SubSection extends Resource
                 }),
 
 
-            AjaxSelect::make('Section', 'section_id')
-                ->rules('required')
-                ->get('/locations/{location}/sections')
+            AjaxSelect::make('Department', 'department_id')
+                ->get('/locations/{location}/departments')
                 ->parent('location')
                 ->onlyOnForms()
                 ->showOnCreating(function ($request) {
@@ -146,12 +146,12 @@ class SubSection extends Resource
                     return false;
                 }),
 
-
-            BelongsTo::make('Section')
+            BelongsTo::make('Department')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Section')
+            BelongsTo::make('Department')
                 ->onlyOnForms()
+                ->nullable()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -159,6 +159,60 @@ class SubSection extends Resource
                     return false;
                 })->hideWhenUpdating(function ($request) {
                     if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+            AjaxSelect::make('Section', 'section_id')
+                ->get('/departments/{department_id}/sections')
+                ->parent('department_id')
+                ->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Section')
+                ->exceptOnForms(),
+
+            AjaxSelect::make('Supervisor', 'employee_id')
+                ->rules('nullable')
+                ->get('/locations/{location}/employees')
+                ->parent('location')
+                ->onlyOnForms()
+                ->showOnCreating(function($request){
+                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function($request){
+                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')
+                ->exceptOnForms(),
+
+            BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')
+                ->onlyOnForms()
+                ->nullable()
+                ->hideWhenCreating(function($request){
+                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function($request){
+                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
                         return true;
                     }
                     return false;

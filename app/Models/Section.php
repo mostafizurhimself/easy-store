@@ -43,4 +43,24 @@ class Section extends Model
        return $this->belongsTo(Floor::class);
     }
 
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function employee()
+    {
+       return $this->belongsTo(Employee::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function subSections()
+    {
+       return $this->hasMany(SubSection::class);
+    }
+
 }

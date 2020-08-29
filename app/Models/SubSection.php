@@ -28,9 +28,39 @@ class SubSection extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function department()
+    {
+       return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function section()
     {
        return $this->belongsTo(Section::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function employee()
+    {
+       return $this->belongsTo(Employee::class);
+    }
+
+    /**
+     * Determines has-one-through relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     */
+    public function floor()
+    {
+      return $this->hasOneThrough(Floor::class, Section::class);
     }
 
 }

@@ -10,6 +10,7 @@ use App\Models\Employee;
 use App\Models\Material;
 use App\Models\Provider;
 use App\Models\Supplier;
+use App\Models\ProductOutput;
 use App\Models\ServiceDispatch;
 use App\Models\AssetReceiveItem;
 use App\Observers\AssetObserver;
@@ -28,6 +29,7 @@ use App\Observers\ProviderObserver;
 use App\Observers\SupplierObserver;
 use App\Models\MaterialPurchaseItem;
 use Illuminate\Support\ServiceProvider;
+use App\Observers\ProductOutputObserver;
 use App\Observers\ServiceDispatchObserver;
 use App\Observers\AssetReceiveItemObserver;
 use App\Observers\AssetPurchaseItemObserver;
@@ -74,5 +76,6 @@ class ObserverServiceProvider extends ServiceProvider
         Service::observe(ServiceObserver::class);
         ServiceDispatch::observe(ServiceDispatchObserver::class);
         Product::observe(ProductObserver::class);
+        ProductOutput::observe(ProductOutputObserver::class);
     }
 }

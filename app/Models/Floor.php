@@ -30,7 +30,17 @@ class Floor extends Model
      */
     public function sections()
     {
-    //    return $this->hasMany(Section::class);
+       return $this->hasMany(Section::class);
+    }
+
+    /**
+     * Determines has-one-through relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function subSections()
+    {
+      return $this->hasManyThrough(SubSection::class, Section::class);
     }
 
 }

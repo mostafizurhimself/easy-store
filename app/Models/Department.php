@@ -33,4 +33,14 @@ class Department extends Model
        return $this->hasMany(Section::class, 'department_id');
     }
 
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function employee()
+    {
+       return $this->belongsTo(Employee::class);
+    }
+
 }

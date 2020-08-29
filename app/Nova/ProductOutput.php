@@ -10,13 +10,17 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
+use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Titasgailius\SearchRelations\SearchesRelations;
 
 class ProductOutput extends Resource
 {
+    use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
@@ -47,6 +51,18 @@ class ProductOutput extends Resource
         'id',
     ];
 
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'location' => ['name'],
+        'category' => ['name'],
+        'style' => ['code'],
+        'section' => ['name'],
+        'subSection' => ['name'],
+    ];
     /**
      * The icon of the resource.
      *
@@ -108,22 +124,157 @@ class ProductOutput extends Resource
                     return false;
                 }),
 
+            AjaxSelect::make('Category', 'category_id')
+                ->rules('required')
+                ->get('/locations/{location}/product-categories')
+                ->parent('location')->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
+                ->exceptOnForms(),
+
+            BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
+                ->onlyOnForms()
+                ->hideWhenCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+            AjaxSelect::make('Style', 'style_id')
+                ->rules('required')
+                ->get('/locations/{location}/styles')
+                ->parent('location')->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
             BelongsTo::make('Style', 'style', 'App\Nova\Style')
-                ->showCreateRelationButton(),
+                ->exceptOnForms(),
+
+            BelongsTo::make('Style', 'style', 'App\Nova\Style')
+                ->onlyOnForms()
+                ->hideWhenCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0'),
 
             Currency::make('rate')
                 ->currency("BDT")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->hideFromIndex(),
 
             Currency::make('Amount')
                 ->currency("BDT")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->hideFromIndex(),
 
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
+
+            AjaxSelect::make('Section', 'section_id')
+                ->rules('required')
+                ->get('/locations/{location}/sections')
+                ->parent('location')
+                ->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Section')
+                ->onlyOnForms()
+                ->hideWhenCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+
+            BelongsTo::make('Section')
+                ->exceptOnForms(),
+
+            AjaxSelect::make('Sub Section', 'sub_section_id')
+                ->rules('required')
+                ->get('/sections/{section_id}/sub-sections')
+                ->parent('section_id')
+                ->onlyOnForms()
+                ->showOnCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->showOnUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+            BelongsTo::make('Sub Section', 'subSection')
+                ->onlyOnForms()
+                ->hideWhenCreating(function ($request) {
+                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                })->hideWhenUpdating(function ($request) {
+                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
+
+
+            BelongsTo::make('Sub Section', 'subSection')
+                ->exceptOnForms(),
 
             Badge::make('Status')->map([
                     OutputStatus::DRAFT()->getValue()        => 'warning',
@@ -133,12 +284,6 @@ class ProductOutput extends Resource
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
-
-            BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')
-                ->showCreateRelationButton(),
-
-            BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')
-                ->nullable(),
         ];
     }
 

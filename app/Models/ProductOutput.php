@@ -35,6 +35,16 @@ class ProductOutput extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function category()
+    {
+       return $this->belongsTo(ProductCategory::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function style()
     {
        return $this->belongsTo(Style::class);
@@ -45,9 +55,9 @@ class ProductOutput extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function floor()
+    public function section()
     {
-       return $this->belongsTo(Floor::class);
+       return $this->belongsTo(Section::class);
     }
 
     /**
@@ -55,9 +65,9 @@ class ProductOutput extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function employee()
+    public function subSection()
     {
-       return $this->belongsTo(Employee::class);
+       return $this->belongsTo(SubSection::class);
     }
 
 }

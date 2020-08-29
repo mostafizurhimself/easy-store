@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
@@ -94,12 +95,23 @@ class Style extends Resource
                 }),
 
             Text::make('Name')
-                ->rules('required', 'max:45', 'string'),
+                ->rules('required', 'max:45', 'string')
+                ->creationRules([
+                    Rule::unique('styles', 'name')->where('location_id', request()->get('location'))
+                ])
+                ->updateRules([
+                    Rule::unique('styles', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                ]),
+
 
             Text::make('Code')
                 ->rules('required', 'max:45', 'string')
-                ->creationRules('unique:styles,code')
-                ->updateRules('unique:styles,code,{{resourceId}}'),
+                ->creationRules([
+                    Rule::unique('styles', 'code')->where('location_id', request()->get('location'))
+                ])
+                ->updateRules([
+                    Rule::unique('styles', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                ]),
 
             Currency::make('Rate')
                 ->currency('BDT')
