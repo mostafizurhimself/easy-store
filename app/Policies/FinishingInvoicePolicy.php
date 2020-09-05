@@ -106,4 +106,18 @@ class FinishingInvoicePolicy
                 $user->hasPermissionTo('force delete all locations data')) &&
                 $finishingInvoice->status == FinishingStatus::DRAFT();
     }
+
+     /**
+     * Determine whether the user can add a finishing to the invoice.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\FinishingInvoice  $finishingInvoice
+     * @return mixed
+     */
+    public function addFinishing(User $user, FinishingInvoice $finishingInvoice)
+    {
+        // return $finishingInvoice->status == FinishingStatus::DRAFT();
+        return true;
+    }
+
 }

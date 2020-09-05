@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Enums\FinishingStatus;
 use App\Models\User;
 use App\Models\Finishing;
+use App\Enums\FinishingStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FinishingPolicy
@@ -44,7 +44,7 @@ class FinishingPolicy
      */
     public function create(User $user)
     {
-        return $user->isSuperAdmin() || $user->hasPermissionTo('create finishings');
+        return request()->path() != "resources/".\App\Nova\Finishing::uriKey();
     }
 
     /**
