@@ -6,9 +6,9 @@ use App\Traits\HasReadableIdWithDate;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AssetTransferOrder extends Model
+class FinishingInvoice extends Model
 {
-    use LogsActivity, HasReadableIdWithDate, SoftDeletes;
+    use LogsActivity, SoftDeletes, HasReadableIdWithDate;
 
     /**
      * The attributes that are not mass assignable.
@@ -17,7 +17,7 @@ class AssetTransferOrder extends Model
      */
     protected $guarded = [];
 
-     /**
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -31,14 +31,14 @@ class AssetTransferOrder extends Model
      */
     protected static $logUnguarded = true;
 
-    /**
+     /**
      * Set the model readable id prefix
      *
      * @var string
      */
     public static function readableIdPrefix()
     {
-        return "TOA";
+        return "FI";
     }
 
     /**
@@ -46,36 +46,46 @@ class AssetTransferOrder extends Model
      *
      * @var int
      */
-    protected static $readableIdLength = 5;
-
-    /**
-     * Determines one-to-many relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function receiver()
-    {
-       return $this->belongsTo(Location::class)->withTrashed();
-    }
+    protected static $readableIdLength = 4;
 
     /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transferItems()
+    public function finishings()
     {
-       return $this->hasMany(AssetTransferItem::class, 'transfer_order_id');
+       return $this->hasMany(Finishing::class, 'invoice_id');
     }
 
     /**
-     * Get the purchase assets ids as an array
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function floor()
+    {
+       return $this->belongsTo(Floor::class)->withTrashed();
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function section()
+    {
+       return $this->belongsTo(Section::class)->withTrashed();
+    }
+
+    /**
+     * Get the purchase products ids as an array
      *
      * @return array
      */
-    public function assetIds($id = null)
+    public function productIds($id = null)
     {
-        return $this->transferItems->whereNotIn('asset_id', [$id])->pluck('asset_id')->toArray();
+        return $this->finishings->whereNotIn('product_id', [$id])->pluck('product_id')->toArray();
     }
 
     /**
@@ -85,7 +95,18 @@ class AssetTransferOrder extends Model
      */
     public function updateTotalAmount()
     {
-        $this->totalAmount = $this->transferItems->sum('amount');
+        $this->totalAmount = $this->finishings->sum('amount');
+        $this->save();
+    }
+
+    /**
+     * Update the total receive amount
+     *
+     * @return void
+     */
+    public function updateTotalQuantity()
+    {
+        $this->totalQuantity = $this->finishings->sum('quantity');
         $this->save();
     }
 

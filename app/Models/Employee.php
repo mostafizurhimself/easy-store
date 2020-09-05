@@ -69,7 +69,7 @@ class Employee extends Model
      */
     public function department()
     {
-       return $this->belongsTo(Department::class);
+       return $this->belongsTo(Department::class)->withTrashed();
     }
 
     /**
@@ -79,7 +79,7 @@ class Employee extends Model
      */
     public function section()
     {
-       return $this->belongsTo(Section::class);
+       return $this->belongsTo(Section::class)->withTrashed();
     }
 
     /**
@@ -89,7 +89,7 @@ class Employee extends Model
      */
     public function designation()
     {
-       return $this->belongsTo(Designation::class);
+       return $this->belongsTo(Designation::class)->withTrashed();
     }
 
     /**

@@ -51,7 +51,7 @@ class AssetPurchaseItem extends Model
      */
     public function purchaseOrder()
     {
-       return $this->belongsTo(AssetPurchaseOrder::class, 'purchase_order_id');
+       return $this->belongsTo(AssetPurchaseOrder::class, 'purchase_order_id')->withTrashed();
     }
 
     /**
@@ -61,7 +61,7 @@ class AssetPurchaseItem extends Model
      */
     public function asset()
     {
-       return $this->belongsTo(Asset::class);
+       return $this->belongsTo(Asset::class)->withTrashed();
     }
 
     /**

@@ -49,7 +49,7 @@ class Product extends Model implements HasMedia
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class);
+       return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -59,7 +59,7 @@ class Product extends Model implements HasMedia
      */
     public function category()
     {
-       return $this->belongsTo(ProductCategory::class, 'category_id');
+       return $this->belongsTo(ProductCategory::class, 'category_id')->withTrashed();
     }
 
 

@@ -17,6 +17,7 @@ use App\Models\Location;
 use App\Models\Material;
 use App\Models\Provider;
 use App\Models\Supplier;
+use App\Models\Finishing;
 use App\Models\Department;
 use App\Models\Permission;
 use App\Models\Designation;
@@ -37,6 +38,7 @@ use App\Policies\ProductPolicy;
 use App\Policies\SectionPolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\SettingPolicy;
+use App\Models\FinishingInvoice;
 use App\Models\AssetReceiveItem;
 use App\Models\MaterialCategory;
 use App\Policies\EmployeePolicy;
@@ -47,6 +49,7 @@ use App\Policies\SupplierPolicy;
 use App\Models\AssetPurchaseItem;
 use App\Models\AssetTransferItem;
 use App\Models\FabricReceiveItem;
+use App\Policies\FinishingPolicy;
 use App\Models\AssetPurchaseOrder;
 use App\Models\AssetTransferOrder;
 use App\Models\FabricDistribution;
@@ -71,6 +74,7 @@ use App\Policies\ServiceCategoryPolicy;
 use App\Policies\ServiceDispatchPolicy;
 use Spatie\Activitylog\Models\Activity;
 use App\Policies\AssetReceiveItemPolicy;
+use App\Policies\FinishingInvoicePolicy;
 use App\Policies\MaterialCategoryPolicy;
 use App\Policies\AssetPurchaseItemPolicy;
 use App\Policies\AssetTransferItemPolicy;
@@ -127,6 +131,8 @@ class AuthServiceProvider extends ServiceProvider
         ProductCategory::class        => ProductCategoryPolicy::class,
         Product::class                => ProductPolicy::class,
         ProductOutput::class          => ProductOutputPolicy::class,
+        FinishingInvoice::class       => FinishingInvoicePolicy::class,
+        Finishing::class              => FinishingPolicy::class,
         Supplier::class               => SupplierPolicy::class,
         Provider::class               => ProviderPolicy::class,
         Permission::class             => PermissionPolicy::class,

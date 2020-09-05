@@ -7,10 +7,11 @@ use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Location extends Model
 {
-    use LogsActivity, HasReadableId, CamelCasing;
+    use LogsActivity, HasReadableId, CamelCasing, SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.

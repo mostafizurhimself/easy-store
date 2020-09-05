@@ -178,6 +178,7 @@ class Designation extends Resource
 
             AjaxSelect::make('Section', 'section_id')
                 ->get('/departments/{department_id}/sections')
+                ->rules('required')
                 ->parent('department_id')
                 ->onlyOnForms()
                 ->showOnCreating(function ($request) {
@@ -192,12 +193,11 @@ class Designation extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Section')
-                ->exceptOnForms(),
-
-            BelongsTo::make('Section')
+            AjaxSelect::make('Section', 'section_id')
+                ->get('/departments/{department}/sections')
+                ->rules('required')
+                ->parent('department')
                 ->onlyOnForms()
-                ->nullable()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;

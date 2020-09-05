@@ -49,7 +49,7 @@ class Service extends Model implements HasMedia
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class);
+       return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -59,7 +59,7 @@ class Service extends Model implements HasMedia
      */
     public function category()
     {
-       return $this->belongsTo(ServiceCategory::class, 'category_id');
+       return $this->belongsTo(ServiceCategory::class, 'category_id')->withTrashed();
     }
 
     /**
@@ -69,7 +69,7 @@ class Service extends Model implements HasMedia
      */
     public function providers()
     {
-        return $this->belongsToMany(Provider::class, 'service_provider');
+        return $this->belongsToMany(Provider::class, 'service_provider')->withTrashed();
     }
 
     /**

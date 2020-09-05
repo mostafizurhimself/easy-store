@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Enums\PurchaseStatus;
 use App\Traits\HasReadableIdWithDate;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FabricPurchaseOrder extends Model
 {
-    use LogsActivity, HasReadableIdWithDate;
+    use LogsActivity, HasReadableIdWithDate, SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.
@@ -62,7 +63,7 @@ class FabricPurchaseOrder extends Model
      */
     public function supplier()
     {
-       return $this->belongsTo(Supplier::class);
+       return $this->belongsTo(Supplier::class)->withTrashed();
     }
 
     /**

@@ -69,7 +69,7 @@ class MaterialReceiveItem extends Model implements HasMedia
      */
     public function purchaseOrder()
     {
-       return $this->belongsTo(MaterialPurchaseOrder::class, 'purchase_order_id');
+       return $this->belongsTo(MaterialPurchaseOrder::class, 'purchase_order_id')->withTrashed();
     }
 
     /**
@@ -79,7 +79,7 @@ class MaterialReceiveItem extends Model implements HasMedia
      */
     public function purchaseItem()
     {
-       return $this->belongsTo(MaterialPurchaseItem::class, 'purchase_item_id');
+       return $this->belongsTo(MaterialPurchaseItem::class, 'purchase_item_id')->withTrashed();
     }
 
     /**
@@ -89,7 +89,7 @@ class MaterialReceiveItem extends Model implements HasMedia
      */
     public function material()
     {
-       return $this->belongsTo(Material::class, 'material_id');
+       return $this->belongsTo(Material::class, 'material_id')->withTrashed();
     }
 
     /**

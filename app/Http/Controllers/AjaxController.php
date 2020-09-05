@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Floor;
 use App\Models\Section;
 use App\Models\Location;
 use App\Models\Department;
@@ -72,6 +73,19 @@ class AjaxController extends Controller
     public function sectionsViaLocation(Location $location)
     {
         return $location->sections->map(function($section) {
+            return [ 'value' => $section->id, 'display' => $section->name ];
+        });
+    }
+
+    /**
+     * Get the floor wise sections
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function sectionsViaFloor(Floor $floor)
+    {
+        return $floor->sections->map(function($section) {
             return [ 'value' => $section->id, 'display' => $section->name ];
         });
     }

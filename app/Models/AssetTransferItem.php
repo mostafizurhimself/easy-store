@@ -51,7 +51,7 @@ class AssetTransferItem extends Model
      */
     public function transferOrder()
     {
-       return $this->belongsTo(AssetTransferOrder::class, 'transfer_order_id');
+       return $this->belongsTo(AssetTransferOrder::class, 'transfer_order_id')->withTrashed();
     }
 
     /**
@@ -61,7 +61,7 @@ class AssetTransferItem extends Model
      */
     public function asset()
     {
-       return $this->belongsTo(Asset::class);
+       return $this->belongsTo(Asset::class)->withTrashed();
     }
 
     /**

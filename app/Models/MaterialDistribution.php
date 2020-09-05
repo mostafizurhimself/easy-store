@@ -50,7 +50,7 @@ class MaterialDistribution extends Model
      */
     public function material()
     {
-       return $this->belongsTo(Material::class);
+       return $this->belongsTo(Material::class)->withTrashed();
     }
 
     /**
@@ -60,7 +60,7 @@ class MaterialDistribution extends Model
      */
     public function receiver()
     {
-       return $this->belongsTo(Employee::class, 'receiver_id');
+       return $this->belongsTo(Employee::class, 'receiver_id')->withTrashed();
     }
 
     /**

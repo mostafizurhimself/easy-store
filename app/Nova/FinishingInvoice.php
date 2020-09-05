@@ -2,45 +2,52 @@
 
 namespace App\Nova;
 
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\Trix;
+use App\Enums\FinishingStatus;
+use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
-use Illuminate\Validation\Rule;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\FinishingInvoices\ConfirmFinishing;
 
-class SubSection extends Resource
+class FinishingInvoice extends Resource
 {
-    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\SubSection::class;
+    public static $model = \App\Models\FinishingInvoice::class;
 
     /**
      * The group associated with the resource.
      *
      * @return string
      */
-    public static $group = '<span class="hidden">03</span>Organization';
+    public static $group = '<span class="hidden">09</span>Finishing Section';
 
     /**
      * The side nav menu order.
      *
      * @var int
      */
-    public static $priority = 4;
+    public static $priority = 1;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'readable_id';
 
     /**
      * Get the search result subtitle for the resource.
@@ -49,7 +56,17 @@ class SubSection extends Resource
      */
     public function subtitle()
     {
-        return "Location: {$this->location->name}";
+      return "Location: {$this->location->name}";
+    }
+
+    /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+      return "Invoices";
     }
 
     /**
@@ -59,7 +76,7 @@ class SubSection extends Resource
      */
     public static function icon()
     {
-        return 'fas fa-th';
+        return 'fas fa-file-invoice';
     }
 
     /**
@@ -68,18 +85,7 @@ class SubSection extends Resource
      * @var array
      */
     public static $search = [
-        'name',
-    ];
-
-    /**
-     * The relationship columns that should be searched.
-     *
-     * @var array
-     */
-    public static $searchRelations = [
-        'location' => ['name'],
-        'section' => ['name'],
-        'employee' => ['readable_id'],
+        'readable_id',
     ];
 
     /**
@@ -91,17 +97,16 @@ class SubSection extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make(__('ID'), 'id')->sortable(),
-
-            Text::make('Name')
-                ->sortable()
-                ->rules('required', 'string', 'max:45')
-                ->creationRules([
-                    Rule::unique('sections', 'name')->where('location_id', request()->get('location'))
-                ])
-                ->updateRules([
-                    Rule::unique('sections', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+            RouterLink::make('Invoice', 'id')
+                ->withMeta([
+                    'label' => $this->readableId,
                 ]),
+
+            Date::make('Date')
+                ->rules('required')
+                ->default(function($request){
+                    return Carbon::now();
+                }),
 
             BelongsTo::make('Location')
                 // ->searchable()
@@ -129,12 +134,21 @@ class SubSection extends Resource
                     return false;
                 }),
 
+            Number::make('Total Quantity')
+                ->exceptOnForms(),
 
-            AjaxSelect::make('Department', 'department_id')
-                ->get('/locations/{location}/departments')
+            Currency::make('Total Amount')
+                ->currency('BDT')
+                ->exceptOnForms(),
+
+            Trix::make('Note')
+                ->rules('nullable', 'max:500'),
+
+
+            AjaxSelect::make('Floor', 'floor_id')
                 ->rules('required')
-                ->parent('location')
-                ->onlyOnForms()
+                ->get('/locations/{location}/floors')
+                ->parent('location')->onlyOnForms()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -147,10 +161,10 @@ class SubSection extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Department')
+            BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Department')
+            BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -165,9 +179,8 @@ class SubSection extends Resource
                 }),
 
             AjaxSelect::make('Section', 'section_id')
-                ->get('/departments/{department_id}/sections')
-                ->rules('required')
-                ->parent('department_id')
+                ->get('/floors/{floor_id}/sections')
+                ->parent('floor_id')
                 ->onlyOnForms()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -182,9 +195,8 @@ class SubSection extends Resource
                 }),
 
             AjaxSelect::make('Section', 'section_id')
-                ->get('/departments/{department}/sections')
-                ->rules('required')
-                ->parent('department')
+                ->get('/floors/{floor}/sections')
+                ->parent('floor')
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -198,40 +210,17 @@ class SubSection extends Resource
                     return false;
                 }),
 
-            AjaxSelect::make('Supervisor', 'employee_id')
-                ->rules('nullable')
-                ->get('/locations/{location}/employees')
-                ->parent('location')
-                ->onlyOnForms()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
+            Badge::make('Status')->map([
+                    FinishingStatus::DRAFT()->getValue()     => 'warning',
+                    FinishingStatus::CONFIRMED()->getValue() => 'info',
+                    FinishingStatus::ADDED()->getValue()     => 'success',
+                ])
+                ->label(function(){
+                    return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
-            BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')
-                ->exceptOnForms(),
+            HasMany::make('Finishings', 'finishings', 'App\Nova\Finishing'),
 
-            BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')
-                ->onlyOnForms()
-                ->nullable()
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                }),
         ];
     }
 
@@ -276,6 +265,8 @@ class SubSection extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new ConfirmFinishing,
+        ];
     }
 }

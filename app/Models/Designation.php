@@ -30,7 +30,7 @@ class Designation extends Model
      */
     public function department()
     {
-       return $this->belongsTo(Department::class);
+       return $this->belongsTo(Department::class)->withTrashed();
     }
 
     /**
@@ -40,7 +40,7 @@ class Designation extends Model
      */
     public function section()
     {
-       return $this->belongsTo(Section::class);
+       return $this->belongsTo(Section::class)->withTrashed();
     }
 
     /**
@@ -50,6 +50,6 @@ class Designation extends Model
      */
     public function subSections()
     {
-       return $this->belongsTo(SubSection::class);
+       return $this->belongsTo(SubSection::class)->withTrashed();
     }
 }

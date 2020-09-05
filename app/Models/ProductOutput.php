@@ -37,7 +37,7 @@ class ProductOutput extends Model
      */
     public function category()
     {
-       return $this->belongsTo(ProductCategory::class);
+       return $this->belongsTo(ProductCategory::class)->withTrashed();
     }
 
     /**
@@ -47,7 +47,7 @@ class ProductOutput extends Model
      */
     public function style()
     {
-       return $this->belongsTo(Style::class);
+       return $this->belongsTo(Style::class)->withTrashed();
     }
 
     /**
@@ -57,7 +57,7 @@ class ProductOutput extends Model
      */
     public function section()
     {
-       return $this->belongsTo(Section::class);
+       return $this->belongsTo(Section::class)->withTrashed();
     }
 
     /**
@@ -67,7 +67,7 @@ class ProductOutput extends Model
      */
     public function subSection()
     {
-       return $this->belongsTo(SubSection::class);
+       return $this->belongsTo(SubSection::class)->withTrashed();
     }
 
 }

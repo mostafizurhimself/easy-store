@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use App\Enums\DistributionStatus;
+use App\Traits\CamelCasing;
 use App\Traits\HasReadableIdWithDate;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class FabricDistribution extends Model
+class Finishing extends Model
 {
-    use LogsActivity, SoftDeletes, HasReadableIdWithDate;
+    use LogsActivity, SoftDeletes, HasReadableIdWithDate, CamelCasing;
 
     /**
      * The attributes that are not mass assignable.
@@ -25,7 +26,6 @@ class FabricDistribution extends Model
      */
     protected static $logUnguarded = true;
 
-
     /**
      * Set the model readable id prefix
      *
@@ -33,7 +33,7 @@ class FabricDistribution extends Model
      */
     public static function readableIdPrefix()
     {
-        return "FD";
+        return "F";
     }
 
     /**
@@ -48,9 +48,9 @@ class FabricDistribution extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function fabric()
+    public function invoice()
     {
-       return $this->belongsTo(Fabric::class)->withTrashed();
+       return $this->belongsTo(FinishingInvoice::class, 'invoice_id')->withTrashed();
     }
 
     /**
@@ -58,31 +58,19 @@ class FabricDistribution extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function receiver()
+    public function product()
     {
-       return $this->belongsTo(Employee::class, 'receiver_id')->withTrashed();
+       return $this->belongsTo(Product::class)->withTrashed();
     }
 
     /**
-     * Get the unit for the fabrics
+     * Determines one-to-many relation
      *
-     * @return string
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function getUnitAttribute()
+    public function style()
     {
-        return $this->fabric->unit->name;
+       return $this->belongsTo(Style::class)->withTrashed();
     }
-
-    /**
-     * Scope a query to only include draft distributions.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeDraft($query)
-    {
-        return $query->where('status', DistributionStatus::DRAFT());
-    }
-
 
 }

@@ -69,7 +69,7 @@ class FabricReceiveItem extends Model implements HasMedia
      */
     public function purchaseOrder()
     {
-       return $this->belongsTo(FabricPurchaseOrder::class, 'purchase_order_id');
+       return $this->belongsTo(FabricPurchaseOrder::class, 'purchase_order_id')->withTrashed();
     }
 
     /**
@@ -79,7 +79,7 @@ class FabricReceiveItem extends Model implements HasMedia
      */
     public function purchaseItem()
     {
-       return $this->belongsTo(FabricPurchaseItem::class, 'purchase_item_id');
+       return $this->belongsTo(FabricPurchaseItem::class, 'purchase_item_id')->withTrashed();
     }
 
     /**
@@ -89,7 +89,7 @@ class FabricReceiveItem extends Model implements HasMedia
      */
     public function fabric()
     {
-       return $this->belongsTo(Fabric::class, 'fabric_id');
+       return $this->belongsTo(Fabric::class, 'fabric_id')->withTrashed();
     }
 
     /**

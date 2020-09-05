@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Style extends Model
 {
-    use LogsActivity;
+    use LogsActivity, SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.

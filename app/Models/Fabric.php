@@ -57,7 +57,7 @@ class Fabric extends Model implements HasMedia
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class);
+       return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -67,7 +67,7 @@ class Fabric extends Model implements HasMedia
      */
     public function category()
     {
-       return $this->belongsTo(FabricCategory::class, 'category_id');
+       return $this->belongsTo(FabricCategory::class, 'category_id')->withTrashed();
     }
 
     /**
@@ -77,7 +77,7 @@ class Fabric extends Model implements HasMedia
      */
     public function suppliers()
     {
-        return $this->belongsToMany(Supplier::class);
+        return $this->belongsToMany(Supplier::class)->withTrashed();
     }
 
     /**

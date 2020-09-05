@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0dfc6e3f2a83b4ecf578a970c5e98b1",
+    "content-hash": "0549ecefbbf8285102772048307986e3",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -2160,6 +2160,48 @@
                 "watermark"
             ],
             "time": "2019-11-02T09:15:47+00:00"
+        },
+        {
+            "name": "jackabox/nova-duplicate-field",
+            "version": "0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jackabox/nova-duplicate-field.git",
+                "reference": "c7c2ccd3bcbc5e05ea05303c6080da0ef9f4f907"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jackabox/nova-duplicate-field/zipball/c7c2ccd3bcbc5e05ea05303c6080da0ef9f4f907",
+                "reference": "c7c2ccd3bcbc5e05ea05303c6080da0ef9f4f907",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jackabox\\DuplicateField\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jackabox\\DuplicateField\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field to duplicate records.",
+            "keywords": [
+                "duplicate",
+                "laravel",
+                "nova"
+            ],
+            "time": "2019-11-27T13:04:06+00:00"
         },
         {
             "name": "kirschbaum-development/nova-inline-relationship",

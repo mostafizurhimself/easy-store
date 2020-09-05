@@ -51,7 +51,7 @@ class FabricPurchaseItem extends Model
      */
     public function purchaseOrder()
     {
-       return $this->belongsTo(FabricPurchaseOrder::class, 'purchase_order_id');
+       return $this->belongsTo(FabricPurchaseOrder::class, 'purchase_order_id')->withTrashed();
     }
 
     /**
@@ -61,7 +61,7 @@ class FabricPurchaseItem extends Model
      */
     public function fabric()
     {
-       return $this->belongsTo(Fabric::class);
+       return $this->belongsTo(Fabric::class)->withTrashed();
     }
 
     /**

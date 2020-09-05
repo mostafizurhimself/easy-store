@@ -83,7 +83,7 @@ class Supplier extends Model implements HasMedia
      */
     public function assets()
     {
-        return $this->belongsToMany(Asset::class);
+        return $this->belongsToMany(Asset::class)->withTrashed();
     }
 
     /**
@@ -93,7 +93,7 @@ class Supplier extends Model implements HasMedia
      */
     public function fabrics()
     {
-        return $this->belongsToMany(Fabric::class);
+        return $this->belongsToMany(Fabric::class)->withTrashed();
     }
 
     /**
@@ -103,6 +103,6 @@ class Supplier extends Model implements HasMedia
      */
     public function materials()
     {
-        return $this->belongsToMany(Material::class);
+        return $this->belongsToMany(Material::class)->withTrashed();
     }
 }

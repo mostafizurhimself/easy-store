@@ -30,7 +30,7 @@ class SubSection extends Model
      */
     public function department()
     {
-       return $this->belongsTo(Department::class);
+       return $this->belongsTo(Department::class)->withTrashed();
     }
 
     /**
@@ -40,7 +40,7 @@ class SubSection extends Model
      */
     public function section()
     {
-       return $this->belongsTo(Section::class);
+       return $this->belongsTo(Section::class)->withTrashed();
     }
 
     /**
@@ -50,7 +50,7 @@ class SubSection extends Model
      */
     public function employee()
     {
-       return $this->belongsTo(Employee::class);
+       return $this->belongsTo(Employee::class)->withTrashed();
     }
 
     /**
