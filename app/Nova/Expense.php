@@ -268,7 +268,7 @@ class Expense extends Resource
                 ->currency('BDT')
                 ->exceptOnForms(),
 
-            Files::make('Attachments', 'receive-item-attachments')
+            Files::make('Attachments', 'expense-attachments')
                 ->singleMediaRules('max:5000') // max 5000kb
                 ->hideFromIndex(),
 

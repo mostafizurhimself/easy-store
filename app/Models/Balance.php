@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasReadableIdWithDate;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Balance extends Model implements HasMedia
 {
-    use LogsActivity, SoftDeletes, InteractsWithMedia;
+    use LogsActivity, SoftDeletes, InteractsWithMedia, HasReadableIdWithDate;
 
     /**
      * The attributes that are not mass assignable.
@@ -26,6 +27,31 @@ class Balance extends Model implements HasMedia
     protected static $logUnguarded = true;
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['date'];
+
+    /**
+     * Set the model readable id prefix
+     *
+     * @var string
+     */
+    public static function readableIdPrefix()
+    {
+        return "B";
+    }
+
+    /**
+     * Set the model readable id length
+     *
+     * @var int
+     */
+    protected static $readableIdLength = 5;
+
+
+    /**
      * Register the media collections
      *
      * @return void
@@ -33,6 +59,16 @@ class Balance extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
        $this->addMediaCollection('balance-attachments')->singleFile();
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function expenser()
+    {
+       return $this->belongsTo(Expenser::class);
     }
 
 }

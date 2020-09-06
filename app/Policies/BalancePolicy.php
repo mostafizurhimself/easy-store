@@ -2,9 +2,10 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\Balance;
 use App\Models\User;
+use App\Models\Balance;
+use App\Enums\BalanceStatus;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BalancePolicy
 {
@@ -55,9 +56,10 @@ class BalancePolicy
      */
     public function update(User $user, Balance $balance)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update balances') && $user->locationId == $balance->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+                $user->hasPermissionTo('update all locations data')) &&
+                $balance->status == BalanceStatus::DRAFT();
     }
 
     /**
@@ -69,9 +71,10 @@ class BalancePolicy
      */
     public function delete(User $user, Balance $balance)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete balances') && $user->locationId == $balance->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+                $user->hasPermissionTo('delete all locations data')) &&
+                $balance->status == BalanceStatus::DRAFT();
     }
 
     /**
@@ -83,9 +86,10 @@ class BalancePolicy
      */
     public function restore(User $user, Balance $balance)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore balances') && $user->locationId == $balance->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+                $user->hasPermissionTo('restore all locations data')) &&
+                $balance->status == BalanceStatus::DRAFT();
     }
 
     /**
@@ -97,8 +101,9 @@ class BalancePolicy
      */
     public function forceDelete(User $user, Balance $balance)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete balances') && $user->locationId == $balance->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+                $user->hasPermissionTo('force delete all locations data')) &&
+                $balance->status == BalanceStatus::DRAFT();
     }
 }

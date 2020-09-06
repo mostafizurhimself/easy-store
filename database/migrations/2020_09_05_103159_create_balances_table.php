@@ -16,18 +16,19 @@ class CreateBalancesTable extends Migration
         Schema::create('balances', function (Blueprint $table) {
             $table->id();
             $table->string('readable_id')->nullable();
+            $table->bigInteger('location_id')->unsigned()->nullable();
             $table->bigInteger('expenser_id')->unsigned()->nullable();
+            $table->date('date');
             $table->text('description')->nullable();
             $table->string('reference')->nullable()->index('balance_reference_index');
             $table->double('amount')->default(0);
             $table->string('method');
             $table->string('approved_by')->nullable()->index('balance_approved_by_index');
-            $table->bigInteger('created_by')->unsigned();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('expenser_id')->references('id')->on('expensers');
-            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreign('location_id')->references('id')->on('locations');
         });
     }
 
@@ -38,6 +39,6 @@ class CreateBalancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('expenser_balances');
+        Schema::dropIfExists('balances');
     }
 }
