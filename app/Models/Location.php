@@ -213,4 +213,24 @@ class Location extends Model
     {
        return $this->hasMany(Product::class);
     }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function expensers()
+    {
+       return $this->hasMany(Expenser::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function expenseCategories()
+    {
+       return $this->hasMany(ExpenseCategory::class);
+    }
 }

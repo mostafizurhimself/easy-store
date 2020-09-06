@@ -261,4 +261,31 @@ class AjaxController extends Controller
             return [ 'value' => $product->id, 'display' => $product->name ];
         });
     }
+
+    /**
+     * Get the location wise expensers
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function expensersViaLocation(Location $location)
+    {
+        return $location->expensers->map(function($expenser) {
+            return [ 'value' => $expenser->id, 'display' => $expenser->name ];
+        });
+    }
+
+    /**
+     * Get the location wise service categories
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function expenseCategoriesViaLocation(Location $location)
+    {
+        return $location->expenseCategories->map(function($category) {
+            return [ 'value' => $category->id, 'display' => $category->name ];
+        });
+    }
+
 }

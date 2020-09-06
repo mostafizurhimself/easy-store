@@ -92,7 +92,7 @@ class ProductOutput extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make(__('ID'), 'id')->sortable(),
+            ID::make(__('ID'), 'id')->sortable()->onlyOnIndex(),
 
             Date::make('Date')
                 ->rules('required')

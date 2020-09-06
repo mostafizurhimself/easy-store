@@ -60,7 +60,7 @@ class Unit extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()->sortable()->onlyOnIndex(),
 
             Text::make('Name')
                 ->rules('required', 'max:45')

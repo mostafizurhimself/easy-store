@@ -3,13 +3,15 @@
 namespace App\Models;
 
 use App\Enums\PurchaseStatus;
+use Spatie\MediaLibrary\HasMedia;
 use App\Traits\HasReadableIdWithDate;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AssetPurchaseOrder extends Model
+class AssetPurchaseOrder extends Model implements HasMedia
 {
-    use LogsActivity, HasReadableIdWithDate, SoftDeletes;
+    use LogsActivity, HasReadableIdWithDate, SoftDeletes, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.
@@ -38,6 +40,16 @@ class AssetPurchaseOrder extends Model
      * @var boolean
      */
     protected static $logUnguarded = true;
+
+    /**
+     * Register the media collections
+     *
+     * @return void
+     */
+    public function registerMediaCollections(): void
+    {
+       $this->addMediaCollection('purchase-order-attachments')->singleFile();
+    }
 
     /**
      * Set the model readable id prefix

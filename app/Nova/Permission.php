@@ -114,6 +114,7 @@ class Permission extends Resource
                 ->rules('required')
                 ->hideFromIndex()
                 ->hideFromDetail(),
+
             Text::make(__('Name'))
                 ->displayUsing(function(){
                     return Str::title($this->name);

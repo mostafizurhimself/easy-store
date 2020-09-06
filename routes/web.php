@@ -40,5 +40,7 @@ Route::group(['middleware' => 'nova'], function () {
     Route::get('locations/{location}/services', 'AjaxController@servicesViaLocation');
     Route::get('locations/{location}/product-categories', 'AjaxController@productCategoriesViaLocation');
     Route::get('locations/{location}/products', 'AjaxController@productsViaLocation');
+    Route::get('locations/{location}/expensers', 'AjaxController@expensersViaLocation');
+    Route::get('locations/{location}/expense-categories', 'AjaxController@expenseCategoriesViaLocation');
 
 });

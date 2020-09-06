@@ -49,8 +49,8 @@ class MaterialCategory extends Resource
      */
     public function subtitle()
     {
-        $subtitle = "Total Materials: {$this->materials->count()},";
-        $subtitle .= " Location: {$this->location->name}";
+        $subtitle = "Total Materials: {$this->materials->count()}";
+        $subtitle .= ", Location: {$this->location->name}";
         return $subtitle;
     }
 
@@ -102,7 +102,7 @@ class MaterialCategory extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()->sortable()->onlyOnIndex(),
 
             BelongsTo::make('Location')
                 ->searchable()

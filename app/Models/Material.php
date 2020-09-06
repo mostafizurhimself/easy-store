@@ -39,7 +39,7 @@ class Material extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('material-image')->singleFile();
+       $this->addMediaCollection('material-images')->singleFile();
     }
 
     /**

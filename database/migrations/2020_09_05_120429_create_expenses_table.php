@@ -19,10 +19,12 @@ class CreateExpensesTable extends Migration
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->bigInteger('expenser_id')->unsigned()->nullable();
             $table->bigInteger('category_id')->unsigned();
-            $table->date('date');
+            $table->date('date')->index('expense_date_index');
             $table->text('description')->nullable();
+            $table->string('reference')->nullable()->index('expense_reference_index');
+            $table->string('po_number')->nullable()->index('expense_po_number_index');
             $table->double('amount')->default(0);
-            $table->string('approved_by')->nullable();
+            $table->string('approved_by')->nullable()->index('expense_approved_by_index');
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();

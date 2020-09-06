@@ -47,7 +47,7 @@ class Fabric extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('fabric-image')->singleFile();
+       $this->addMediaCollection('fabric-images')->singleFile();
     }
 
     /**

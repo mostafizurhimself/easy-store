@@ -91,7 +91,7 @@ class Product extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make(__('ID'), 'id')->sortable(),
+            ID::make(__('ID'), 'id')->sortable()->onlyOnIndex(),
 
             BelongsTo::make('Location')
                 // ->searchable()
@@ -140,7 +140,7 @@ class Product extends Resource
                     Rule::unique('products', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
 
-            Images::make('Image', 'product-image')
+            Images::make('Image', 'product-images')
                 ->croppable(true)
                 ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
                 ->hideFromIndex(),

@@ -5,15 +5,13 @@ namespace App\Models;
 use App\Facades\Settings;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
-use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Provider extends Model implements HasMedia
+class Provider extends Model
 {
-    use LogsActivity, InteractsWithMedia, SoftDeletes, HasReadableId, CamelCasing;
+    use LogsActivity, SoftDeletes, HasReadableId, CamelCasing;
 
     /**
      * The attributes that are not mass assignable.
@@ -45,16 +43,6 @@ class Provider extends Model implements HasMedia
      * @var int
      */
     protected static $readableIdLength = 5;
-
-    /**
-     * Register the media collections
-     *
-     * @return void
-     */
-    public function registerMediaCollections(): void
-    {
-       $this->addMediaCollection('provider-contact-person-image')->singleFile();
-    }
 
     /**
      * Get the provider address

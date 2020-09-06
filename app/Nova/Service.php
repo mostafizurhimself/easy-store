@@ -103,7 +103,7 @@ class Service extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()->sortable()->onlyOnIndex(),
 
             BelongsTo::make('Location')
                 // ->searchable()

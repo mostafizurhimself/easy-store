@@ -40,6 +40,19 @@ class AssetCategory extends Resource
      */
     public static $title = 'name';
 
+      /**
+     * Get the search result subtitle for the resource.
+     *
+     * @return string
+     */
+    public function subtitle()
+    {
+        $subtitle = "Total Assets: {$this->assets->count()}";
+        $subtitle .= ", Location: {$this->location->name}";
+        return $subtitle;
+    }
+
+
     /**
      * The columns that should be searched.
      *
@@ -78,7 +91,7 @@ class AssetCategory extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()->sortable()->onlyOnIndex(),
 
             BelongsTo::make('Location')
                 // ->searchable()

@@ -23,4 +23,14 @@ class ExpenseCategory extends Model
      */
     protected static $logUnguarded = true;
 
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function expenses()
+    {
+       return $this->hasMany(Expense::class);
+    }
+
 }

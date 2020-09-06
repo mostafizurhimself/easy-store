@@ -9,10 +9,13 @@ use App\Models\Asset;
 use App\Models\Floor;
 use App\Models\Style;
 use App\Models\Fabric;
+use App\Models\Balance;
+use App\Models\Expense;
 use App\Models\Section;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Employee;
+use App\Models\Expenser;
 use App\Models\Location;
 use App\Models\Material;
 use App\Models\Provider;
@@ -31,17 +34,21 @@ use App\Policies\FloorPolicy;
 use App\Policies\StylePolicy;
 use App\Models\FabricCategory;
 use App\Policies\FabricPolicy;
+use App\Models\ExpenseCategory;
 use App\Models\ProductCategory;
 use App\Models\ServiceCategory;
 use App\Models\ServiceDispatch;
+use App\Policies\BalancePolicy;
+use App\Policies\ExpensePolicy;
 use App\Policies\ProductPolicy;
 use App\Policies\SectionPolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\SettingPolicy;
-use App\Models\FinishingInvoice;
 use App\Models\AssetReceiveItem;
+use App\Models\FinishingInvoice;
 use App\Models\MaterialCategory;
 use App\Policies\EmployeePolicy;
+use App\Policies\ExpenserPolicy;
 use App\Policies\LocationPolicy;
 use App\Policies\MaterialPolicy;
 use App\Policies\ProviderPolicy;
@@ -69,6 +76,7 @@ use App\Policies\AssetCategoryPolicy;
 use App\Policies\ProductOutputPolicy;
 use App\Models\ServiceDispatchInvoice;
 use App\Policies\FabricCategoryPolicy;
+use App\Policies\ExpenseCategoryPolicy;
 use App\Policies\ProductCategoryPolicy;
 use App\Policies\ServiceCategoryPolicy;
 use App\Policies\ServiceDispatchPolicy;
@@ -134,6 +142,10 @@ class AuthServiceProvider extends ServiceProvider
         FinishingInvoice::class       => FinishingInvoicePolicy::class,
         Finishing::class              => FinishingPolicy::class,
         Supplier::class               => SupplierPolicy::class,
+        Expenser::class               => ExpenserPolicy::class,
+        ExpenseCategory::class        => ExpenseCategoryPolicy::class,
+        Expense::class                => ExpensePolicy::class,
+        Balance::class                => BalancePolicy::class,
         Provider::class               => ProviderPolicy::class,
         Permission::class             => PermissionPolicy::class,
         Role::class                   => RolePolicy::class,

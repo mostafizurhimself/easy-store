@@ -3,13 +3,15 @@
 namespace App\Models;
 
 use App\Traits\CamelCasing;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ContactPerson extends Model
+class ContactPerson extends Model implements HasMedia
 {
-    use LogsActivity, SoftDeletes, CamelCasing;
+    use LogsActivity, SoftDeletes, CamelCasing, InteractsWithMedia;
 
     /**
      * The table associated with the model.
@@ -38,6 +40,16 @@ class ContactPerson extends Model
     public function contactable()
     {
         return $this->morphTo();
+    }
+
+     /**
+     * Register the media collections
+     *
+     * @return void
+     */
+    public function registerMediaCollections(): void
+    {
+       $this->addMediaCollection('contact-person-images')->singleFile();
     }
 
 }

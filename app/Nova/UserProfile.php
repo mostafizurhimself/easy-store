@@ -49,7 +49,7 @@ class UserProfile extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()->sortable()->onlyOnIndex(),
 
             Images::make('Profile Picture', 'avatar') // second parameter is the media collection name
             ->croppable(false)

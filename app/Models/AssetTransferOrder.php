@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Spatie\MediaLibrary\HasMedia;
 use App\Traits\HasReadableIdWithDate;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AssetTransferOrder extends Model
+class AssetTransferOrder extends Model implements HasMedia
 {
-    use LogsActivity, HasReadableIdWithDate, SoftDeletes;
+    use LogsActivity, HasReadableIdWithDate, SoftDeletes, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.
@@ -30,6 +32,16 @@ class AssetTransferOrder extends Model
      * @var boolean
      */
     protected static $logUnguarded = true;
+
+    /**
+     * Register the media collections
+     *
+     * @return void
+     */
+    public function registerMediaCollections(): void
+    {
+       $this->addMediaCollection('transfer-order-attachments')->singleFile();
+    }
 
     /**
      * Set the model readable id prefix

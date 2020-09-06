@@ -138,7 +138,11 @@ class Supplier extends Resource
                 ->rules('required', 'numeric', 'min:0')
                 ->exceptOnForms(),
 
-            Boolean::make('Active'),
+            Select::make('Status')
+                ->options(ActiveStatus::titleCaseOptions())
+                ->rules('required')
+                ->onlyOnForms(),
+
 
             MorphMany::make('Address'),
 

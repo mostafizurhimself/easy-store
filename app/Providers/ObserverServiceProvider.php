@@ -7,6 +7,7 @@ use App\Models\Fabric;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\Employee;
+use App\Models\Expenser;
 use App\Models\Material;
 use App\Models\Provider;
 use App\Models\Supplier;
@@ -25,6 +26,7 @@ use App\Observers\ProductObserver;
 use App\Observers\ServiceObserver;
 use App\Models\MaterialReceiveItem;
 use App\Observers\EmployeeObserver;
+use App\Observers\ExpenserObserver;
 use App\Observers\MaterialObserver;
 use App\Observers\ProviderObserver;
 use App\Observers\SupplierObserver;
@@ -80,5 +82,6 @@ class ObserverServiceProvider extends ServiceProvider
         Product::observe(ProductObserver::class);
         ProductOutput::observe(ProductOutputObserver::class);
         Finishing::observe(FinishingObserver::class);
+        Expenser::observe(ExpenserObserver::class);
     }
 }

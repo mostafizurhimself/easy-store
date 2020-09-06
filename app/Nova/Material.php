@@ -120,7 +120,7 @@ class Material extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()->sortable()->onlyOnIndex(),
 
             BelongsTo::make('Location')
                 ->searchable()
@@ -169,7 +169,7 @@ class Material extends Resource
                     Rule::unique('materials', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
 
-            Images::make('Image', 'material-image')
+            Images::make('Image', 'material-images')
                 ->croppable(true)
                 ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
                 ->hideFromIndex(),

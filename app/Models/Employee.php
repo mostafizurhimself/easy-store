@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Facades\Settings;
 use App\Traits\HasReadableId;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Employee extends Model
+class Employee extends Model implements HasMedia
 {
-    use LogsActivity, HasReadableId, SoftDeletes;
+    use LogsActivity, HasReadableId, SoftDeletes, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.
@@ -24,6 +26,16 @@ class Employee extends Model
      * @var boolean
      */
     protected static $logUnguarded = true;
+
+    /**
+     * Register the media collections
+     *
+     * @return void
+     */
+    public function registerMediaCollections(): void
+    {
+       $this->addMediaCollection('employee-attachments')->singleFile();
+    }
 
     /**
      * Set the model readable id prefix

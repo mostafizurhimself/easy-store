@@ -18,10 +18,10 @@ class CreateBalancesTable extends Migration
             $table->string('readable_id')->nullable();
             $table->bigInteger('expenser_id')->unsigned()->nullable();
             $table->text('description')->nullable();
-            $table->string('reference')->nullable();
+            $table->string('reference')->nullable()->index('balance_reference_index');
             $table->double('amount')->default(0);
             $table->string('method');
-            $table->string('approved_by')->nullable();
+            $table->string('approved_by')->nullable()->index('balance_approved_by_index');
             $table->bigInteger('created_by')->unsigned();
             $table->string('status')->default('draft');
             $table->timestamps();
