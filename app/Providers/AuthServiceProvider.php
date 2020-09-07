@@ -54,11 +54,9 @@ use App\Policies\MaterialPolicy;
 use App\Policies\ProviderPolicy;
 use App\Policies\SupplierPolicy;
 use App\Models\AssetPurchaseItem;
-use App\Models\AssetTransferItem;
 use App\Models\FabricReceiveItem;
 use App\Policies\FinishingPolicy;
 use App\Models\AssetPurchaseOrder;
-use App\Models\AssetTransferOrder;
 use App\Models\FabricDistribution;
 use App\Models\FabricPurchaseItem;
 use App\Policies\DepartmentPolicy;
@@ -85,10 +83,8 @@ use App\Policies\AssetReceiveItemPolicy;
 use App\Policies\FinishingInvoicePolicy;
 use App\Policies\MaterialCategoryPolicy;
 use App\Policies\AssetPurchaseItemPolicy;
-use App\Policies\AssetTransferItemPolicy;
 use App\Policies\FabricReceiveItemPolicy;
 use App\Policies\AssetPurchaseOrderPolicy;
-use App\Policies\AssetTransferOrderPolicy;
 use App\Policies\FabricDistributionPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
 use App\Policies\FabricPurchaseOrderPolicy;
@@ -130,8 +126,6 @@ class AuthServiceProvider extends ServiceProvider
         AssetPurchaseOrder::class     => AssetPurchaseOrderPolicy::class,
         AssetPurchaseItem::class      => AssetPurchaseItemPolicy::class,
         AssetReceiveItem::class       => AssetReceiveItemPolicy::class,
-        AssetTransferOrder::class     => AssetTransferOrderPolicy::class,
-        AssetTransferItem::class      => AssetTransferItemPolicy::class,
         ServiceCategory::class        => ServiceCategoryPolicy::class,
         Service::class                => ServicePolicy::class,
         ServiceDispatchInvoice::class => ServiceDispatchInvoicePolicy::class,
