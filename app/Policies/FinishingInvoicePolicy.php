@@ -57,7 +57,7 @@ class FinishingInvoicePolicy
     public function update(User $user, FinishingInvoice $finishingInvoice)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update finishing invoices') && $user->locationId == $finishingInvoice->locationId ) ||
+                ($user->hasPermissionTo('update finishing invoices') && $user->locationId == $finishingInvoice->locationId) ||
                 $user->hasPermissionTo('update all locations data')) &&
                 $finishingInvoice->status == FinishingStatus::DRAFT();
     }
@@ -72,7 +72,7 @@ class FinishingInvoicePolicy
     public function delete(User $user, FinishingInvoice $finishingInvoice)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete finishing invoices') && $user->locationId == $finishingInvoice->locationId ) ||
+                ($user->hasPermissionTo('delete finishing invoices') && $user->locationId == $finishingInvoice->locationId) ||
                 $user->hasPermissionTo('delete all locations data')) &&
                 $finishingInvoice->status == FinishingStatus::DRAFT();
     }
@@ -87,7 +87,7 @@ class FinishingInvoicePolicy
     public function restore(User $user, FinishingInvoice $finishingInvoice)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore finishing invoices') && $user->locationId == $finishingInvoice->locationId ) ||
+                ($user->hasPermissionTo('restore finishing invoices') && $user->locationId == $finishingInvoice->locationId) ||
                 $user->hasPermissionTo('restore all locations data')) &&
                 $finishingInvoice->status == FinishingStatus::DRAFT();
     }
@@ -107,7 +107,7 @@ class FinishingInvoicePolicy
                 $finishingInvoice->status == FinishingStatus::DRAFT();
     }
 
-     /**
+    /**
      * Determine whether the user can add a finishing to the invoice.
      *
      * @param  \App\Models\User  $user
@@ -116,7 +116,6 @@ class FinishingInvoicePolicy
      */
     public function addFinishing(User $user, FinishingInvoice $finishingInvoice)
     {
-        // return $finishingInvoice->status == FinishingStatus::DRAFT();
         return true;
     }
 

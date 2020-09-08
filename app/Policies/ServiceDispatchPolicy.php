@@ -106,4 +106,16 @@ class ServiceDispatchPolicy
                 $user->hasPermissionTo('force delete all locations data')) &&
                 $serviceDispatch->status == DispatchStatus::DRAFT();
     }
+
+    /**
+     * Determine whether the user can add a receive item to the dispatch.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ServiceDispatch  $serviceDispatch
+     * @return mixed
+     */
+    public function addServiceReceive(User $user, ServiceDispatch $serviceDispatch)
+    {
+        return $serviceDispatch->status == DispatchStatus::CONFIRMED() || $serviceDispatch->status == DispatchStatus::PARTIAL();
+    }
 }

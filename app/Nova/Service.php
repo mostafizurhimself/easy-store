@@ -152,7 +152,7 @@ class Service extends Resource
                     Rule::unique('services', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
 
-            Images::make('Image', 'service-image')
+            Images::make('Image', 'service-images')
                 ->croppable(true)
                 ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
                 ->hideFromIndex(),
@@ -168,13 +168,13 @@ class Service extends Resource
                 ->displayUsing(function () {
                     return $this->totalDispatchQuantity . " " . $this->unit->name;
                 })
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             Text::make('Receive')
                 ->displayUsing(function () {
                     return $this->totalReceiveQuantity . " " . $this->unit->name;
                 })
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             Text::make('Remaining')
                 ->displayUsing(function () {

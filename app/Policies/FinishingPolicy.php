@@ -44,7 +44,7 @@ class FinishingPolicy
      */
     public function create(User $user)
     {
-        return request()->path() != "resources/".\App\Nova\Finishing::uriKey();
+        return ($user->isSuperAdmin() || $user->hasPermissionTo('create finishing invoices'));
     }
 
     /**

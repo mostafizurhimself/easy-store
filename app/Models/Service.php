@@ -39,7 +39,7 @@ class Service extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('service-image')->singleFile();
+       $this->addMediaCollection('service-images')->singleFile();
     }
 
     /**

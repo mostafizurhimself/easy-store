@@ -16,11 +16,11 @@ class ServiceDispatchObserver
     public function saving(ServiceDispatch $serviceDispatch)
     {
         //Get the service
-        $asset = Service::find($serviceDispatch->serviceId);
+        $service = Service::find($serviceDispatch->serviceId);
 
         //Set the dispatch amount
-        $serviceDispatch->rate = $asset->rate;
-        $serviceDispatch->amount = $asset->rate * $serviceDispatch->quantity;
+        $serviceDispatch->rate = $service->rate;
+        $serviceDispatch->dispatchAmount = $service->rate * $serviceDispatch->dispatchQuantity;
     }
 
     /**
@@ -32,7 +32,7 @@ class ServiceDispatchObserver
     public function saved(ServiceDispatch $serviceDispatch)
     {
         //Update the total amount of invoice
-        $serviceDispatch->invoice->updateTotalAmount();
+        $serviceDispatch->invoice->updateDispatchAmount();
     }
 
     /**
@@ -44,7 +44,7 @@ class ServiceDispatchObserver
     public function deleted(ServiceDispatch $serviceDispatch)
     {
         //Update the total amount of invoice
-        $serviceDispatch->invoice->updateTotalAmount();
+        $serviceDispatch->invoice->updateDispatchAmount();
     }
 
     /**
@@ -56,7 +56,7 @@ class ServiceDispatchObserver
     public function restored(ServiceDispatch $serviceDispatch)
     {
         //Update the total amount of invoice
-        $serviceDispatch->invoice->updateTotalAmount();
+        $serviceDispatch->invoice->updateDispatchAmount();
     }
 
     /**
@@ -68,6 +68,6 @@ class ServiceDispatchObserver
     public function forceDeleted(ServiceDispatch $serviceDispatch)
     {
         //Update the total amount of invoice
-        $serviceDispatch->invoice->updateTotalAmount();
+        $serviceDispatch->invoice->updateDispatchAmount();
     }
 }

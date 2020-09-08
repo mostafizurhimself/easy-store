@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\DispatchStatus;
 use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\HasMany;
@@ -16,9 +17,9 @@ use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
-use App\Nova\Actions\ServiceDispatchInvoices\ConfirmInvoice;
+use App\Nova\Actions\ServiceInvoices\ConfirmInvoice;
 
-class ServiceDispatchInvoice extends Resource
+class ServiceInvoice extends Resource
 {
 
     use SearchesRelations;
@@ -27,7 +28,7 @@ class ServiceDispatchInvoice extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\ServiceDispatchInvoice::class;
+    public static $model = \App\Models\ServiceInvoice::class;
 
     /**
      * The group associated with the resource.
@@ -142,23 +143,31 @@ class ServiceDispatchInvoice extends Resource
             Trix::make('Description')
                 ->rules('nullable', 'max:500'),
 
-            Currency::make('Total Amount')
+            Currency::make('Total Dispatch Amount')
                 ->currency('BDT')
                 ->exceptOnForms(),
+
+            Currency::make('Total Receive Amount')
+                ->currency('BDT')
+                ->exceptOnForms(),
+
+            Text::make('Approved By')
+                ->onlyOnDetail(),
 
             BelongsTo::make('Provider', 'provider', 'App\Nova\Provider'),
 
             Badge::make('Status')->map([
                 DispatchStatus::DRAFT()->getValue()     => 'warning',
-                DispatchStatus::CONFIRMED()->getValue() => 'danger',
-                DispatchStatus::PARTIAL()->getValue()   => 'info',
+                DispatchStatus::CONFIRMED()->getValue() => 'info',
+                DispatchStatus::PARTIAL()->getValue()   => 'success',
                 DispatchStatus::RECEIVED()->getValue()  => 'success',
             ])
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
-            HasMany::make('Dispatches', 'dispatches', 'App\Nova\ServiceDispatch')
+            HasMany::make('Dispatches', 'dispatches', 'App\Nova\ServiceDispatch'),
+            HasMany::make('Receives', 'receives', 'App\Nova\ServiceReceive')
 
         ];
     }

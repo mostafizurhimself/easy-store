@@ -33,6 +33,8 @@ use App\Policies\AssetPolicy;
 use App\Policies\FloorPolicy;
 use App\Policies\StylePolicy;
 use App\Models\FabricCategory;
+use App\Models\ServiceInvoice;
+use App\Models\ServiceReceive;
 use App\Policies\FabricPolicy;
 use App\Models\ExpenseCategory;
 use App\Models\ProductCategory;
@@ -72,8 +74,9 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\MaterialPurchaseOrder;
 use App\Policies\AssetCategoryPolicy;
 use App\Policies\ProductOutputPolicy;
-use App\Models\ServiceDispatchInvoice;
 use App\Policies\FabricCategoryPolicy;
+use App\Policies\ServiceInvoicePolicy;
+use App\Policies\ServiceReceivePolicy;
 use App\Policies\ExpenseCategoryPolicy;
 use App\Policies\ProductCategoryPolicy;
 use App\Policies\ServiceCategoryPolicy;
@@ -92,7 +95,6 @@ use App\Policies\MaterialReceiveItemPolicy;
 use App\Policies\MaterialDistributionPolicy;
 use App\Policies\MaterialPurchaseItemPolicy;
 use App\Policies\MaterialPurchaseOrderPolicy;
-use App\Policies\ServiceDispatchInvoicePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -128,8 +130,9 @@ class AuthServiceProvider extends ServiceProvider
         AssetReceiveItem::class       => AssetReceiveItemPolicy::class,
         ServiceCategory::class        => ServiceCategoryPolicy::class,
         Service::class                => ServicePolicy::class,
-        ServiceDispatchInvoice::class => ServiceDispatchInvoicePolicy::class,
+        ServiceInvoice::class         => ServiceInvoicePolicy::class,
         ServiceDispatch::class        => ServiceDispatchPolicy::class,
+        ServiceReceive::class         => ServiceReceivePolicy::class,
         ProductCategory::class        => ProductCategoryPolicy::class,
         Product::class                => ProductPolicy::class,
         ProductOutput::class          => ProductOutputPolicy::class,

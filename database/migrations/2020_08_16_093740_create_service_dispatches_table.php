@@ -18,14 +18,17 @@ class CreateServiceDispatchesTable extends Migration
             $table->string('readable_id')->nullable();
             $table->bigInteger('service_id')->unsigned();
             $table->bigInteger('invoice_id')->unsigned()->nullable();
-            $table->double('quantity')->default(0);
+            $table->double('dispatch_quantity')->default(0);
+            $table->double('receive_quantity')->default(0);
             $table->double('rate')->default(0);
-            $table->double('amount')->default(0);
+            $table->double('dispatch_amount')->default(0);
+            $table->double('receive_amount')->default(0);
             $table->text('description')->nullable();
+            $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('service_id')->references('id')->on('services');
-            $table->foreign('invoice_id')->references('id')->on('service_dispatch_invoices');
+            $table->foreign('invoice_id')->references('id')->on('service_invoices');
         });
     }
 

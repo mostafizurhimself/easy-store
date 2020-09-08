@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CamelCasing;
-use App\Enums\ServiceDispatchStatus;
+use App\Enums\DispatchStatus;
 use App\Traits\HasReadableIdWithDate;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -61,7 +61,17 @@ class ServiceDispatch extends Model
      */
     public function invoice()
     {
-       return $this->belongsTo(ServiceDispatchInvoice::class);
+       return $this->belongsTo(ServiceInvoice::class, 'invoice_id')->withTrashed();
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function receives()
+    {
+       return $this->hasMany(ServiceReceive::class, 'dispatch_id');
     }
 
     /**
@@ -75,16 +85,6 @@ class ServiceDispatch extends Model
     }
 
     /**
-     * Get the unit of the service
-     *
-     * @return string
-     */
-    public function getStatusAttribute()
-    {
-        return $this->invoice->status;
-    }
-
-    /**
      * Scope a query to only include draft distributions.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
@@ -92,7 +92,62 @@ class ServiceDispatch extends Model
      */
     public function scopeDraft($query)
     {
-        return $query->where('status', ServiceDispatchStatus::DRAFT());
+        return $query->where('status', DisPatchStatus::DRAFT());
+    }
+
+    /**
+     * Update total receive amount
+     *
+     * @return double
+     */
+    public function updateReceiveAmount()
+    {
+        $this->receiveAmount = $this->receives->sum('amount');
+        $this->save();
+    }
+
+    /**
+     * Update total receive quantity
+     *
+     * @return double
+     */
+    public function updateReceiveQuantity()
+    {
+        $this->receiveQuantity = $this->receives->sum('quantity');
+        $this->save();
+    }
+
+    /**
+     * Get the remaining quantity attribute
+     *
+     * @return double
+     */
+    public function getRemainingQuantityAttribute()
+    {
+        return $this->dispatchQuantity - $this->receiveQuantity;
+    }
+
+    /**
+     * Update purchase item status
+     *
+     * @return void
+     */
+    public function updateStatus()
+    {
+        if($this->receives()->exists() && ($this->dispatchQuantity == $this->receiveQuantity)){
+            $this->status = Dispatchstatus::RECEIVED();
+        }
+
+        if($this->receives()->exists() && ($this->dispatchQuantity != $this->receiveQuantity)){
+            $this->status = Dispatchstatus::PARTIAL();
+        }
+
+        if(!$this->receives()->exists()){
+            $this->status = Dispatchstatus::CONFIRMED();
+        }
+
+        $this->save();
+
     }
 
 }

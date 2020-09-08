@@ -2,27 +2,32 @@
 
 namespace App\Nova;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\DispatchStatus;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Rules\ServiceReceiveQuantityRule;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use App\Rules\ServiceReceiveQuantityRuleForUpdate;
+use App\Nova\Actions\ServiceReceives\ConfirmReceive;
 
-class ServiceDispatch extends Resource
+class ServiceReceive extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\ServiceDispatch::class;
+    public static $model = \App\Models\ServiceReceive::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -55,13 +60,13 @@ class ServiceDispatch extends Resource
     ];
 
     /**
-     * Get the displayable label of the resource.
+     * Get the displayable singular label of the resource.
      *
      * @return string
      */
-    public static function label()
+    public static function singularLabel()
     {
-        return "Dispatches";
+        return "Receive";
     }
 
     /**
@@ -73,59 +78,61 @@ class ServiceDispatch extends Resource
     public function fields(Request $request)
     {
         return [
-            // ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Invoice', 'invoice', "App\Nova\ServiceInvoice")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Service', 'service', 'App\Nova\Service'),
+            BelongsTo::make('Dispatch', 'dispatch', "App\Nova\ServiceDispatch")
+                ->onlyOnDetail(),
 
-            Number::make('Quantity', 'dispatch_quantity')
-                ->rules('required', 'numeric', 'min:1')
+            BelongsTo::make('Service')
+                ->exceptOnForms(),
+
+            Date::make('Date')
+                ->rules('required')
+                ->default(function($request){
+                    return Carbon::now();
+                }),
+
+            Number::make('Quantity')
+                ->rules('required', 'numeric', 'min:0')
+                ->creationRules(new ServiceReceiveQuantityRule($request->viaResource, $request->viaResourceId))
+                ->updateRules(new ServiceReceiveQuantityRuleForUpdate(\App\Nova\ServiceDispatch::uriKey(), $this->resource->dispatchId, $this->resource->quantity))
                 ->onlyOnForms(),
+
+            Text::make('Quantity', function(){
+                    return $this->quantity." ".$this->unit;
+                })
+                ->exceptOnForms(),
 
             Currency::make('Rate')
                 ->currency('BDT')
-                ->exceptOnForms(),
+                ->help("Leave blank if you do not want to change the service rate."),
 
-            Text::make('Dispatch Quantity', function () {
-                return $this->dispatchQuantity . " " . $this->unit;
-            })
-                ->exceptOnForms(),
-
-            Text::make('Receive Quantity', function () {
-                return $this->receiveQuantity . " " . $this->unit;
-            })
-                ->exceptOnForms(),
-
-            Text::make('Remaining Quantity', function () {
-                return $this->remainingQuantity . " " . $this->unit;
-            })
-                ->exceptOnForms(),
-
-            Currency::make('Dispatch Amount')
+            Currency::make('Amount')
                 ->currency('BDT')
-                ->exceptOnForms()
+                ->exceptOnForms(),
+
+            Text::make("Reference")
+                ->hideFromIndex()
+                ->rules('required', 'string', 'max:200')
+                ->help("You can input the provider invoice no here."),
+
+            Files::make('Attachments', 'receive-service-attachments')
                 ->hideFromIndex(),
 
-            Currency::make('Receive Amount')
-                ->currency('BDT')
-                ->exceptOnForms()
-                ->hideFromIndex(),
-
-            Trix::make('Description')
+            Trix::make('Note')
                 ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
-                DispatchStatus::DRAFT()->getValue()     => 'warning',
-                DispatchStatus::CONFIRMED()->getValue() => 'info',
-                DispatchStatus::PARTIAL()->getValue()   => 'success',
-                DispatchStatus::RECEIVED()->getValue()  => 'success',
-            ])
-                ->label(function () {
+                    DispatchStatus::DRAFT()->getValue()     => 'warning',
+                    DispatchStatus::CONFIRMED()->getValue() => 'info',
+                    DispatchStatus::PARTIAL()->getValue()   => 'success',
+                    DispatchStatus::RECEIVED()->getValue()  => 'success',
+                ])
+                ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
-            HasMany::make('Receive Service', 'receives', 'App\Nova\ServiceReceive'),
 
 
         ];
@@ -172,30 +179,9 @@ class ServiceDispatch extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
-    }
-
-    /**
-     * Build a "relatable" query for the given resource.
-     *
-     * This query determines which instances of the model may be attached to other resources.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public static function relatableServices(NovaRequest $request, $query)
-    {
-        $invoice = \App\Models\ServiceInvoice::find($request->viaResourceId);
-        try {
-            $serviceId = $request->findResourceOrFail()->serviceId;
-        } catch (\Throwable $th) {
-            $serviceId = null;
-        }
-        return $query->whereHas('providers', function ($supplier) use ($invoice) {
-            $supplier->where('provider_id', $invoice->providerId)
-                ->where('location_id', $invoice->locationId);
-        })->whereNotIn('id', $invoice->serviceIds($serviceId));
+        return [
+            new ConfirmReceive,
+        ];
     }
 
     /**
@@ -207,7 +193,7 @@ class ServiceDispatch extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
+        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
     }
 
     /**
@@ -219,10 +205,10 @@ class ServiceDispatch extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if (isset($request->viaResource) && isset($request->viaResourceId)) {
-            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
+        if(isset($request->viaResource) && isset($request->viaResourceId)){
+            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
         }
 
-        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+        return '/resources/'.$resource->uriKey()."/".$resource->id;
     }
 }
