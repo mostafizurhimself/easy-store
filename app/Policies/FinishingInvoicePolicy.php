@@ -116,7 +116,7 @@ class FinishingInvoicePolicy
      */
     public function addFinishing(User $user, FinishingInvoice $finishingInvoice)
     {
-        return true;
+        return  $finishingInvoice->status == FinishingStatus::DRAFT();;
     }
 
 }

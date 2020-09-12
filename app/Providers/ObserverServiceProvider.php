@@ -30,6 +30,7 @@ use App\Observers\ExpenserObserver;
 use App\Observers\MaterialObserver;
 use App\Observers\ProviderObserver;
 use App\Observers\SupplierObserver;
+use App\Models\AssetRequisitionItem;
 use App\Models\MaterialPurchaseItem;
 use App\Observers\FinishingObserver;
 use Illuminate\Support\ServiceProvider;
@@ -42,6 +43,7 @@ use App\Observers\FabricReceiveItemObserver;
 use App\Observers\FabricDistributionObserver;
 use App\Observers\FabricPurchaseItemObserver;
 use App\Observers\MaterialReceiveItemObserver;
+use App\Observers\AssetRequisitionItemObserver;
 use App\Observers\MaterialPurchaseItemObserver;
 
 class ObserverServiceProvider extends ServiceProvider
@@ -76,6 +78,7 @@ class ObserverServiceProvider extends ServiceProvider
         MaterialReceiveItem::observe(MaterialReceiveItemObserver::class);
         AssetPurchaseItem::observe(AssetPurchaseItemObserver::class);
         AssetReceiveItem::observe(AssetReceiveItemObserver::class);
+        AssetRequisitionItem::observe(AssetRequisitionItemObserver::class);
         Service::observe(ServiceObserver::class);
         ServiceDispatch::observe(ServiceDispatchObserver::class);
         ServiceReceive::observe(ServiceReceiveObserver::class);

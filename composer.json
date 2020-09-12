@@ -32,7 +32,6 @@
         "gregoriohc/laravel-nova-theme-responsive": "^0.8.1",
         "guzzlehttp/guzzle": "^6.3",
         "hubertnnn/laravel-nova-field-dynamic-select": "^0.2.0",
-        "inspheric/nova-defaultable": "^1.2",
         "inspheric/nova-email-field": "^1.42",
         "kirschbaum-development/nova-inline-relationship": "^0.3.0",
         "laravel/framework": "^7.0",

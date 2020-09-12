@@ -16,6 +16,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\ServiceInvoices\Recalculate;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceInvoices\ConfirmInvoice;
 
@@ -214,6 +215,13 @@ class ServiceInvoice extends Resource
     public function actions(Request $request)
     {
         return [
+
+            (new Recalculate)->canSee(function($request){
+                return $request->user()->isSuperAdmin();
+            })->canRun(function($request){
+                return $request->user()->isSuperAdmin();
+            }),
+
             new ConfirmInvoice,
         ];
     }

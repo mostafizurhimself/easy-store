@@ -48,7 +48,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('purchase-order-attachments')->singleFile();
+       $this->addMediaCollection('purchase-order-attachments');
     }
 
     /**

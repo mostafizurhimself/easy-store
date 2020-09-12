@@ -34,7 +34,7 @@ class Employee extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('employee-attachments')->singleFile();
+       $this->addMediaCollection('employee-attachments');
     }
 
     /**

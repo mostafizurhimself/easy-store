@@ -57,7 +57,7 @@ class Expense extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('expense-attachments')->singleFile();
+       $this->addMediaCollection('expense-attachments');
     }
 
     /**

@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\CamelCasing;
 use App\Traits\HasReadableIdWithDate;
-use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Balance extends Model implements HasMedia
+class AssetRequisitionItem extends Model
 {
-    use LogsActivity, SoftDeletes, InteractsWithMedia, HasReadableIdWithDate;
+    use LogsActivity, SoftDeletes, CamelCasing, HasReadableIdWithDate;
 
     /**
      * The attributes that are not mass assignable.
@@ -27,20 +27,13 @@ class Balance extends Model implements HasMedia
     protected static $logUnguarded = true;
 
     /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['date'];
-
-    /**
      * Set the model readable id prefix
      *
      * @var string
      */
     public static function readableIdPrefix()
     {
-        return "B";
+        return "ARI";
     }
 
     /**
@@ -50,15 +43,14 @@ class Balance extends Model implements HasMedia
      */
     protected static $readableIdLength = 5;
 
-
     /**
-     * Register the media collections
+     * Determines one-to-many relation
      *
-     * @return void
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function registerMediaCollections(): void
+    public function requisition()
     {
-       $this->addMediaCollection('balance-attachments');
+       return $this->belongsTo(AssetRequisition::class)->withTrashed();
     }
 
     /**
@@ -66,9 +58,19 @@ class Balance extends Model implements HasMedia
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function expenser()
+    public function asset()
     {
-       return $this->belongsTo(Expenser::class);
+       return $this->belongsTo(Asset::class);
+    }
+
+    /**
+     * Get the unit for the assets
+     *
+     * @return string
+     */
+    public function getUnitAttribute()
+    {
+        return $this->asset->unit->name;
     }
 
 }

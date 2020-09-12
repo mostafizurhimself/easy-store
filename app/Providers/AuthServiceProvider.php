@@ -11,6 +11,7 @@ use App\Models\Style;
 use App\Models\Fabric;
 use App\Models\Balance;
 use App\Models\Expense;
+use App\Models\Product;
 use App\Models\Section;
 use App\Models\Service;
 use App\Models\Setting;
@@ -23,6 +24,7 @@ use App\Models\Supplier;
 use App\Models\Finishing;
 use App\Models\Department;
 use App\Models\Permission;
+use App\Models\SubSection;
 use App\Models\Designation;
 use App\Policies\RolePolicy;
 use App\Policies\UnitPolicy;
@@ -47,6 +49,7 @@ use App\Policies\SectionPolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\SettingPolicy;
 use App\Models\AssetReceiveItem;
+use App\Models\AssetRequisition;
 use App\Models\FinishingInvoice;
 use App\Models\MaterialCategory;
 use App\Policies\EmployeePolicy;
@@ -63,10 +66,12 @@ use App\Models\FabricDistribution;
 use App\Models\FabricPurchaseItem;
 use App\Policies\DepartmentPolicy;
 use App\Policies\PermissionPolicy;
+use App\Policies\SubSectionPolicy;
 use App\Models\FabricPurchaseOrder;
 use App\Models\MaterialReceiveItem;
 use App\Policies\ActivityLogPolicy;
 use App\Policies\DesignationPolicy;
+use App\Models\AssetRequisitionItem;
 use App\Models\MaterialDistribution;
 use App\Models\MaterialPurchaseItem;
 use Illuminate\Support\Facades\Auth;
@@ -83,6 +88,7 @@ use App\Policies\ServiceCategoryPolicy;
 use App\Policies\ServiceDispatchPolicy;
 use Spatie\Activitylog\Models\Activity;
 use App\Policies\AssetReceiveItemPolicy;
+use App\Policies\AssetRequisitionPolicy;
 use App\Policies\FinishingInvoicePolicy;
 use App\Policies\MaterialCategoryPolicy;
 use App\Policies\AssetPurchaseItemPolicy;
@@ -92,6 +98,7 @@ use App\Policies\FabricDistributionPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
 use App\Policies\FabricPurchaseOrderPolicy;
 use App\Policies\MaterialReceiveItemPolicy;
+use App\Policies\AssetRequisitionItemPolicy;
 use App\Policies\MaterialDistributionPolicy;
 use App\Policies\MaterialPurchaseItemPolicy;
 use App\Policies\MaterialPurchaseOrderPolicy;
@@ -109,6 +116,7 @@ class AuthServiceProvider extends ServiceProvider
         Location::class               => LocationPolicy::class,
         Department::class             => DepartmentPolicy::class,
         Section::class                => SectionPolicy::class,
+        SubSection::class             => SubSectionPolicy::class,
         Designation::class            => DesignationPolicy::class,
         Employee::class               => EmployeePolicy::class,
         FabricCategory::class         => FabricCategoryPolicy::class,
@@ -128,6 +136,8 @@ class AuthServiceProvider extends ServiceProvider
         AssetPurchaseOrder::class     => AssetPurchaseOrderPolicy::class,
         AssetPurchaseItem::class      => AssetPurchaseItemPolicy::class,
         AssetReceiveItem::class       => AssetReceiveItemPolicy::class,
+        AssetRequisition::class       => AssetRequisitionPolicy::class,
+        AssetRequisitionItem::class   => AssetRequisitionItemPolicy::class,
         ServiceCategory::class        => ServiceCategoryPolicy::class,
         Service::class                => ServicePolicy::class,
         ServiceInvoice::class         => ServiceInvoicePolicy::class,

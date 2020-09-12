@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Laravel\Nova\Nova;
+use Eminiarts\Tabs\Tabs;
 use App\Models\Permission;
 use Laravel\Nova\Resource;
 use Illuminate\Support\Str;
@@ -19,7 +20,6 @@ use Eminiarts\NovaPermissions\Checkboxes;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Easystore\PermissionCheckbox\PermissionCheckbox;
-use Eminiarts\Tabs\Tabs;
 
 class Role extends Resource
 {
@@ -80,7 +80,7 @@ class Role extends Resource
      */
     public function subtitle()
     {
-        return "Users: ". count($this->users);
+        return "Users: " . count($this->users);
     }
 
 
@@ -132,74 +132,81 @@ class Role extends Resource
 
         return [
 
-            new Tabs('Role Details', [
-                'Role Info' => [
+            ID::make('Id', 'id')
+                ->rules('required')
+                ->hideFromIndex()
+                ->hideFromDetail(),
 
-                    ID::make('Id', 'id')
-                    ->rules('required')
-                    ->hideFromIndex()
-                    ->hideFromDetail(),
+            TextWithSlug::make('Display Name')
+                ->slug('name')
+                ->rules(['required', 'string', 'max:255'])
+                ->creationRules('unique:' . config('permission.table_names.roles'))
+                ->updateRules('unique:' . config('permission.table_names.roles') . ',display_name,{{resourceId}}'),
 
-                    TextWithSlug::make('Display Name')
-                        ->slug('name')
-                        ->rules(['required', 'string', 'max:255'])
-                        ->creationRules('unique:' . config('permission.table_names.roles'))
-                        ->updateRules('unique:' . config('permission.table_names.roles') . ',display_name,{{resourceId}}'),
+            Text::make('Name')
+                ->onlyOnDetail(),
 
-                    Slug::make('Name')
-                        ->rules(['required', 'string', 'max:255'])
-                        ->onlyOnForms(),
+            Slug::make('Name')
+                ->rules(['required', 'string', 'max:255'])
+                ->onlyOnForms(),
 
 
-                    Select::make(__('Guard Name'), 'guard_name')
-                        ->options($guardOptions->toArray())
-                        ->rules(['required', Rule::in($guardOptions)])
-                        ->readonly(function($request){
-                            return !$request->user()->isSuperAdmin();
-                        }),
-                ],
-                'Permissions' => [
+            Select::make(__('Guard Name'), 'guard_name')
+                ->options($guardOptions->toArray())
+                ->rules(['required', Rule::in($guardOptions)])
+                ->readonly(function ($request) {
+                    return !$request->user()->isSuperAdmin();
+                }),
 
-                        //Permissions for super-admin
-                        PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
-                        ->withGroups()
-                        ->options(Permission::all()->sortBy('group_order')->map(function ($permission, $key) {
-                            return [
-                                'group'  => __(Str::title($permission->group)),
-                                'option' => $permission->name,
-                                'label'  => __(Str::title($permission->name)),
-                            ];
-                        })
-                        ->groupBy('group')->toArray())
-                        ->canSee(function($request){
-                            return $request->user()->isSuperAdmin();
-                        }),
+            //Permissions for super-admin
+            PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
+                ->withGroups()
+                ->options(Permission::all()->sortBy('group_order')->map(function ($permission, $key) {
+                    return [
+                        'group'  => __(Str::title($permission->group)),
+                        'option' => $permission->name,
+                        'label'  => __(Str::title($permission->name)),
+                    ];
+                })
+                    ->groupBy('group')->toArray())
+                ->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin();
+                }),
 
-                        //Permission for other users.
-                        PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
-                            ->withGroups()
-                            ->options(
-                            Permission::where('group', '!=', Permission::SUPER_ADMIN_GROUP)->get()->sortBy('group_order')->map(function ($permission, $key) {
-                                return [
-                                    'group'  => __(Str::title($permission->group)),
-                                    'option' => $permission->name,
-                                    'label'  => __(Str::title($permission->name)),
-                                ];
-                            })
-                            ->groupBy('group')->toArray())
-                            ->canSee(function($request){
-                                return $request->user()->hasPermissionTo('assign permissions') && !$request->user()->isSuperAdmin();
-                            }),
-                ]
-            ]),
+            //Permission for other users.
+            PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
+                ->withGroups()
+                ->options(
+                    Permission::where('group', '!=', Permission::SUPER_ADMIN_GROUP)->get()->sortBy('group_order')->map(function ($permission, $key) {
+                        return [
+                            'group'  => __(Str::title($permission->group)),
+                            'option' => $permission->name,
+                            'label'  => __(Str::title($permission->name)),
+                        ];
+                    })
+                        ->groupBy('group')->toArray()
+                )
+                ->canSee(function ($request) {
+                    return $request->user()->hasPermissionTo('assign permissions') && !$request->user()->isSuperAdmin();
+                }),
+
+            // (new Tabs('Role Details', [
+            //     'Role Info' => [
+
+
+            //     ],
+            //     'Permissions' => [
+
+
+            //     ]
+            // ]))->withToolbar(),
 
             Text::make(__('Users'), function () {
-                    return count($this->users);
-                })
+                return count($this->users);
+            })
                 ->exceptOnForms(),
 
-            MorphToMany::make($userResource::label(), 'users', $userResource)
-                ->searchable(),
+            MorphToMany::make($userResource::label(), 'users', $userResource),
         ];
     }
 

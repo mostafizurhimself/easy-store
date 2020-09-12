@@ -5,11 +5,9 @@ namespace App\Nova;
 use Illuminate\Support\Str;
 use Laravel\Nova\Resource as NovaResource;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Inspheric\NovaDefaultable\HasDefaultableFields;
 
 abstract class Resource extends NovaResource
 {
-    use HasDefaultableFields;
     /**
      * The group associated with the resource.
      *

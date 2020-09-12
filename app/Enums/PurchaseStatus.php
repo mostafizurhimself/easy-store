@@ -10,7 +10,7 @@ class PurchaseStatus extends Enum
 {
     private const DRAFT     = 'draft';
     private const CONFIRMED = 'confirmed';
-    private const PARTIAL   = 'Partial';
-    private const RECEIVED  = 'Received';
-    private const BILLED    = 'Billed';
+    private const PARTIAL   = 'partial';
+    private const RECEIVED  = 'received';
+    private const BILLED    = 'billed';
 }

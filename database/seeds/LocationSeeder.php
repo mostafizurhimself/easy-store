@@ -19,7 +19,7 @@ class LocationSeeder extends Seeder
             ['name'          => 'Hazipara'],
             [
             'name'          => 'Hazipara',
-            'readable_id'   => 'LO-00001',
+            'readable_id'   => 'LO001',
             'type'          => LocationType::FACTORY()->getValue(),
             'status'        => LocationStatus::ACTIVE()->getValue()
         ]);
@@ -28,7 +28,7 @@ class LocationSeeder extends Seeder
             ['name'          => 'Chowdhurypara'],
             [
             'name'          => 'Chowdhurypara',
-            'readable_id'   => 'LO-00002',
+            'readable_id'   => 'LO002',
             'type'          => LocationType::FACTORY()->getValue(),
             'status'        => LocationStatus::ACTIVE()->getValue()
         ]);
