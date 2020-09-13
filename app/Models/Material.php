@@ -72,4 +72,25 @@ class Material extends Model implements HasMedia
         return $this->belongsToMany(Supplier::class)->withTrashed();
     }
 
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function distributions()
+    {
+       return $this->hasMany(MaterialDistribution::class);
+    }
+
+
+    /**
+     * Get the remaining stock attribute of the item
+     *
+     * @return double
+     */
+    public function getStockAttribute()
+    {
+        return $this->quantity - $this->distributions()->draft()->sum('quantity');
+    }
+
 }

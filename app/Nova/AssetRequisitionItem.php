@@ -9,12 +9,14 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Number;
 use App\Enums\RequisitionStatus;
+use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class AssetRequisitionItem extends Resource
 {
+    use WithOutLocation;
     /**
      * The model the resource corresponds to.
      *

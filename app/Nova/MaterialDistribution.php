@@ -20,6 +20,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialDistributions\ConfirmDistribution;
+use Laravel\Nova\Fields\HasMany;
 
 class MaterialDistribution extends Resource
 {
@@ -97,7 +98,7 @@ class MaterialDistribution extends Resource
             // ID::make()->sortable(),
 
             BelongsTo::make('Location')
-                ->searchable()
+                // ->searchable()
                 ->showOnCreating(function($request){
                     if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
                         return true;
@@ -240,7 +241,6 @@ class MaterialDistribution extends Resource
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
-
 
         ];
     }

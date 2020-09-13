@@ -23,6 +23,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Orlyapps\NovaBelongsToDepend\NovaBelongsToDepend;
 use Hubertnnn\LaravelNova\Fields\DynamicSelect\DynamicSelect;
@@ -207,6 +208,9 @@ class Employee extends Resource
 
                     Text::make('Nationality')
                         ->rules('nullable', 'string', 'max:50')
+                        ->hideFromIndex(),
+
+                    Files::make('Attachments', 'employee-attachments')
                         ->hideFromIndex(),
 
                 ],

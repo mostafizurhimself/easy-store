@@ -19,6 +19,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use App\Nova\Lenses\AssetRequisition\Requisitions;
 use App\Nova\Actions\AssetRequisitions\ConfirmRequisition;
 
 class AssetRequisition extends Resource
@@ -210,7 +211,9 @@ class AssetRequisition extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new Requisitions()
+        ];
     }
 
     /**

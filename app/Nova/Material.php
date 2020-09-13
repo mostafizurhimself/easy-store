@@ -13,8 +13,10 @@ use NovaAjaxSelect\AjaxSelect;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Lenses\Material\ItSections;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Benjacho\BelongsToManyField\BelongsToManyField;
@@ -264,6 +266,8 @@ class Material extends Resource
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
+            HasMany::make('Distributions', 'distributions', "App\Nova\MaterialDistribution"),
+
 
         ];
     }
@@ -298,7 +302,9 @@ class Material extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new ItSections(),
+        ];
     }
 
     /**
