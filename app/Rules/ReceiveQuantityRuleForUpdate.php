@@ -21,6 +21,11 @@ class ReceiveQuantityRuleForUpdate implements Rule
     protected $previousQuantity;
 
     /**
+     * @var double
+     */
+    protected $allowedQuantity;
+
+    /**
      * Create a new rule instance.
      *
      * @return void
@@ -51,7 +56,8 @@ class ReceiveQuantityRuleForUpdate implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $this->purchaseItem->remainingQuantity >= $value - $this->previousQuantity;
+        $this->allowedQuantity = $this->purchaseItem->remainingQuantity + $this->previousQuantity;
+        return $this->allowedQuantity >= $value;
     }
 
     /**
@@ -61,6 +67,6 @@ class ReceiveQuantityRuleForUpdate implements Rule
      */
     public function message()
     {
-        return 'The receive quantity is greated than the purchase qunatity.';
+        return "You can not receive more than {$this->allowedQuantity} {$this->purchaseItem->unit}";
     }
 }

@@ -227,7 +227,9 @@ class AssetPurchaseOrder extends Resource
                 return $request->user()->isSuperAdmin();
             }),
 
-            new ConfirmPurchase,
+            (new ConfirmPurchase)->canSee(function($request){
+                return $request->findModelQuery()->first()->status == PurchaseStatus::DRAFT();
+            }),
         ];
     }
 }

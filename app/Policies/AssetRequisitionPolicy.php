@@ -33,6 +33,7 @@ class AssetRequisitionPolicy
     {
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('view asset requisitions') && $user->locationId == $assetRequisition->locationId ) ||
+                ($user->locationId == $assetRequisition->receiverId && $assetRequisition->status != RequisitionStatus::DRAFT()) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -105,5 +106,17 @@ class AssetRequisitionPolicy
                 ($user->hasPermissionTo('force delete asset requisitions') && $user->locationId == $assetRequisition->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data'))&&
                 $assetRequisition->status == RequisitionStatus::DRAFT();
+    }
+
+    /**
+     * Determine whether the user can add a requisition item to the requisition.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\AssetRequisition  $assetRequisition
+     * @return mixed
+     */
+    public function addAssetRequisitionItem(User $user, AssetRequisition $assetRequisition)
+    {
+        return $assetRequisition->status == RequisitionStatus::DRAFT();
     }
 }

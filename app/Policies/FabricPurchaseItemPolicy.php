@@ -32,7 +32,7 @@ class FabricPurchaseItemPolicy
     public function view(User $user, FabricPurchaseItem $fabricPurchaseItem)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view fabric purchase items') && $user->locationId == $fabricPurchaseItem->locationId ) ||
+                ($user->hasPermissionTo('view fabric purchase items') && $user->locationId == $fabricPurchaseItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -57,7 +57,7 @@ class FabricPurchaseItemPolicy
     public function update(User $user, FabricPurchaseItem $fabricPurchaseItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update fabric purchase items') && $user->locationId == $fabricPurchaseItem->locationId ) ||
+                ($user->hasPermissionTo('update fabric purchase items') && $user->locationId == $fabricPurchaseItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
                 $fabricPurchaseItem->status == PurchaseStatus::DRAFT();
     }
@@ -72,7 +72,7 @@ class FabricPurchaseItemPolicy
     public function delete(User $user, FabricPurchaseItem $fabricPurchaseItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete fabric purchase items') && $user->locationId == $fabricPurchaseItem->locationId ) ||
+                ($user->hasPermissionTo('delete fabric purchase items') && $user->locationId == $fabricPurchaseItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('delete all locations data')) &&
                 $fabricPurchaseItem->status == PurchaseStatus::DRAFT();
     }
@@ -87,7 +87,7 @@ class FabricPurchaseItemPolicy
     public function restore(User $user, FabricPurchaseItem $fabricPurchaseItem)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore fabric purchase items') && $user->locationId == $fabricPurchaseItem->locationId ) ||
+                ($user->hasPermissionTo('restore fabric purchase items') && $user->locationId == $fabricPurchaseItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('restore all locations data');
     }
 
@@ -101,7 +101,7 @@ class FabricPurchaseItemPolicy
     public function forceDelete(User $user, FabricPurchaseItem $fabricPurchaseItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete fabric purchase items') && $user->locationId == $fabricPurchaseItem->locationId ) ||
+                ($user->hasPermissionTo('force delete fabric purchase items') && $user->locationId == $fabricPurchaseItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
                 $fabricPurchaseItem->status == PurchaseStatus::DRAFT();
     }

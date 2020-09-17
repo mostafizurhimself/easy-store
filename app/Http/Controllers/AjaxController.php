@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Department;
 use App\Models\Designation;
 use Illuminate\Http\Request;
+use App\Enums\RequisitionStatus;
 
 class AjaxController extends Controller
 {
@@ -207,6 +208,19 @@ class AjaxController extends Controller
     {
         return $location->assets->map(function($asset) {
             return [ 'value' => $asset->id, 'display' => $asset->code ];
+        });
+    }
+
+    /**
+     * Get the location wise requisitions
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function assetRequisitionsViaLocation(Location $location)
+    {
+        return $location->assetRequisitions->where('status', '!=', RequisitionStatus::DRAFT())->map(function($requisition) {
+            return [ 'value' => $requisition->id, 'display' => $requisition->readableId ];
         });
     }
 

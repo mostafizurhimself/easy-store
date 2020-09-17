@@ -48,7 +48,7 @@ class Designation extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function subSections()
+    public function subSection()
     {
        return $this->belongsTo(SubSection::class)->withTrashed();
     }

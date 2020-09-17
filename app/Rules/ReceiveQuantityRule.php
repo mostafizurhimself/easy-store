@@ -54,6 +54,6 @@ class ReceiveQuantityRule implements Rule
      */
     public function message()
     {
-        return 'The receive quantity is greated than the purchase qunatity.';
+        return "You can not receive more than {$this->purchaseItem->remainingQuantity} {$this->purchaseItem->unit}";
     }
 }

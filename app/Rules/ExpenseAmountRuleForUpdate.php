@@ -18,14 +18,25 @@ class ExpenseAmountRuleForUpdate implements Rule
     protected $previousAmount;
 
     /**
+     * @var double
+     */
+    protected $previousExpenser;
+
+    /**
+     * @var double
+     */
+    protected $allowedAmount;
+
+    /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($expenser, $previousAmount)
+    public function __construct($expenser, $previousAmount, $previousExpenser)
     {
         $this->expenser = Expenser::find($expenser);
         $this->previousAmount = $previousAmount;
+        $this->previousExpenser =  Expenser::find($previousExpenser);
     }
 
     /**
@@ -37,7 +48,13 @@ class ExpenseAmountRuleForUpdate implements Rule
      */
     public function passes($attribute, $value)
     {
-       return $this->expenser->remainingBalance + $this->previousAmount >= $value;
+        $this->allowedAmount = $this->expenser->remainingBalance;
+
+        if($this->expenser->id == $this->previousExpenser->id){
+            $this->allowedAmount = $this->expenser->remainingBalance + $this->previousAmount;
+        }
+
+        return $this->allowedAmount >= $value;
     }
 
     /**
@@ -47,6 +64,6 @@ class ExpenseAmountRuleForUpdate implements Rule
      */
     public function message()
     {
-        return 'You cannot expense more than '. ($this->expenser->remainingBalance + $this->previousAmount) ." BDT";
+        return 'You cannot expense more than '. ($this->allowedAmount) ." BDT";
     }
 }

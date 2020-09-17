@@ -32,7 +32,7 @@ class FinishingPolicy
     public function view(User $user, Finishing $finishing)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view finishings') && $user->locationId == $finishing->locationId ) ||
+                ($user->hasPermissionTo('view finishings') && $user->locationId == $finishing->invoice->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -57,7 +57,7 @@ class FinishingPolicy
     public function update(User $user, Finishing $finishing)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update finishings') && $user->locationId == $finishing->locationId ) ||
+                ($user->hasPermissionTo('update finishings') && $user->locationId == $finishing->invoice->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
                 $finishing->status == FinishingStatus::DRAFT();
     }
@@ -72,7 +72,7 @@ class FinishingPolicy
     public function delete(User $user, Finishing $finishing)
     {
         return( $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete finishings') && $user->locationId == $finishing->locationId ) ||
+                ($user->hasPermissionTo('delete finishings') && $user->locationId == $finishing->invoice->locationId ) ||
                 $user->hasPermissionTo('delete all locations data')) &&
                 $finishing->status == FinishingStatus::DRAFT();
     }
@@ -87,7 +87,7 @@ class FinishingPolicy
     public function restore(User $user, Finishing $finishing)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore finishings') && $user->locationId == $finishing->locationId ) ||
+                ($user->hasPermissionTo('restore finishings') && $user->locationId == $finishing->invoice->locationId ) ||
                 $user->hasPermissionTo('restore all locations data')) &&
                 $finishing->status == FinishingStatus::DRAFT();
     }
@@ -102,7 +102,7 @@ class FinishingPolicy
     public function forceDelete(User $user, Finishing $finishing)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete finishings') && $user->locationId == $finishing->locationId ) ||
+                ($user->hasPermissionTo('force delete finishings') && $user->locationId == $finishing->invoice->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
                 $finishing->status == FinishingStatus::DRAFT();
     }

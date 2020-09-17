@@ -222,7 +222,9 @@ class ServiceInvoice extends Resource
                 return $request->user()->isSuperAdmin();
             }),
 
-            new ConfirmInvoice,
+            (new ConfirmInvoice)->canSee(function($request){
+                return $request->findModelQuery()->first()->status == DispatchStatus::DRAFT();
+            }),
         ];
     }
 }

@@ -233,4 +233,14 @@ class Location extends Model
     {
        return $this->hasMany(ExpenseCategory::class);
     }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function assetRequisitions()
+    {
+       return $this->hasMany(AssetRequisition::class);
+    }
 }

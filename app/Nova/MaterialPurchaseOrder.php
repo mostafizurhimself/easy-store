@@ -145,8 +145,7 @@ class MaterialPurchaseOrder extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Supplier')
-                ->searchable(),
+            BelongsTo::make('Supplier', 'supplier', 'App\Nova\Supplier'),
 
             Currency::make('Purchase Amount', 'total_purchase_amount')
                 ->currency('BDT')
@@ -226,7 +225,9 @@ class MaterialPurchaseOrder extends Resource
                 return $request->user()->isSuperAdmin();
             }),
 
-            new ConfirmPurchase,
+            (new ConfirmPurchase)->canSee(function($request){
+                return $request->findModelQuery()->first()->status == PurchaseStatus::DRAFT();
+            }),
         ];
     }
 }

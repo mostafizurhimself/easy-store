@@ -30,7 +30,7 @@ class ReceiverRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $this->locationId != $value;
+        return $this->locationId != $value;
     }
 
     /**

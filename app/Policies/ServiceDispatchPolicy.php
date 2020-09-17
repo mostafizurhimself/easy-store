@@ -32,7 +32,7 @@ class ServiceDispatchPolicy
     public function view(User $user, ServiceDispatch $serviceDispatch)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view service dispatches') && $user->locationId == $serviceDispatch->locationId ) ||
+                ($user->hasPermissionTo('view service dispatches') && $user->locationId == $serviceDispatch->invoice->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -57,7 +57,7 @@ class ServiceDispatchPolicy
     public function update(User $user, ServiceDispatch $serviceDispatch)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update service dispatches') && $user->locationId == $serviceDispatch->locationId ) ||
+                ($user->hasPermissionTo('update service dispatches') && $user->locationId == $serviceDispatch->invoice->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
                 $serviceDispatch->status == DispatchStatus::DRAFT();
     }
@@ -72,7 +72,7 @@ class ServiceDispatchPolicy
     public function delete(User $user, ServiceDispatch $serviceDispatch)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete service dispatches') && $user->locationId == $serviceDispatch->locationId ) ||
+                ($user->hasPermissionTo('delete service dispatches') && $user->locationId == $serviceDispatch->invoice->locationId ) ||
                 $user->hasPermissionTo('delete all locations data')) &&
                 $serviceDispatch->status == DispatchStatus::DRAFT();
     }
@@ -87,7 +87,7 @@ class ServiceDispatchPolicy
     public function restore(User $user, ServiceDispatch $serviceDispatch)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore service dispatches') && $user->locationId == $serviceDispatch->locationId ) ||
+                ($user->hasPermissionTo('restore service dispatches') && $user->locationId == $serviceDispatch->invoice->locationId ) ||
                 $user->hasPermissionTo('restore all locations data')) &&
                 $serviceDispatch->status == DispatchStatus::DRAFT();
     }
@@ -102,7 +102,7 @@ class ServiceDispatchPolicy
     public function forceDelete(User $user, ServiceDispatch $serviceDispatch)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete service dispatches') && $user->locationId == $serviceDispatch->locationId ) ||
+                ($user->hasPermissionTo('force delete service dispatches') && $user->locationId == $serviceDispatch->invoice->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
                 $serviceDispatch->status == DispatchStatus::DRAFT();
     }

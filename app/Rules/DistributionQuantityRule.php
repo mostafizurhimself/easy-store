@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Asset;
 use App\Models\Fabric;
 use App\Models\Material;
 use Illuminate\Contracts\Validation\Rule;
@@ -26,6 +27,10 @@ class DistributionQuantityRule implements Rule
 
         if($uriKey == \App\Nova\MaterialDistribution::uriKey()){
             $this->item = Material::find($itemId);
+        }
+
+        if($uriKey == \App\Nova\AssetDistributionItem::uriKey()){
+            $this->item = Asset::find($itemId);
         }
     }
 

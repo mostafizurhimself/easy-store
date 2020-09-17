@@ -180,7 +180,9 @@ class ServiceReceive extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmReceive,
+            (new ConfirmReceive)->canSee(function($request){
+                return $request->findModelQuery()->first()->status == DispatchStatus::DRAFT();
+            }),
         ];
     }
 

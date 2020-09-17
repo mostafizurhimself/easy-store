@@ -170,7 +170,7 @@ class MaterialDistribution extends Resource
 
             Number::make('Quantity')
                 ->creationRules(new DistributionQuantityRule(\App\Nova\MaterialDistribution::uriKey(), $request->get('material_id') ?? $request->get('material')))
-                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\MaterialDistribution::uriKey(), !empty($request->get('material_id')) ?? $request->get('material'), $this->resource->quantity))
+                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\MaterialDistribution::uriKey(), !empty($request->get('material_id')) ?? $request->get('material'), $this->resource->quantity, $this->resource->materialId))
                 ->rules('required', 'numeric', 'min:1')
                 ->onlyOnForms(),
 
@@ -287,7 +287,9 @@ class MaterialDistribution extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmDistribution
+            (new ConfirmDistribution)->canSee(function($request){
+                return $request->findModelQuery()->first()->status == DistributionStatus::DRAFT();
+            }),
         ];
     }
 }

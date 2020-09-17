@@ -32,7 +32,7 @@ class ServiceReceivePolicy
     public function view(User $user, ServiceReceive $serviceReceive)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view service receives') && $user->locationId == $serviceReceive->locationId ) ||
+                ($user->hasPermissionTo('view service receives') && $user->locationId == $serviceReceive->invoice->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -57,7 +57,7 @@ class ServiceReceivePolicy
     public function update(User $user, ServiceReceive $serviceReceive)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update service receives') && $user->locationId == $serviceReceive->locationId ) ||
+                ($user->hasPermissionTo('update service receives') && $user->locationId == $serviceReceive->invoice->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
                 $serviceReceive->status == DispatchStatus::DRAFT();
     }
@@ -72,7 +72,7 @@ class ServiceReceivePolicy
     public function delete(User $user, ServiceReceive $serviceReceive)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete service receives') && $user->locationId == $serviceReceive->locationId ) ||
+                ($user->hasPermissionTo('delete service receives') && $user->locationId == $serviceReceive->invoice->locationId ) ||
                 $user->hasPermissionTo('delete all locations data')) &&
                 $serviceReceive->status == DispatchStatus::DRAFT();
     }
@@ -87,7 +87,7 @@ class ServiceReceivePolicy
     public function restore(User $user, ServiceReceive $serviceReceive)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore service receives') && $user->locationId == $serviceReceive->locationId ) ||
+                ($user->hasPermissionTo('restore service receives') && $user->locationId == $serviceReceive->invoice->locationId ) ||
                 $user->hasPermissionTo('restore all locations data')) &&
                 $serviceReceive->status == DispatchStatus::DRAFT();
     }
@@ -102,7 +102,7 @@ class ServiceReceivePolicy
     public function forceDelete(User $user, ServiceReceive $serviceReceive)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete service receives') && $user->locationId == $serviceReceive->locationId ) ||
+                ($user->hasPermissionTo('force delete service receives') && $user->locationId == $serviceReceive->invoice->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
                 $serviceReceive->status == DispatchStatus::DRAFT();
     }

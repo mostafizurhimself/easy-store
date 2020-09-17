@@ -106,10 +106,10 @@ class AssetRequisition extends Resource
                 ]),
 
             Date::make('Date')
-                ->rules('required')
                 ->default(function($request){
                     return Carbon::now();
-                }),
+                })
+                ->readonly(),
 
             BelongsTo::make('Location')
             // ->searchable()
@@ -159,7 +159,7 @@ class AssetRequisition extends Resource
                 ->options(function(){
                     return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
                 })
-                ->rules('required')
+                ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
                 ->onlyOnForms(),
 
             Text::make('Receiver', function(){
@@ -225,7 +225,9 @@ class AssetRequisition extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmRequisition,
+            (new ConfirmRequisition)->canSee(function($request){
+                return $request->findModelQuery()->first()->status == RequisitionStatus::DRAFT();
+            }),
         ];
     }
 }

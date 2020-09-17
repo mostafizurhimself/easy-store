@@ -65,7 +65,7 @@ class Asset extends Resource
      */
     public function title()
     {
-        return $this->name;
+        return "{$this->name} ({$this->code})";
     }
 
 

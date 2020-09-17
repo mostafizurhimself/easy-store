@@ -176,6 +176,9 @@ class Designation extends Resource
                     return false;
                 }),
 
+            BelongsTo::make('Section')
+                ->exceptOnForms(),
+
             AjaxSelect::make('Section', 'section_id')
                 ->get('/departments/{department_id}/sections')
                 ->rules('required')
@@ -209,6 +212,17 @@ class Designation extends Resource
                     }
                     return false;
                 }),
+
+            BelongsTo::make('Sub Section', 'subSection', 'App\Nova\SubSection')
+                ->exceptOnForms(),
+
+            AjaxSelect::make('Sub Section', 'sub_section_id')
+                ->get('/sections/{section_id}/sub-sections')
+                ->rules('required')
+                ->parent('section_id')
+                ->onlyOnForms(),
+
+
 
         ];
     }

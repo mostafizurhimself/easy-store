@@ -231,33 +231,14 @@ class Expense extends Resource
                 ->currency('BDT')
                 ->rules('required', 'numeric', 'min:0')
                 ->onlyOnForms()
-                ->creationRules(new ExpenseAmountRule($request->get('expenser_id')))
-                ->updateRules(new ExpenseAmountRuleForUpdate($request->get('expenser_id'), $this->resource->amount))
+                ->creationRules(new ExpenseAmountRule($request->get('expenser_id') ?? $request->get('expenser')))
+                ->updateRules(new ExpenseAmountRuleForUpdate($request->get('expenser_id'), $this->resource->amount, $this->resource->expenserId))
                 ->showOnCreating(function($request){
                     if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
                         return true;
                     }
                     return false;
                 })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                }),
-
-
-            Currency::make('Amount')
-                ->currency('BDT')
-                ->rules('required', 'numeric', 'min:0')
-                ->onlyOnForms()
-                ->creationRules(new ExpenseAmountRule($request->get('expenser')))
-                ->updateRules(new ExpenseAmountRuleForUpdate($request->get('expenser'), $this->resource->amount))
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
                     if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
                         return true;
                     }
@@ -331,7 +312,9 @@ class Expense extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmExpense,
+            (new ConfirmExpense)->canSee(function($request){
+                return $request->findModelQuery()->first()->status == ExpenseStatus::DRAFT();
+            }),
         ];
     }
 }

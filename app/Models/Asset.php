@@ -77,9 +77,9 @@ class Asset extends Model implements HasMedia
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transferItems()
+    public function distributionItems()
     {
-       return $this->hasMany(AssetTransferItem::class);
+       return $this->hasMany(AssetDistributionItem::class);
     }
 
     /**
@@ -89,7 +89,7 @@ class Asset extends Model implements HasMedia
      */
     public function getStockAttribute()
     {
-        return $this->quantity - $this->transferItems()->draft()->sum('quantity');
+        return $this->quantity - $this->distributionItems()->draft()->sum('distribution_quantity');
     }
 
 

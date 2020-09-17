@@ -53,7 +53,7 @@ class Material extends Resource
      */
     public function title()
     {
-        return $this->code;
+        return "{$this->name} ({$this->code})";
     }
 
 

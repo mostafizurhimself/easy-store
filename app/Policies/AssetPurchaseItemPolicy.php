@@ -32,7 +32,7 @@ class AssetPurchaseItemPolicy
     public function view(User $user, AssetPurchaseItem $assetPurchaseItem)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view asset purchase items') && $user->locationId == $assetPurchaseItem->locationId ) ||
+                ($user->hasPermissionTo('view asset purchase items') && $user->locationId == $assetPurchaseItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -57,7 +57,7 @@ class AssetPurchaseItemPolicy
     public function update(User $user, AssetPurchaseItem $assetPurchaseItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update asset purchase items') && $user->locationId == $assetPurchaseItem->locationId ) ||
+                ($user->hasPermissionTo('update asset purchase items') && $user->locationId == $assetPurchaseItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
                 $assetPurchaseItem->status == PurchaseStatus::DRAFT();
     }
@@ -72,7 +72,7 @@ class AssetPurchaseItemPolicy
     public function delete(User $user, AssetPurchaseItem $assetPurchaseItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete asset purchase items') && $user->locationId == $assetPurchaseItem->locationId ) ||
+                ($user->hasPermissionTo('delete asset purchase items') && $user->locationId == $assetPurchaseItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('delete all locations data')) &&
                 $assetPurchaseItem->status == PurchaseStatus::DRAFT();
     }
@@ -87,7 +87,7 @@ class AssetPurchaseItemPolicy
     public function restore(User $user, AssetPurchaseItem $assetPurchaseItem)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore asset purchase items') && $user->locationId == $assetPurchaseItem->locationId ) ||
+                ($user->hasPermissionTo('restore asset purchase items') && $user->locationId == $assetPurchaseItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('restore all locations data');
     }
 
@@ -101,7 +101,7 @@ class AssetPurchaseItemPolicy
     public function forceDelete(User $user, AssetPurchaseItem $assetPurchaseItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete asset purchase items') && $user->locationId == $assetPurchaseItem->locationId ) ||
+                ($user->hasPermissionTo('force delete asset purchase items') && $user->locationId == $assetPurchaseItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
                 $assetPurchaseItem->status == PurchaseStatus::DRAFT();
     }

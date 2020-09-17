@@ -169,7 +169,7 @@ class FabricDistribution extends Resource
 
             Number::make('Quantity')
                 ->creationRules(new DistributionQuantityRule(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric')))
-                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'), $this->resource->quantity))
+                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId))
                 ->rules('required', 'numeric', 'min:1')
                 ->onlyOnForms(),
 
@@ -287,7 +287,9 @@ class FabricDistribution extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmDistribution
+            (new ConfirmDistribution)->canSee(function($request){
+                return $request->findModelQuery()->first()->status == DistributionStatus::DRAFT();
+            }),
         ];
     }
 }

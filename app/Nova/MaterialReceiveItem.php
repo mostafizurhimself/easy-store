@@ -56,6 +56,16 @@ class MaterialReceiveItem extends Resource
     public static $displayInNavigation = false;
 
     /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+      return "Receive Items";
+    }
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -161,7 +171,9 @@ class MaterialReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmReceiveItem,
+            (new ConfirmReceiveItem)->canSee(function($request){
+                return $request->findModelQuery()->first()->status == PurchaseStatus::DRAFT();
+            }),
         ];
     }
 

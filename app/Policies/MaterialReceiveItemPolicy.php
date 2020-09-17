@@ -32,7 +32,7 @@ class MaterialReceiveItemPolicy
     public function view(User $user, MaterialReceiveItem $materialReceiveItem)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view material receive items') && $user->locationId == $materialReceiveItem->locationId ) ||
+                ($user->hasPermissionTo('view material receive items') && $user->locationId == $materialReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -57,7 +57,7 @@ class MaterialReceiveItemPolicy
     public function update(User $user, MaterialReceiveItem $materialReceiveItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update material receive items') && $user->locationId == $materialReceiveItem->locationId ) ||
+                ($user->hasPermissionTo('update material receive items') && $user->locationId == $materialReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
                 $materialReceiveItem->status == PurchaseStatus::DRAFT();
     }
@@ -72,7 +72,7 @@ class MaterialReceiveItemPolicy
     public function delete(User $user, MaterialReceiveItem $materialReceiveItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete material receive items') && $user->locationId == $materialReceiveItem->locationId ) ||
+                ($user->hasPermissionTo('delete material receive items') && $user->locationId == $materialReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('delete all locations data')) &&
                 $materialReceiveItem->status == PurchaseStatus::DRAFT();
     }
@@ -87,7 +87,7 @@ class MaterialReceiveItemPolicy
     public function restore(User $user, MaterialReceiveItem $materialReceiveItem)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore material receive items') && $user->locationId == $materialReceiveItem->locationId ) ||
+                ($user->hasPermissionTo('restore material receive items') && $user->locationId == $materialReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('restore all locations data');
     }
 
@@ -101,7 +101,7 @@ class MaterialReceiveItemPolicy
     public function forceDelete(User $user, MaterialReceiveItem $materialReceiveItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete material receive items') && $user->locationId == $materialReceiveItem->locationId ) ||
+                ($user->hasPermissionTo('force delete material receive items') && $user->locationId == $materialReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
                 $materialReceiveItem->status == PurchaseStatus::DRAFT();
     }

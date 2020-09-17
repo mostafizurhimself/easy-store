@@ -158,16 +158,6 @@ class Employee extends Resource
                         ->rules('required')
                         ->onlyOnForms(),
 
-                    Badge::make('Status')->map([
-                            EmployeeStatus::ACTIVE()->getValue()   => 'success',
-                            EmployeeStatus::VACATION()->getValue() => 'warning',
-                            EmployeeStatus::INACTIVE()->getValue() => 'danger',
-                            EmployeeStatus::RESIGNED()->getValue() => 'danger',
-                        ])
-                        ->label(function(){
-                            return Str::title(Str::of($this->status)->replace('_', " "));
-                        }),
-
                 ],
 
                 "Personal Information" => [
@@ -305,6 +295,16 @@ class Employee extends Resource
                         ->currency('BDT')
                         ->rules('required', 'numeric', 'min:0')
                         ->hideFromIndex(),
+
+                    Badge::make('Status')->map([
+                            EmployeeStatus::ACTIVE()->getValue()   => 'success',
+                            EmployeeStatus::VACATION()->getValue() => 'warning',
+                            EmployeeStatus::INACTIVE()->getValue() => 'danger',
+                            EmployeeStatus::RESIGNED()->getValue() => 'danger',
+                        ])
+                        ->label(function(){
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
                 ]
 
             ]))->withToolbar(),

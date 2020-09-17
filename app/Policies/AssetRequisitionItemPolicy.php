@@ -32,7 +32,8 @@ class AssetRequisitionItemPolicy
     public function view(User $user, AssetRequisitionItem $assetRequisitionItem)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view asset requisition items') && $user->locationId == $assetRequisitionItem->locationId ) ||
+                ($user->hasPermissionTo('view asset requisition items') && $user->locationId == $assetRequisitionItem->requisition->locationId ) ||
+                ($user->locationId == $assetRequisitionItem->requisition->receiverId && $assetRequisitionItem->status != RequisitionStatus::DRAFT()) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -57,7 +58,7 @@ class AssetRequisitionItemPolicy
     public function update(User $user, AssetRequisitionItem $assetRequisitionItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update asset requisition items') && $user->locationId == $assetRequisitionItem->locationId ) ||
+                ($user->hasPermissionTo('update asset requisition items') && $user->locationId == $assetRequisitionItem->requisition->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
                 $assetRequisitionItem->status == RequisitionStatus::DRAFT();
     }
@@ -72,7 +73,7 @@ class AssetRequisitionItemPolicy
     public function delete(User $user, AssetRequisitionItem $assetRequisitionItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete asset requisition items') && $user->locationId == $assetRequisitionItem->locationId ) ||
+                ($user->hasPermissionTo('delete asset requisition items') && $user->locationId == $assetRequisitionItem->requisition->locationId ) ||
                 $user->hasPermissionTo('delete all locations data'))&&
                 $assetRequisitionItem->status == RequisitionStatus::DRAFT();
     }
@@ -87,7 +88,7 @@ class AssetRequisitionItemPolicy
     public function restore(User $user, AssetRequisitionItem $assetRequisitionItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore asset requisition items') && $user->locationId == $assetRequisitionItem->locationId ) ||
+                ($user->hasPermissionTo('restore asset requisition items') && $user->locationId == $assetRequisitionItem->requisition->locationId ) ||
                 $user->hasPermissionTo('restore all locations data'))&&
                 $assetRequisitionItem->status == RequisitionStatus::DRAFT();
     }
@@ -102,7 +103,7 @@ class AssetRequisitionItemPolicy
     public function forceDelete(User $user, AssetRequisitionItem $assetRequisitionItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete asset requisition items') && $user->locationId == $assetRequisitionItem->locationId ) ||
+                ($user->hasPermissionTo('force delete asset requisition items') && $user->locationId == $assetRequisitionItem->requisition->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data'))&&
                 $assetRequisitionItem->status == RequisitionStatus::DRAFT();
     }

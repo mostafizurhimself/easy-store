@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Asset;
 use App\Models\Fabric;
 use App\Models\Material;
 use Illuminate\Contracts\Validation\Rule;
@@ -12,6 +13,11 @@ class DistributionQuantityRuleForUpdate implements Rule
      * @var mixed
      */
     protected $item;
+
+    /**
+     * @var mixed
+     */
+    protected $previousItemId;
 
     /**
      * @var double
@@ -28,7 +34,7 @@ class DistributionQuantityRuleForUpdate implements Rule
      *
      * @return void
      */
-    public function __construct($uriKey, $itemId, $previousQuantity)
+    public function __construct($uriKey, $itemId, $previousQuantity, $previousItemId)
     {
         if($uriKey == \App\Nova\FabricDistribution::uriKey()){
             $this->item = Fabric::find($itemId);
@@ -36,6 +42,11 @@ class DistributionQuantityRuleForUpdate implements Rule
 
         if($uriKey == \App\Nova\MaterialDistribution::uriKey()){
             $this->item = Material::find($itemId);
+        }
+
+        if($uriKey == \App\Nova\AssetDistributionItem::uriKey()){
+            $this->item = Asset::find($itemId);
+            $this->previousItem = Asset::find($previousItemId);
         }
 
         $this->previousQuantity = $previousQuantity;
@@ -51,7 +62,11 @@ class DistributionQuantityRuleForUpdate implements Rule
     public function passes($attribute, $value)
     {
         //Calculte the allowed quantity
-        $this->allowedQuantity = $this->item->stock + $this->previousQuantity;
+        if($this->item->id == $this->previousItem->id){
+            $this->allowedQuantity = $this->item->stock + $this->previousQuantity;
+        }else{
+            $this->allowedQuantity = $this->item->stock;
+        }
 
         //Validate the quantity
         return $this->allowedQuantity >= $value;

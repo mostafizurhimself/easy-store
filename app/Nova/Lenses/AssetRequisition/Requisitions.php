@@ -31,6 +31,8 @@ class Requisitions extends Lens
     {
         return $request->withOrdering($request->withFilters(
             $query->where('receiver_id', $request->user()->locationId)
+                    ->where('status','!=', RequisitionStatus::DRAFT())
+                    ->orderBy('id', 'DESC')
         ));
     }
 
@@ -59,7 +61,6 @@ class Requisitions extends Lens
             Text::make('Location', function(){
                     return $this->location->name;
                 }),
-
 
 
             Currency::make('Requisition Amount', 'total_requisition_amount')

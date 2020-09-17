@@ -4,11 +4,14 @@ namespace App\Nova;
 
 use App\Helpers\Money;
 use Laravel\Nova\Panel;
+use App\Enums\ActiveStatus;
 use Inspheric\Fields\Email;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\MorphOne;
@@ -18,7 +21,6 @@ use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Suppliers\UpdateOpeningBalance;
-use App\Traits\WithOutLocation;
 
 class Supplier extends Resource
 {

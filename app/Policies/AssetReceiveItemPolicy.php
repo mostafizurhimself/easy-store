@@ -32,7 +32,7 @@ class AssetReceiveItemPolicy
     public function view(User $user, AssetReceiveItem $assetReceiveItem)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view asset receive items') && $user->locationId == $assetReceiveItem->locationId ) ||
+                ($user->hasPermissionTo('view asset receive items') && $user->locationId == $assetReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -57,7 +57,7 @@ class AssetReceiveItemPolicy
     public function update(User $user, AssetReceiveItem $assetReceiveItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update asset receive items') && $user->locationId == $assetReceiveItem->locationId ) ||
+                ($user->hasPermissionTo('update asset receive items') && $user->locationId == $assetReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
                 $assetReceiveItem->status == PurchaseStatus::DRAFT();
     }
@@ -72,7 +72,7 @@ class AssetReceiveItemPolicy
     public function delete(User $user, AssetReceiveItem $assetReceiveItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete asset receive items') && $user->locationId == $assetReceiveItem->locationId ) ||
+                ($user->hasPermissionTo('delete asset receive items') && $user->locationId == $assetReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('delete all locations data')) &&
                 $assetReceiveItem->status == PurchaseStatus::DRAFT();
     }
@@ -87,7 +87,7 @@ class AssetReceiveItemPolicy
     public function restore(User $user, AssetReceiveItem $assetReceiveItem)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore asset receive items') && $user->locationId == $assetReceiveItem->locationId ) ||
+                ($user->hasPermissionTo('restore asset receive items') && $user->locationId == $assetReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('restore all locations data');
     }
 
@@ -101,7 +101,7 @@ class AssetReceiveItemPolicy
     public function forceDelete(User $user, AssetReceiveItem $assetReceiveItem)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete asset receive items') && $user->locationId == $assetReceiveItem->locationId ) ||
+                ($user->hasPermissionTo('force delete asset receive items') && $user->locationId == $assetReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
                 $assetReceiveItem->status == PurchaseStatus::DRAFT();
     }

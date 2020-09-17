@@ -13,9 +13,13 @@ use Laravel\Nova\Fields\Select;
 use App\Enums\RequisitionStatus;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Rules\DistributionQuantityRule;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Rules\DistributionQuantityRuleForUpdate;
+use App\Rules\DistributionQuantityRuleOnRequisition;
+use App\Rules\DistributionQuantityRuleOnRequisitionForUpdate;
 
-class AssetRequisitionItem extends Resource
+class AssetDistributionItem extends Resource
 {
     use WithOutLocation;
     /**
@@ -23,14 +27,14 @@ class AssetRequisitionItem extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\AssetRequisitionItem::class;
+    public static $model = \App\Models\AssetDistributionItem::class;
 
-        /**
+    /**
      * The side nav menu order.
      *
      * @var int
      */
-    public static $priority = 5;
+    public static $priority = 7;
 
     /**
      * The group associated with the resource.
@@ -38,6 +42,32 @@ class AssetRequisitionItem extends Resource
      * @return string
      */
     public static $group = '<span class="hidden">06</span>Asset Section';
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $title = 'readable_id';
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
+
+    /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+      return "Distribution Items";
+    }
 
     /**
      * Indicates if the resource should be globally searchable.
@@ -54,43 +84,6 @@ class AssetRequisitionItem extends Resource
     public static $displayInNavigation = false;
 
     /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
-    public static $title = 'readable_id';
-
-    /**
-     * Get the search result subtitle for the resource.
-     *
-     * @return string
-     */
-    public function subtitle()
-    {
-      return "Location: {$this->location->name}";
-    }
-
-    /**
-     * Get the displayable label of the resource.
-     *
-     * @return string
-     */
-    public static function label()
-    {
-      return "Requisition Items";
-    }
-
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
-    public static $search = [
-        'readable_id',
-    ];
-
-    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -99,60 +92,72 @@ class AssetRequisitionItem extends Resource
     public function fields(Request $request)
     {
         return [
-            BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
+            BelongsTo::make('Invoice', 'invoice', "App\Nova\AssetDistributionInvoice")
                 ->onlyOnDetail(),
 
-            Text::make('Asset', function(){
-                return $this->asset->name."({$this->asset->code})";
-            })
+            BelongsTo::make('Asset')
                 ->exceptOnForms(),
 
             Select::make('Asset', 'asset_id')
                 ->options(function(){
-                    //Get the requisition from request on create
-                    $requisition = \App\Models\AssetRequisition::find(request()->viaResourceId);
+                    //Get the invoice form the request
+                    $invoice = \App\Models\AssetDistributionInvoice::find(request()->viaResourceId);
 
-                    //Get the requisition without request/after create
-                    if(empty($requisition)){
-                        $requisition = \App\Models\AssetRequisition::find($this->resource->requisitionId);
+                    //Get the invoice after create
+                    if(empty($invoice)){
+                        $invoice = \App\Models\AssetDistributionInvoice::find($this->resource->invoiceId);
                     }
 
                     try {
                         $assetId = request()->findResourceOrFail()->assetId;
                     } catch (\Throwable $th) {
-                        $assetId = null;
+                        $assetId = $this->resource->assetId;
                     }
-                    return \App\Models\Asset::where('location_id', $requisition->receiverId)
-                        ->whereNotIn('id', $requisition->assetIds($assetId))->get()->map(function($asset){
+
+                    return \App\Models\Asset::whereIn('id',$invoice->requisition->assetIds())
+                        ->whereNotIn('id', $invoice->assetIds($assetId))->get()->map(function($asset){
                             return [ 'value' => $asset->id, 'label' => $asset->name."({$asset->code})" ];
                         });
                 })
                 ->rules('required')
                 ->onlyOnForms(),
 
-            Number::make('Quantity', 'requisition_quantity')
+            Number::make('Quantity', 'distribution_quantity')
                 ->rules('required', 'numeric', 'min:0')
+                ->creationRules(new DistributionQuantityRule(\App\Nova\AssetDistributionItem::uriKey(), $request->get('asset_id')),
+                                new DistributionQuantityRuleOnRequisition($request->viaResource, $request->viaResourceId, $request->get('asset_id')),
+                )
+                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\AssetDistributionItem::uriKey(),
+                                                                    $request->get('asset_id'),
+                                                                    $this->resource->distributionQuantity,
+                                                                    $this->resource->assetId),
+                            new DistributionQuantityRuleOnRequisitionForUpdate($request->viaResource,
+                                                                    $request->viaResourceId,
+                                                                    $request->get('asset_id'),
+                                                                    $this->resource->assetId,
+                                                                    $this->resource->distributionQuantity),
+                            )
                 ->onlyOnForms(),
-
-            Text::make('Requisition Quantity', function(){
-                return $this->requisitionQuantity." ".$this->unit;
-            })
-            ->exceptOnForms(),
 
             Text::make('Distribution Quantity', function(){
                 return $this->distributionQuantity." ".$this->unit;
             })
             ->exceptOnForms(),
 
-            Currency::make('Requisition Rate')
-                ->currency('BDT')
-                ->exceptOnForms(),
-
-            Currency::make('Requisition Amount')
+            Currency::make('Distribution Rate')
                 ->currency('BDT')
                 ->exceptOnForms(),
 
             Currency::make('Distribution Amount')
+                ->currency('BDT')
+                ->exceptOnForms(),
+
+            Text::make('Receive Quantity', function(){
+                    return $this->receiveQuantity." ".$this->unit;
+                })
+                ->exceptOnForms(),
+
+            Currency::make('Receive Amount')
                 ->currency('BDT')
                 ->onlyOnDetail(),
 
@@ -240,4 +245,5 @@ class AssetRequisitionItem extends Resource
 
         return '/resources/'.$resource->uriKey()."/".$resource->id;
     }
+
 }
