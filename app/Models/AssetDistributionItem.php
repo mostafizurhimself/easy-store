@@ -51,7 +51,7 @@ class AssetDistributionItem extends Model
      */
     public function invoice()
     {
-       return $this->belongsTo(AssetDistributionInvoice::class)->withTrashed();
+       return $this->belongsTo(AssetDistributionInvoice::class, 'invoice_id')->withTrashed();
     }
 
     /**
@@ -85,14 +85,25 @@ class AssetDistributionItem extends Model
     }
 
     /**
-     * Get the unit for the assets
+     * Determines one-to-many relation
      *
-     * @return string
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function getUnitAttribute()
+    public function receiveItems()
     {
-        return $this->asset->unit->name;
+       return $this->hasMany(AssetDistributionReceiveItem::class, 'distribution_item_id');
     }
+
+    /**
+     * Get the purchase item remaining receive quantity
+     *
+     * @return double
+     */
+    public function getRemainingQuantityAttribute()
+    {
+        return $this->distributionQuantity - $this->receiveQuantity;
+    }
+
 
     /**
      * Scope a query to only include draft distributions.
@@ -104,5 +115,61 @@ class AssetDistributionItem extends Model
     {
         return $query->where('status', DistributionStatus::DRAFT());
     }
+
+    /**
+     * Get the unit for the assets
+     *
+     * @return string
+     */
+    public function getUnitAttribute()
+    {
+        return $this->asset->unit->name;
+    }
+
+    /**
+     * Update total receive quantity
+     *
+     * @return void
+     */
+    public function updateReceiveQuantity()
+    {
+        $this->receiveQuantity = $this->receiveItems->sum('quantity');
+        $this->save();
+    }
+
+     /**
+     * Update total receive amount
+     *
+     * @return void
+     */
+    public function updateReceiveAmount()
+    {
+        $this->receiveAmount = $this->receiveItems->sum('amount');
+        $this->save();
+    }
+
+    /**
+     * Update purchase item status
+     *
+     * @return void
+     */
+    public function updateStatus()
+    {
+        if($this->receiveItems()->exists() && ($this->purchaseQuantity == $this->receiveQuantity)){
+            $this->status = PurchaseStatus::RECEIVED();
+        }
+
+        if($this->receiveItems()->exists() && ($this->purchaseQuantity != $this->receiveQuantity)){
+            $this->status = PurchaseStatus::PARTIAL();
+        }
+
+        if(!$this->receiveItems()->exists()){
+            $this->status = PurchaseStatus::CONFIRMED();
+        }
+
+        $this->save();
+
+    }
+
 
 }

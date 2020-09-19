@@ -93,6 +93,16 @@ class AssetRequisition extends Model implements HasMedia
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function distributions()
+    {
+       return $this->hasMany(AssetDistributionInvoice::class, 'requisition_id');
+    }
+
+    /**
      * Get the requisition assets ids as an array
      *
      * @return array

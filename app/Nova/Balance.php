@@ -237,9 +237,7 @@ class Balance extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmBalance)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == BalanceStatus::DRAFT();
-            }),
+            new ConfirmBalance
         ];
     }
 }

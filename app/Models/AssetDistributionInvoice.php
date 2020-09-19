@@ -75,6 +75,16 @@ class AssetDistributionInvoice extends Model implements HasMedia
     /**
      * Determines one-to-many relation
      *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function receiveItems()
+    {
+       return $this->hasMany(AssetDistributionReceiveItem::class, 'invoice_id');
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function receiver()
@@ -93,24 +103,13 @@ class AssetDistributionInvoice extends Model implements HasMedia
     }
 
     /**
-     * Get the purchase assets ids as an array
+     * Get the distribuion assets ids as an array
      *
      * @return array
      */
     public function assetIds($id = null)
     {
         return $this->distributionItems->whereNotIn('asset_id', [$id])->pluck('asset_id')->toArray();
-    }
-
-    /**
-     * Update the total purchase amount
-     *
-     * @return void
-     */
-    public function updateDistributionAmount()
-    {
-        $this->totalDistributionAmount = $this->distributionItems->sum('distribution_amount');
-        $this->save();
     }
 
     /**
@@ -123,6 +122,103 @@ class AssetDistributionInvoice extends Model implements HasMedia
     {
         return $query->where('status', DistributionStatus::DRAFT());
     }
+
+    /**
+     * Update the total distribuion amount
+     *
+     * @return void
+     */
+    public function updateDistributionAmount()
+    {
+        $this->totalDistributionAmount = $this->distributionItems->sum('distribution_amount');
+        $this->save();
+    }
+
+    /**
+     * Update the total receive amount
+     *
+     * @return void
+     */
+    public function updateReceiveAmount()
+    {
+        $this->totalReceiveAmount = $this->receiveItems->sum('amount');
+        $this->save();
+    }
+
+    /**
+     * Check all the distribuion items status is confirmed or not
+     *
+     * @return bool
+     */
+    public function isConfirmed()
+    {
+        $status = $this->distributionItems()->pluck('status')->unique();
+        if($status->count() == 1  && $status->first() == DistributionStatus::CONFIRMED()){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check all the distribuion items status is received or not
+     *
+     * @return bool
+     */
+    public function isReceived()
+    {
+        $status = $this->distributionItems()->pluck('status')->unique();
+        if($status->count() == 1  && $status->first() == DistributionStatus::RECEIVED()){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check any of the distribuion items status is partial or not
+     *
+     * @return bool
+     */
+    public function isPartial()
+    {
+        if($this->receiveItems()->exists()){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Update the distribuion invoice status
+     *
+     * @return void
+     */
+    public function updateStatus()
+    {
+        if($this->distributionItems()->exists()){
+
+            if($this->isConfirmed()){
+                $this->status = DistributionStatus::CONFIRMED();
+                $this->save();
+                return;
+            }
+
+            if($this->isReceived()){
+                $this->status = DistributionStatus::RECEIVED();
+                $this->save();
+                return;
+            }
+
+            if($this->isPartial()){
+                $this->status = DistributionStatus::PARTIAL();
+                $this->save();
+                return;
+            }
+
+        }else{
+            $this->status = DistributionStatus::DRAFT();
+            $this->save();
+        }
+    }
+
 
 
 

@@ -126,7 +126,7 @@ class ServiceReceive extends Resource
             Badge::make('Status')->map([
                     DispatchStatus::DRAFT()->getValue()     => 'warning',
                     DispatchStatus::CONFIRMED()->getValue() => 'info',
-                    DispatchStatus::PARTIAL()->getValue()   => 'success',
+                    DispatchStatus::PARTIAL()->getValue()   => 'danger',
                     DispatchStatus::RECEIVED()->getValue()  => 'success',
                 ])
                 ->label(function(){
@@ -180,9 +180,7 @@ class ServiceReceive extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmReceive)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == DispatchStatus::DRAFT();
-            }),
+            new ConfirmReceive
         ];
     }
 

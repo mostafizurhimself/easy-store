@@ -30,19 +30,6 @@ class Location extends Resource
     public static $model = 'App\Models\Location';
 
     /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel()
-    {
-            $model = static::$model;
-            $model = new $model;
-            $model->status= LocationStatus::ACTIVE();
-            return $model;
-    }
-
-    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
@@ -143,6 +130,7 @@ class Location extends Resource
             Select::make('Status')
                 ->options(LocationStatus::titleCaseOptions())
                 ->rules('required')
+                ->default(LocationStatus::ACTIVE())
                 ->onlyOnForms(),
 
             Badge::make('Status')->map([

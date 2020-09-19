@@ -113,7 +113,7 @@ class AssetPurchaseOrderPolicy
      * @param  \App\Models\AssetPurchaseOrder  $assetPurchaseOrder
      * @return mixed
      */
-    public function addPurchaseItem(User $user, AssetPurchaseOrder $assetPurchaseOrder)
+    public function addAssetPurchaseItem(User $user, AssetPurchaseOrder $assetPurchaseOrder)
     {
         return $assetPurchaseOrder->status == PurchaseStatus::DRAFT();
     }

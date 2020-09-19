@@ -118,7 +118,7 @@ class ServiceDispatch extends Resource
             Badge::make('Status')->map([
                 DispatchStatus::DRAFT()->getValue()     => 'warning',
                 DispatchStatus::CONFIRMED()->getValue() => 'info',
-                DispatchStatus::PARTIAL()->getValue()   => 'success',
+                DispatchStatus::PARTIAL()->getValue()   => 'danger',
                 DispatchStatus::RECEIVED()->getValue()  => 'success',
             ])
                 ->label(function () {

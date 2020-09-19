@@ -92,10 +92,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             })
             ->roleResource(Role::class)
             ->permissionResource(Permission::class),
-
-            // (new \Bolechen\NovaActivitylog\NovaActivitylog())->canSee(function($request){
-            //     return $request->user()->isSuperAdmin();
-            // }),
         ];
     }
 

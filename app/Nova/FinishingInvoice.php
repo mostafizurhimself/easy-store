@@ -266,9 +266,7 @@ class FinishingInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmFinishing)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == FinishingStatus::DRAFT();
-            }),
+            new ConfirmFinishing
         ];
     }
 }

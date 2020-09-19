@@ -19,7 +19,7 @@ class ServiceInvoicePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isSuperAdmin() || $user->hasPermissionTo('view any service dispatch invoices');
+        return $user->isSuperAdmin() || $user->hasPermissionTo('view any service invoices');
     }
 
     /**
@@ -32,7 +32,7 @@ class ServiceInvoicePolicy
     public function view(User $user, ServiceInvoice $serviceInvoice)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view service dispatch invoices') && $user->locationId == $serviceInvoice->locationId ) ||
+                ($user->hasPermissionTo('view service invoices') && $user->locationId == $serviceInvoice->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -44,7 +44,7 @@ class ServiceInvoicePolicy
      */
     public function create(User $user)
     {
-        return $user->isSuperAdmin() || $user->hasPermissionTo('create service dispatch invoices');
+        return $user->isSuperAdmin() || $user->hasPermissionTo('create service invoices');
     }
 
     /**
@@ -57,7 +57,7 @@ class ServiceInvoicePolicy
     public function update(User $user, ServiceInvoice $serviceInvoice)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update service dispatch invoices') && $user->locationId == $serviceInvoice->locationId ) ||
+                ($user->hasPermissionTo('update service invoices') && $user->locationId == $serviceInvoice->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
                 $serviceInvoice->status == DispatchStatus::DRAFT();
     }
@@ -72,7 +72,7 @@ class ServiceInvoicePolicy
     public function delete(User $user, ServiceInvoice $serviceInvoice)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete service dispatch invoices') && $user->locationId == $serviceInvoice->locationId ) ||
+                ($user->hasPermissionTo('delete service invoices') && $user->locationId == $serviceInvoice->locationId ) ||
                 $user->hasPermissionTo('delete all locations data'))  &&
                 $serviceInvoice->status == DispatchStatus::DRAFT();
     }
@@ -87,7 +87,7 @@ class ServiceInvoicePolicy
     public function restore(User $user, ServiceInvoice $serviceInvoice)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore service dispatch invoices') && $user->locationId == $serviceInvoice->locationId ) ||
+                ($user->hasPermissionTo('restore service invoices') && $user->locationId == $serviceInvoice->locationId ) ||
                 $user->hasPermissionTo('restore all locations data'))  &&
                 $serviceInvoice->status == DispatchStatus::DRAFT();
     }
@@ -102,9 +102,21 @@ class ServiceInvoicePolicy
     public function forceDelete(User $user, ServiceInvoice $serviceInvoice)
     {
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete service dispatch invoices') && $user->locationId == $serviceInvoice->locationId ) ||
+                ($user->hasPermissionTo('force delete service invoices') && $user->locationId == $serviceInvoice->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data'))  &&
                 $serviceInvoice->status == DispatchStatus::DRAFT();
+    }
+
+     /**
+     * Determine whether the user can a dispatch to the invoice.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ServiceInvoice  $serviceInvoice
+     * @return mixed
+     */
+    public function addServiceDispatch(User $user, ServiceInvoice $serviceInvoice)
+    {
+        return $serviceInvoice->status == DispatchStatus::DRAFT();
     }
 
     /**

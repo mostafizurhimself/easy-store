@@ -2,20 +2,25 @@
 
 namespace App\Nova;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use App\Enums\PurchaseStatus;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\HasMany;
+use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
+use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 
-class FabricPurchaseItem extends Resource
+class AssetDistributionReceiveItem extends Resource
 {
     use WithOutLocation;
     /**
@@ -23,7 +28,7 @@ class FabricPurchaseItem extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\FabricPurchaseItem';
+    public static $model = \App\Models\AssetDistributionReceiveItem::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -39,8 +44,17 @@ class FabricPurchaseItem extends Resource
      */
     public static function label()
     {
-      return "Purchase Item";
+      return "Receive Items";
     }
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
 
     /**
      * Indicates if the resource should be globally searchable.
@@ -65,53 +79,59 @@ class FabricPurchaseItem extends Resource
     public function fields(Request $request)
     {
         return [
-            // ID::make()->sortable(),
+            // ID::make(__('ID'), 'id')->sortable(),
 
-            BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\FabricPurchaseOrder")
+            BelongsTo::make('Invoice', 'invoice', \App\Nova\AssetDistributionInvoice::class)
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Fabric'),
+            BelongsTo::make('Asset')
+                ->hideWhenCreating()
+                ->readonly(),
 
-            Number::make('Quantity', 'purchase_quantity')
+            Date::make('Date')
+                ->rules('required')
+                ->default(function($request){
+                    return Carbon::now();
+                }),
+
+            Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
+                ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
+                ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\AssetDistributionItem::uriKey(), $this->resource->distributionItemId, $this->resource->quantity))
                 ->onlyOnForms(),
 
-            Text::make('Purchase Quantity', function(){
-                return $this->purchaseQuantity." ".$this->unit;
-            })
-            ->exceptOnForms(),
+            Text::make('Quantity', function(){
+                    return $this->quantity." ".$this->unit;
+                })
+                ->exceptOnForms(),
 
-            Text::make('Receive Quantity', function(){
-                return $this->receiveQuantity." ".$this->unit;
-            })
-            ->exceptOnForms(),
-
-            Currency::make('Purchase Rate')
+            Currency::make('Rate')
                 ->currency('BDT')
                 ->exceptOnForms(),
 
-            Currency::make('Purchase Amount')
+            Currency::make('Amount')
                 ->currency('BDT')
                 ->exceptOnForms(),
 
-            Currency::make('Receive Amount')
-                ->currency('BDT')
-                ->onlyOnDetail(),
+            Text::make("Reference")
+                ->hideFromIndex()
+                ->rules('nullable', 'string', 'max:200'),
+
+            Files::make('Attachments', 'distribution-receive-item-attachments')
+                ->hideFromIndex(),
+
+            Trix::make('Note')
+                ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
-                    PurchaseStatus::DRAFT()->getValue()     => 'warning',
-                    PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'danger',
-                    PurchaseStatus::RECEIVED()->getValue()  => 'success',
-                    PurchaseStatus::BILLED()->getValue()    => 'danger',
+                    DistributionStatus::DRAFT()->getValue()     => 'warning',
+                    DistributionStatus::CONFIRMED()->getValue() => 'info',
+                    DistributionStatus::PARTIAL()->getValue()   => 'danger',
+                    DistributionStatus::RECEIVED()->getValue()  => 'success',
                 ])
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
-
-            HasMany::make('Receive Items', 'receiveItems', 'App\Nova\FabricReceiveItem'),
-
-
         ];
     }
 
@@ -157,29 +177,6 @@ class FabricPurchaseItem extends Resource
     public function actions(Request $request)
     {
         return [];
-    }
-
-    /**
-     * Build a "relatable" query for the given resource.
-     *
-     * This query determines which instances of the model may be attached to other resources.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public static function relatableFabrics(NovaRequest $request, $query)
-    {
-        $purchase = \App\Models\FabricPurchaseOrder::find($request->viaResourceId);
-        try {
-            $fabricId = $request->findResourceOrFail()->fabricId;
-        } catch (\Throwable $th) {
-           $fabricId = null;
-        }
-        return $query->whereHas('suppliers', function($supplier) use($purchase){
-                $supplier->where('supplier_id', $purchase->supplierId)
-                        ->where('location_id', $purchase->locationId);
-        })->whereNotIn('id', $purchase->fabricIds($fabricId));
     }
 
     /**

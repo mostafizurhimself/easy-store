@@ -5,6 +5,7 @@ namespace App\Rules;
 use App\Models\AssetPurchaseItem;
 use App\Models\FabricPurchaseItem;
 use App\Models\MaterialPurchaseItem;
+use App\Models\AssetDistributionItem;
 use Illuminate\Contracts\Validation\Rule;
 
 class ReceiveQuantityRule implements Rule
@@ -13,25 +14,29 @@ class ReceiveQuantityRule implements Rule
     /**
      * Purchase item instance
      */
-    protected $purchaseItem;
+    protected $item;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($viaResource, $purchaseItemId)
+    public function __construct($viaResource, $itemId)
     {
         if($viaResource == \App\Nova\FabricPurchaseItem::uriKey()){
-            $this->purchaseItem = FabricPurchaseItem::find($purchaseItemId);
+            $this->item = FabricPurchaseItem::find($itemId);
         }
 
         if($viaResource == \App\Nova\MaterialPurchaseItem::uriKey()){
-            $this->purchaseItem = MaterialPurchaseItem::find($purchaseItemId);
+            $this->item = MaterialPurchaseItem::find($itemId);
         }
 
         if($viaResource == \App\Nova\AssetPurchaseItem::uriKey()){
-            $this->purchaseItem = AssetPurchaseItem::find($purchaseItemId);
+            $this->item = AssetPurchaseItem::find($itemId);
+        }
+
+        if($viaResource == \App\Nova\AssetDistributionItem::uriKey()){
+            $this->item = AssetDistributionItem::find($itemId);
         }
     }
 
@@ -44,7 +49,7 @@ class ReceiveQuantityRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $this->purchaseItem->remainingQuantity >= $value;
+        return $this->item->remainingQuantity >= $value;
     }
 
     /**
@@ -54,6 +59,6 @@ class ReceiveQuantityRule implements Rule
      */
     public function message()
     {
-        return "You can not receive more than {$this->purchaseItem->remainingQuantity} {$this->purchaseItem->unit}";
+        return "You can not receive more than {$this->item->remainingQuantity} {$this->item->unit}";
     }
 }

@@ -287,9 +287,7 @@ class FabricDistribution extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmDistribution)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == DistributionStatus::DRAFT();
-            }),
+            new ConfirmDistribution
         ];
     }
 }

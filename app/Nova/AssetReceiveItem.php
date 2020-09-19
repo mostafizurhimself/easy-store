@@ -32,7 +32,7 @@ class AssetReceiveItem extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\AssetReceiveItem';
+    public static $model = \App\Models\AssetReceiveItem::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -121,7 +121,7 @@ class AssetReceiveItem extends Resource
             Badge::make('Status')->map([
                     PurchaseStatus::DRAFT()->getValue()     => 'warning',
                     PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'success',
+                    PurchaseStatus::PARTIAL()->getValue()   => 'danger',
                     PurchaseStatus::RECEIVED()->getValue()  => 'success',
                     PurchaseStatus::BILLED()->getValue()    => 'danger',
                 ])
@@ -175,9 +175,7 @@ class AssetReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmReceiveItem)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == PurchaseStatus::DRAFT();
-            }),
+            new ConfirmReceiveItem
         ];
     }
 

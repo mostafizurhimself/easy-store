@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Select;
+use Illuminate\Support\Optional;
 use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
@@ -21,6 +22,7 @@ use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\AssetDistributionInvoices\ConfirmInvoice;
+use App\Nova\Lenses\AssetDistributionInvoice\DistributionInvoices;
 
 class AssetDistributionInvoice extends Resource
 {
@@ -159,7 +161,8 @@ class AssetDistributionInvoice extends Resource
             AjaxSelect::make('Requisition', 'requisition_id')
                 ->get('/locations/{receiver_id}/asset-requisitions')
                 ->parent('receiver_id')
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->hideWhenUpdating(),
 
             BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
                 ->exceptOnForms(),
@@ -167,14 +170,15 @@ class AssetDistributionInvoice extends Resource
             Badge::make('Status')->map([
                     DistributionStatus::DRAFT()->getValue()     => 'warning',
                     DistributionStatus::CONFIRMED()->getValue() => 'info',
-                    DistributionStatus::PARTIAL()->getValue()   => 'success',
+                    DistributionStatus::PARTIAL()->getValue()   => 'danger',
                     DistributionStatus::RECEIVED()->getValue()  => 'success',
                 ])
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
-            HasMany::make('Distribution Items', 'distributionItems', 'App\Nova\AssetDistributionItem'),
+            HasMany::make('Distribution Items', 'distributionItems', \App\Nova\AssetDistributionItem::class),
+            HasMany::make('Receive Items', 'receiveItems', \App\Nova\AssetDistributionReceiveItem::class),
         ];
     }
 
@@ -208,7 +212,9 @@ class AssetDistributionInvoice extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new DistributionInvoices
+        ];
     }
 
     /**
@@ -220,9 +226,7 @@ class AssetDistributionInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmInvoice)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == DistributionStatus::DRAFT();
-            }),
+            new ConfirmInvoice
         ];
     }
 }

@@ -219,8 +219,10 @@ class AjaxController extends Controller
      */
     public function assetRequisitionsViaLocation(Location $location)
     {
-        return $location->assetRequisitions->where('status', '!=', RequisitionStatus::DRAFT())->map(function($requisition) {
-            return [ 'value' => $requisition->id, 'display' => $requisition->readableId ];
+        return $location->assetRequisitions->where('status', '=', RequisitionStatus::CONFIRMED())->map(function($requisition) {
+            if(!$requisition->distributions()->exists()){
+                return [ 'value' => $requisition->id, 'display' => $requisition->readableId ];
+            }
         });
     }
 

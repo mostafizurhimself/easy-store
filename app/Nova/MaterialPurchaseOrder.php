@@ -158,7 +158,7 @@ class MaterialPurchaseOrder extends Resource
             Badge::make('Status')->map([
                     PurchaseStatus::DRAFT()->getValue()     => 'warning',
                     PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'success',
+                    PurchaseStatus::PARTIAL()->getValue()   => 'danger',
                     PurchaseStatus::RECEIVED()->getValue()  => 'success',
                     PurchaseStatus::BILLED()->getValue()    => 'danger',
                 ])
@@ -225,9 +225,7 @@ class MaterialPurchaseOrder extends Resource
                 return $request->user()->isSuperAdmin();
             }),
 
-            (new ConfirmPurchase)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == PurchaseStatus::DRAFT();
-            }),
+            new ConfirmPurchase
         ];
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Nova\Lenses\AssetRequisition;
+namespace App\Nova\Lenses\AssetDistributionInvoice;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -10,15 +11,14 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Fields\Badge;
-use App\Enums\RequisitionStatus;
 use Laravel\Nova\Fields\HasMany;
+use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
-use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\LensRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 
-class Requisitions extends Lens
+class DistributionInvoices extends Lens
 {
     /**
      * Get the query builder / paginator for the lens.
@@ -31,7 +31,7 @@ class Requisitions extends Lens
     {
         return $request->withOrdering($request->withFilters(
             $query->where('receiver_id', $request->user()->locationId)
-                    ->where('status','!=', RequisitionStatus::DRAFT())
+                    ->where('status','!=', DistributionStatus::DRAFT())
                     ->orderBy('id', 'DESC')
         ));
     }
@@ -45,10 +45,9 @@ class Requisitions extends Lens
     public function fields(Request $request)
     {
         return [
+            ID::make(__('ID'), 'id')->sortable(),
 
-            ID::make('ID', 'id'),
-
-            Text::make('Requisition', function(){
+            Text::make('Invoice No', function(){
                 return $this->readableId;
             }),
 
@@ -56,29 +55,30 @@ class Requisitions extends Lens
                 ->rules('required')
                 ->default(function($request){
                     return Carbon::now();
-                }),
+                })
+                ->readonly(),
 
             Text::make('Location', function(){
                     return $this->location->name;
                 }),
 
 
-            Currency::make('Requisition Amount', 'total_requisition_amount')
+            Currency::make('Distribution Amount', 'total_distribution_amount')
                 ->currency('BDT')
-                ->exceptOnForms(),
-
-            Date::make('Deadline')
-                ->rules('required'),
+                ->onlyOnDetail(),
 
             Text::make('Receiver', function(){
                 return $this->receiver->name;
             }),
 
+            BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
+                ->exceptOnForms(),
+
             Badge::make('Status')->map([
-                    RequisitionStatus::DRAFT()->getValue()     => 'warning',
-                    RequisitionStatus::CONFIRMED()->getValue() => 'info',
-                    RequisitionStatus::PARTIAL()->getValue()   => 'danger',
-                    RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
+                    DistributionStatus::DRAFT()->getValue()     => 'warning',
+                    DistributionStatus::CONFIRMED()->getValue() => 'info',
+                    DistributionStatus::PARTIAL()->getValue()   => 'danger',
+                    DistributionStatus::RECEIVED()->getValue()  => 'success',
                 ])
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
@@ -126,6 +126,6 @@ class Requisitions extends Lens
      */
     public function uriKey()
     {
-        return 'asset-requisition-requisitions';
+        return 'asset-distribution-invoice-distribution-invoices';
     }
 }

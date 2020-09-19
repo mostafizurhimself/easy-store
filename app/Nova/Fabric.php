@@ -309,9 +309,7 @@ class Fabric extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UpdateOpeningQuantity)->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update fabrics');
-            })->onlyOnDetail(),
+            new UpdateOpeningQuantity
         ];
     }
 }

@@ -312,9 +312,7 @@ class Expense extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmExpense)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == ExpenseStatus::DRAFT();
-            }),
+            new ConfirmExpense
         ];
     }
 }

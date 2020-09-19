@@ -33,6 +33,7 @@ class AssetDistributionItemPolicy
     {
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('view asset distribution items') && $user->locationId == $assetDistributionItem->invoice->locationId ) ||
+                ($user->locationId == $assetDistributionItem->invoice->receiverId && $assetDistributionItem->status != DistributionStatus::DRAFT()) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -59,7 +60,7 @@ class AssetDistributionItemPolicy
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update asset distribution items') && $user->locationId == $assetDistributionItem->invoice->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
-                $assetDistributionItem->staus == DistributionStatus::DRAFT();
+                $assetDistributionItem->status == DistributionStatus::DRAFT();
     }
 
     /**
@@ -74,7 +75,7 @@ class AssetDistributionItemPolicy
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete asset distribution items') && $user->locationId == $assetDistributionItem->invoice->locationId ) ||
                 $user->hasPermissionTo('delete all locations data'))&&
-                $assetDistributionItem->staus == DistributionStatus::DRAFT();
+                $assetDistributionItem->status == DistributionStatus::DRAFT();
     }
 
     /**
@@ -89,7 +90,7 @@ class AssetDistributionItemPolicy
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore asset distribution items') && $user->locationId == $assetDistributionItem->invoice->locationId ) ||
                 $user->hasPermissionTo('restore all locations data'))&&
-                $assetDistributionItem->staus == DistributionStatus::DRAFT();
+                $assetDistributionItem->status == DistributionStatus::DRAFT();
     }
 
     /**
@@ -105,6 +106,19 @@ class AssetDistributionItemPolicy
                 ($user->hasPermissionTo('force delete asset distribution items') && $user->locationId == $assetDistributionItem->invoice->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
                 $assetDistributionItem->staus == DistributionStatus::DRAFT();
+    }
+
+    /**
+     * Determine whether the user can add a receive item to the distribution item.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\AssetDistributionItem  $assetDistributionItem
+     * @return mixed
+     */
+    public function addAssetDistributionReceiveItem(User $user, AssetDistributionItem $assetDistributionItem)
+    {
+        return ($assetDistributionItem->status == DistributionStatus::CONFIRMED() || $assetDistributionItem->status == DistributionStatus::PARTIAL())
+                && $assetDistributionItem->invoice->receiverId == $user->locationId;
     }
 
 }

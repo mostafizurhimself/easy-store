@@ -160,7 +160,7 @@ class ServiceInvoice extends Resource
             Badge::make('Status')->map([
                 DispatchStatus::DRAFT()->getValue()     => 'warning',
                 DispatchStatus::CONFIRMED()->getValue() => 'info',
-                DispatchStatus::PARTIAL()->getValue()   => 'success',
+                DispatchStatus::PARTIAL()->getValue()   => 'danger',
                 DispatchStatus::RECEIVED()->getValue()  => 'success',
             ])
                 ->label(function () {
@@ -222,9 +222,7 @@ class ServiceInvoice extends Resource
                 return $request->user()->isSuperAdmin();
             }),
 
-            (new ConfirmInvoice)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == DispatchStatus::DRAFT();
-            }),
+            new ConfirmInvoice
         ];
     }
 }

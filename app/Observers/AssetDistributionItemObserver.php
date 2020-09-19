@@ -16,12 +16,13 @@ class AssetDistributionItemObserver
     public function saving(AssetDistributionItem $assetDistributionItem)
     {
         //Set the requisiton item
-        if($assetDistributionItem->invoice->requisitionId){
-           $assetDistributionItem->requisitionItemId = $assetDistributionItem->invoice
-                                                                            ->requisition
-                                                                            ->requisitionItems
-                                                                            ->where('asset_id', $assetDistributionItem->assetId)
-                                                                            ->first()->id;
+        if ($assetDistributionItem->invoice->requisitionId) {
+            $assetDistributionItem->requisitionId = $assetDistributionItem->invoice->requisitionId;
+            $assetDistributionItem->requisitionItemId = $assetDistributionItem->invoice
+                ->requisition
+                ->requisitionItems
+                ->where('asset_id', $assetDistributionItem->assetId)
+                ->first()->id;
         }
         //Get the asset
         $asset = Asset::find($assetDistributionItem->assetId);

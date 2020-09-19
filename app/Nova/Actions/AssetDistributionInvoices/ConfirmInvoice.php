@@ -30,19 +30,22 @@ class ConfirmInvoice extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
+        foreach ($models as $model) {
 
             //Get all the distribution items of the distribution invoice
-            foreach($model->distributionItems as $distributionItem){
+            foreach ($model->distributionItems as $distributionItem) {
 
-                // Update the related requisition item distribution quantity
-                $distributionItem->requisitionItem->updateDistributionQuantity();
+                //Check if requisition exits
+                if ($distributionItem->requisitionId) {
+                    // Update the related requisition item distribution quantity
+                    $distributionItem->requisitionItem->updateDistributionQuantity();
 
-                // Update the related requisition item distribution amount
-                $distributionItem->requisitionItem->updateDistributionAmount();
+                    // Update the related requisition item distribution amount
+                    $distributionItem->requisitionItem->updateDistributionAmount();
 
-                // Update the related requisition item distribution status
-                $distributionItem->requisitionItem->updateStatus();
+                    // Update the related requisition item distribution status
+                    $distributionItem->requisitionItem->updateStatus();
+                }
 
                 //Decrease the asset quantity
                 $distributionItem->asset->decrement('quantity', $distributionItem->distributionQuantity);
@@ -52,11 +55,14 @@ class ConfirmInvoice extends Action
                 $distributionItem->save();
             }
 
-            //Update the related requisition distribution amount
-            $model->requisition->updateDistributionAmount();
+            //Check if requisition exits
+            if ($model->requisitionId) {
+                //Update the related requisition distribution amount
+                $model->requisition->updateDistributionAmount();
 
-            //Update the related requisition distribution status
-            $model->requisition->updateStatus();
+                //Update the related requisition distribution status
+                $model->requisition->updateStatus();
+            }
 
             //Update the distribution invoice status
             $model->status = DistributionStatus::CONFIRMED();

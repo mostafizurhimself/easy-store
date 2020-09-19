@@ -11,6 +11,7 @@ use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use App\Enums\RequisitionStatus;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Rules\DistributionQuantityRule;
@@ -95,32 +96,33 @@ class AssetDistributionItem extends Resource
             BelongsTo::make('Invoice', 'invoice', "App\Nova\AssetDistributionInvoice")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Asset')
-                ->exceptOnForms(),
+            BelongsTo::make('Asset'),
 
-            Select::make('Asset', 'asset_id')
-                ->options(function(){
-                    //Get the invoice form the request
-                    $invoice = \App\Models\AssetDistributionInvoice::find(request()->viaResourceId);
+            // Select::make('Asset', 'asset_id')
+            //     ->onlyOnForms()
+            //     ->options(function(){
+            //         //Get the invoice form the request
+            //         $invoice = \App\Models\AssetDistributionInvoice::find(request()->viaResourceId);
 
-                    //Get the invoice after create
-                    if(empty($invoice)){
-                        $invoice = \App\Models\AssetDistributionInvoice::find($this->resource->invoiceId);
-                    }
+            //         //Get the invoice after create
+            //         if(empty($invoice)){
+            //             $invoice = $this->resource->invoice;
+            //         }
 
-                    try {
-                        $assetId = request()->findResourceOrFail()->assetId;
-                    } catch (\Throwable $th) {
-                        $assetId = $this->resource->assetId;
-                    }
+            //         try {
+            //             $assetId = request()->findResourceOrFail()->assetId;
+            //         } catch (\Throwable $th) {
+            //             $assetId = $this->resource->assetId;
+            //         }
 
-                    return \App\Models\Asset::whereIn('id',$invoice->requisition->assetIds())
-                        ->whereNotIn('id', $invoice->assetIds($assetId))->get()->map(function($asset){
-                            return [ 'value' => $asset->id, 'label' => $asset->name."({$asset->code})" ];
-                        });
-                })
-                ->rules('required')
-                ->onlyOnForms(),
+            //         if(!empty($invoice->requisitionId)){
+            //             return \App\Models\Asset::whereIn('id',$invoice->requisition->assetIds())
+            //                 ->whereNotIn('id', $invoice->assetIds($assetId))->get()->map(function($asset){
+            //                     return [ 'value' => $asset->id, 'label' => $asset->name."({$asset->code})" ];
+            //                 });
+            //         }
+            //     })
+            //     ->rules('required'),
 
             Number::make('Quantity', 'distribution_quantity')
                 ->rules('required', 'numeric', 'min:0')
@@ -164,13 +166,14 @@ class AssetDistributionItem extends Resource
             Badge::make('Status')->map([
                     RequisitionStatus::DRAFT()->getValue()     => 'warning',
                     RequisitionStatus::CONFIRMED()->getValue() => 'info',
-                    RequisitionStatus::PACKED()->getValue()    => 'info',
-                    RequisitionStatus::PARTIAL()->getValue()   => 'success',
+                    RequisitionStatus::PARTIAL()->getValue()   => 'danger',
                     RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
                 ])
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
+
+            HasMany::make('Receive Items', 'receiveItems', \App\Nova\AssetDistributionReceiveItem::class)
         ];
     }
 
@@ -216,6 +219,42 @@ class AssetDistributionItem extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Build a "relatable" query for the given resource.
+     *
+     * This query determines which instances of the model may be attached to other resources.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableAssets(NovaRequest $request, $query)
+    {
+        $invoice = \App\Models\AssetDistributionInvoice::find($request->viaResourceId);
+
+        if(empty($invoice)){
+            $invoice = $request->findResourceOrFail()->invoice;
+        }
+
+        try {
+            $assetId = $request->findResourceOrFail()->assetId;
+        } catch (\Throwable $th) {
+           $assetId = null;
+        }
+
+        if(!empty($invoice->requisitionId)){
+            return $query->whereIn('id',$invoice->requisition->assetIds())
+                ->whereNotIn('id', $invoice->assetIds($assetId))->get()->map(function($asset){
+                    return [ 'value' => $asset->id, 'label' => $asset->name."({$asset->code})" ];
+                });
+        }
+
+        return $query->where('location_id', $invoice->locationId)
+                ->whereNotIn('id', $invoice->assetIds($assetId))->get()->map(function($asset){
+                    return [ 'value' => $asset->id, 'label' => $asset->name."({$asset->code})" ];
+                });
     }
 
     /**

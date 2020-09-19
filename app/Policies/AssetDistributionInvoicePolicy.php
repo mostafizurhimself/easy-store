@@ -33,6 +33,7 @@ class AssetDistributionInvoicePolicy
     {
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('view asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId ) ||
+                ($user->locationId == $assetDistributionInvoice->receiverId && $assetDistributionInvoice->status != DistributionStatus::DRAFT()) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -117,5 +118,17 @@ class AssetDistributionInvoicePolicy
     public function addAssetDistributionItem(User $user, AssetDistributionInvoice $assetDistributionInvoice)
     {
         return $assetDistributionInvoice->status == DistributionStatus::DRAFT();
+    }
+
+    /**
+     * Determine whether the user can add a distribution item to the distribution invoice.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\AssetDistributionInvoice  $assetDistributionInvoice
+     * @return mixed
+     */
+    public function addAssetDistributionReceiveItem(User $user, AssetDistributionInvoice $assetDistributionInvoice)
+    {
+        return false;
     }
 }

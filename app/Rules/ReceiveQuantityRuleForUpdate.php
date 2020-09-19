@@ -5,15 +5,16 @@ namespace App\Rules;
 use App\Models\AssetPurchaseItem;
 use App\Models\FabricPurchaseItem;
 use App\Models\MaterialPurchaseItem;
+use App\Models\AssetDistributionItem;
 use Illuminate\Contracts\Validation\Rule;
 
 class ReceiveQuantityRuleForUpdate implements Rule
 {
 
     /**
-     * Purchase item instance
+     * @var mixed
      */
-    protected $purchaseItem;
+    protected $item;
 
     /**
      * @var double
@@ -30,19 +31,24 @@ class ReceiveQuantityRuleForUpdate implements Rule
      *
      * @return void
      */
-    public function __construct($viaResource, $purchaseItemId, $previousQuantity)
+    public function __construct($viaResource, $itemId, $previousQuantity)
     {
         if($viaResource == \App\Nova\FabricPurchaseItem::uriKey() || $viaResource == \App\Nova\FabricPurchaseOrder::uriKey()){
-            $this->purchaseItem = FabricPurchaseItem::find($purchaseItemId);
+            $this->item = FabricPurchaseItem::find($itemId);
         }
 
         if($viaResource == \App\Nova\MaterialPurchaseItem::uriKey() || $viaResource == \App\Nova\MaterialPurchaseOrder::uriKey()){
-            $this->purchaseItem = MaterialPurchaseItem::find($purchaseItemId);
+            $this->item = MaterialPurchaseItem::find($itemId);
         }
 
         if($viaResource == \App\Nova\AssetPurchaseItem::uriKey() || $viaResource == \App\Nova\AssetPurchaseOrder::uriKey()){
-            $this->purchaseItem = AssetPurchaseItem::find($purchaseItemId);
+            $this->item = AssetPurchaseItem::find($itemId);
         }
+
+        if($viaResource == \App\Nova\AssetDistributionItem::uriKey() || $viaResource == \App\Nova\AssetDistributionInvoice::uriKey()){
+            $this->item = AssetDistributionItem::find($itemId);
+        }
+
 
         $this->previousQuantity = $previousQuantity;
     }
@@ -56,7 +62,7 @@ class ReceiveQuantityRuleForUpdate implements Rule
      */
     public function passes($attribute, $value)
     {
-        $this->allowedQuantity = $this->purchaseItem->remainingQuantity + $this->previousQuantity;
+        $this->allowedQuantity = $this->item->remainingQuantity + $this->previousQuantity;
         return $this->allowedQuantity >= $value;
     }
 
@@ -67,6 +73,6 @@ class ReceiveQuantityRuleForUpdate implements Rule
      */
     public function message()
     {
-        return "You can not receive more than {$this->allowedQuantity} {$this->purchaseItem->unit}";
+        return "You can not receive more than {$this->allowedQuantity} {$this->item->unit}";
     }
 }

@@ -169,8 +169,7 @@ class AssetRequisition extends Resource
             Badge::make('Status')->map([
                     RequisitionStatus::DRAFT()->getValue()     => 'warning',
                     RequisitionStatus::CONFIRMED()->getValue() => 'info',
-                    RequisitionStatus::PACKED()->getValue()    => 'info',
-                    RequisitionStatus::PARTIAL()->getValue()   => 'success',
+                    RequisitionStatus::PARTIAL()->getValue()   => 'danger',
                     RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
                 ])
                 ->label(function(){
@@ -225,9 +224,7 @@ class AssetRequisition extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmRequisition)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == RequisitionStatus::DRAFT();
-            }),
+            new ConfirmRequisition
         ];
     }
 }

@@ -119,7 +119,7 @@ class MaterialReceiveItem extends Resource
             Badge::make('Status')->map([
                     PurchaseStatus::DRAFT()->getValue()     => 'warning',
                     PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'success',
+                    PurchaseStatus::PARTIAL()->getValue()   => 'danger',
                     PurchaseStatus::RECEIVED()->getValue()  => 'success',
                     PurchaseStatus::BILLED()->getValue()    => 'danger',
                 ])
@@ -171,9 +171,7 @@ class MaterialReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmReceiveItem)->canSee(function($request){
-                return $request->findModelQuery()->first()->status == PurchaseStatus::DRAFT();
-            }),
+            new ConfirmReceiveItem
         ];
     }
 
