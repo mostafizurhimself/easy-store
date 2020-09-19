@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use App\Enums\RequisitionStatus;
 use Laravel\Nova\Fields\HasMany;
+use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Rules\DistributionQuantityRule;
@@ -164,10 +165,10 @@ class AssetDistributionItem extends Resource
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
-                    RequisitionStatus::DRAFT()->getValue()     => 'warning',
-                    RequisitionStatus::CONFIRMED()->getValue() => 'info',
-                    RequisitionStatus::PARTIAL()->getValue()   => 'danger',
-                    RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
+                    DistributionStatus::DRAFT()->getValue()     => 'warning',
+                    DistributionStatus::CONFIRMED()->getValue() => 'info',
+                    DistributionStatus::PARTIAL()->getValue()   => 'danger',
+                    DistributionStatus::RECEIVED()->getValue()  => 'success',
                 ])
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));

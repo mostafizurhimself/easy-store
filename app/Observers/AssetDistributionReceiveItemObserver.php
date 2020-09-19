@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Asset;
+use App\Models\AssetDistributionItem;
 use App\Models\AssetDistributionReceiveItem;
 
 class AssetDistributionReceiveItemObserver
@@ -23,14 +24,19 @@ class AssetDistributionReceiveItemObserver
 
         //Create or find the asset
         $asset  = Asset::firstOrCreate(
-            ['code' => $distributionItem->asset->code],
+            [
+                'code'        => $distributionItem->asset->code,
+                'location_id' => $distributionItem->invoice->receiverId,
+            ],
 
             [
-                'location_id' => $distributionItem->invoice->receiverId,
-                'name' => $distributionItem->asset->name,
-                'description' => $distributionItem->asset->description,
-                'rate' => $distributionItem->asset->rate,
-                'unit_id' => $distributionItem->asset->unitId,
+                'name'             => $distributionItem->asset->name,
+                'description'      => $distributionItem->asset->description,
+                'rate'             => $distributionItem->asset->rate,
+                'opening_quantity' => 0,
+                'quantity'         => 0,
+                'alert_quantity'   => 0,
+                'unit_id'          => $distributionItem->asset->unitId,
             ]
         );
 

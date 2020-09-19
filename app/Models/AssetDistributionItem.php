@@ -155,16 +155,16 @@ class AssetDistributionItem extends Model
      */
     public function updateStatus()
     {
-        if($this->receiveItems()->exists() && ($this->purchaseQuantity == $this->receiveQuantity)){
-            $this->status = PurchaseStatus::RECEIVED();
+        if($this->receiveItems()->exists() && ($this->distributionQuantity == $this->receiveQuantity)){
+            $this->status = DistributionStatus::RECEIVED();
         }
 
-        if($this->receiveItems()->exists() && ($this->purchaseQuantity != $this->receiveQuantity)){
-            $this->status = PurchaseStatus::PARTIAL();
+        if($this->receiveItems()->exists() && ($this->distributionQuantity != $this->receiveQuantity)){
+            $this->status = DistributionStatus::PARTIAL();
         }
 
         if(!$this->receiveItems()->exists()){
-            $this->status = PurchaseStatus::CONFIRMED();
+            $this->status = DistributionStatus::CONFIRMED();
         }
 
         $this->save();

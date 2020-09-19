@@ -19,6 +19,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use App\Nova\Actions\AssetDistributionReceiveItem\ConfirmReceiveItem;
 
 class AssetDistributionReceiveItem extends Resource
 {
@@ -95,6 +96,13 @@ class AssetDistributionReceiveItem extends Resource
                 }),
 
             Number::make('Quantity')
+                ->default(function($request){
+                    if($request->viaResource ==  \App\Nova\AssetDistributionItem::uriKey() && !empty($request->viaResourceId)){
+                        return \App\Models\AssetDistributionItem::find($request->viaResourceId)->remainingQuantity;
+                    }else{
+                        return $this->resource->distributionItem->remainingQuantity;
+                    }
+                })
                 ->rules('required', 'numeric', 'min:0')
                 ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
                 ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\AssetDistributionItem::uriKey(), $this->resource->distributionItemId, $this->resource->quantity))
@@ -127,7 +135,7 @@ class AssetDistributionReceiveItem extends Resource
                     DistributionStatus::DRAFT()->getValue()     => 'warning',
                     DistributionStatus::CONFIRMED()->getValue() => 'info',
                     DistributionStatus::PARTIAL()->getValue()   => 'danger',
-                    DistributionStatus::RECEIVED()->getValue()  => 'success',
+                    DistributionStatus::RECEIVED()->getValue()  => 'success'
                 ])
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
@@ -176,7 +184,9 @@ class AssetDistributionReceiveItem extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new ConfirmReceiveItem
+        ];
     }
 
     /**
