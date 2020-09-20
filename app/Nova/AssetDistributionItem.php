@@ -127,8 +127,8 @@ class AssetDistributionItem extends Resource
 
             Number::make('Quantity', 'distribution_quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new DistributionQuantityRule(\App\Nova\AssetDistributionItem::uriKey(), $request->get('asset_id')),
-                                new DistributionQuantityRuleOnRequisition($request->viaResource, $request->viaResourceId, $request->get('asset_id')),
+                ->creationRules(new DistributionQuantityRule(\App\Nova\AssetDistributionItem::uriKey(), $request->get('asset_id') ?? $request->get('asset')),
+                                new DistributionQuantityRuleOnRequisition($request->viaResource, $request->viaResourceId, $request->get('asset_id') ?? $request->get('asset')),
                 )
                 ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\AssetDistributionItem::uriKey(),
                                                                     $request->get('asset_id'),
