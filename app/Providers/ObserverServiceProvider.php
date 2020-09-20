@@ -33,6 +33,7 @@ use App\Observers\SupplierObserver;
 use App\Models\AssetRequisitionItem;
 use App\Models\MaterialPurchaseItem;
 use App\Observers\FinishingObserver;
+use Illuminate\Support\Facades\Auth;
 use App\Models\AssetDistributionItem;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\ProductOutputObserver;

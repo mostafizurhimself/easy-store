@@ -107,6 +107,16 @@ class User extends Authenticatable implements HasMedia
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function consumes()
+    {
+       return $this->hasMany(AssetConsume::class, 'consumer');
+    }
+
+    /**
      * Check the user is employee or not
      *
      * @return bool

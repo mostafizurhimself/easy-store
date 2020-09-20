@@ -65,7 +65,7 @@ class AssetPurchaseItem extends Model
     }
 
     /**
-     * Get the unit for the assets
+     * Get the unit of the assets
      *
      * @return string
      */

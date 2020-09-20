@@ -40,5 +40,6 @@ class AppServiceProvider extends ServiceProvider
         Validator::replacer('url', function($message, $attribute, $rule, $parameters) {
             return str_replace(':field', Str::title(str_replace('_', ' ', $attribute)), ':field shold be valid URL.');
         });
+
     }
 }

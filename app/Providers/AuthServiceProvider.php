@@ -26,6 +26,7 @@ use App\Models\Department;
 use App\Models\Permission;
 use App\Models\SubSection;
 use App\Models\Designation;
+use App\Models\AssetConsume;
 use App\Policies\RolePolicy;
 use App\Policies\UnitPolicy;
 use App\Policies\UserPolicy;
@@ -74,6 +75,7 @@ use App\Policies\DesignationPolicy;
 use App\Models\AssetRequisitionItem;
 use App\Models\MaterialDistribution;
 use App\Models\MaterialPurchaseItem;
+use App\Policies\AssetConsumePolicy;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\AssetDistributionItem;
@@ -147,6 +149,7 @@ class AuthServiceProvider extends ServiceProvider
         AssetDistributionInvoice::class     => AssetDistributionInvoicePolicy::class,
         AssetDistributionItem::class        => AssetDistributionItemPolicy::class,
         AssetDistributionReceiveItem::class => AssetDistributionReceiveItemPolicy::class,
+        AssetConsume::class                 => AssetConsumePolicy::class,
         ServiceCategory::class              => ServiceCategoryPolicy::class,
         Service::class                      => ServicePolicy::class,
         ServiceInvoice::class               => ServiceInvoicePolicy::class,

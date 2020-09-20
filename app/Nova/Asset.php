@@ -13,8 +13,10 @@ use NovaAjaxSelect\AjaxSelect;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Actions\Assets\Consume;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Assets\UpdateOpeningQuantity;
@@ -264,6 +266,8 @@ class Asset extends Resource
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
+            HasMany::make('Consume History', 'consumes', \App\Nova\AssetConsume::class)
+
         ];
     }
 
@@ -309,6 +313,9 @@ class Asset extends Resource
     public function actions(Request $request)
     {
         return [
+            (new Consume)->onlyOnTableRow()
+                        ->confirmButtonText('Consume'),
+
             (new UpdateOpeningQuantity)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update assets');
             })->onlyOnDetail(),
