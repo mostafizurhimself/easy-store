@@ -9,7 +9,7 @@ use ChrisWare\NovaBreadcrumbs\Traits\Breadcrumbs;
 
 abstract class Resource extends NovaResource
 {
-    use Breadcrumbs;
+    // use Breadcrumbs;
 
     /**
      * The group associated with the resource.

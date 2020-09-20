@@ -93,7 +93,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             ->roleResource(Role::class)
             ->permissionResource(Permission::class),
 
-            \ChrisWare\NovaBreadcrumbs\NovaBreadcrumbs::make()->withoutStyles(),
+            // \ChrisWare\NovaBreadcrumbs\NovaBreadcrumbs::make()->withoutStyles(),
         ];
     }
 
