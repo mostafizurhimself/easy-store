@@ -216,7 +216,6 @@ class Designation extends Resource
 
             AjaxSelect::make('Sub Section', 'sub_section_id')
                 ->get('/sections/{section_id}/sub-sections')
-                ->rules('required')
                 ->parent('section_id')
                 ->onlyOnForms(),
 
