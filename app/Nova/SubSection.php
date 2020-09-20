@@ -97,10 +97,10 @@ class SubSection extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:45')
                 ->creationRules([
-                    Rule::unique('sub_sections', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('sub_sections', 'name')->where('section_id', request()->get('section'))->where('location_id', request()->get('location'))
                 ])
                 ->updateRules([
-                    Rule::unique('sub_sections', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('sub_sections', 'name')->where('section_id', request()->get('section'))->where('location_id', request()->get('location'))->ignore($this->resource->id)
                 ]),
 
             BelongsTo::make('Location')

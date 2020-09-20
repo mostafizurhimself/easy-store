@@ -181,7 +181,6 @@ class Designation extends Resource
 
             AjaxSelect::make('Section', 'section_id')
                 ->get('/departments/{department_id}/sections')
-                ->rules('required')
                 ->parent('department_id')
                 ->onlyOnForms()
                 ->showOnCreating(function ($request) {
@@ -198,7 +197,6 @@ class Designation extends Resource
 
             AjaxSelect::make('Section', 'section_id')
                 ->get('/departments/{department}/sections')
-                ->rules('required')
                 ->parent('department')
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
