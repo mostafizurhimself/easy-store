@@ -245,11 +245,12 @@ class Employee extends Resource
                         ->placeholder('Choose an option') // Add this just if you want to customize the placeholder
                         ->optionsResolve(function ($location) {
                             // Reduce the amount of unnecessary data sent
+                            // return $location->designations()->get(['id', 'name']);
                             return $location->designations->map(function($value) {
                                 $designation = Designation::find($value->id);
                                 $department = $designation->department ? $designation->department->name." >> " : "";
                                 $section = $designation->section ? $designation->section->name." >> " : "";
-                                return [ 'id' => $designation->id, 'name' => $department . $section . $designation->name ];
+                                return [ 'value' => $designation->id, 'display' => $department . $section . $designation->name ];
                             });
                         })
                         ->onlyOnForms()

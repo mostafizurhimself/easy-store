@@ -102,13 +102,18 @@ class FabricReceiveItem extends Resource
 
             Currency::make('Rate')
                 ->currency('BDT')
-                ->exceptOnForms(),
+                ->default(function($request){
+                    if($request->viaResource == \App\Nova\FabricPurchaseItem::uriKey() && !empty($request->viaResourceId)){
+                        return \App\Models\FabricPurchaseItem::find($request->viaResourceId)->purchaseRate;
+                    }
+                }),
 
             Currency::make('Amount')
                 ->currency('BDT')
                 ->exceptOnForms(),
 
             Text::make("Reference")
+                ->help('Here you can enter the supplier invoice number.')
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'max:200'),
 

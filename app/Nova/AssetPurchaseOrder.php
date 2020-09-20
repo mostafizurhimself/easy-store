@@ -145,8 +145,7 @@ class AssetPurchaseOrder extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Supplier')
-                ->searchable(),
+            BelongsTo::make('Supplier'),
 
             Currency::make('Purchase Amount', 'total_purchase_amount')
                 ->currency('BDT')
