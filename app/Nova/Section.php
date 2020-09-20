@@ -199,6 +199,7 @@ class Section extends Resource
 
             BelongsTo::make('Floor')
                 ->onlyOnForms()
+                ->showCreateRelationButton()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
