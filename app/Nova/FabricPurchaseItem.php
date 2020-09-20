@@ -18,6 +18,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 class FabricPurchaseItem extends Resource
 {
     use WithOutLocation;
+
     /**
      * The model the resource corresponds to.
      *

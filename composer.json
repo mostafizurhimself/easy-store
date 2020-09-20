@@ -16,6 +16,7 @@
         "bissolli/nova-phone-field": "^0.0.4",
         "bolechen/nova-activitylog": "^0.2.1",
         "caddydz/nova-preview-resource": "^0.0.2",
+        "chris-ware/nova-breadcrumbs": "^2.0",
         "cloudcake/nova-fixed-bars": "^1.1",
         "david-griffiths/nova-dark-theme": "^1.0",
         "dillingham/nova-ajax-select": "^1.0",

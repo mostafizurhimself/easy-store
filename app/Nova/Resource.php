@@ -5,9 +5,12 @@ namespace App\Nova;
 use Illuminate\Support\Str;
 use Laravel\Nova\Resource as NovaResource;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use ChrisWare\NovaBreadcrumbs\Traits\Breadcrumbs;
 
 abstract class Resource extends NovaResource
 {
+    use Breadcrumbs;
+
     /**
      * The group associated with the resource.
      *
