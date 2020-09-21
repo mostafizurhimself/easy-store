@@ -182,7 +182,8 @@ class User extends Resource
                     //Permissions for super-admin
                     PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
                         ->withGroups()
-                        ->options(Permission::all()->sortBy('group_order')->map(function ($permission, $key) {
+                        ->options(Permission::whereIn('id', request()->user()->getAllPermissions()->pluck('id'))
+                        ->get()->sortBy('group_order')->map(function ($permission, $key) {
                             return [
                                 'group'  => __(Str::title($permission->group)),
                                 'option' => $permission->name,
@@ -191,25 +192,10 @@ class User extends Resource
                         })
                             ->groupBy('group')
                             ->toArray())
-                        ->canSee(function ($request) {
-                            return $request->user()->isSuperAdmin();
-                        })
-                        ->hideFromIndex(),
-
-                    //Permission for other users.
-                    PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
-                        ->withGroups()
-                        ->options(Permission::where('group', '!=', Permission::SUPER_ADMIN_GROUP)->get()->sortBy('group_order')->map(function ($permission, $key) {
-                            return [
-                                'group'  => __(Str::title($permission->group)),
-                                'option' => $permission->name,
-                                'label'  => __(Str::title($permission->name)),
-                            ];
-                        })->groupBy('group')->toArray())
-                        ->canSee(function ($request) {
-                            return $request->user()->hasPermissionTo('assign permissions') && !$request->user()->isSuperAdmin();
-                        })
-                        ->hideFromIndex(),
+                            ->hideFromIndex()
+                            ->canSee(function ($request) {
+                                return $request->user()->hasPermissionTo('assign permissions') || $request->user()->isSuperAdmin();
+                            }),
                 ],
             ]))->withToolbar(),
 

@@ -19,11 +19,12 @@ use Benjaminhirsch\NovaSlugField\Slug;
 use Eminiarts\NovaPermissions\Checkboxes;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
+use ChrisWare\NovaBreadcrumbs\Traits\Breadcrumbs;
 use Easystore\PermissionCheckbox\PermissionCheckbox;
 
 class Role extends Resource
 {
-    use TabsOnEdit;
+    use TabsOnEdit, Breadcrumbs;
     /**
      * The model the resource corresponds to.
      *
@@ -161,7 +162,8 @@ class Role extends Resource
             //Permissions for super-admin
             PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
                 ->withGroups()
-                ->options(Permission::all()->sortBy('group_order')->map(function ($permission, $key) {
+                ->options(Permission::whereIn('id', request()->user()->getAllPermissions()->pluck('id'))
+                ->get()->sortBy('group_order')->map(function ($permission, $key) {
                     return [
                         'group'  => __(Str::title($permission->group)),
                         'option' => $permission->name,
@@ -169,37 +171,9 @@ class Role extends Resource
                     ];
                 })
                     ->groupBy('group')->toArray())
-                ->canSee(function ($request) {
-                    return $request->user()->isSuperAdmin();
-                }),
-
-            //Permission for other users.
-            PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
-                ->withGroups()
-                ->options(
-                    Permission::where('group', '!=', Permission::SUPER_ADMIN_GROUP)->get()->sortBy('group_order')->map(function ($permission, $key) {
-                        return [
-                            'group'  => __(Str::title($permission->group)),
-                            'option' => $permission->name,
-                            'label'  => __(Str::title($permission->name)),
-                        ];
-                    })
-                        ->groupBy('group')->toArray()
-                )
-                ->canSee(function ($request) {
-                    return $request->user()->hasPermissionTo('assign permissions') && !$request->user()->isSuperAdmin();
-                }),
-
-            // (new Tabs('Role Details', [
-            //     'Role Info' => [
-
-
-            //     ],
-            //     'Permissions' => [
-
-
-            //     ]
-            // ]))->withToolbar(),
+                    ->canSee(function ($request) {
+                        return $request->user()->hasPermissionTo('assign permissions') || $request->user()->isSuperAdmin();
+                    }),
 
             Text::make(__('Users'), function () {
                 return count($this->users);
