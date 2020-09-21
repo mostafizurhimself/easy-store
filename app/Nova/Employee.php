@@ -40,19 +40,6 @@ class Employee extends Resource
     public static $model = 'App\Models\Employee';
 
     /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel()
-    {
-            $model = static::$model;
-            $var = new $model;
-            $var->status= EmployeeStatus::ACTIVE()->getValue();
-            return $var;
-    }
-
-    /**
      * The group associated with the resource.
      *
      * @return string

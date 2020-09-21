@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ActiveStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -24,7 +25,7 @@ class CreateProvidersTable extends Migration
             $table->string('vat_number')->nullable();
             $table->double('opening_balance')->default(0);
             $table->double('balance')->default(0);
-            $table->boolean('active')->default(true);
+            $table->string('status')->default(ActiveStatus::ACTIVE());
             $table->timestamps();
             $table->softDeletes();
         });

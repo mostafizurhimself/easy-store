@@ -4,12 +4,15 @@ namespace App\Nova;
 
 use Eminiarts\Tabs\Tabs;
 use App\Models\Permission;
-use Inspheric\Fields\Email;
+use App\Enums\ActiveStatus;
 use Illuminate\Support\Str;
+use Inspheric\Fields\Email;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Eminiarts\Tabs\TabsOnEdit;
+use Laravel\Nova\Fields\Badge;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
 use Yassi\NestedForm\NestedForm;
 use Laravel\Nova\Fields\MorphOne;
@@ -34,19 +37,6 @@ class User extends Resource
      * @var string
      */
     public static $model = 'App\\Models\\User';
-
-    /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel()
-    {
-        $model = static::$model;
-        $var = new $model;
-        $var->active = true;
-        return $var;
-    }
 
     /**
      * The group associated with the resource.
@@ -173,7 +163,20 @@ class User extends Resource
                         ->hideFromIndex()
                         ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png'),
 
-                    Boolean::make('Active'),
+                    Select::make('Status')
+                        ->options(ActiveStatus::titleCaseOptions())
+                        ->default(ActiveStatus::ACTIVE())
+                        ->rules('required')
+                        ->onlyOnForms(),
+
+
+                    Badge::make('Status')->map([
+                            ActiveStatus::ACTIVE()->getValue()   => 'success',
+                            ActiveStatus::INACTIVE()->getValue() => 'danger',
+                        ])
+                        ->label(function(){
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
                 ],
                 'Permissions' => [
                     //Permissions for super-admin

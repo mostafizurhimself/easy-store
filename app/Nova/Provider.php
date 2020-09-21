@@ -4,11 +4,16 @@ namespace App\Nova;
 
 use App\Helpers\Money;
 use Laravel\Nova\Panel;
+use App\Enums\ActiveStatus;
+use Illuminate\Support\Str;
 use Inspheric\Fields\Email;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Badge;
+use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\MorphOne;
@@ -18,7 +23,6 @@ use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Providers\UpdateOpeningBalance;
-use App\Traits\WithOutLocation;
 
 class Provider extends Resource
 {
@@ -29,19 +33,6 @@ class Provider extends Resource
      * @var string
      */
     public static $model = 'App\Models\Provider';
-
-    /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel()
-    {
-        $model = static::$model;
-        $var = new $model;
-        $var->active = true;
-        return $var;
-    }
 
     /**
      * The group associated with the resource.
@@ -140,7 +131,20 @@ class Provider extends Resource
                 ->rules('required', 'numeric', 'min:0')
                 ->exceptOnForms(),
 
-            Boolean::make('Active'),
+            Select::make('Status')
+                ->options(ActiveStatus::titleCaseOptions())
+                ->default(ActiveStatus::ACTIVE())
+                ->rules('required')
+                ->onlyOnForms(),
+
+
+            Badge::make('Status')->map([
+                    ActiveStatus::ACTIVE()->getValue()   => 'success',
+                    ActiveStatus::INACTIVE()->getValue() => 'danger',
+                ])
+                ->label(function(){
+                    return Str::title(Str::of($this->status)->replace('_', " "));
+                }),
 
             MorphMany::make('Address'),
         ];

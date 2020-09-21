@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\EmployeeStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -35,7 +36,7 @@ class CreateEmployeesTable extends Migration
             $table->enum('marital_status', \App\Enums\MaritalStatus::toArray())->nullable();
             $table->enum('blood_group', \App\Enums\BloodGroup::toArray())->nullable();
             $table->string('nationality')->nullable();
-            $table->string('status');
+            $table->string('status')->default(EmployeeStatus::ACTIVE());
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');

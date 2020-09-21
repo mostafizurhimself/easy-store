@@ -19,6 +19,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\MorphOne;
 use Laravel\Nova\Fields\MorphMany;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\ActiveStatusFilter;
 use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -170,7 +171,9 @@ class Supplier extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new ActiveStatusFilter
+        ];
     }
 
     /**

@@ -2,8 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use Faker\Generator as Faker;
 use App\Models\Provider;
+use App\Enums\ActiveStatus;
+use Faker\Generator as Faker;
 
 $factory->define(Provider::class, function (Faker $faker) {
     return [
@@ -12,7 +13,7 @@ $factory->define(Provider::class, function (Faker $faker) {
         'email'  => $faker->email,
         'opening_balance' => 0,
         'balance' => 0,
-        'active' => 1,
+        'status' => ActiveStatus::ACTIVE(),
     ];
 });
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Facades\Settings;
+use App\Traits\ActiveScope;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Supplier extends Model
 {
-    use LogsActivity, SoftDeletes, HasReadableId, CamelCasing;
+    use LogsActivity, SoftDeletes, HasReadableId, CamelCasing, ActiveScope;
 
     /**
      * The attributes that are not mass assignable.
