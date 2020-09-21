@@ -6,10 +6,12 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use ChrisWare\NovaBreadcrumbs\Traits\Breadcrumbs;
 use Bolechen\NovaActivitylog\Resources\Activitylog as BaseActivityLog;
 
 class ActivityLog extends BaseActivityLog
 {
+    use Breadcrumbs;
     /**
      * The group associated with the resource.
      *

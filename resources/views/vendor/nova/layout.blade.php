@@ -1,5 +1,4 @@
-{{-- {{dd(auth()->user()->getAllPermissions()->pluck('name'))}} --}}
-
+{{-- {{dd(\Laravel\Nova\Nova::resourceInformation(request()))}} --}}
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full font-sans antialiased">
@@ -9,6 +8,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ \Laravel\Nova\Nova::name() }}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="{{asset('images/logo.jpg')}}" type="image/gif" sizes="16x16">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,800,800i,900,900i" rel="stylesheet">

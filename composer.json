@@ -36,6 +36,7 @@
         "hubertnnn/laravel-nova-field-dynamic-select": "^0.2.0",
         "inspheric/nova-email-field": "^1.42",
         "kirschbaum-development/nova-inline-relationship": "^0.3.0",
+        "klepak/nova-dynamic-page-title": "^1.0",
         "laravel/framework": "^7.0",
         "laravel/nova": "*",
         "laravel/tinker": "^2.0",
