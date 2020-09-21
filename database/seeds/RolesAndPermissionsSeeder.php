@@ -17,59 +17,85 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $collection = collect([
-            ['name' => 'locations', 'order' => 100],
-            ['name' => 'departments', 'order' => 200],
-            ['name' => 'sections', 'order' => 300],
-            ['name' => 'sub sections', 'order' => 400],
-            ['name' => 'designations', 'order' => 500],
-            ['name' => 'employees', 'order' => 600],
-            ['name' => 'fabric categories', 'order' => 700],
-            ['name' => 'fabrics', 'order' => 800],
-            ['name' => 'fabric purchase orders', 'order' => 900],
-            ['name' => 'fabric purchase items', 'order' => 1000],
-            ['name' => 'fabric receive items', 'order' => 1100],
-            ['name' => 'fabric distributions', 'order' => 1200],
-            ['name' => 'material categories', 'order' => 1300],
-            ['name' => 'materials', 'order' => 1400],
-            ['name' => 'material purchase orders', 'order' => 1500],
-            ['name' => 'material purchase items', 'order' => 1600],
-            ['name' => 'material receive items', 'order' => 1700],
-            ['name' => 'material distributions', 'order' => 1800],
-            ['name' => 'asset categories', 'order' => 1900],
-            ['name' => 'assets', 'order' => 2000],
-            ['name' => 'asset purchase orders', 'order' => 2100],
-            ['name' => 'asset purchase items', 'order' => 2200],
-            ['name' => 'asset receive items', 'order' => 2300],
-            ['name' => 'asset requisitions', 'order' => 2400],
-            ['name' => 'asset requisition items', 'order' => 2500],
-            ['name' => 'asset distribution invoices', 'order' => 2600],
-            ['name' => 'asset distribution items', 'order' => 2700],
-            ['name' => 'asset distribution receive items', 'order' => 2800],
-            ['name' => 'service categories', 'order' => 2900],
-            ['name' => 'services', 'order' => 3000],
-            ['name' => 'service invoices', 'order' => 3100],
-            ['name' => 'service dispatches', 'order' => 3200],
-            ['name' => 'service receives', 'order' => 3300],
-            ['name' => 'product categories', 'order' => 3400],
-            ['name' => 'products', 'order' => 3500],
-            ['name' => 'product outputs', 'order' => 3600],
-            ['name' => 'finishing invoices', 'order' => 3700],
-            ['name' => 'finishings', 'order' => 3800],
-            ['name' => 'expensers', 'order' => 3900],
-            ['name' => 'expense categories', 'order' => 4000],
-            ['name' => 'expenses', 'order' => 4100],
-            ['name' => 'balances', 'order' => 4200],
-            ['name' => 'suppliers', 'order' => 4300],
-            ['name' => 'providers', 'order' => 4400],
-            ['name' => 'users', 'order' => 4500],
-            ['name' => 'roles', 'order' => 4600],
-            ['name' => 'floors', 'order' => 4700],
-            ['name' => 'styles', 'order' => 4800],
-            ['name' => 'units', 'order' => 4900],
+            ['name' => 'locations', 'order' => 100, 'type' => 'resource'],
+            ['name' => 'departments', 'order' => 200, 'type' => 'resource'],
+            ['name' => 'sections', 'order' => 300, 'type' => 'resource'],
+            ['name' => 'sub sections', 'order' => 400, 'type' => 'resource'],
+            ['name' => 'designations', 'order' => 500, 'type' => 'resource'],
+            ['name' => 'employees', 'order' => 600, 'type' => 'resource'],
+            ['name' => 'fabric categories', 'order' => 700, 'type' => 'resource'],
+            ['name' => 'fabrics', 'order' => 800, 'type' => 'resource'],
+            ['name' => 'update fabrics opening quantity', 'group' => 'fabrics', 'order' => 850, 'type' => 'action'],
+            ['name' => 'fabric purchase orders', 'order' => 900, 'type' => 'resource'],
+            ['name' => 'confirm fabric purchase orders', 'group' => 'fabric purchase orders', 'order' => 950, 'type' => 'action'],
+            ['name' => 'fabric purchase items', 'order' => 1000, 'type' => 'resource'],
+            ['name' => 'fabric receive items', 'order' => 1100, 'type' => 'resource'],
+            ['name' => 'confirm fabric receive items', 'group' => 'fabric receive items', 'order' => 1150, 'type' => 'action'],
+            ['name' => 'fabric distributions', 'order' => 1200, 'type' => 'resource'],
+            ['name' => 'confirm fabric distributions', 'group' => 'fabric distributions', 'order' => 1250, 'type' => 'action'],
+            ['name' => 'material categories', 'order' => 1300, 'type' => 'resource'],
+            ['name' => 'materials', 'order' => 1400, 'type' => 'resource'],
+            ['name' => 'update materials opening quantity', 'group' => 'materials', 'order' => 1450, 'type' => 'action'],
+            ['name' => 'material purchase orders', 'order' => 1500, 'type' => 'resource'],
+            ['name' => 'confirm material purchase orders', 'group' => 'material purchase orders', 'order' => 1550, 'type' => 'action'],
+            ['name' => 'material purchase items', 'order' => 1600, 'type' => 'resource'],
+            ['name' => 'material receive items', 'order' => 1700, 'type' => 'resource'],
+            ['name' => 'confirm material receive items', 'group' => 'material receive items', 'order' => 1750, 'type' => 'action'],
+            ['name' => 'material distributions', 'order' => 1800, 'type' => 'resource'],
+            ['name' => 'confirm material distributions', 'group' => 'material distributions', 'order' => 1850, 'type' => 'action'],
+            ['name' => 'asset categories', 'order' => 1900, 'type' => 'resource'],
+            ['name' => 'assets', 'order' => 2000, 'type' => 'resource'],
+            ['name' => 'consume assets', 'group' => 'assets', 'order' => 2050, 'type' => 'action'],
+            ['name' => 'update assets opening quantity', 'group' => 'assets', 'order' => 2055, 'type' => 'action'],
+            ['name' => 'asset purchase orders', 'order' => 2100, 'type' => 'resource'],
+            ['name' => 'confirm asset purchase orders', 'group' => 'asset purchase orders', 'order' => 2150, 'type' => 'action'],
+            ['name' => 'asset purchase items', 'order' => 2200, 'type' => 'resource'],
+            ['name' => 'asset receive items', 'order' => 2300, 'type' => 'resource'],
+            ['name' => 'confirm asset receive items', 'group' => 'asset receive items', 'order' => 2350, 'type' => 'action'],
+            ['name' => 'asset requisitions', 'order' => 2400, 'type' => 'resource'],
+            ['name' => 'confirm asset requisitions', 'group' => 'asset requisitions', 'order' => 2450, 'type' => 'action'],
+            ['name' => 'asset requisition items', 'order' => 2500, 'type' => 'resource'],
+            ['name' => 'asset distribution invoices', 'order' => 2600, 'type' => 'resource'],
+            ['name' => 'confirm asset distribution invoices', 'group' => 'asset distribution invoices', 'order' => 2650, 'type' => 'action'],
+            ['name' => 'asset distribution items', 'order' => 2700, 'type' => 'resource'],
+            ['name' => 'asset distribution receive items', 'order' => 2800, 'type' => 'resource'],
+            ['name' => 'confirm asset distribution receive items', 'group' => 'asset distribution receive items', 'order' => 2850, 'type' => 'action'],
+            ['name' => 'service categories', 'order' => 2900, 'type' => 'resource'],
+            ['name' => 'services', 'order' => 3000, 'type' => 'resource'],
+            ['name' => 'service invoices', 'order' => 3100, 'type' => 'resource'],
+            ['name' => 'confirm service invoices', 'group' => 'service invoices', 'order' => 3150, 'type' => 'action'],
+            ['name' => 'service dispatches', 'order' => 3200, 'type' => 'resource'],
+            ['name' => 'service receives', 'order' => 3300, 'type' => 'resource'],
+            ['name' => 'confirm service receives', 'group' => 'service receives', 'order' => 3350, 'type' => 'action'],
+            ['name' => 'product categories', 'order' => 3400, 'type' => 'resource'],
+            ['name' => 'products', 'order' => 3500, 'type' => 'resource'],
+            ['name' => 'update products opening quantity', 'group' => 'products', 'order' => 3550, 'type' => 'action'],
+            ['name' => 'product outputs', 'order' => 3600, 'type' => 'resource'],
+            ['name' => 'finishing invoices', 'order' => 3700, 'type' => 'resource'],
+            ['name' => 'confirm finishing invoices', 'group' => 'finishing invoices', 'order' => 3750, 'type' => 'action'],
+            ['name' => 'finishings', 'order' => 3800, 'type' => 'resource'],
+            ['name' => 'expensers', 'order' => 3900, 'type' => 'resource'],
+            ['name' => 'expense categories', 'order' => 4000, 'type' => 'resource'],
+            ['name' => 'expenses', 'order' => 4100, 'type' => 'resource'],
+            ['name' => 'confirm expenses', 'group' => 'expenses', 'order' => 4150, 'type' => 'action'],
+            ['name' => 'balances', 'order' => 4200, 'type' => 'resource'],
+            ['name' => 'confirm balances', 'group' => 'balances', 'order' => 4250, 'type' => 'action'],
+            ['name' => 'suppliers', 'order' => 4300, 'type' => 'resource'],
+            ['name' => 'update suppliers opening balance', 'group' => 'suppliers', 'order' => 4350, 'type' => 'action'],
+            ['name' => 'providers', 'order' => 4400, 'type' => 'resource'],
+            ['name' => 'update providers opening balance', 'group' => 'providers', 'order' => 4450, 'type' => 'action'],
+            ['name' => 'users', 'order' => 4500, 'type' => 'resource'],
+            ['name' => 'mark as active', 'group' => 'users', 'order' => 4550, 'type' => 'action'],
+            ['name' => 'mark as inactive', 'group' => 'users', 'order' => 4555, 'type' => 'action'],
+            ['name' => 'roles', 'order' => 4600, 'type' => 'resource'],
+            ['name' => 'floors', 'order' => 4700, 'type' => 'resource'],
+            ['name' => 'styles', 'order' => 4800, 'type' => 'resource'],
+            ['name' => 'units', 'order' => 4900, 'type' => 'resource'],
             // ... // List all your Models you want to have Permissions for.
         ]);
 
-        $collection->each(function ($item, $key) {
+        //Resource Permissions
+        $collection->where('type', 'resource')->each(function ($item, $key) {
             // create permissions for each collection item
             Permission::updateOrCreate(['name' => 'view ' .$item['name'] ],['group' => $item['name'], 'name' => 'view ' . $item['name'], 'group_order' => ($item['order'] + 1)]);
             Permission::updateOrCreate(['name' => 'view any ' .$item['name'] ],['group' => $item['name'], 'name' => 'view any ' . $item['name'], 'group_order' => ($item['order'] + 2)]);
@@ -80,11 +106,15 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::updateOrCreate(['name' => 'force delete ' .$item['name'] ],['group' => $item['name'], 'name' => 'force delete ' . $item['name'], 'group_order' => ($item['order'] + 7)]);
         });
 
+        //Action Permissions
+        $collection->where('type', 'action')->each(function($item, $key){
+            Permission::updateOrCreate(['name' => 'can ' .$item['name'] ],['group' => $item['group'], 'name' => 'can ' . $item['name'], 'group_order' => $item['order']]);
+        });
+
             //Exceptional Permissions
             Permission::updateOrCreate(['name' => 'view permissions'],['group' => 'permissions', 'name' => 'view permissions', 'group_order' => 4651]);
             Permission::updateOrCreate(['name' => 'view any permissions'],['group' => 'permissions', 'name' => 'view any permissions', 'group_order' => 4652]);
             Permission::updateOrCreate(['name' => 'assign permissions'],['group' => 'permissions', 'name' => 'assign permissions', 'group_order' => 4653]);
-
 
         //Super Admin Permissions
         $superAdminCollection = collect([
@@ -109,6 +139,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Create a Super-Admin Role and assign all Permissions
         $role = Role::updateOrCreate(['name' => 'super-admin'], ['name' => 'super-admin', 'display_name' => 'Super Admin']);
+        $role->givePermissionTo(Permission::all());
 
 
         // Give User Super-Admin Role

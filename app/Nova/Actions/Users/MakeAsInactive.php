@@ -2,12 +2,13 @@
 
 namespace App\Nova\Actions\Users;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MakeAsInactive extends Action
 {
@@ -23,7 +24,7 @@ class MakeAsInactive extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            $model->active = false;
+            $model->status = ActiveStatus::INACTIVE();
             $model->save();
         }
 
