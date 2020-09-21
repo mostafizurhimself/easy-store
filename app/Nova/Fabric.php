@@ -309,7 +309,9 @@ class Fabric extends Resource
     public function actions(Request $request)
     {
         return [
-            new UpdateOpeningQuantity
+            (new UpdateOpeningQuantity)->canSee(function($request){
+                $request->user()->hasPermissionTo('can update fabrics opening quantity');
+            })->onlyOnDetail(),
         ];
     }
 }

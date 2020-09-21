@@ -241,7 +241,9 @@ class Balance extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmBalance
+            (new ConfirmBalance)->canSee(function($request){
+                $request->user()->hasPermissionTo('can confirm balances');
+            }),
         ];
     }
 }

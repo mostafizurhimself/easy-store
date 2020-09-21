@@ -180,7 +180,9 @@ class ServiceReceive extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmReceive
+            (new ConfirmReceive)->canSee(function($request){
+                $request->user()->hasPermissionTo('can confirm service receives');
+            }),
         ];
     }
 

@@ -235,7 +235,9 @@ class AssetPurchaseOrder extends Resource
                 return $request->user()->isSuperAdmin();
             }),
 
-            new ConfirmPurchase
+            (new ConfirmPurchase)->canSee(function($request){
+                $request->user()->hasPermissionTo('can confirm asset purchase orders');
+            }),
         ];
     }
 }

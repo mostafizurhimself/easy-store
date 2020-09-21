@@ -316,8 +316,8 @@ class Material extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UpdateOpeningQuantity)->canSee(function ($request) {
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update materials');
+            (new UpdateOpeningQuantity)->canSee(function($request){
+                $request->user()->hasPermissionTo('can update materials opening quantity');
             })->onlyOnDetail(),
         ];
     }

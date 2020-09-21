@@ -193,7 +193,7 @@ class Provider extends Resource
     {
         return [
             (new UpdateOpeningBalance)->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update providers');
+                $request->user()->hasPermissionTo('can update products opening quantity');
             })->onlyOnDetail(),
         ];
     }

@@ -316,7 +316,9 @@ class Expense extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmExpense
+            (new ConfirmExpense)->canSee(function($request){
+                $request->user()->hasPermissionTo('can confirm expenses');
+            }),
         ];
     }
 }

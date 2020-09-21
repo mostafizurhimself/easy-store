@@ -219,7 +219,9 @@ class ServiceInvoice extends Resource
                 return $request->user()->isSuperAdmin();
             }),
 
-            new ConfirmInvoice
+            (new ConfirmInvoice)->canSee(function($request){
+                $request->user()->hasPermissionTo('can confirm service invoices');
+            }),
         ];
     }
 }

@@ -287,7 +287,9 @@ class FabricDistribution extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmDistribution
+            (new ConfirmDistribution)->canSee(function($request){
+                $request->user()->hasPermissionTo('can confirm fabric distributions');
+            }),
         ];
     }
 }

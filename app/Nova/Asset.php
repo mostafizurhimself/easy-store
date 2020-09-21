@@ -314,10 +314,13 @@ class Asset extends Resource
     {
         return [
             (new Consume)->onlyOnTableRow()
-                        ->confirmButtonText('Consume'),
+                        ->confirmButtonText('Consume')
+                        ->canSee(function($request){
+                            $request->user()->hasPermissionTo('can consume assets');
+                        }),
 
-            (new UpdateOpeningQuantity)->canSee(function ($request) {
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update assets');
+            (new UpdateOpeningQuantity)->canSee(function($request){
+                $request->user()->hasPermissionTo('can update assets opening quantity');
             })->onlyOnDetail(),
         ];
     }

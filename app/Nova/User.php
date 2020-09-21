@@ -249,12 +249,12 @@ class User extends Resource
     public function actions(Request $request)
     {
         return [
-            (new MakeAsActive)->canSee(function ($request) {
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update users');
-            })->onlyOnIndex(),
-            (new MakeAsInactive)->canSee(function ($request) {
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('update users');
-            })->onlyOnIndex(),
+            (new MakeAsActive)->canSee(function($request){
+                $request->user()->hasPermissionTo('can mark as active');
+            }),
+            (new MakeAsInactive)->canSee(function($request){
+                $request->user()->hasPermissionTo('can mark as inactive');
+            }),
         ];
     }
 }
