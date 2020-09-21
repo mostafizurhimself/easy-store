@@ -17,7 +17,9 @@
         "build-router-link": "cd nova-components/RouterLink && npm run dev",
         "build-router-link-prod": "cd nova-components/RouterLink && npm run prod",
         "build-profile": "cd nova-components/Profile && npm run dev",
-        "build-profile-prod": "cd nova-components/Profile && npm run prod"
+        "build-profile-prod": "cd nova-components/Profile && npm run prod",
+        "build-prevent-direct-create-tool": "cd nova-components/PreventDirectCreateTool && npm run dev",
+        "build-prevent-direct-create-tool-prod": "cd nova-components/PreventDirectCreateTool && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.19",

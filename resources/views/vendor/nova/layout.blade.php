@@ -1,3 +1,6 @@
+{{-- {{dd(auth()->user()->getAllPermissions()->pluck('name'))}} --}}
+
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full font-sans antialiased">
 <head>
