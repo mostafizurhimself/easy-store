@@ -5,6 +5,7 @@ namespace App\Nova\Actions\Balances;
 use App\Enums\BalanceStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
@@ -24,15 +25,12 @@ class ConfirmBalance extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
-
-            //Set the approved by
-            $model->approvedBy = $fields->approved_by;
-
+        foreach ($models as $model) {
             //Update the expenser balance
             $model->expenser->increment('balance', $model->amount);
 
             //Update the status
+            $model->approve()->create(['employee_id' => $fields->approved_by]);
             $model->status = BalanceStatus::CONFIRMED();
             $model->save();
         }
@@ -46,8 +44,9 @@ class ConfirmBalance extends Action
     public function fields()
     {
         return [
-            Text::make('Approved By', 'approved_by')
-                ->rules('required', 'string', 'max:200')
+            Select::make('Approved By')
+                ->rules('required')
+                ->options(\App\Models\Employee::toSelectOptions())
         ];
     }
 }

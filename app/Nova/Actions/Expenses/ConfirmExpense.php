@@ -5,6 +5,7 @@ namespace App\Nova\Actions\Expenses;
 use App\Enums\ExpenseStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
@@ -26,13 +27,11 @@ class ConfirmExpense extends Action
     {
         foreach($models as $model){
 
-            //Set the approved by
-            $model->approvedBy = $fields->approved_by;
-
             //Update the expenser balance
             $model->expenser->decrement('balance', $model->amount);
 
             //Update the status
+            $model->approve()->create(['employee_id' => $fields->approved_by]);
             $model->status = ExpenseStatus::CONFIRMED();
             $model->save();
         }
@@ -46,8 +45,9 @@ class ConfirmExpense extends Action
     public function fields()
     {
         return [
-            Text::make('Approved By', 'approved_by')
-                ->rules('required', 'string', 'max:200')
+            Select::make('Approved By')
+                ->rules('required')
+                ->options(\App\Models\Employee::toSelectOptions())
         ];
     }
 }

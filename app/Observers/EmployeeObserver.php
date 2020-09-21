@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Employee;
+use App\Models\Designation;
 
 class EmployeeObserver
 {
@@ -14,18 +15,19 @@ class EmployeeObserver
      */
     public function saving(Employee $employee)
     {
-        $employee->department_id = $employee->designation->department ? $employee->designation->department->id : null ;
-        $employee->section_id = $employee->designation->section ? $employee->designation->section->id : null ;
-        $employee->sub_section_id = $employee->designation->subSection ? $employee->designation->subSection->id : null ;
+        $designation = Designation::find($employee->designation_id);
+        $employee->department_id = $designation->department ? $designation->department->id : null ;
+        $employee->section_id = $designation->section ? $designation->section->id : null ;
+        $employee->sub_section_id = $designation->subSection ? $employee->designation->subSection->id : null ;
     }
 
     /**
-     * Handle the employee "updated" event.
+     * Handle the employee "saved" event.
      *
      * @param  \App\Models\Employee  $employee
      * @return void
      */
-    public function updating(Employee $employee)
+    public function saved(Employee $employee)
     {
         //
     }

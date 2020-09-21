@@ -23,7 +23,6 @@ class CreateAssetDistributionInvoicesTable extends Migration
             $table->text('note')->nullable();
             $table->bigInteger('receiver_id')->unsigned();
             $table->bigInteger('requisition_id')->unsigned()->nullable();
-            $table->string('approved_by')->nullable();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();

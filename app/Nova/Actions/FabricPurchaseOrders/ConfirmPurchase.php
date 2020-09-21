@@ -4,11 +4,12 @@ namespace App\Nova\Actions\FabricPurchaseOrders;
 
 use App\Enums\PurchaseStatus;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Collection;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ConfirmPurchase extends Action
 {
@@ -32,8 +33,6 @@ class ConfirmPurchase extends Action
     {
         foreach($models as $model){
             if($model->status == PurchaseStatus::DRAFT()){
-                $model->status = PurchaseStatus::CONFIRMED();
-                $model->save();
 
                 //Update the relate purchase items statusr
                 foreach($model->purchaseItems as $purchaseItem){
@@ -42,6 +41,11 @@ class ConfirmPurchase extends Action
                         $purchaseItem->save();
                     }
                 }
+
+                //Update the model status
+                $model->approve()->create(['employee_id' => $fields->approved_by]);
+                $model->status = PurchaseStatus::CONFIRMED();
+                $model->save();
             }
         }
     }
@@ -53,6 +57,10 @@ class ConfirmPurchase extends Action
      */
     public function fields()
     {
-        return [];
+        return [
+            Select::make('Approved By')
+                ->rules('required')
+                ->options(\App\Models\Employee::toSelectOptions())
+        ];
     }
 }

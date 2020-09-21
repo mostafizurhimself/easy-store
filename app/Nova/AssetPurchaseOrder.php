@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\PurchaseStatus;
 use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\HasMany;
@@ -170,6 +171,14 @@ class AssetPurchaseOrder extends Resource
 
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
+
+            Text::make('Approved By', function(){
+                return $this->approve->employee->name;
+            })
+            ->canSee(function(){
+                return $this->approve()->exists();
+            })
+            ->onlyOnDetail(),
 
             HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\AssetPurchaseItem'),
 

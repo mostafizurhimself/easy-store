@@ -23,7 +23,6 @@ class CreateBalancesTable extends Migration
             $table->string('reference')->nullable()->index('balance_reference_index');
             $table->double('amount')->default(0);
             $table->string('method');
-            $table->string('approved_by')->nullable()->index('balance_approved_by_index');
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();

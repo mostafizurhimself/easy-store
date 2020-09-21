@@ -152,9 +152,6 @@ class ServiceInvoice extends Resource
                 ->currency('BDT')
                 ->exceptOnForms(),
 
-            Text::make('Approved By')
-                ->onlyOnDetail(),
-
             BelongsTo::make('Provider', 'provider', 'App\Nova\Provider'),
 
             Badge::make('Status')->map([

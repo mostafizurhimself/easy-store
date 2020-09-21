@@ -253,8 +253,12 @@ class Expense extends Resource
                 ->singleMediaRules('max:5000') // max 5000kb
                 ->hideFromIndex(),
 
-            Text::make('Approved By', 'approved_by')
-                ->rules('required', 'string', 'max:200')
+            Text::make('Approved By', function(){
+                    return $this->approve->employee->name;
+                })
+                ->canSee(function(){
+                    return $this->approve()->exists();
+                })
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([

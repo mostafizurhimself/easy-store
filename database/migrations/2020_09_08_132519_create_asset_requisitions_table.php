@@ -23,7 +23,6 @@ class CreateAssetRequisitionsTable extends Migration
             $table->text('note')->nullable();
             $table->bigInteger('receiver_id')->unsigned();
             $table->date('deadline')->index('asset_requisition_deadline_index');
-            $table->string('approved_by')->nullable();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();

@@ -62,6 +62,16 @@ class Balance extends Model implements HasMedia
     }
 
     /**
+     * Get the model approve
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function approve()
+    {
+        return $this->morphOne(Approve::class, 'approvable');
+    }
+
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

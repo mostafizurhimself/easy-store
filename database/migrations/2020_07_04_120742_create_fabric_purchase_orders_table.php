@@ -22,7 +22,6 @@ class CreateFabricPurchaseOrdersTable extends Migration
             $table->double('total_purchase_amount')->default(0);
             $table->double('total_receive_amount')->default(0);
             $table->text('note')->nullable();
-            $table->string('approved_by')->nullable();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();

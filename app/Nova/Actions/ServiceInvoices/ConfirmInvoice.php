@@ -36,7 +36,6 @@ class ConfirmInvoice extends Action
             }
 
             //update the model status
-            $model->approvedBy = $fields->approved_by;
             $model->status = DispatchStatus::CONFIRMED();
             $model->save();
         }
@@ -49,9 +48,6 @@ class ConfirmInvoice extends Action
      */
     public function fields()
     {
-        return [
-            Text::make('Approved By')
-                ->rules('required', 'string', 'max:200')
-        ];
+        return [];
     }
 }

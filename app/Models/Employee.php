@@ -65,6 +65,13 @@ class Employee extends Model implements HasMedia
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $append = ['name', 'employeeId'];
+
+    /**
      * Determines one-to-one relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -109,9 +116,33 @@ class Employee extends Model implements HasMedia
      *
      * @return string
      */
-    public function getFullNameAttribute()
+    public function getNameAttribute()
     {
         return $this->firstName." ".$this->lastName;
+    }
+
+
+    /**
+     * Get the employee id attribute
+     *
+     * @return string
+     */
+    public function getEmployeeIdAttribute()
+    {
+        return $this->readableId;
+    }
+
+
+    /**
+     * Get the select options of the employee
+     *
+     * @return array
+     */
+    public static function toSelectOptions()
+    {
+        return static::all()->map(function($employee){
+            return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
+        });
     }
 
 }

@@ -163,10 +163,6 @@ class Balance extends Resource
             ->currency('BDT')
             ->rules('required', 'numeric', 'min:0'),
 
-        Text::make('Approved By', 'approved_by')
-            ->rules('required', 'string', 'max:200')
-            ->onlyOnDetail(),
-
         Select::make('Payment Method', 'method')
             ->options(PaymentMethod::titleCaseOptions())
             ->rules('required')
@@ -180,6 +176,14 @@ class Balance extends Resource
         Files::make('Attachments', 'balance-attachments')
             ->singleMediaRules('max:5000') // max 5000kb
             ->hideFromIndex(),
+
+        Text::make('Approved By', function(){
+                return $this->approve->employee->name;
+            })
+            ->canSee(function(){
+                return $this->approve()->exists();
+            })
+            ->onlyOnDetail(),
 
 
         Badge::make('Status')->map([

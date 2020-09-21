@@ -22,7 +22,6 @@ class CreateServiceInvoicesTable extends Migration
             $table->double('total_receive_amount')->default(0);
             $table->text('description')->nullable();
             $table->bigInteger('provider_id')->unsigned();
-            $table->string('approved_by')->nullable();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();

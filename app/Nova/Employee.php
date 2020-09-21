@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Carbon\Carbon;
 use App\Enums\Gender;
 use Eminiarts\Tabs\Tabs;
 use App\Enums\BloodGroup;
@@ -143,6 +144,7 @@ class Employee extends Resource
                     Select::make('Status')
                         ->options(EmployeeStatus::titleCaseOptions())
                         ->rules('required')
+                        ->default(EmployeeStatus::ACTIVE())
                         ->onlyOnForms(),
 
                 ],
@@ -184,6 +186,7 @@ class Employee extends Resource
                         ->hideFromIndex(),
 
                     Text::make('Nationality')
+                        ->default('Bangladeshi')
                         ->rules('nullable', 'string', 'max:50')
                         ->hideFromIndex(),
 
@@ -195,9 +198,7 @@ class Employee extends Resource
                 "Official Information" => [
 
 
-                    NovaBelongsToDepend::make('Location')
-                        ->placeholder('Choose an option') // Add this just if you want to customize the placeholder
-                        ->options(\App\Models\Location::all())
+                    BelongsTo::make('Location')
                         ->showOnCreating(function ($request) {
                             if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                                 return true;
@@ -228,20 +229,11 @@ class Employee extends Resource
                     BelongsTo::make('Section')
                         ->onlyOnDetail(),
 
-                    NovaBelongsToDepend::make('Designation')
-                        ->placeholder('Choose an option') // Add this just if you want to customize the placeholder
-                        ->optionsResolve(function ($location) {
-                            // Reduce the amount of unnecessary data sent
-                            // return $location->designations()->get(['id', 'name']);
-                            return $location->designations->map(function($value) {
-                                $designation = Designation::find($value->id);
-                                $department = $designation->department ? $designation->department->name." >> " : "";
-                                $section = $designation->section ? $designation->section->name." >> " : "";
-                                return [ 'value' => $designation->id, 'display' => $department . $section . $designation->name ];
-                            });
-                        })
+                    AjaxSelect::make('Designation', 'designation_id')
+                        ->rules('required')
+                        ->get('/locations/{location}/designations')
+                        ->parent('location')
                         ->onlyOnForms()
-                        ->dependsOn('Location')
                         ->showOnCreating(function ($request) {
                             if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                                 return true;
@@ -274,6 +266,7 @@ class Employee extends Resource
 
                     Date::make('Joining Date')
                         ->rules('required')
+                        ->default(Carbon::now())
                         ->hideFromIndex(),
 
                     Date::make('Resign Date')
