@@ -24,7 +24,7 @@ class CreateSuppliersTable extends Migration
             $table->string('vat_number')->nullable();
             $table->double('opening_balance')->default(0);
             $table->double('balance')->default(0);
-            $table->boolean('active')->default(true);
+            $table->string('status')->default('active');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -104,12 +104,12 @@ class Designation extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:45')
                 ->creationRules([
-                    Rule::unique('designations', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('designations', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                         ->where('department_id', request()->get('department_id'))
                         ->where('section_id', request()->get('section_id'))
                 ])
                 ->updateRules([
-                    Rule::unique('designations', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('designations', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                         ->where('department_id', request()->get('department_id'))
                         ->where('section_id', request()->get('section_id'))
                         ->ignore($this->resource->id)

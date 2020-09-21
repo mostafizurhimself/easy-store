@@ -123,10 +123,10 @@ class AssetCategory extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:45')
                 ->creationRules([
-                    Rule::unique('asset_categories', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('asset_categories', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('asset_categories', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('asset_categories', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Textarea::make('Description')

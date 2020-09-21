@@ -154,10 +154,10 @@ class Material extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('materials', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('materials', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('materials', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('materials', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Text::make('Code')
@@ -165,10 +165,10 @@ class Material extends Resource
                 ->help('If you want to generate code automatically, leave the field blank.')
                 ->rules('nullable', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('materials', 'code')->where('location_id', request()->get('location'))
+                    Rule::unique('materials', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('materials', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('materials', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Images::make('Image', 'material-images')

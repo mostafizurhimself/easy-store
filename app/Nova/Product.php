@@ -123,10 +123,10 @@ class Product extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('products', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('products', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('products', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('products', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Text::make('Code')
@@ -134,10 +134,10 @@ class Product extends Resource
                 ->help('If you want to generate code automatically, leave the field blank.')
                 ->rules('nullable', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('products', 'code')->where('location_id', request()->get('location'))
+                    Rule::unique('products', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('products', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('products', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Images::make('Image', 'product-images')

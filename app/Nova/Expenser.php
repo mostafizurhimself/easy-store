@@ -117,10 +117,10 @@ class Expenser extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:45')
                 ->creationRules([
-                    Rule::unique('expensers', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('expensers', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('expensers', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('expensers', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Text::make('Code')
@@ -128,10 +128,10 @@ class Expenser extends Resource
                 ->help('If you want to generate code automatically, leave the field blank.')
                 ->rules('nullable', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('expensers', 'code')->where('location_id', request()->get('location'))
+                    Rule::unique('expensers', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('expensers', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('expensers', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Images::make('Images', 'expenser-image')

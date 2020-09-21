@@ -152,10 +152,10 @@ class Fabric extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('fabrics', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('fabrics', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('fabrics', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('fabrics', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Text::make('Code')
@@ -163,10 +163,10 @@ class Fabric extends Resource
                 ->help('If you want to generate code automatically, leave the field blank.')
                 ->rules('nullable', 'string', 'max:100')
                 ->creationRules([
-                    Rule::unique('fabrics', 'code')->where('location_id', request()->get('location'))
+                    Rule::unique('fabrics', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('fabrics', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('fabrics', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Images::make('Image', 'fabric-images')

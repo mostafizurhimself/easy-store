@@ -94,10 +94,10 @@ class Floor extends Resource
             Text::make('Floor Name', 'name')
                 ->rules('required', 'max:45', 'string')
                 ->creationRules([
-                    Rule::unique('floors', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('floors', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('floors', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('floors', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Text::make('Floor Number', 'number')

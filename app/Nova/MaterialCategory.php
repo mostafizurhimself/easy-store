@@ -134,10 +134,10 @@ class MaterialCategory extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:45')
                 ->creationRules([
-                    Rule::unique('material_categories', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('material_categories', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('material_categories', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('material_categories', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Textarea::make('Description')

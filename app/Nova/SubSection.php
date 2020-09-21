@@ -97,10 +97,10 @@ class SubSection extends Resource
                 ->sortable()
                 ->rules('required', 'string', 'max:45')
                 ->creationRules([
-                    Rule::unique('sub_sections', 'name')->where('section_id', request()->get('section'))->where('location_id', request()->get('location'))
+                    Rule::unique('sub_sections', 'name')->where('section_id', request()->get('section_id'))
                 ])
                 ->updateRules([
-                    Rule::unique('sub_sections', 'name')->where('section_id', request()->get('section'))->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('sub_sections', 'name')->where('section_id', request()->get('section_id'))->ignore($this->resource->id)
                 ]),
 
             BelongsTo::make('Location')
@@ -281,5 +281,29 @@ class SubSection extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Return the location to redirect the user after creation.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Laravel\Nova\Resource  $resource
+     * @return string
+     */
+    public static function redirectAfterCreate(NovaRequest $request, $resource)
+    {
+        return '/resources/'.static::uriKey();
+    }
+
+    /**
+     * Return the location to redirect the user after update.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Laravel\Nova\Resource  resource
+     * @return string
+     */
+    public static function redirectAfterUpdate(NovaRequest $request, $resource)
+    {
+        return '/resources/'.static::uriKey();
     }
 }

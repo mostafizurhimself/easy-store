@@ -97,20 +97,20 @@ class Style extends Resource
             Text::make('Name')
                 ->rules('required', 'max:45', 'string')
                 ->creationRules([
-                    Rule::unique('styles', 'name')->where('location_id', request()->get('location'))
+                    Rule::unique('styles', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('styles', 'name')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('styles', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
 
             Text::make('Code')
                 ->rules('required', 'max:45', 'string')
                 ->creationRules([
-                    Rule::unique('styles', 'code')->where('location_id', request()->get('location'))
+                    Rule::unique('styles', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
                 ->updateRules([
-                    Rule::unique('styles', 'code')->where('location_id', request()->get('location'))->ignore($this->resource->id)
+                    Rule::unique('styles', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
             Currency::make('Rate')
