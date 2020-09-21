@@ -108,13 +108,13 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::updateOrCreate(['name' => 'force delete all locations data'],['group' => 'super admin', 'name' => 'force delete all locations data', 'group_order' => 20007]);
 
         // Create a Super-Admin Role and assign all Permissions
-        $role = Role::updateOrCreate(['name' => 'super-admin'], ['name' => 'super-admin', 'display_name' => 'Super Admin']);
-        $role->givePermissionTo(Permission::all());
+        // $role = Role::updateOrCreate(['name' => 'super-admin'], ['name' => 'super-admin', 'display_name' => 'Super Admin']);
 
         // Give User Super-Admin Role
         $user = App\Models\User::whereEmail('admin@easystore.com')->first(); // Change this to your email.
-        if(!$user->hasRole('super-admin')){
-            $user->assignRole('super-admin');
-        }
+        $user->givePermissionTo(Permission::all());
+        // if(!$user->hasRole('super-admin')){
+        //     $user->assignRole('super-admin');
+        // }
     }
 }

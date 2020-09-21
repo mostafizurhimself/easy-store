@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Enums\ActiveStatus;
 use Illuminate\Support\Facades\Auth;
 
 class ActiveUser
@@ -16,7 +17,7 @@ class ActiveUser
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::user()->active){
+        if(Auth::user()->status == ActiveStatus::ACTIVE()){
             return $next($request);
         }
 
