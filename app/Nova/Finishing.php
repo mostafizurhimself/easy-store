@@ -29,14 +29,21 @@ class Finishing extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">09</span>Finishing Section';
+    public static $group = '<span class="hidden">08</span>Product Section';
 
     /**
      * The side nav menu order.
      *
      * @var int
      */
-    public static $priority = 2;
+    public static $priority = 5;
+
+    /**
+     * Hide resource from Nova's standard menu.
+     *
+     * @var bool
+     */
+    public static $displayInNavigation = false;
 
     /**
      * The icon of the resource.
@@ -85,7 +92,8 @@ class Finishing extends Resource
 
             BelongsTo::make('Product'),
 
-            BelongsTo::make('Style'),
+            BelongsTo::make('Style')
+                ->showCreateRelationButton(),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')

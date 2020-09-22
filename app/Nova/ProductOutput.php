@@ -36,6 +36,13 @@ class ProductOutput extends Resource
     public static $group = '<span class="hidden">08</span>Product Section';
 
     /**
+     * The side nav menu order.
+     *
+     * @var int
+     */
+    public static $priority = 3;
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string

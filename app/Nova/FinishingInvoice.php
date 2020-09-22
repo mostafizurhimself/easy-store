@@ -33,14 +33,14 @@ class FinishingInvoice extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">09</span>Finishing Section';
+    public static $group = '<span class="hidden">08</span>Product Section';
 
     /**
      * The side nav menu order.
      *
      * @var int
      */
-    public static $priority = 1;
+    public static $priority = 4;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

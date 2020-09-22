@@ -20,10 +20,9 @@ trait Locationable
      */
     public static function bootLocationable()
     {
-        static::created(function($model){
+        static::creating(function($model){
             if(Auth::check() && empty($model->locationId)){
                 $model->locationId = Auth::user()->locationId;
-                $model->save();
             }
         });
     }
