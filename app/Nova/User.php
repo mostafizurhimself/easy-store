@@ -250,10 +250,10 @@ class User extends Resource
     {
         return [
             (new MakeAsActive)->canSee(function($request){
-                $request->user()->hasPermissionTo('can mark as active');
+                return $request->user()->hasPermissionTo('can mark as active');
             }),
             (new MakeAsInactive)->canSee(function($request){
-                $request->user()->hasPermissionTo('can mark as inactive');
+                return $request->user()->hasPermissionTo('can mark as inactive');
             }),
         ];
     }

@@ -267,7 +267,7 @@ class FinishingInvoice extends Resource
     {
         return [
             (new ConfirmFinishing)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm finishing invoices');
+                return $request->user()->hasPermissionTo('can confirm finishing invoices');
             }),
         ];
     }

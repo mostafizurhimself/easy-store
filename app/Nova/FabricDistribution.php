@@ -288,7 +288,7 @@ class FabricDistribution extends Resource
     {
         return [
             (new ConfirmDistribution)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm fabric distributions');
+                return $request->user()->hasPermissionTo('can confirm fabric distributions');
             }),
         ];
     }

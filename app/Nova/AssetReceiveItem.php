@@ -181,7 +181,7 @@ class AssetReceiveItem extends Resource
     {
         return [
             (new ConfirmReceiveItem)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm asset receive items');
+                return $request->user()->hasPermissionTo('can confirm asset receive items');
             }),
         ];
     }

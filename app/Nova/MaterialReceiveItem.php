@@ -177,7 +177,7 @@ class MaterialReceiveItem extends Resource
     {
         return [
             (new ConfirmReceiveItem)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm material receive items');
+                return $request->user()->hasPermissionTo('can confirm material receive items');
             }),
         ];
     }

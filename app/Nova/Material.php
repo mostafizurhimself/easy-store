@@ -317,7 +317,7 @@ class Material extends Resource
     {
         return [
             (new UpdateOpeningQuantity)->canSee(function($request){
-                $request->user()->hasPermissionTo('can update materials opening quantity');
+                return $request->user()->hasPermissionTo('can update materials opening quantity');
             })->onlyOnDetail(),
         ];
     }

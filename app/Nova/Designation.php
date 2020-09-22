@@ -60,6 +60,18 @@ class Designation extends Resource
     }
 
     /**
+     * Get the breadcrumb resource title
+     *
+     * @return string
+     */
+     public function breadcrumbResourceTitle()
+     {
+         return $this->name;
+     }
+
+
+
+    /**
      * Get the search result subtitle for the resource.
      *
      * @return string

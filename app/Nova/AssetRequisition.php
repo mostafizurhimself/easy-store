@@ -211,9 +211,7 @@ class AssetRequisition extends Resource
     public function lenses(Request $request)
     {
         return [
-            (new Requisitions)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm asset requisitions');
-            }),
+            new Requisitions
         ];
     }
 
@@ -226,7 +224,9 @@ class AssetRequisition extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmRequisition
+            (new ConfirmRequisition)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can confirm asset requisitions');
+            }),
         ];
     }
 }

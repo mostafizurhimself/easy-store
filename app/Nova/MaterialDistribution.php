@@ -288,7 +288,7 @@ class MaterialDistribution extends Resource
     {
         return [
             (new ConfirmDistribution)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm material distributions');
+                return $request->user()->hasPermissionTo('can confirm material distributions');
             }),
         ];
     }

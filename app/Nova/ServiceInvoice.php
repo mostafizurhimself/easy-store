@@ -220,8 +220,8 @@ class ServiceInvoice extends Resource
             }),
 
             (new ConfirmInvoice)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm service invoices');
-            }),
+                return $request->user()->hasPermissionTo('can confirm service invoices');
+            })->confirmButtonText('Confirm'),
         ];
     }
 }

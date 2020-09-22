@@ -286,7 +286,7 @@ class Product extends Resource
     {
         return [
             (new UpdateOpeningQuantity)->canSee(function($request){
-                $request->user()->hasPermissionTo('can update products opening quantity');
+                return $request->user()->hasPermissionTo('can update products opening quantity');
             })->onlyOnDetail(),
         ];
     }

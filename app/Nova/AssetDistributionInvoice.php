@@ -227,7 +227,7 @@ class AssetDistributionInvoice extends Resource
     {
         return [
             (new ConfirmInvoice)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm asset distribution invoices');
+                return $request->user()->hasPermissionTo('can confirm asset distribution invoices');
             }),
         ];
     }

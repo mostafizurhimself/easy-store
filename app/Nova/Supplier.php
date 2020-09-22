@@ -197,7 +197,7 @@ class Supplier extends Resource
     {
         return [
             (new UpdateOpeningBalance)->canSee(function($request){
-                $request->user()->hasPermissionTo('can update suppliers opening quantity');
+                return $request->user()->hasPermissionTo('can update suppliers opening quantity');
             })->onlyOnDetail(),
         ];
     }

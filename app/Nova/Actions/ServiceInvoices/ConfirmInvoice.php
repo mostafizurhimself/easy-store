@@ -39,6 +39,8 @@ class ConfirmInvoice extends Action
             $model->status = DispatchStatus::CONFIRMED();
             $model->save();
         }
+
+        return Action::message('Service invoice confirmed successfully.');
     }
 
     /**

@@ -236,7 +236,7 @@ class AssetPurchaseOrder extends Resource
             }),
 
             (new ConfirmPurchase)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm asset purchase orders');
+                return $request->user()->hasPermissionTo('can confirm asset purchase orders');
             }),
         ];
     }

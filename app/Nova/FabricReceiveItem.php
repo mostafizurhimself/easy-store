@@ -181,7 +181,7 @@ class FabricReceiveItem extends Resource
     {
         return [
             (new ConfirmReceiveItem)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm fabric receive items');
+                return $request->user()->hasPermissionTo('can confirm fabric receive items');
             }),
         ];
     }

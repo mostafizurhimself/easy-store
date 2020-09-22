@@ -9,6 +9,7 @@ use App\Enums\DispatchStatus;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
+use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
@@ -17,6 +18,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ServiceDispatch extends Resource
 {
+    use WithOutLocation;
     /**
      * The model the resource corresponds to.
      *

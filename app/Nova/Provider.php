@@ -193,7 +193,7 @@ class Provider extends Resource
     {
         return [
             (new UpdateOpeningBalance)->canSee(function($request){
-                $request->user()->hasPermissionTo('can update products opening quantity');
+                return $request->user()->hasPermissionTo('can update products opening quantity');
             })->onlyOnDetail(),
         ];
     }

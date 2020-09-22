@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
+use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
@@ -22,6 +23,7 @@ use App\Nova\Actions\ServiceReceives\ConfirmReceive;
 
 class ServiceReceive extends Resource
 {
+    use WithOutLocation;
     /**
      * The model the resource corresponds to.
      *
@@ -97,7 +99,13 @@ class ServiceReceive extends Resource
                 ->rules('required', 'numeric', 'min:0')
                 ->creationRules(new ServiceReceiveQuantityRule($request->viaResource, $request->viaResourceId))
                 ->updateRules(new ServiceReceiveQuantityRuleForUpdate(\App\Nova\ServiceDispatch::uriKey(), $this->resource->dispatchId, $this->resource->quantity))
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->default(function($request){
+                    if($request->viaResource == \App\Nova\ServiceDispatch::uriKey() && !empty($request->viaResourceId)){
+                        return \App\Models\ServiceDispatch::find($request->viaResourceId)->remainingQuantity;
+                    }
+                }),
+
 
             Text::make('Quantity', function(){
                     return $this->quantity." ".$this->unit;
@@ -106,7 +114,11 @@ class ServiceReceive extends Resource
 
             Currency::make('Rate')
                 ->currency('BDT')
-                ->help("Leave blank if you do not want to change the service rate."),
+                ->default(function($request){
+                    if($request->viaResource == \App\Nova\ServiceDispatch::uriKey() && !empty($request->viaResourceId)){
+                        return \App\Models\ServiceDispatch::find($request->viaResourceId)->rate;
+                    }
+                }),
 
             Currency::make('Amount')
                 ->currency('BDT')
@@ -181,7 +193,7 @@ class ServiceReceive extends Resource
     {
         return [
             (new ConfirmReceive)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm service receives');
+                return $request->user()->hasPermissionTo('can confirm service receives');
             }),
         ];
     }

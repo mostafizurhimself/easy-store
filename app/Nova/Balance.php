@@ -242,7 +242,7 @@ class Balance extends Resource
     {
         return [
             (new ConfirmBalance)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm balances');
+                return $request->user()->hasPermissionTo('can confirm balances');
             }),
         ];
     }

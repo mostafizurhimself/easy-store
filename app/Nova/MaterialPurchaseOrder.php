@@ -233,7 +233,7 @@ class MaterialPurchaseOrder extends Resource
             }),
 
             (new ConfirmPurchase)->canSee(function($request){
-                $request->user()->hasPermissionTo('can confirm material purchase orders');
+                return $request->user()->hasPermissionTo('can confirm material purchase orders');
             }),
         ];
     }

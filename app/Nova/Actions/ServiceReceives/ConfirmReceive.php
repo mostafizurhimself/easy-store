@@ -15,6 +15,13 @@ class ConfirmReceive extends Action
     use InteractsWithQueue, Queueable;
 
     /**
+     * The text to be used for the action's confirm button.
+     *
+     * @var string
+     */
+    public $confirmButtonText = 'Confirm';
+
+    /**
      * Perform the action on the given models.
      *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
@@ -28,6 +35,12 @@ class ConfirmReceive extends Action
             $model->status = DispatchStatus::CONFIRMED();
             $model->save();
         }
+
+        if($models->count() > 1){
+            return Action::message('Service receives is confirmed successfully.');
+        }
+
+        return Action::message('Service receive is confirmed successfully.');
     }
 
     /**
