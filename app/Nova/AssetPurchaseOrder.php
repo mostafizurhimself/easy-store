@@ -121,7 +121,7 @@ class AssetPurchaseOrder extends Resource
                 }),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -146,7 +146,7 @@ class AssetPurchaseOrder extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Supplier'),
+            BelongsTo::make('Supplier')->searchable(),
 
             Currency::make('Purchase Amount', 'total_purchase_amount')
                 ->currency('BDT')

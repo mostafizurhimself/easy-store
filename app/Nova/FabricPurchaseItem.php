@@ -71,7 +71,7 @@ class FabricPurchaseItem extends Resource
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\FabricPurchaseOrder")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Fabric'),
+            BelongsTo::make('Fabric')->searchable(),
 
             Number::make('Quantity', 'purchase_quantity')
                 ->rules('required', 'numeric', 'min:0')

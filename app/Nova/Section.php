@@ -119,7 +119,7 @@ class Section extends Resource
                 ]),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -237,7 +237,7 @@ class Section extends Resource
             BelongsTo::make('Section Incharge', 'employee', 'App\Nova\Employee')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Section Incharge', 'employee', 'App\Nova\Employee')
+            BelongsTo::make('Section Incharge', 'employee', 'App\Nova\Employee')->searchable()
                 ->onlyOnForms()
                 ->nullable()
                 ->hideWhenCreating(function($request){

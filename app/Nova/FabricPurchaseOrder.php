@@ -122,7 +122,7 @@ class FabricPurchaseOrder extends Resource
                 }),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -147,7 +147,7 @@ class FabricPurchaseOrder extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier"),
+            BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")->searchable(),
 
             Currency::make('Purchase Amount', 'total_purchase_amount')
                 ->currency('BDT')

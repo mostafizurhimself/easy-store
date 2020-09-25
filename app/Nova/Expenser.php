@@ -88,7 +88,7 @@ class Expenser extends Resource
                 ->onlyOnIndex(),
 
             BelongsTo::make('Location')
-            // ->searchable()
+            ->searchable()
             ->showOnCreating(function ($request) {
                 if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                     return true;
@@ -160,7 +160,7 @@ class Expenser extends Resource
             BelongsTo::make('Employee ID', 'employee', 'App\Nova\Employee')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Employee ID', 'employee', 'App\Nova\Employee')
+            BelongsTo::make('Employee ID', 'employee', 'App\Nova\Employee')->searchable()
                 ->onlyOnForms()
                 ->nullable()
                 ->hideWhenCreating(function($request){

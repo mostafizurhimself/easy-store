@@ -70,7 +70,7 @@ class AssetPurchaseItem extends Resource
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\AssetPurchaseOrder")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Asset'),
+            BelongsTo::make('Asset')->searchable(),
 
             Number::make('Quantity', 'purchase_quantity')
                 ->rules('required', 'numeric', 'min:0')

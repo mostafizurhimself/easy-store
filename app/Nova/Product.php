@@ -94,7 +94,7 @@ class Product extends Resource
             ID::make(__('ID'), 'id')->sortable()->onlyOnIndex(),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;

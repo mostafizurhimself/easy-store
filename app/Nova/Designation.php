@@ -128,7 +128,7 @@ class Designation extends Resource
                 ]),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -174,6 +174,7 @@ class Designation extends Resource
                 ->exceptOnForms(),
 
             BelongsTo::make('Department')
+            ->searchable()
                 ->onlyOnForms()
                 ->nullable()
                 ->hideWhenCreating(function ($request) {

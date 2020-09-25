@@ -116,7 +116,7 @@ class ServiceInvoice extends Resource
                 }),
 
 
-            BelongsTo::make('Location')
+            BelongsTo::make('Location')->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -152,7 +152,7 @@ class ServiceInvoice extends Resource
                 ->currency('BDT')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Provider', 'provider', 'App\Nova\Provider'),
+            BelongsTo::make('Provider', 'provider', 'App\Nova\Provider')->searchable(),
 
             Badge::make('Status')->map([
                 DispatchStatus::DRAFT()->getValue()     => 'warning',

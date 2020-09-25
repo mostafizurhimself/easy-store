@@ -199,6 +199,7 @@ class Employee extends Resource
 
 
                     BelongsTo::make('Location')
+                        ->searchable()
                         ->showOnCreating(function ($request) {
                             if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                                 return true;
@@ -250,6 +251,7 @@ class Employee extends Resource
                         ->exceptOnForms(),
 
                     BelongsTo::make('Designation')
+                    ->searchable()
                         ->onlyOnForms()
                         ->nullable()
                         ->hideWhenCreating(function ($request) {

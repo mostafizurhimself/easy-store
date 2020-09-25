@@ -19,7 +19,9 @@
         "build-profile": "cd nova-components/Profile && npm run dev",
         "build-profile-prod": "cd nova-components/Profile && npm run prod",
         "build-prevent-direct-create-tool": "cd nova-components/PreventDirectCreateTool && npm run dev",
-        "build-prevent-direct-create-tool-prod": "cd nova-components/PreventDirectCreateTool && npm run prod"
+        "build-prevent-direct-create-tool-prod": "cd nova-components/PreventDirectCreateTool && npm run prod",
+        "build-searchable-select": "cd nova-components/SearchableSelect && npm run dev",
+        "build-searchable-select-prod": "cd nova-components/SearchableSelect && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.19",

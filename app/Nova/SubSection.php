@@ -104,7 +104,7 @@ class SubSection extends Resource
                 ]),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -150,7 +150,7 @@ class SubSection extends Resource
             BelongsTo::make('Department')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Department')
+            BelongsTo::make('Department')->searchable()
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -165,7 +165,7 @@ class SubSection extends Resource
                 }),
 
 
-            BelongsTo::make('Section')
+            BelongsTo::make('Section')->searchable()
                 ->exceptOnForms(),
 
             AjaxSelect::make('Section', 'section_id')
@@ -222,7 +222,7 @@ class SubSection extends Resource
             BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')
+            BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')->searchable()
                 ->onlyOnForms()
                 ->nullable()
                 ->hideWhenCreating(function($request){

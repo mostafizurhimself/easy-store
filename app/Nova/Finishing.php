@@ -90,9 +90,10 @@ class Finishing extends Resource
             BelongsTo::make('Invoice', 'invoice', "App\Nova\FinishingInvoice")
                 ->exceptOnForms(),
 
-            BelongsTo::make('Product'),
+            BelongsTo::make('Product')->searchable(),
 
             BelongsTo::make('Style')
+                ->searchable()
                 ->showCreateRelationButton(),
 
             Number::make('Quantity')

@@ -106,7 +106,7 @@ class ProductOutput extends Resource
                 ->default(Carbon::now()),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
                 ->showOnCreating(function($request){
                     if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
                         return true;
@@ -183,7 +183,7 @@ class ProductOutput extends Resource
             BelongsTo::make('Style', 'style', 'App\Nova\Style')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Style', 'style', 'App\Nova\Style')
+            BelongsTo::make('Style', 'style', 'App\Nova\Style')->searchable()
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {

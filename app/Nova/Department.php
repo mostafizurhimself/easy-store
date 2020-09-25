@@ -117,7 +117,7 @@ class Department extends Resource
                 ]),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
                 ->showOnCreating(function($request){
                     if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
                         return true;
@@ -163,6 +163,7 @@ class Department extends Resource
                 ->exceptOnForms(),
 
             BelongsTo::make('Department Head', 'employee', 'App\Nova\Employee')
+            ->searchable()
                 ->onlyOnForms()
                 ->nullable()
                 ->hideWhenCreating(function($request){

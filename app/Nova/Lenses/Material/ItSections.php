@@ -42,7 +42,6 @@ class ItSections extends Lens
             ID::make(__('ID'), 'id')->sortable(),
 
             BelongsTo::make('Location')
-                // ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;

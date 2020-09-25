@@ -130,7 +130,7 @@ class FabricDistribution extends Resource
             BelongsTo::make('Fabric')
                     ->exceptOnForms(),
 
-            BelongsTo::make('Fabric')
+            BelongsTo::make('Fabric')->searchable()
                 ->onlyOnForms()
                 ->hideWhenCreating(function($request){
                     if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
@@ -199,7 +199,7 @@ class FabricDistribution extends Resource
             })
             ->hideFromIndex(),
 
-            BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")
+            BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")->searchable()
                 ->onlyOnForms()
                 ->hideWhenCreating(function($request){
                     if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){

@@ -109,7 +109,7 @@ class FinishingInvoice extends Resource
                 }),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -164,7 +164,7 @@ class FinishingInvoice extends Resource
             BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')
+            BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')->searchable()
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {

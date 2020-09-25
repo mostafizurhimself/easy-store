@@ -119,7 +119,7 @@ class User extends Resource
                         ->rules('required', 'max:255'),
 
                     BelongsTo::make('Location')
-                        // ->searchable()
+                        ->searchable()
                         ->showOnCreating(function ($request) {
                             if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                                 return true;

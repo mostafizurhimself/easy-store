@@ -106,7 +106,7 @@ class AssetDistributionInvoice extends Resource
                 ->readonly(),
 
             BelongsTo::make('Location')
-            // ->searchable()
+            ->searchable()
                 ->showOnCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -165,6 +165,7 @@ class AssetDistributionInvoice extends Resource
                 ->hideWhenUpdating(),
 
             BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
+                ->searchable()
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([

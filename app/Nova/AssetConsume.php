@@ -64,7 +64,8 @@ class AssetConsume extends Resource
         return [
             Text::make('Consume Id', 'readable_id'),
 
-            BelongsTo::make('Asset'),
+            BelongsTo::make('Asset')
+            ->searchable(),
 
             Text::make('Quantity', function(){
                 return $this->quantity ." ".$this->unit;

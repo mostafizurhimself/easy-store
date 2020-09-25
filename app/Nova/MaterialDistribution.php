@@ -98,7 +98,7 @@ class MaterialDistribution extends Resource
             // ID::make()->sortable(),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
                 ->showOnCreating(function($request){
                     if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
                         return true;
@@ -131,7 +131,7 @@ class MaterialDistribution extends Resource
             BelongsTo::make('Material')
                     ->exceptOnForms(),
 
-            BelongsTo::make('Material')
+            BelongsTo::make('Material')->searchable()
                 ->onlyOnForms()
                 ->hideWhenCreating(function($request){
                     if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
@@ -200,7 +200,7 @@ class MaterialDistribution extends Resource
             })
             ->hideFromIndex(),
 
-            BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")
+            BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")->searchable()
                 ->onlyOnForms()
                 ->hideWhenCreating(function($request){
                     if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){

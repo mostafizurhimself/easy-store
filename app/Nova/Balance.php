@@ -86,7 +86,7 @@ class Balance extends Resource
             ]),
 
             BelongsTo::make('Location')
-            // ->searchable()
+            ->searchable()
             ->showOnCreating(function ($request) {
                 if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
                     return true;
@@ -139,6 +139,7 @@ class Balance extends Resource
             ->exceptOnForms(),
 
         BelongsTo::make('Expenser', 'expenser', 'App\Nova\Expenser')
+        ->searchable()
             ->onlyOnForms()
             ->hideWhenCreating(function($request){
                 if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
