@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2.5",
         "64robots/nova-fields": "^0.16.0",
+        "akaunting/money": "^1.2",
         "armincms/json": "^0.5.1",
         "benjacho/belongs-to-many-field": "^1.8",
         "benjaminhirsch/nova-slug-field": "^1.2",
@@ -21,8 +22,10 @@
         "david-griffiths/nova-dark-theme": "^1.0",
         "dillingham/nova-ajax-select": "^1.0",
         "dillingham/nova-attach-many": "^1.0",
+        "easystore/invoice": "*",
         "easystore/nova-theme": "*",
         "easystore/permission-checkbox": "*",
+        "easystore/prevent-direct-create": "*",
         "easystore/router-link": "*",
         "ebess/advanced-nova-media-library": "^3.1",
         "eminiarts/nova-permissions": "^1.0",
@@ -45,8 +48,7 @@
         "pdmfc/nova-action-button": "^0.4.0",
         "pusher/pusher-php-server": "^4.1",
         "titasgailius/search-relations": "^1.0",
-        "yassi/nova-nested-form": "^3.0",
-        "easystore/prevent-direct-create": "*"
+        "yassi/nova-nested-form": "^3.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
@@ -113,6 +115,10 @@
         {
             "type": "path",
             "url": "./nova-components/PreventDirectCreate"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Invoice"
         }
     ]
 }

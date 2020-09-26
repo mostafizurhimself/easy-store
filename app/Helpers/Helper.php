@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Carbon;
+use League\Flysystem\Config;
 
 class Helper
 {
@@ -42,5 +43,25 @@ class Helper
         }
 
         return $this->generateReadableId($value, $finalPrefix, $length);  // POF200700001
+    }
+
+    /**
+     * Format Currency
+     *
+     * @return string
+     */
+    public function currency($value)
+    {
+        return config('nova.currency', 'BDT') . " " . $this->currencyShort($value);
+    }
+
+    /**
+     * Format Currency
+     *
+     * @return string
+     */
+    public function currencyShort($value)
+    {
+        return money($value, config('nova.currency', 'BDT'));
     }
 }

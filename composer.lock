@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4cc3e6ea61675d4969a2f957831fe8d3",
+    "content-hash": "3603730c80d26ec0930207090c2ef0f3",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -46,6 +46,67 @@
                 "nova"
             ],
             "time": "2020-03-19T17:28:32+00:00"
+        },
+        {
+            "name": "akaunting/money",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/akaunting/money.git",
+                "reference": "75f6d0d036cd1ca82c2926cfae5a7c2759445cfb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/akaunting/money/zipball/75f6d0d036cd1ca82c2926cfae5a7c2759445cfb",
+                "reference": "75f6d0d036cd1ca82c2926cfae5a7c2759445cfb",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=5.4",
+                "illuminate/view": ">=5.4",
+                "php": ">=5.6.4"
+            },
+            "require-dev": {
+                "mockery/mockery": ">=1.0",
+                "phpunit/phpunit": ">=5.7"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Akaunting\\Money\\Provider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Akaunting\\Money\\": "./src"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Denis Duliçi",
+                    "email": "info@akaunting.com",
+                    "homepage": "https://akaunting.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Currency formatting and conversion package for Laravel.",
+            "keywords": [
+                "convert",
+                "currency",
+                "format",
+                "laravel",
+                "money"
+            ],
+            "time": "2020-07-06T06:21:54+00:00"
         },
         {
             "name": "armincms/json",
@@ -1379,6 +1440,42 @@
                 "schedule"
             ],
             "time": "2019-03-31T00:38:28+00:00"
+        },
+        {
+            "name": "easystore/invoice",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./nova-components/Invoice",
+                "reference": "90dcbb2a49c80d64d8a1f1b6c887cb3edb1d1c26"
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Easystore\\Invoice\\ToolServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Easystore\\Invoice\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova tool.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "easystore/nova-theme",

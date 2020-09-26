@@ -219,6 +219,15 @@ class AssetDistributionInvoice extends Model implements HasMedia
         }
     }
 
+    /**
+     * Get the invoice reference no
+     *
+     * @return string
+     */
+    public function getReferenceAttribute()
+    {
+        return $this->requisition ? $this->requisition->readableId : 'N/A';
+    }
 
 
 

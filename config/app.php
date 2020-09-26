@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Easystore\NovaTheme\ThemeServiceProvider::class,
+        Akaunting\Money\Provider::class,
 
         /*
          * Application Service Providers...

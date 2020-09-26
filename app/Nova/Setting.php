@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Easystore\RouterLink\RouterLink;
 use App\Models\Setting as SettingModel;
+use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Epartment\NovaDependencyContainer\HasDependencies;
@@ -90,19 +91,25 @@ class Setting extends Resource
                 ->onlyOnForms()
                 ->readonly(),
 
-            NovaDependencyContainer::make([
+            Images::make('Logo', 'settings')
+                ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
+                ->croppable()
+                ->hideFromIndex(),
 
-                Images::make('Logo', 'settings')
-                    ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
-                    ->croppable()
-                    ->hideFromIndex(),
+            NovaDependencyContainer::make([
 
                 Json::make('Settings', [
                     Text::make('Name', 'name')
                         ->rules('nullable', 'string', 'max:100'),
 
                     Email::make('Email', 'email')
-                        ->rules('nullable', 'email')
+                        ->rules('nullable', 'email'),
+
+                    PhoneNumber::make('Mobile')
+                        ->withCustomFormats('+88 ### #### ####')
+                        ->onlyCustomFormats()
+                        ->rules('nullable'),
+
                 ])
                 ->flatten()
                 ->hideFromIndex(),

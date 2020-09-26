@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Facades\Settings;
+use App\Enums\AddressType;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
 use Illuminate\Database\Eloquent\Model;
@@ -243,4 +244,20 @@ class Location extends Model
     {
        return $this->hasMany(AssetRequisition::class);
     }
+
+    /**
+     * Get the location address of the location
+     *
+     * @return \App\Models\Address
+     */
+    public function getLocationAddressAttribute()
+    {
+        if($this->address()->exists()){
+
+            return $this->address->where('type', AddressType::LOCATION_ADDRESS())->first();
+        }
+
+        return null;
+    }
+
 }

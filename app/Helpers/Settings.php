@@ -17,13 +17,23 @@ class Settings
     }
 
     /**
-     * Get the application name
+     * Get the company details
      *
      * @return object
      */
     public function company()
     {
         return json_decode(Setting::where('name', Setting::COMPANY_SETTINGS)->first()->settings);
+    }
+
+    /**
+     * Get the company logo
+     *
+     * @return object
+     */
+    public function companyLogo()
+    {
+        return Setting::where('name', Setting::COMPANY_SETTINGS)->first()->getMedia('settings')->first() ? Setting::where('name', Setting::COMPANY_SETTINGS)->first()->getMedia('settings')->first() : null;
     }
 
     /**

@@ -95,7 +95,7 @@ class AssetDistributionItem extends Model
     }
 
     /**
-     * Get the purchase item remaining receive quantity
+     * Get the distribution item remaining receive quantity
      *
      * @return double
      */
@@ -103,7 +103,6 @@ class AssetDistributionItem extends Model
     {
         return $this->distributionQuantity - $this->receiveQuantity;
     }
-
 
     /**
      * Scope a query to only include draft distributions.
@@ -149,7 +148,7 @@ class AssetDistributionItem extends Model
     }
 
     /**
-     * Update purchase item status
+     * Update distribution item status
      *
      * @return void
      */

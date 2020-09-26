@@ -25,7 +25,9 @@
         "build-purchase-invoice-tool": "cd nova-components/PurchaseInvoiceTool && npm run dev",
         "build-purchase-invoice-tool-prod": "cd nova-components/PurchaseInvoiceTool && npm run prod",
         "build-prevent-direct-create": "cd nova-components/PreventDirectCreate && npm run dev",
-        "build-prevent-direct-create-prod": "cd nova-components/PreventDirectCreate && npm run prod"
+        "build-prevent-direct-create-prod": "cd nova-components/PreventDirectCreate && npm run prod",
+        "build-invoice": "cd nova-components/Invoice && npm run dev",
+        "build-invoice-prod": "cd nova-components/Invoice && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.19",

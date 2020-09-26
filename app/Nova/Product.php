@@ -211,6 +211,7 @@ class Product extends Resource
                 }),
 
             BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
+                ->showCreateRelationButton()
                 ->exceptOnForms(),
 
             BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
