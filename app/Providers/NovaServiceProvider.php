@@ -7,6 +7,7 @@ use App\Nova\Role;
 use Laravel\Nova\Nova;
 use App\Nova\Location;
 use App\Nova\Permission;
+use Easystore\PreventDirectCreate\PreventDirectCreate;
 use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\NovaApplicationServiceProvider;
@@ -95,9 +96,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
             \ChrisWare\NovaBreadcrumbs\NovaBreadcrumbs::make()->withoutStyles(),
 
-            \EasyStore\PreventDirectCreateTool\PreventDirectCreateTool::make(),
-
-            \Easystore\PurchaseInvoiceTool\PurchaseInvoiceTool::make()
+            PreventDirectCreate::make(),
         ];
     }
 

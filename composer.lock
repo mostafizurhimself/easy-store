@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d44e9de6079df29fb41fdb611b2ce25",
+    "content-hash": "4cc3e6ea61675d4969a2f957831fe8d3",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -1381,42 +1381,6 @@
             "time": "2019-03-31T00:38:28+00:00"
         },
         {
-            "name": "easy-store/prevent-direct-create-tool",
-            "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "./nova-components/PreventDirectCreateTool",
-                "reference": "add447c2edb66e85946ab1a08aef55a017cf07fb"
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "EasyStore\\PreventDirectCreateTool\\ToolServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "EasyStore\\PreventDirectCreateTool\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova tool.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "transport-options": {
-                "relative": true
-            }
-        },
-        {
             "name": "easystore/nova-theme",
             "version": "dev-master",
             "dist": {
@@ -1489,12 +1453,12 @@
             }
         },
         {
-            "name": "easystore/purchase-invoice-tool",
+            "name": "easystore/prevent-direct-create",
             "version": "dev-master",
             "dist": {
                 "type": "path",
-                "url": "./nova-components/PurchaseInvoiceTool",
-                "reference": "61939c7cc40338787a27c61170d7bf669d34dfb1"
+                "url": "./nova-components/PreventDirectCreate",
+                "reference": "4aa3f0839c2bba537e9e15e55941c31486a029ce"
             },
             "require": {
                 "php": ">=7.1.0"
@@ -1503,13 +1467,13 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Easystore\\PurchaseInvoiceTool\\ToolServiceProvider"
+                        "Easystore\\PreventDirectCreate\\ToolServiceProvider"
                     ]
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Easystore\\PurchaseInvoiceTool\\": "src/"
+                    "Easystore\\PreventDirectCreate\\": "src/"
                 }
             },
             "license": [
@@ -1546,42 +1510,6 @@
             "autoload": {
                 "psr-4": {
                     "Easystore\\RouterLink\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "transport-options": {
-                "relative": true
-            }
-        },
-        {
-            "name": "easystore/searchable-select",
-            "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "./nova-components/SearchableSelect",
-                "reference": "0195a5f6f2c6c281155d0eb236441c403c0f3625"
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Easystore\\SearchableSelect\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Easystore\\SearchableSelect\\": "src/"
                 }
             },
             "license": [
