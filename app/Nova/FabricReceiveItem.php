@@ -79,7 +79,7 @@ class FabricReceiveItem extends Resource
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\FabricPurchaseOrder")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Fabric')->searchable()
+            BelongsTo::make('Fabric')
                 ->hideWhenCreating()
                 ->readonly(),
 
