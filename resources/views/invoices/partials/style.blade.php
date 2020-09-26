@@ -22,11 +22,26 @@
         flex-grow: 1;
     }
 
+    #invoice .top{
+        padding: 0 30px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    #invoice .print {
+        padding: 10px 50px;
+        text-transform: uppercase
+    }
+
     .invoice {
         position: relative;
         background-color: #FFF;
         min-height: 680px;
         padding: 30px
+    }
+
+    .invoice .logo img{
+        height: 80px;
     }
 
     .invoice header {
@@ -160,26 +175,22 @@
 
     .invoice footer {
         width: 100%;
-        text-align: center;
+        display: flex;
+        justify-content: flex-end;
         color: #777;
-        border-top: 1px solid #aaa;
         padding: 8px 0
     }
 
+
     @media print {
+/*
+        .top .print{
+            display: none;
+        } */
+
         .invoice {
             font-size: 11px!important;
             overflow: hidden!important
-        }
-
-        .invoice footer {
-            position: absolute;
-            bottom: 10px;
-            page-break-after: always
-        }
-
-        .invoice>div:last-child {
-            page-break-before: always
         }
     }
     </style>

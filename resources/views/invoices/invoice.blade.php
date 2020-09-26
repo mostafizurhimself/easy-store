@@ -12,6 +12,9 @@
 </head>
 <body>
     <div id="invoice">
+        {{-- <div class="top">
+            <button onclick="window.print()">Print this page</button>
+        </div> --}}
         <div class="invoice">
             <div style="min-width: 600px">
 
@@ -19,5 +22,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>

@@ -63,12 +63,9 @@
             </tr>
         </tfoot>
     </table>
-    {{-- <div class="thanks">Thank you!</div> --}}
 </main>
 
-{{-- Footer --}}
 
-@include('invoices.partials.footer')
 
 
 @endsection

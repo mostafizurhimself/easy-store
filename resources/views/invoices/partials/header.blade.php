@@ -1,8 +1,8 @@
 <header>
     <div class="row">
         <div class="col">
-            <a target="_blank" href="#">
-                <img src="{{Settings::companyLogo() ?? asset('images/logo.jpg')}}" data-holder-rendered="true" width="100px" />
+            <a class="logo" href="#">
+                <img src="{{Settings::companyLogo() ?? asset('images/logo.jpg')}}" data-holder-rendered="true" />
             </a>
         </div>
         <div class="col company-details">
