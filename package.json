@@ -21,7 +21,9 @@
         "build-prevent-direct-create-tool": "cd nova-components/PreventDirectCreateTool && npm run dev",
         "build-prevent-direct-create-tool-prod": "cd nova-components/PreventDirectCreateTool && npm run prod",
         "build-searchable-select": "cd nova-components/SearchableSelect && npm run dev",
-        "build-searchable-select-prod": "cd nova-components/SearchableSelect && npm run prod"
+        "build-searchable-select-prod": "cd nova-components/SearchableSelect && npm run prod",
+        "build-purchase-invoice-tool": "cd nova-components/PurchaseInvoiceTool && npm run dev",
+        "build-purchase-invoice-tool-prod": "cd nova-components/PurchaseInvoiceTool && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.19",

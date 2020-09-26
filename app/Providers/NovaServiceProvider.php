@@ -96,6 +96,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             \ChrisWare\NovaBreadcrumbs\NovaBreadcrumbs::make()->withoutStyles(),
 
             \EasyStore\PreventDirectCreateTool\PreventDirectCreateTool::make(),
+
+            \Easystore\PurchaseInvoiceTool\PurchaseInvoiceTool::make()
         ];
     }
 
