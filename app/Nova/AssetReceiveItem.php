@@ -79,7 +79,7 @@ class AssetReceiveItem extends Resource
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\AssetPurchaseOrder")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Asset')->searchable()
+            BelongsTo::make('Asset')
                 ->hideWhenCreating()
                 ->readonly(),
 

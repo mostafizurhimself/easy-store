@@ -97,7 +97,7 @@ class AssetDistributionItem extends Resource
             BelongsTo::make('Invoice', 'invoice', "App\Nova\AssetDistributionInvoice")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Asset')->searchable(),
+            BelongsTo::make('Asset'),
 
             // Select::make('Asset', 'asset_id')
             //     ->onlyOnForms()

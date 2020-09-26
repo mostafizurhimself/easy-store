@@ -77,7 +77,7 @@ class MaterialReceiveItem extends Resource
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\MaterialPurchaseOrder")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Material')->searchable()
+            BelongsTo::make('Material')
                 ->hideWhenCreating()
                 ->readonly(),
 

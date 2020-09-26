@@ -86,7 +86,7 @@ class ServiceReceive extends Resource
             BelongsTo::make('Dispatch', 'dispatch', "App\Nova\ServiceDispatch")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Service')->searchable()
+            BelongsTo::make('Service')
                 ->exceptOnForms(),
 
             Date::make('Date')

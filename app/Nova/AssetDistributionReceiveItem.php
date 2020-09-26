@@ -86,7 +86,6 @@ class AssetDistributionReceiveItem extends Resource
                 ->onlyOnDetail(),
 
             BelongsTo::make('Asset')
-            ->searchable()
                 ->hideWhenCreating()
                 ->readonly(),
 

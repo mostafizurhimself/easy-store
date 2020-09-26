@@ -79,7 +79,7 @@ class ServiceDispatch extends Resource
             BelongsTo::make('Invoice', 'invoice', "App\Nova\ServiceInvoice")
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Service', 'service', 'App\Nova\Service')->searchable(),
+            BelongsTo::make('Service', 'service', 'App\Nova\Service'),
 
             Number::make('Quantity', 'dispatch_quantity')
                 ->rules('required', 'numeric', 'min:1')

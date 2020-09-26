@@ -164,7 +164,7 @@ class FinishingInvoice extends Resource
             BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')->searchable()
+            BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
