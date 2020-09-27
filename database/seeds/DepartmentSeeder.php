@@ -20,7 +20,6 @@ class DepartmentSeeder extends Seeder
             [
                 'location_id' => 1,
                 'name' => 'Finishing Department',
-                'active' => true,
             ]
         );
 
@@ -28,12 +27,10 @@ class DepartmentSeeder extends Seeder
             [
                 'location_id' => 1,
                 'name' => 'Sewing Department',
-                'active' => true,
             ],
             [
                 'location_id' => 1,
                 'name' => 'Sewing Department',
-                'active' => true,
             ]
         );
 
@@ -41,12 +38,10 @@ class DepartmentSeeder extends Seeder
             [
                 'location_id' => 1,
                 'name' => 'Audit Department',
-                'active' => true,
             ],
             [
                 'location_id' => 1,
                 'name' => 'Audit Department',
-                'active' => true,
             ]
         );
 
@@ -54,12 +49,10 @@ class DepartmentSeeder extends Seeder
             [
                 'location_id' => 1,
                 'name' => 'Distribution Department',
-                'active' => true,
             ],
             [
                 'location_id' => 1,
                 'name' => 'Distribution Department',
-                'active' => true,
             ]
         );
 
@@ -69,12 +62,10 @@ class DepartmentSeeder extends Seeder
             [
                 'location_id' => 2,
                 'name' => 'Finishing Department',
-                'active' => true,
             ],
             [
                 'location_id' => 2,
                 'name' => 'Finishing Department',
-                'active' => true,
             ]
         );
 
@@ -82,12 +73,10 @@ class DepartmentSeeder extends Seeder
             [
                 'location_id' => 2,
                 'name' => 'Sewing Department',
-                'active' => true,
             ],
             [
                 'location_id' => 2,
                 'name' => 'Sewing Department',
-                'active' => true,
             ]
         );
 
@@ -95,12 +84,10 @@ class DepartmentSeeder extends Seeder
             [
                 'location_id' => 2,
                 'name' => 'Audit Department',
-                'active' => true,
             ],
             [
                 'location_id' => 2,
                 'name' => 'Audit Department',
-                'active' => true,
             ]
         );
 
@@ -108,12 +95,10 @@ class DepartmentSeeder extends Seeder
             [
                 'location_id' => 2,
                 'name' => 'Distribution Department',
-                'active' => true,
             ],
             [
                 'location_id' => 2,
                 'name' => 'Distribution Department',
-                'active' => true,
             ]
         );
     }
