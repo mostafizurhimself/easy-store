@@ -175,7 +175,6 @@ class Designation extends Resource
                 ->exceptOnForms(),
 
             BelongsTo::make('Department')
-            ->searchable()
                 ->onlyOnForms()
                 ->nullable()
                 ->hideWhenCreating(function ($request) {
