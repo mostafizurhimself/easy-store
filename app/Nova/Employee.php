@@ -26,6 +26,7 @@ use Easystore\RouterLink\RouterLink;
 use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Orlyapps\NovaBelongsToDepend\NovaBelongsToDepend;
 use Hubertnnn\LaravelNova\Fields\DynamicSelect\DynamicSelect;
@@ -141,6 +142,11 @@ class Employee extends Resource
                         ->withCustomFormats('## #### ####')
                         ->onlyCustomFormats()
                         ->hideFromIndex(),
+
+                    Images::make('Image', 'employee-images')
+                        ->croppable(true)
+                        ->hideFromIndex()
+                        ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png'),
 
                     Select::make('Status')
                         ->options(EmployeeStatus::titleCaseOptions())
