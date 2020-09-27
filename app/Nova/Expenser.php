@@ -13,6 +13,7 @@ use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 
@@ -223,7 +224,11 @@ class Expenser extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            (new LocationFilter)->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            })
+        ];
     }
 
     /**

@@ -10,17 +10,18 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Rules\DistributionQuantityRule;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialDistributions\ConfirmDistribution;
-use Laravel\Nova\Fields\HasMany;
 
 class MaterialDistribution extends Resource
 {
@@ -264,7 +265,11 @@ class MaterialDistribution extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            (new LocationFilter)->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            })
+        ];
     }
 
     /**

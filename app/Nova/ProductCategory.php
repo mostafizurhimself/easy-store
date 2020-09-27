@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\Text;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ProductCategory extends Resource
@@ -152,7 +153,11 @@ class ProductCategory extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            (new LocationFilter)->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            })
+        ];
     }
 
     /**

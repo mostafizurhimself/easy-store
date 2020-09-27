@@ -14,6 +14,7 @@ use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Rules\DistributionQuantityRule;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -264,7 +265,11 @@ class FabricDistribution extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            (new LocationFilter)->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            })
+        ];
     }
 
     /**

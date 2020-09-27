@@ -2,22 +2,24 @@
 
 namespace App\Nova;
 
-use Illuminate\Support\Str;
-use Laravel\Nova\Fields\ID;
-use Inspheric\Fields\Email;
 use App\Enums\LocationType;
+use Illuminate\Support\Str;
+use Inspheric\Fields\Email;
+use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
 use App\Enums\LocationStatus;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
-use Laravel\Nova\Fields\Select;
 use App\Traits\WithOutLocation;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\MorphOne;
 use Laravel\Nova\Fields\BelongsTo;
-use Easystore\RouterLink\RouterLink;
-use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Fields\MorphMany;
+use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\ActiveStatusFilter;
+use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\Location\LocationStatusFilter;
 
 class Location extends Resource
 {
@@ -166,7 +168,9 @@ class Location extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new LocationStatusFilter
+        ];
     }
 
     /**

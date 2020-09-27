@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -41,6 +42,22 @@ class Department extends Model
     public function employee()
     {
        return $this->belongsTo(Employee::class)->withTrashed();
+    }
+
+    /**
+     * Get the filter options of locations
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        return Cache::remember('nova-department-filter-options', 3600, function () {
+            $departments = self::setEagerLoads([])->get(['id', 'name']);
+
+            return $departments->mapWithKeys(function ($department) {
+                return [$department->name => $department->id];
+            })->toArray();
+        });
     }
 
 }

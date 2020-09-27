@@ -6,6 +6,7 @@ use App\Facades\Settings;
 use App\Enums\AddressType;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -258,6 +259,22 @@ class Location extends Model
         }
 
         return null;
+    }
+
+    /**
+     * Get the filter options of locations
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        return Cache::remember('nova-location-filter-options', 3600, function () {
+            $locations = self::setEagerLoads([])->get(['id', 'name']);
+
+            return $locations->mapWithKeys(function ($location) {
+                return [$location->name => $location->id];
+            })->toArray();
+        });
     }
 
 }

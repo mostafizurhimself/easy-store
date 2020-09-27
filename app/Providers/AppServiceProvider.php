@@ -41,5 +41,6 @@ class AppServiceProvider extends ServiceProvider
             return str_replace(':field', Str::title(str_replace('_', ' ', $attribute)), ':field shold be valid URL.');
         });
 
+
     }
 }

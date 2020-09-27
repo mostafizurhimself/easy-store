@@ -20,7 +20,7 @@ class ActiveStatusFilter extends Filter
      *
      * @var string
      */
-    public $name = "Status Filter";
+    public $name = "Status";
 
     /**
      * Apply the filter to the given query.

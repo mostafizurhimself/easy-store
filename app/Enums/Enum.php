@@ -33,4 +33,21 @@ class Enum extends BaseEnum
     {
         return Str::title(Str::of($this->value)->replace('_', ' '));
     }
+
+     /**
+     * Show the enum values in title case
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        $values = array();
+
+        /** @psalm-var T $value */
+        foreach (static::toArray() as $key => $value) {
+            $values[Str::title(Str::of($value)->replace('_', ' '))] = $value;
+        }
+
+        return $values;
+    }
 }

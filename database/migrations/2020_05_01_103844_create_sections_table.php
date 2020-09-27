@@ -22,7 +22,6 @@ class CreateSectionsTable extends Migration
             $table->bigInteger('floor_id')->unsigned()->nullable();
             $table->string('name')->index('section_name_index');
             $table->string('code')->nullable()->index('section_code_index');
-            $table->boolean('active');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');

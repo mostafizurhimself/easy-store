@@ -17,13 +17,16 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\MorphMany;
+use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Balances\ConfirmBalance;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use Titasgailius\SearchRelations\SearchesRelations;
 
 class Balance extends Resource
 {
+    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
@@ -61,6 +64,15 @@ class Balance extends Resource
         'readable_id',
     ];
 
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'location' => ['name'],
+        'expenser' => ['name'],
+    ];
     /**
      * The icon of the resource.
      *
@@ -219,7 +231,11 @@ class Balance extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            (new LocationFilter)->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            })
+        ];
     }
 
     /**
