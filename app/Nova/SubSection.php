@@ -152,7 +152,7 @@ class SubSection extends Resource
             BelongsTo::make('Department')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Department')->searchable()
+            BelongsTo::make('Department')
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -167,7 +167,7 @@ class SubSection extends Resource
                 }),
 
 
-            BelongsTo::make('Section')->searchable()
+            BelongsTo::make('Section')
                 ->exceptOnForms(),
 
             AjaxSelect::make('Section', 'section_id')
