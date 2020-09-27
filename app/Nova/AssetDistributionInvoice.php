@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
@@ -133,7 +134,7 @@ class AssetDistributionInvoice extends Resource
 
             Currency::make('Distribution Amount', 'total_distribution_amount')
                 ->currency('BDT')
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             Currency::make('Receive Amount', 'total_receive_amount')
                 ->currency('BDT')
