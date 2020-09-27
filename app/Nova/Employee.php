@@ -21,6 +21,7 @@ use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
