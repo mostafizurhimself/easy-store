@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\Text;
 use NovaAjaxSelect\AjaxSelect;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 
