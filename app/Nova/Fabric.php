@@ -33,19 +33,6 @@ class Fabric extends Resource
     public static $model = 'App\Models\Fabric';
 
     /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel()
-    {
-            $model = static::$model;
-            $model = new $model;
-            $model->status= ActiveStatus::ACTIVE();
-            return $model;
-    }
-
-    /**
      * The side nav menu order.
      *
      * @var int
@@ -255,6 +242,7 @@ class Fabric extends Resource
             Select::make('Status')
                 ->options(ActiveStatus::titleCaseOptions())
                 ->rules('required')
+                ->default(ActiveStatus::ACTIVE())
                 ->onlyOnForms(),
 
             Badge::make('Status')->map([

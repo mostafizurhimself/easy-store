@@ -40,6 +40,13 @@ class FabricDistribution extends Resource
     public static $group = '<span class="hidden">04</span>Fabrics Section';
 
     /**
+     * The side nav menu order.
+     *
+     * @var int
+     */
+    public static $priority = 5;
+
+    /**
      * The icon of the resource.
      *
      * @return string

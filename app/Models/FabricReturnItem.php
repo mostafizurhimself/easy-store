@@ -1,0 +1,95 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\CamelCasing;
+use Spatie\MediaLibrary\HasMedia;
+use App\Traits\HasReadableIdWithDate;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class FabricReturnItem extends Model implements HasMedia
+{
+    use LogsActivity, CamelCasing, SoftDeletes, HasReadableIdWithDate, InteractsWithMedia;
+
+    /**
+     * The attributes that are not mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
+     * Add all attributes that are not listed in $guarded for log
+     *
+     * @var boolean
+     */
+    protected static $logUnguarded = true;
+
+       /**
+     * Set the model readable id prefix
+     *
+     * @var string
+     */
+    public static function readableIdPrefix()
+    {
+        return "FRI";
+    }
+
+    /**
+     * Set the model readable id length
+     *
+     * @var int
+     */
+    protected static $readableIdLength = 5;
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['date'];
+
+    /**
+     * Register the media collections
+     *
+     * @return void
+     */
+    public function registerMediaCollections(): void
+    {
+       $this->addMediaCollection('return-item-attachments');
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function invoice()
+    {
+       return $this->belongsTo(FabricReturnInvoice::class, 'invoice_id')->withTrashed();
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function fabric()
+    {
+       return $this->belongsTo(Fabric::class, 'fabric_id')->withTrashed();
+    }
+
+    /**
+     * Get the unit for the fabrics
+     *
+     * @return string
+     */
+    public function getUnitAttribute()
+    {
+        return $this->fabric->unit->name;
+    }
+
+}

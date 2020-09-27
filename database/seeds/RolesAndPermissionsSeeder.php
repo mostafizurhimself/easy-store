@@ -17,12 +17,16 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $collection = collect([
+
+            // Organizations
             ['name' => 'locations', 'order' => 100, 'type' => 'resource'],
             ['name' => 'departments', 'order' => 200, 'type' => 'resource'],
             ['name' => 'sections', 'order' => 300, 'type' => 'resource'],
             ['name' => 'sub sections', 'order' => 400, 'type' => 'resource'],
             ['name' => 'designations', 'order' => 500, 'type' => 'resource'],
             ['name' => 'employees', 'order' => 600, 'type' => 'resource'],
+
+            // Fabric Section
             ['name' => 'fabric categories', 'order' => 700, 'type' => 'resource'],
             ['name' => 'fabrics', 'order' => 800, 'type' => 'resource'],
             ['name' => 'update fabrics opening quantity', 'group' => 'fabrics', 'order' => 850, 'type' => 'action'],
@@ -30,10 +34,15 @@ class RolesAndPermissionsSeeder extends Seeder
             ['name' => 'confirm fabric purchase orders', 'group' => 'fabric purchase orders', 'order' => 950, 'type' => 'action'],
             ['name' => 'generate fabric purchase orders', 'group' => 'fabric purchase orders', 'order' => 955, 'type' => 'action'],
             ['name' => 'fabric purchase items', 'order' => 1000, 'type' => 'resource'],
-            ['name' => 'fabric receive items', 'order' => 1100, 'type' => 'resource'],
-            ['name' => 'confirm fabric receive items', 'group' => 'fabric receive items', 'order' => 1150, 'type' => 'action'],
+            ['name' => 'fabric receive items', 'order' => 1120, 'type' => 'resource'],
+            ['name' => 'confirm fabric receive items', 'group' => 'fabric receive items', 'order' => 1110, 'type' => 'action'],
+            ['name' => 'fabric return invoices', 'order' => 1120, 'type' => 'resource'],
+            ['name' => 'confirm fabric return invoices', 'group' => 'fabric return invoices', 'order' => 1130, 'type' => 'action'],
+            ['name' => 'fabric return items', 'order' => 1140, 'type' => 'resource'],
             ['name' => 'fabric distributions', 'order' => 1200, 'type' => 'resource'],
-            ['name' => 'confirm fabric distributions', 'group' => 'fabric distributions', 'order' => 1250, 'type' => 'action'],
+            ['name' => 'confirm fabric distributions', 'group' => 'fabric distributions', 'order' => 1210, 'type' => 'action'],
+
+            // Material Section
             ['name' => 'material categories', 'order' => 1300, 'type' => 'resource'],
             ['name' => 'materials', 'order' => 1400, 'type' => 'resource'],
             ['name' => 'update materials opening quantity', 'group' => 'materials', 'order' => 1450, 'type' => 'action'],
@@ -42,9 +51,14 @@ class RolesAndPermissionsSeeder extends Seeder
             ['name' => 'generate material purchase orders', 'group' => 'material purchase orders', 'order' => 1555, 'type' => 'action'],
             ['name' => 'material purchase items', 'order' => 1600, 'type' => 'resource'],
             ['name' => 'material receive items', 'order' => 1700, 'type' => 'resource'],
-            ['name' => 'confirm material receive items', 'group' => 'material receive items', 'order' => 1750, 'type' => 'action'],
+            ['name' => 'confirm material receive items', 'group' => 'material receive items', 'order' => 1710, 'type' => 'action'],
+            ['name' => 'material return invoices', 'order' => 1720, 'type' => 'resource'],
+            ['name' => 'confirm material return invoices', 'group' => 'material return invoices', 'order' => 1730, 'type' => 'action'],
+            ['name' => 'material return items', 'order' => 1740, 'type' => 'resource'],
             ['name' => 'material distributions', 'order' => 1800, 'type' => 'resource'],
-            ['name' => 'confirm material distributions', 'group' => 'material distributions', 'order' => 1850, 'type' => 'action'],
+            ['name' => 'confirm material distributions', 'group' => 'material distributions', 'order' => 1810, 'type' => 'action'],
+
+            // Asset Section
             ['name' => 'asset categories', 'order' => 1900, 'type' => 'resource'],
             ['name' => 'assets', 'order' => 2000, 'type' => 'resource'],
             ['name' => 'consume assets', 'group' => 'assets', 'order' => 2050, 'type' => 'action'],
@@ -54,7 +68,10 @@ class RolesAndPermissionsSeeder extends Seeder
             ['name' => 'generate asset purchase orders', 'group' => 'asset purchase orders', 'order' => 2155, 'type' => 'action'],
             ['name' => 'asset purchase items', 'order' => 2200, 'type' => 'resource'],
             ['name' => 'asset receive items', 'order' => 2300, 'type' => 'resource'],
-            ['name' => 'confirm asset receive items', 'group' => 'asset receive items', 'order' => 2350, 'type' => 'action'],
+            ['name' => 'confirm asset receive items', 'group' => 'asset receive items', 'order' => 2310, 'type' => 'action'],
+            ['name' => 'asset return invoices', 'order' => 2320, 'type' => 'resource'],
+            ['name' => 'confirm asset return invoices', 'group' => 'asset return invoices', 'order' => 2330, 'type' => 'action'],
+            ['name' => 'asset return items', 'order' => 2340, 'type' => 'resource'],
             ['name' => 'asset requisitions', 'order' => 2400, 'type' => 'resource'],
             ['name' => 'confirm asset requisitions', 'group' => 'asset requisitions', 'order' => 2450, 'type' => 'action'],
             ['name' => 'generate asset requisitions', 'group' => 'asset requisitions', 'order' => 2455, 'type' => 'action'],
@@ -64,7 +81,9 @@ class RolesAndPermissionsSeeder extends Seeder
             ['name' => 'generate asset distribution invoices', 'group' => 'asset distribution invoices', 'order' => 2655, 'type' => 'action'],
             ['name' => 'asset distribution items', 'order' => 2700, 'type' => 'resource'],
             ['name' => 'asset distribution receive items', 'order' => 2800, 'type' => 'resource'],
-            ['name' => 'confirm asset distribution receive items', 'group' => 'asset distribution receive items', 'order' => 2850, 'type' => 'action'],
+            ['name' => 'confirm asset distribution receive items', 'group' => 'asset distribution receive items', 'order' => 2810, 'type' => 'action'],
+
+            // Service Section
             ['name' => 'service categories', 'order' => 2900, 'type' => 'resource'],
             ['name' => 'services', 'order' => 3000, 'type' => 'resource'],
             ['name' => 'service invoices', 'order' => 3100, 'type' => 'resource'],
@@ -73,6 +92,8 @@ class RolesAndPermissionsSeeder extends Seeder
             ['name' => 'service dispatches', 'order' => 3200, 'type' => 'resource'],
             ['name' => 'service receives', 'order' => 3300, 'type' => 'resource'],
             ['name' => 'confirm service receives', 'group' => 'service receives', 'order' => 3350, 'type' => 'action'],
+
+            // Product Section
             ['name' => 'product categories', 'order' => 3400, 'type' => 'resource'],
             ['name' => 'products', 'order' => 3500, 'type' => 'resource'],
             ['name' => 'update products opening quantity', 'group' => 'products', 'order' => 3550, 'type' => 'action'],
@@ -81,20 +102,28 @@ class RolesAndPermissionsSeeder extends Seeder
             ['name' => 'confirm finishing invoices', 'group' => 'finishing invoices', 'order' => 3750, 'type' => 'action'],
             ['name' => 'generate finishing invoices', 'group' => 'finishing invoices', 'order' => 3755, 'type' => 'action'],
             ['name' => 'finishings', 'order' => 3800, 'type' => 'resource'],
+
+            // Expense Section
             ['name' => 'expensers', 'order' => 3900, 'type' => 'resource'],
             ['name' => 'expense categories', 'order' => 4000, 'type' => 'resource'],
             ['name' => 'expenses', 'order' => 4100, 'type' => 'resource'],
             ['name' => 'confirm expenses', 'group' => 'expenses', 'order' => 4150, 'type' => 'action'],
             ['name' => 'balances', 'order' => 4200, 'type' => 'resource'],
             ['name' => 'confirm balances', 'group' => 'balances', 'order' => 4250, 'type' => 'action'],
+
+            // Vendor Section
             ['name' => 'suppliers', 'order' => 4300, 'type' => 'resource'],
             ['name' => 'update suppliers opening balance', 'group' => 'suppliers', 'order' => 4350, 'type' => 'action'],
             ['name' => 'providers', 'order' => 4400, 'type' => 'resource'],
             ['name' => 'update providers opening balance', 'group' => 'providers', 'order' => 4450, 'type' => 'action'],
+
+            // ACL Section
             ['name' => 'users', 'order' => 4500, 'type' => 'resource'],
             ['name' => 'mark as active', 'group' => 'users', 'order' => 4550, 'type' => 'action'],
             ['name' => 'mark as inactive', 'group' => 'users', 'order' => 4555, 'type' => 'action'],
             ['name' => 'roles', 'order' => 4600, 'type' => 'resource'],
+
+            // Others Section
             ['name' => 'floors', 'order' => 4700, 'type' => 'resource'],
             ['name' => 'styles', 'order' => 4800, 'type' => 'resource'],
             ['name' => 'units', 'order' => 4900, 'type' => 'resource'],

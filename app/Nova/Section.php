@@ -25,19 +25,6 @@ class Section extends Resource
     public static $model = 'App\Models\Section';
 
     /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel()
-    {
-        $model = static::$model;
-        $var = new $model;
-        $var->active = true;
-        return $var;
-    }
-
-    /**
      * The group associated with the resource.
      *
      * @return string

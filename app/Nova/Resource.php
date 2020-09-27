@@ -28,6 +28,16 @@ abstract class Resource extends NovaResource
     ];
 
     /**
+     * Get the navigation label of the resource
+     *
+     * @return string
+     */
+    public static function navigationLabel()
+    {
+        return static::label();
+    }
+
+    /**
      * Build an "index" query for the given resource.
      *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request

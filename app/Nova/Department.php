@@ -24,19 +24,6 @@ class Department extends Resource
     public static $model = 'App\Models\Department';
 
     /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel()
-    {
-            $model = static::$model;
-            $var = new $model;
-            $var->active= true;
-            return $var;
-    }
-
-    /**
      * The group associated with the resource.
      *
      * @return string

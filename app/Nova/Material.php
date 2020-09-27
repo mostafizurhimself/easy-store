@@ -35,19 +35,6 @@ class Material extends Resource
     public static $model = 'App\Models\Material';
 
     /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel()
-    {
-        $model = static::$model;
-        $model = new $model;
-        $model->status = ActiveStatus::ACTIVE();
-        return $model;
-    }
-
-    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @return string
@@ -257,6 +244,7 @@ class Material extends Resource
             Select::make('Status')
                 ->options(ActiveStatus::titleCaseOptions())
                 ->rules('required')
+                ->default(ActiveStatus::ACTIVE())
                 ->onlyOnForms(),
 
             Badge::make('Status')->map([
