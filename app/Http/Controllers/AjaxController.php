@@ -112,11 +112,8 @@ class AjaxController extends Controller
      */
     public function designationsViaLocation(Location $location)
     {
-        return $location->designations->map(function($value) {
-            $designation = Designation::find($value->id);
-            $department = $designation->department ? $designation->department->name." >> " : "";
-            $section = $designation->section ? $designation->section->name." >> " : "";
-            return [ 'value' => $designation->id, 'display' => $department . $section . $designation->name ];
+        return $location->designations->map(function($designation) {
+            return [ 'value' => $designation->id, 'display' => $designation->name ];
         });
     }
 

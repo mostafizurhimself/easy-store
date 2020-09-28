@@ -234,8 +234,44 @@ class Employee extends Resource
                     BelongsTo::make('Department')
                         ->onlyOnDetail(),
 
+                    AjaxSelect::make('Department', 'department_id')
+                        ->get('/locations/{location}/departments')
+                        ->parent('location')
+                        ->onlyOnForms()
+                        ->showOnCreating(function ($request) {
+                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })->showOnUpdating(function ($request) {
+                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
+
+                    BelongsTo::make('Department')
+                        ->nullable()
+                        ->onlyOnForms()
+                        ->hideWhenCreating(function ($request) {
+                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })->hideWhenUpdating(function ($request) {
+                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
+
                     BelongsTo::make('Section')
                         ->onlyOnDetail(),
+
+                    AjaxSelect::make('Section', 'section_id')
+                        ->get('/departments/{department_id}/sections')
+                        ->parent('department_id')
+                        ->onlyOnForms(),
 
                     AjaxSelect::make('Designation', 'designation_id')
                         ->rules('required')
@@ -258,7 +294,7 @@ class Employee extends Resource
                         ->exceptOnForms(),
 
                     BelongsTo::make('Designation')
-                    ->searchable()
+                        ->searchable()
                         ->onlyOnForms()
                         ->nullable()
                         ->hideWhenCreating(function ($request) {

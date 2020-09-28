@@ -127,7 +127,7 @@ class Expenser extends Resource
             Text::make('Code')
                 ->sortable()
                 ->help('If you want to generate code automatically, leave the field blank.')
-                ->rules('nullable', 'string', 'max:100')
+                ->rules('nullable', 'string', 'max:20', 'space')
                 ->creationRules([
                     Rule::unique('expensers', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])

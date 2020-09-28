@@ -11,7 +11,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class FabricReturnItem extends Model implements HasMedia
+class MaterialReturnItem extends Model implements HasMedia
 {
     use LogsActivity, CamelCasing, SoftDeletes, HasReadableIdWithDate, InteractsWithMedia;
 
@@ -36,7 +36,7 @@ class FabricReturnItem extends Model implements HasMedia
      */
     public static function readableIdPrefix()
     {
-        return "FRI";
+        return "MRI";
     }
 
     /**
@@ -70,7 +70,7 @@ class FabricReturnItem extends Model implements HasMedia
      */
     public function invoice()
     {
-       return $this->belongsTo(FabricReturnInvoice::class, 'invoice_id')->withTrashed();
+       return $this->belongsTo(MaterialReturnInvoice::class, 'invoice_id')->withTrashed();
     }
 
     /**
@@ -78,19 +78,19 @@ class FabricReturnItem extends Model implements HasMedia
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function fabric()
+    public function material()
     {
-       return $this->belongsTo(Fabric::class, 'fabric_id')->withTrashed();
+       return $this->belongsTo(Material::class, 'material_id')->withTrashed();
     }
 
     /**
-     * Get the unit for the fabrics
+     * Get the unit for the materials
      *
      * @return string
      */
     public function getUnitAttribute()
     {
-        return $this->fabric->unit->name;
+        return $this->material->unit->name;
     }
 
     /**
@@ -103,5 +103,6 @@ class FabricReturnItem extends Model implements HasMedia
     {
         return $query->where('status', ReturnStatus::DRAFT());
     }
+
 
 }

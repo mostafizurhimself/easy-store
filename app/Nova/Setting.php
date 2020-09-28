@@ -123,9 +123,6 @@ class Setting extends Resource
                     Text::make('Location Prefix', 'location')
                         ->rules('nullable', 'string', 'max:4'),
 
-                    Text::make('Employee Prefix', 'employee')
-                        ->rules('nullable', 'string', 'max:4'),
-
                     Text::make('Supplier Prefix', 'supplier')
                         ->rules('nullable', 'string', 'max:4'),
 

@@ -2,40 +2,83 @@
 
 namespace App\Nova;
 
+use Carbon\Carbon;
+use App\Enums\ReturnStatus;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
-use NovaAjaxSelect\AjaxSelect;
-use Illuminate\Validation\Rule;
+use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Fields\Badge;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
-use Easystore\TextUppercase\TextUppercase;
+use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 
-class Designation extends Resource
+class MaterialReturnInvoice extends Resource
 {
     use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\Models\Designation';
+    public static $model = \App\Models\MaterialReturnInvoice::class;
 
-    /**
+     /**
      * The group associated with the resource.
      *
      * @return string
      */
-    public static $group = '<span class="hidden">03</span>Organization';
+    public static $group = '<span class="hidden">05</span>Material Section';
 
     /**
      * The side nav menu order.
      *
      * @var int
      */
-    public static $priority = 5;
+    public static $priority = 4;
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $title = 'readable_id';
+
+     /**
+     * Get the search result subtitle for the resource.
+     *
+     * @return string
+     */
+    public function subtitle()
+    {
+      return "Location: {$this->location->name}";
+    }
+
+    /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+      return "Return Invoices";
+    }
+
+    /**
+     * Get the navigation label of the resource
+     *
+     * @return string
+     */
+    public static function navigationLabel()
+    {
+        return "Returns";
+    }
 
     /**
      * The icon of the resource.
@@ -44,40 +87,9 @@ class Designation extends Resource
      */
     public static function icon()
     {
-        return 'fas fa-id-card-alt';
+      return 'fas fa-exchange-alt';
     }
 
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @return string
-     */
-    public function title()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get the breadcrumb resource title
-     *
-     * @return string
-     */
-     public function breadcrumbResourceTitle()
-     {
-         return $this->name;
-     }
-
-
-
-    /**
-     * Get the search result subtitle for the resource.
-     *
-     * @return string
-     */
-    public function subtitle()
-    {
-        return "Location: {$this->location->name}";
-    }
 
     /**
      * The columns that should be searched.
@@ -85,7 +97,7 @@ class Designation extends Resource
      * @var array
      */
     public static $search = [
-        'name',
+        'readable_id',
     ];
 
     /**
@@ -94,7 +106,7 @@ class Designation extends Resource
      * @var array
      */
     public static $searchRelations = [
-        'location'   => ['name'],
+        'location' => ['name'],
     ];
 
     /**
@@ -106,7 +118,15 @@ class Designation extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable()->onlyOnIndex(),
+            RouterLink::make('Invoice', 'id')
+                ->withMeta([
+                    'label' => $this->readableId,
+                ]),
+
+            Date::make('Date')
+                ->rules('required')
+                ->default(Carbon::now())
+                ->hideWhenUpdating(),
 
             BelongsTo::make('Location')
                 ->searchable()
@@ -134,27 +154,35 @@ class Designation extends Resource
                     return false;
                 }),
 
-            Text::make('Name')
-                ->sortable()
-                ->rules('required', 'string', 'max:45')
-                ->creationRules([
-                    Rule::unique('designations', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
-                ])
-                ->updateRules([
-                    Rule::unique('designations', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
-                        ->ignore($this->resource->id)
-                ]),
+            BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")
+                    // ->searchable()
+                    ->sortable(),
 
-            TextUppercase::make('Code')
-                ->sortable()
-                ->rules('required', 'string', 'max:3', 'space')
-                ->creationRules([
-                    Rule::unique('designations', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
+            Currency::make('Total Amount', 'total_return_amount')
+                ->currency('BDT')
+                ->exceptOnForms(),
+
+            Badge::make('Status')->map([
+                    ReturnStatus::DRAFT()->getValue()     => 'warning',
+                    ReturnStatus::CONFIRMED()->getValue() => 'info',
+                    ReturnStatus::BILLED()->getValue()    => 'danger',
                 ])
-                ->updateRules([
-                    Rule::unique('designations', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
-                        ->ignore($this->resource->id)
-                ]),
+                ->label(function(){
+                    return Str::title(Str::of($this->status)->replace('_', " "));
+                }),
+
+            Trix::make('Note')
+                ->rules('nullable', 'max:500'),
+
+            Text::make('Approved By', function(){
+                    return $this->approve ? $this->approve->employee->name : null;
+                })
+                ->canSee(function(){
+                    return $this->approve()->exists();
+                })
+                ->onlyOnDetail(),
+
+            HasMany::make('Return Items', 'returnItems', \App\Nova\MaterialReturnItem::class),
         ];
     }
 
@@ -179,8 +207,8 @@ class Designation extends Resource
     {
         return [
             (new LocationFilter)->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
-            }),
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            })
         ];
     }
 
@@ -204,29 +232,5 @@ class Designation extends Resource
     public function actions(Request $request)
     {
         return [];
-    }
-
-    /**
-     * Return the location to redirect the user after creation.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Laravel\Nova\Resource  $resource
-     * @return string
-     */
-    public static function redirectAfterCreate(NovaRequest $request, $resource)
-    {
-        return '/resources/'.static::uriKey();
-    }
-
-    /**
-     * Return the location to redirect the user after update.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Laravel\Nova\Resource  resource
-     * @return string
-     */
-    public static function redirectAfterUpdate(NovaRequest $request, $resource)
-    {
-        return '/resources/'.static::uriKey();
     }
 }

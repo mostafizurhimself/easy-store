@@ -27,7 +27,9 @@
         "build-prevent-direct-create": "cd nova-components/PreventDirectCreate && npm run dev",
         "build-prevent-direct-create-prod": "cd nova-components/PreventDirectCreate && npm run prod",
         "build-invoice": "cd nova-components/Invoice && npm run dev",
-        "build-invoice-prod": "cd nova-components/Invoice && npm run prod"
+        "build-invoice-prod": "cd nova-components/Invoice && npm run prod",
+        "build-text-uppercase": "cd nova-components/TextUppercase && npm run dev",
+        "build-text-uppercase-prod": "cd nova-components/TextUppercase && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.19",

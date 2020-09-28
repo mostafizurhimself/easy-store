@@ -2,31 +2,25 @@
 
 namespace App\Nova;
 
-use App\Enums\ReturnStatus;
-use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Number;
-use App\Rules\ReturnQuantityRule;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Filters\LocationFilter;
-use App\Rules\ReturnQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
-use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
 
-class FabricReturnItem extends Resource
+class MaterialReturnItem extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\FabricReturnItem::class;
+    public static $model = \App\Models\MaterialReturnItem::class;
 
     /**
      * Indicates if the resource should be globally searchable.
@@ -65,7 +59,7 @@ class FabricReturnItem extends Resource
      * @var array
      */
     public static $search = [
-        'readable_id',
+        'id',
     ];
 
     /**
@@ -77,15 +71,15 @@ class FabricReturnItem extends Resource
     public function fields(Request $request)
     {
         return [
-            BelongsTo::make('Invoice', 'invoice', \App\Nova\FabricReturnINvoice::class)
+            BelongsTo::make('Invoice', 'invoice', \App\Nova\MaterialReturnINvoice::class)
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Fabric'),
+            BelongsTo::make('Material'),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ReturnQuantityRule(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric')))
-                ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId))
+                ->creationRules(new ReturnQuantityRule(\App\Nova\MaterialReturnItem::uriKey(), $request->get('Material')))
+                ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\MaterialReturnItem::uriKey(), $request->get('fabric'), $this->resource->quantity, $this->resource->materialId))
                 ->onlyOnForms(),
 
             Text::make('Quantity', function(){
@@ -130,7 +124,6 @@ class FabricReturnItem extends Resource
         return [];
     }
 
-
     /**
      * Get the filters available for the resource.
      *
@@ -139,9 +132,7 @@ class FabricReturnItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [
-
-        ];
+        return [];
     }
 
     /**
@@ -175,18 +166,18 @@ class FabricReturnItem extends Resource
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function relatableFabrics(NovaRequest $request, $query)
+    public static function relatableMaterials(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\FabricReturnInvoice::find($request->viaResourceId);
+        $invoice = \App\Models\MaterialReturnInvoice::find($request->viaResourceId);
         try {
-            $fabricId = $request->findResourceOrFail()->fabricId;
+            $materialId = $request->findResourceOrFail()->materialId;
         } catch (\Throwable $th) {
-           $fabricId = null;
+           $materialId = null;
         }
         return $query->whereHas('suppliers', function($supplier) use($invoice){
                 $supplier->where('supplier_id', $invoice->supplierId)
                         ->where('location_id', $invoice->locationId);
-        })->whereNotIn('id', $invoice->fabricIds($fabricId));
+        })->whereNotIn('id', $invoice->materialIds($materialId));
     }
 
       /**

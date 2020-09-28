@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Facades\Helper;
 use App\Models\Employee;
 use App\Models\Designation;
 
@@ -13,12 +14,13 @@ class EmployeeObserver
      * @param  \App\Models\Employee  $employee
      * @return void
      */
-    public function saving(Employee $employee)
+    public function created(Employee $employee)
     {
-        $designation = Designation::find($employee->designation_id);
-        $employee->department_id = $designation->department ? $designation->department->id : null ;
-        $employee->section_id = $designation->section ? $designation->section->id : null ;
-        $employee->sub_section_id = $designation->subSection ? $employee->designation->subSection->id : null ;
+        if(empty($employee->designation->code)){
+            throw new Exception("Designation code in not defined.");
+        }
+        $employee->readableId = Helper::generateEmployeeId($employee->id, $employee->designation->code);
+        $employee->save();
     }
 
     /**

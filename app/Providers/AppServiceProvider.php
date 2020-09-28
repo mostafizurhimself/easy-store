@@ -3,9 +3,10 @@
 namespace App\Providers;
 
 use Carbon\Carbon;
-use App\Facades\Helper;
-use App\Enums\PurchaseStatus;
 use App\Models\Model;
+use App\Facades\Helper;
+use Illuminate\Support\Str;
+use App\Enums\PurchaseStatus;
 use App\Models\PurchaseFabric;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
@@ -38,9 +39,15 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Validator::replacer('url', function($message, $attribute, $rule, $parameters) {
-            return str_replace(':field', Str::title(str_replace('_', ' ', $attribute)), ':field shold be valid URL.');
+            return str_replace(':field', str_replace('_', ' ', $attribute), 'The :field should be valid URL.');
         });
 
+        Validator::extend('space', function($attr, $value){
+            return preg_match('/^\S*$/u', $value);
+        });
 
+        Validator::replacer('space', function($message, $attribute, $rule, $parameters) {
+            return str_replace(':field', str_replace('_', ' ', $attribute), 'The :field should not have white space.');
+        });
     }
 }

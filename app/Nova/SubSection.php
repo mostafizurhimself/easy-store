@@ -174,35 +174,7 @@ class SubSection extends Resource
                 ->get('/departments/{department_id}/sections')
                 ->rules('required')
                 ->parent('department_id')
-                ->onlyOnForms()
-                ->showOnCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
-
-            AjaxSelect::make('Section', 'section_id')
-                ->get('/departments/{department}/sections')
-                ->rules('required')
-                ->parent('department')
-                ->onlyOnForms()
-                ->hideWhenCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                ->onlyOnForms(),
 
             AjaxSelect::make('Supervisor', 'employee_id')
                 ->rules('nullable')

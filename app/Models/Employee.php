@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Facades\Settings;
-use App\Traits\HasReadableId;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -11,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model implements HasMedia
 {
-    use LogsActivity, HasReadableId, SoftDeletes, InteractsWithMedia;
+    use LogsActivity, SoftDeletes, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.
@@ -37,23 +36,6 @@ class Employee extends Model implements HasMedia
        $this->addMediaCollection('employee-attachments');
        $this->addMediaCollection('employee-images')->singleFile();
     }
-
-    /**
-     * Set the model readable id prefix
-     *
-     * @var string
-     */
-    public static function readableIdPrefix()
-    {
-        return Settings::prefix()->employee ?? 'EMP';
-    }
-
-    /**
-     * Set the model readable id length
-     *
-     * @var int
-     */
-    protected static $readableIdlength = 7;
 
     /**
      * The attributes that should be mutated to dates.

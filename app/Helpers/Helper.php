@@ -15,7 +15,21 @@ class Helper
      */
     public function generateReadableId($value, $prefix = null, $length = 7)
     {
-        return $prefix.\str_pad($value, $length, "0", STR_PAD_LEFT );;
+        return $prefix.\str_pad($value, $length, "0", STR_PAD_LEFT );
+    }
+
+    /**
+     * Generates formated employee id
+     *
+     * @param int
+     * @return string
+     */
+    public function generateEmployeeId($value, $prefix = null)
+    {
+        //Generates equal length prefix
+        $prefix =  \str_pad($prefix, 3, "0", STR_PAD_RIGHT );
+
+        return $prefix.\str_pad($value, 5, "0", STR_PAD_LEFT );
     }
 
     /**
