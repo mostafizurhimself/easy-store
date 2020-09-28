@@ -53,9 +53,8 @@ class DistributionInvoices extends Lens
 
             Date::make('Date')
                 ->rules('required')
-                ->default(function($request){
-                    return Carbon::now();
-                })
+                ->default(Carbon::now())
+                ->hideWhenUpdating()
                 ->readonly(),
 
             Text::make('Location', function(){

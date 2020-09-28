@@ -117,9 +117,8 @@ class MaterialPurchaseOrder extends Resource
 
             Date::make('Date')
                 ->rules('required')
-                ->default(function($request){
-                    return Carbon::now();
-                }),
+                ->default(Carbon::now())
+                ->hideWhenUpdating(),
 
             BelongsTo::make('Location')
                 ->searchable()
@@ -172,7 +171,7 @@ class MaterialPurchaseOrder extends Resource
                 ->rules('nullable', 'max:500'),
 
             Text::make('Approved By', function(){
-                    return $this->approve->employee->name;
+                    return $this->approve ? $this->approve->employee->name : null;
                 })
                 ->canSee(function(){
                     return $this->approve()->exists();

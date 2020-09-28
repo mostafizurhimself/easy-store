@@ -20,6 +20,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Lenses\DistributionHistory;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\AssetDistributionInvoices\ConfirmInvoice;
@@ -101,9 +102,8 @@ class AssetDistributionInvoice extends Resource
 
             Date::make('Date')
                 ->rules('required')
-                ->default(function($request){
-                    return Carbon::now();
-                })
+                ->default(Carbon::now())
+                ->hideWhenUpdating()
                 ->readonly(),
 
             BelongsTo::make('Location')
@@ -219,7 +219,7 @@ class AssetDistributionInvoice extends Resource
     public function lenses(Request $request)
     {
         return [
-            new DistributionInvoices
+            new DistributionInvoices,
         ];
     }
 

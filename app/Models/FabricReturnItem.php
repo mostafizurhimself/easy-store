@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ReturnStatus;
 use App\Traits\CamelCasing;
 use Spatie\MediaLibrary\HasMedia;
 use App\Traits\HasReadableIdWithDate;
@@ -90,6 +91,17 @@ class FabricReturnItem extends Model implements HasMedia
     public function getUnitAttribute()
     {
         return $this->fabric->unit->name;
+    }
+
+    /**
+     * Scope a query to only include draft distributions.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDraft($query)
+    {
+        return $query->where('status', ReturnStatus::DRAFT());
     }
 
 }

@@ -107,9 +107,8 @@ class AssetRequisition extends Resource
                 ]),
 
             Date::make('Date')
-                ->default(function($request){
-                    return Carbon::now();
-                })
+                ->default(Carbon::now())
+                ->hideWhenUpdating()
                 ->readonly(),
 
             BelongsTo::make('Location')

@@ -1,1 +1,250 @@
-!function(e){var u={};function r(n){if(u[n])return u[n].exports;var s=u[n]={i:n,l:!1,exports:{}};return e[n].call(s.exports,s,s.exports,r),s.l=!0,s.exports}r.m=e,r.c=u,r.d=function(e,u,n){r.o(e,u)||Object.defineProperty(e,u,{configurable:!1,enumerable:!0,get:n})},r.n=function(e){var u=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(u,"a",u),u},r.o=function(e,u){return Object.prototype.hasOwnProperty.call(e,u)},r.p="",r(r.s=0)}([function(e,u,r){r(1),e.exports=r(2)},function(e,u){Nova.booting(function(e,u,r){u.beforeEach(function(e,r,n){"/resources/fabric-purchase-items/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/fabric-receive-items/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/material-purchase-items/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/material-receive-items/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/asset-purchase-items/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/asset-receive-items/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/asset-requisition-items/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/asset-distribution-items/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/asset-distribution-receive-items/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/service-dispatches/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/service-receives/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})}),u.beforeEach(function(e,r,n){"/resources/finishings/new"!==e.path||null!=e.query.viaResource&&null!=e.query.viaResourceId?n():u.push({name:"403"})})})},function(e,u){}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(1);
+module.exports = __webpack_require__(2);
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+Nova.booting(function (Vue, router, store) {
+    //Fabrics Section
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/fabric-purchase-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/fabric-receive-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/fabric-return-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    //Material Section
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/material-purchase-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/material-receive-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/material-return-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    //Asset Section
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/asset-purchase-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/asset-receive-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/asset-return-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/asset-requisition-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/asset-distribution-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/asset-distribution-receive-items/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    //Service Section
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/service-dispatches/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/service-receives/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    //Finishing Section
+    router.beforeEach(function (to, from, next) {
+        if (to.path === "/resources/finishings/new" && (to.query.viaResource == null || to.query.viaResourceId == null)) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    //   router.addRoutes([
+    //     {
+    //       name: 'prevent-direct-create',
+    //       path: '/prevent-direct-create',
+    //       component: require('./components/Tool'),
+    //     },
+    //   ])
+});
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ })
+/******/ ]);

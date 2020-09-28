@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Fabric;
 use App\Models\FabricReturnItem;
 
 class FabricReturnItemObserver
@@ -12,9 +13,16 @@ class FabricReturnItemObserver
      * @param  \App\Models\FabricReturnItem  $fabricReturnItem
      * @return void
      */
-    public function created(FabricReturnItem $fabricReturnItem)
+    public function saving(FabricReturnItem $fabricReturnItem)
     {
-        //
+        //Get the Fabric
+        $fabric = Fabric::find($fabricReturnItem->fabricId);
+
+        //Set the amount
+        if(empty($fabricReturnItem->rate)){
+            $fabricReturnItem->rate = $fabric->rate;
+        }
+        $fabricReturnItem->amount = $fabric->rate * $fabricReturnItem->quantity;
     }
 
     /**
@@ -23,9 +31,10 @@ class FabricReturnItemObserver
      * @param  \App\Models\FabricReturnItem  $fabricReturnItem
      * @return void
      */
-    public function updated(FabricReturnItem $fabricReturnItem)
+    public function saved(FabricReturnItem $fabricReturnItem)
     {
-        //
+        //Update the total return amount
+        $fabricReturnItem->invoice->updateReturnAmount();
     }
 
     /**
@@ -36,7 +45,8 @@ class FabricReturnItemObserver
      */
     public function deleted(FabricReturnItem $fabricReturnItem)
     {
-        //
+        //Update the total return amount
+        $fabricReturnItem->invoice->updateReturnAmount();
     }
 
     /**
@@ -47,7 +57,8 @@ class FabricReturnItemObserver
      */
     public function restored(FabricReturnItem $fabricReturnItem)
     {
-        //
+        //Update the total return amount
+        $fabricReturnItem->invoice->updateReturnAmount();
     }
 
     /**
@@ -58,6 +69,7 @@ class FabricReturnItemObserver
      */
     public function forceDeleted(FabricReturnItem $fabricReturnItem)
     {
-        //
+        //Update the total return amount
+        $fabricReturnItem->invoice->updateReturnAmount();
     }
 }

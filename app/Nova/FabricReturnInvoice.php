@@ -11,11 +11,14 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
 
 class FabricReturnInvoice extends Resource
 {
@@ -124,9 +127,8 @@ class FabricReturnInvoice extends Resource
 
             Date::make('Date')
                 ->rules('required')
-                ->default(function($request){
-                    return Carbon::now();
-                }),
+                ->default(Carbon::now())
+                ->hideWhenUpdating(),
 
             BelongsTo::make('Location')
                 ->searchable()
@@ -158,13 +160,9 @@ class FabricReturnInvoice extends Resource
                     // ->searchable()
                     ->sortable(),
 
-            Currency::make('Purchase Amount', 'total_purchase_amount')
+            Currency::make('Total Amount', 'total_return_amount')
                 ->currency('BDT')
                 ->exceptOnForms(),
-
-            Currency::make('Receive Amount', 'total_receive_amount')
-                ->currency('BDT')
-                ->onlyOnDetail(),
 
             Badge::make('Status')->map([
                     ReturnStatus::DRAFT()->getValue()     => 'warning',
@@ -179,16 +177,14 @@ class FabricReturnInvoice extends Resource
                 ->rules('nullable', 'max:500'),
 
             Text::make('Approved By', function(){
-                    return $this->approve->employee->name;
+                    return $this->approve ? $this->approve->employee->name : null;
                 })
                 ->canSee(function(){
                     return $this->approve()->exists();
                 })
                 ->onlyOnDetail(),
 
-            // HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\FabricPurchaseItem'),
-
-            // HasMany::make('Receive Items', 'receiveItems', 'App\Nova\FabricReceiveItem'),
+            HasMany::make('Return Items', 'returnItems', \App\Nova\FabricReturnItem::class),
         ];
     }
 
@@ -211,7 +207,11 @@ class FabricReturnInvoice extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            (new LocationFilter)->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            })
+        ];
     }
 
     /**
@@ -222,7 +222,9 @@ class FabricReturnInvoice extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+
+        ];
     }
 
     /**
@@ -233,6 +235,8 @@ class FabricReturnInvoice extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new ConfirmInvoice
+        ];
     }
 }

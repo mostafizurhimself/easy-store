@@ -54,9 +54,8 @@ class Requisitions extends Lens
 
             Date::make('Date')
                 ->rules('required')
-                ->default(function($request){
-                    return Carbon::now();
-                }),
+                ->default(Carbon::now())
+                ->hideWhenUpdating(),
 
             Text::make('Location', function(){
                     return $this->location->name;

@@ -129,7 +129,7 @@ class AjaxController extends Controller
     public function employeesViaLocation(Location $location)
     {
         return $location->employees->map(function($employee) {
-            return [ 'value' => $employee->id, 'display' => $employee->readableId ];
+            return [ 'value' => $employee->id, 'display' =>"$employee->name ($employee->readableId)" ];
         });
     }
 
@@ -155,7 +155,7 @@ class AjaxController extends Controller
     public function fabricsViaLocation(Location $location)
     {
         return $location->fabrics->map(function($fabric) {
-            return [ 'value' => $fabric->id, 'display' => $fabric->code ];
+            return [ 'value' => $fabric->id, 'display' => "$fabric->name ($fabric->code)" ];
         });
     }
 
@@ -181,7 +181,7 @@ class AjaxController extends Controller
     public function materialsViaLocation(Location $location)
     {
         return $location->materials->map(function($material) {
-            return [ 'value' => $material->id, 'display' => $material->code ];
+            return [ 'value' => $material->id, 'display' => "$material->name ($material->code)" ];
         });
     }
 
@@ -207,7 +207,7 @@ class AjaxController extends Controller
     public function assetsViaLocation(Location $location)
     {
         return $location->assets->map(function($asset) {
-            return [ 'value' => $asset->id, 'display' => $asset->code ];
+            return [ 'value' => $asset->id, 'display' => "$asset->name ($asset->code)" ];
         });
     }
 

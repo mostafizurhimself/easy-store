@@ -91,9 +91,8 @@ class ServiceReceive extends Resource
 
             Date::make('Date')
                 ->rules('required')
-                ->default(function($request){
-                    return Carbon::now();
-                }),
+                ->default(Carbon::now())
+                ->hideWhenUpdating(),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')

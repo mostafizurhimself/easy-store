@@ -51,6 +51,7 @@ use App\Policies\ServicePolicy;
 use App\Policies\SettingPolicy;
 use App\Models\AssetReceiveItem;
 use App\Models\AssetRequisition;
+use App\Models\FabricReturnItem;
 use App\Models\FinishingInvoice;
 use App\Models\MaterialCategory;
 use App\Policies\EmployeePolicy;
@@ -69,6 +70,7 @@ use App\Policies\DepartmentPolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\SubSectionPolicy;
 use App\Models\FabricPurchaseOrder;
+use App\Models\FabricReturnInvoice;
 use App\Models\MaterialReceiveItem;
 use App\Policies\ActivityLogPolicy;
 use App\Policies\DesignationPolicy;
@@ -93,6 +95,7 @@ use Spatie\Activitylog\Models\Activity;
 use App\Models\AssetDistributionInvoice;
 use App\Policies\AssetReceiveItemPolicy;
 use App\Policies\AssetRequisitionPolicy;
+use App\Policies\FabricReturnItemPolicy;
 use App\Policies\FinishingInvoicePolicy;
 use App\Policies\MaterialCategoryPolicy;
 use App\Policies\AssetPurchaseItemPolicy;
@@ -101,6 +104,7 @@ use App\Policies\AssetPurchaseOrderPolicy;
 use App\Policies\FabricDistributionPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
 use App\Policies\FabricPurchaseOrderPolicy;
+use App\Policies\FabricReturnInvoicePolicy;
 use App\Policies\MaterialReceiveItemPolicy;
 use App\Models\AssetDistributionReceiveItem;
 use App\Policies\AssetRequisitionItemPolicy;
@@ -132,6 +136,8 @@ class AuthServiceProvider extends ServiceProvider
         FabricPurchaseOrder::class          => FabricPurchaseOrderPolicy::class,
         FabricPurchaseItem::class           => FabricPurchaseItemPolicy::class,
         FabricReceiveItem::class            => FabricReceiveItemPolicy::class,
+        FabricReturnInvoice::class          => FabricReturnInvoicePolicy::class,
+        FabricReturnItem::class             => FabricReturnItemPolicy::class,
         FabricDistribution::class           => FabricDistributionPolicy::class,
         MaterialCategory::class             => MaterialCategoryPolicy::class,
         Material::class                     => MaterialPolicy::class,

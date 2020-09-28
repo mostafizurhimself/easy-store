@@ -2,60 +2,31 @@
 
 namespace App\Nova;
 
-use Carbon\Carbon;
+use App\Enums\ReturnStatus;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
-use App\Enums\DistributionStatus;
+use App\Rules\ReturnQuantityRule;
 use Laravel\Nova\Fields\Currency;
-use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Rules\ReceiveQuantityRuleForUpdate;
+use App\Nova\Filters\LocationFilter;
+use App\Rules\ReturnQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
-use App\Nova\Actions\AssetDistributionReceiveItem\ConfirmReceiveItem;
+use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
 
-class AssetDistributionReceiveItem extends Resource
+class FabricReturnItem extends Resource
 {
-    use WithOutLocation;
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\AssetDistributionReceiveItem::class;
-
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
-    public static $title = 'readable_id';
-
-    /**
-     * Get the displayable label of the resource.
-     *
-     * @return string
-     */
-    public static function label()
-    {
-      return "Receive Items";
-    }
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
-    public static $search = [
-        'readable_id',
-    ];
+    public static $model = \App\Models\FabricReturnItem::class;
 
     /**
      * Indicates if the resource should be globally searchable.
@@ -72,6 +43,32 @@ class AssetDistributionReceiveItem extends Resource
     public static $displayInNavigation = false;
 
     /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $title = 'id';
+
+    /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+      return "Return Items";
+    }
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -80,31 +77,15 @@ class AssetDistributionReceiveItem extends Resource
     public function fields(Request $request)
     {
         return [
-            // ID::make(__('ID'), 'id')->sortable(),
-
-            BelongsTo::make('Invoice', 'invoice', \App\Nova\AssetDistributionInvoice::class)
+            BelongsTo::make('Invoice', 'invoice', \App\Nova\FabricReturnINvoice::class)
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Asset')
-                ->hideWhenCreating()
-                ->readonly(),
-
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
+            BelongsTo::make('Fabric'),
 
             Number::make('Quantity')
-                ->default(function($request){
-                    if($request->viaResource ==  \App\Nova\AssetDistributionItem::uriKey() && !empty($request->viaResourceId)){
-                        return \App\Models\AssetDistributionItem::find($request->viaResourceId)->remainingQuantity;
-                    }else{
-                        return $this->resource->distributionItem->remainingQuantity;
-                    }
-                })
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
-                ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\AssetDistributionItem::uriKey(), $this->resource->distributionItemId, $this->resource->quantity))
+                ->creationRules(new ReturnQuantityRule(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric')))
+                ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId))
                 ->onlyOnForms(),
 
             Text::make('Quantity', function(){
@@ -114,31 +95,27 @@ class AssetDistributionReceiveItem extends Resource
 
             Currency::make('Rate')
                 ->currency('BDT')
-                ->exceptOnForms(),
+                ->help("Leave blank if you don't want to change the default rate."),
 
             Currency::make('Amount')
                 ->currency('BDT')
                 ->exceptOnForms(),
 
-            Text::make("Reference")
-                ->hideFromIndex()
-                ->rules('nullable', 'string', 'max:200'),
-
-            Files::make('Attachments', 'distribution-receive-item-attachments')
+            Files::make('Attachments', 'return-item-attachments')
                 ->hideFromIndex(),
 
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
-                    DistributionStatus::DRAFT()->getValue()     => 'warning',
-                    DistributionStatus::CONFIRMED()->getValue() => 'info',
-                    DistributionStatus::PARTIAL()->getValue()   => 'danger',
-                    DistributionStatus::RECEIVED()->getValue()  => 'success'
+                    ReturnStatus::DRAFT()->getValue()     => 'warning',
+                    ReturnStatus::CONFIRMED()->getValue() => 'info',
+                    ReturnStatus::BILLED()->getValue()    => 'danger',
                 ])
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
+
         ];
     }
 
@@ -153,6 +130,7 @@ class AssetDistributionReceiveItem extends Resource
         return [];
     }
 
+
     /**
      * Get the filters available for the resource.
      *
@@ -161,7 +139,11 @@ class AssetDistributionReceiveItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            (new LocationFilter)->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            })
+        ];
     }
 
     /**
@@ -183,14 +165,33 @@ class AssetDistributionReceiveItem extends Resource
      */
     public function actions(Request $request)
     {
-        return [
-            (new ConfirmReceiveItem)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can confirm asset distribution receive items');
-            }),
-        ];
+        return [];
     }
 
     /**
+     * Build a "relatable" query for the given resource.
+     *
+     * This query determines which instances of the model may be attached to other resources.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableFabrics(NovaRequest $request, $query)
+    {
+        $invoice = \App\Models\FabricReturnInvoice::find($request->viaResourceId);
+        try {
+            $fabricId = $request->findResourceOrFail()->fabricId;
+        } catch (\Throwable $th) {
+           $fabricId = null;
+        }
+        return $query->whereHas('suppliers', function($supplier) use($invoice){
+                $supplier->where('supplier_id', $invoice->supplierId)
+                        ->where('location_id', $invoice->locationId);
+        })->whereNotIn('id', $invoice->fabricIds($fabricId));
+    }
+
+      /**
      * Return the location to redirect the user after creation.
      *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request

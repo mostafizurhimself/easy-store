@@ -26,6 +26,20 @@ Nova.booting((Vue, router, store) => {
         next();
     });
 
+
+    router.beforeEach((to, from, next) => {
+        if (
+            to.path === "/resources/fabric-return-items/new" &&
+            (to.query.viaResource == null || to.query.viaResourceId == null)
+        ) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
     //Material Section
     router.beforeEach((to, from, next) => {
         if (
@@ -53,6 +67,19 @@ Nova.booting((Vue, router, store) => {
         next();
     });
 
+    router.beforeEach((to, from, next) => {
+        if (
+            to.path === "/resources/material-return-items/new" &&
+            (to.query.viaResource == null || to.query.viaResourceId == null)
+        ) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
     //Asset Section
     router.beforeEach((to, from, next) => {
         if (
@@ -70,6 +97,19 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/asset-receive-items/new" &&
+            (to.query.viaResource == null || to.query.viaResourceId == null)
+        ) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach((to, from, next) => {
+        if (
+            to.path === "/resources/asset-return-items/new" &&
             (to.query.viaResource == null || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });

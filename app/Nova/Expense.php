@@ -144,9 +144,8 @@ class Expense extends Resource
 
             Date::make('Date')
                 ->rules('required')
-                ->default(function($request){
-                    return Carbon::now();
-                }),
+                ->default(Carbon::now())
+                ->hideWhenUpdating(),
 
             AjaxSelect::make('Expenser', 'expenser_id')
                 ->rules('required')
@@ -256,7 +255,7 @@ class Expense extends Resource
                 ->hideFromIndex(),
 
             Text::make('Approved By', function(){
-                    return $this->approve->employee->name;
+                    return $this->approve ? $this->approve->employee->name : null;
                 })
                 ->canSee(function(){
                     return $this->approve()->exists();

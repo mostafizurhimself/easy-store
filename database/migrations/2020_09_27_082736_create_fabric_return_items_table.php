@@ -21,6 +21,7 @@ class CreateFabricReturnItemsTable extends Migration
             $table->double('quantity')->default(0);
             $table->double('rate')->default(0);
             $table->double('amount')->default(0);
+            $table->text('note')->nullable();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();

@@ -91,13 +91,25 @@ class Fabric extends Model implements HasMedia
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function returns()
+    {
+       return $this->hasMany(FabricReturnItem::class);
+    }
+
+    /**
      * Get the remaining stock attribute of the item
      *
      * @return double
      */
     public function getStockAttribute()
     {
-        return $this->quantity - $this->distributions()->draft()->sum('quantity');
+        return $this->quantity -
+                $this->distributions()->draft()->sum('quantity') -
+                $this->returns()->draft()->sum('quantity') ;
     }
 
 }

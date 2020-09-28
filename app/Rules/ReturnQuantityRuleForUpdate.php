@@ -7,7 +7,7 @@ use App\Models\Fabric;
 use App\Models\Material;
 use Illuminate\Contracts\Validation\Rule;
 
-class DistributionQuantityRuleForUpdate implements Rule
+class ReturnQuantityRuleForUpdate implements Rule
 {
     /**
      * @var mixed
@@ -36,20 +36,20 @@ class DistributionQuantityRuleForUpdate implements Rule
      */
     public function __construct($uriKey, $itemId, $previousQuantity, $previousItemId)
     {
-        if($uriKey == \App\Nova\FabricDistribution::uriKey()){
+        if($uriKey == \App\Nova\FabricReturnItem::uriKey()){
             $this->item = Fabric::find($itemId);
             $this->previousItem = Fabric::find($previousItemId);
         }
 
-        if($uriKey == \App\Nova\MaterialDistribution::uriKey()){
-            $this->item = Material::find($itemId);
-            $this->previousItem = Material::find($previousItemId);
-        }
+        // if($uriKey == \App\Nova\MaterialDistribution::uriKey()){
+        //     $this->item = Material::find($itemId);
+        // $this->previousItem = Material::find($previousItemId);
+        // }
 
-        if($uriKey == \App\Nova\AssetDistributionItem::uriKey()){
-            $this->item = Asset::find($itemId);
-            $this->previousItem = Asset::find($previousItemId);
-        }
+        // if($uriKey == \App\Nova\AssetDistributionItem::uriKey()){
+        //     $this->item = Asset::find($itemId);
+        //     $this->previousItem = Asset::find($previousItemId);
+        // }
 
         $this->previousQuantity = $previousQuantity;
     }
@@ -81,6 +81,6 @@ class DistributionQuantityRuleForUpdate implements Rule
      */
     public function message()
     {
-        return "You can not distribute more than ".$this->allowedQuantity." {$this->item->unit->name}";
+        return "You can not return more than ".$this->allowedQuantity." {$this->item->unit->name}";
     }
 }
