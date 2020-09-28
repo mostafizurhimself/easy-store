@@ -136,7 +136,7 @@ class Designation extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:45')
+                ->rules('required', 'string', 'max:45', 'alpha_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('designations', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
@@ -147,7 +147,7 @@ class Designation extends Resource
 
             TextUppercase::make('Code')
                 ->sortable()
-                ->rules('required', 'string', 'max:3', 'space')
+                ->rules('required', 'string', 'max:3', 'space', 'alpha_num')
                 ->creationRules([
                     Rule::unique('designations', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])

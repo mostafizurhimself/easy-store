@@ -109,7 +109,7 @@ class ServiceCategory extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:45')
+                ->rules('required', 'string', 'max:45', 'alpha_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('service_categories', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])

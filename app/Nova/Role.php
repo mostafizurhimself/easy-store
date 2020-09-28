@@ -140,7 +140,7 @@ class Role extends Resource
 
             TextWithSlug::make('Display Name')
                 ->slug('name')
-                ->rules(['required', 'string', 'max:255'])
+                ->rules(['required', 'string', 'max:255', 'alpha_space', 'multi_space'])
                 ->creationRules('unique:' . config('permission.table_names.roles'))
                 ->updateRules('unique:' . config('permission.table_names.roles') . ',display_name,{{resourceId}}'),
 

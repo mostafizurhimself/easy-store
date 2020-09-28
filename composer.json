@@ -49,7 +49,8 @@
         "pusher/pusher-php-server": "^4.1",
         "titasgailius/search-relations": "^1.0",
         "yassi/nova-nested-form": "^3.0",
-        "easystore/text-uppercase": "*"
+        "easystore/text-uppercase": "*",
+        "easystore/text-titlecase": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
@@ -124,6 +125,10 @@
         {
             "type": "path",
             "url": "./nova-components/TextUppercase"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/TextTitlecase"
         }
     ]
 }

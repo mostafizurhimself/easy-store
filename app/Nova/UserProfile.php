@@ -57,7 +57,7 @@ class UserProfile extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'max:255'),
+                ->rules('required', 'max:255', 'alpha_space', 'multi_space'),
 
             Text::make('Email')
                 ->sortable()

@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
+use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 
@@ -116,7 +117,7 @@ class Expenser extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:45')
+                ->rules('required', 'string', 'max:45', 'alpha_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('expensers', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
@@ -124,10 +125,10 @@ class Expenser extends Resource
                     Rule::unique('expensers', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
-            Text::make('Code')
+            TextUppercase::make('Code')
                 ->sortable()
                 ->help('If you want to generate code automatically, leave the field blank.')
-                ->rules('nullable', 'string', 'max:20', 'space')
+                ->rules('nullable', 'string', 'max:20', 'space', 'alpha_num')
                 ->creationRules([
                     Rule::unique('expensers', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])

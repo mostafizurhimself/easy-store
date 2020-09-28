@@ -185,9 +185,9 @@ module.exports = __webpack_require__(13);
 /***/ (function(module, exports, __webpack_require__) {
 
 Nova.booting(function (Vue, router, store) {
-  Vue.component('index-text-uppercase', __webpack_require__(3));
-  Vue.component('detail-text-uppercase', __webpack_require__(6));
-  Vue.component('form-text-uppercase', __webpack_require__(9));
+  Vue.component('index-text-titlecase', __webpack_require__(3));
+  Vue.component('detail-text-titlecase', __webpack_require__(6));
+  Vue.component('form-text-titlecase', __webpack_require__(9));
 });
 
 /***/ }),
@@ -424,7 +424,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -446,7 +445,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * Fill the given FormData object with the field's internal value.
          */
         fill: function fill(formData) {
-            formData.append(this.field.attribute, this.value.toUpperCase() || '');
+            formData.append(this.field.attribute, this.value || '');
         },
 
 
@@ -28001,7 +28000,6 @@ var render = function() {
           ],
           staticClass: "w-full form-control form-input form-input-bordered",
           class: _vm.errorClasses,
-          staticStyle: { "text-transform": "uppercase" },
           attrs: {
             id: _vm.field.name,
             type: "text",

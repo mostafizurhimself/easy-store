@@ -99,7 +99,7 @@ class Section extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:45')
+                ->rules('required', 'string', 'max:45', 'alpha_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('sections', 'name')->where('department_id', request()->get('department') ?? request()->get('department_id'))
                 ])

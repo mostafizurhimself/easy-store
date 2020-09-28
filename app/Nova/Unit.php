@@ -63,7 +63,7 @@ class Unit extends Resource
             ID::make()->sortable()->onlyOnIndex(),
 
             Text::make('Name')
-                ->rules('required', 'max:45')
+                ->rules('required', 'max:45', 'alpha_space', 'multi_space')
                 ->creationRules('unique:units,name')
                 ->updateRules('unique:units,name,{{resourceId}}'),
 

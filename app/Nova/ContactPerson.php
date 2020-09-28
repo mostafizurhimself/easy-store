@@ -51,7 +51,7 @@ class ContactPerson extends Resource
     {
         return [
             Text::make('Name')
-                ->rules('required', 'max:50'),
+                ->rules('required', 'max:50', 'alpha_space', 'multi_space'),
 
             PhoneNumber::make('Mobile', 'mobile')
                 ->withCustomFormats('+88 ### #### ####')

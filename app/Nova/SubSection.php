@@ -97,7 +97,7 @@ class SubSection extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:45')
+                ->rules('required', 'string', 'max:45', 'alpha_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('sub_sections', 'name')->where('section_id', request()->get('section_id'))
                 ])

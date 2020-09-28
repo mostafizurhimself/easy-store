@@ -93,7 +93,7 @@ class Floor extends Resource
                 }),
 
             Text::make('Floor Name', 'name')
-                ->rules('required', 'max:45', 'string')
+                ->rules('required', 'max:45', 'string', 'alpha_num_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('floors', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
@@ -102,7 +102,7 @@ class Floor extends Resource
                 ]),
 
             Text::make('Floor Number', 'number')
-                ->rules('required', 'min:3', 'max:5'),
+                ->rules('required', 'min:3', 'max:5', 'alpha_num'),
         ];
     }
 

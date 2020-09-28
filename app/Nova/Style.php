@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
+use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Style extends Resource
@@ -27,7 +28,7 @@ class Style extends Resource
      *
      * @var string
      */
-    public static $title = 'code';
+    public static $title = 'name';
 
     /**
      * Get the search result subtitle for the resource.
@@ -96,7 +97,7 @@ class Style extends Resource
                 }),
 
             Text::make('Name')
-                ->rules('required', 'max:45', 'string')
+                ->rules('required', 'max:45', 'string', 'alpha_num_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('styles', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
@@ -105,8 +106,8 @@ class Style extends Resource
                 ]),
 
 
-            Text::make('Code')
-                ->rules('required', 'max:45', 'string', 'space')
+            TextUppercase::make('Code')
+                ->rules('required', 'max:45', 'string', 'space', 'alpha_num')
                 ->creationRules([
                     Rule::unique('styles', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])

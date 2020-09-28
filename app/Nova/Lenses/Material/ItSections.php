@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Badge;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\LensRequest;
 
 class ItSections extends Lens
@@ -70,7 +71,7 @@ class ItSections extends Lens
                 ->sortable()
                 ->rules('required', 'string', 'max:100'),
 
-            Text::make('Code')
+            TextUppercase::make('Code')
                 ->sortable()
                 ->help('If you want to generate code automatically, leave the field blank.')
                 ->rules('nullable', 'string', 'max:100'),

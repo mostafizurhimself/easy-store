@@ -16,6 +16,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
+use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Fabrics\UpdateOpeningQuantity;
@@ -138,7 +139,7 @@ class Fabric extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:100')
+                ->rules('required', 'string', 'max:100', 'alpha_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('fabrics', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
@@ -146,10 +147,10 @@ class Fabric extends Resource
                     Rule::unique('fabrics', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ]),
 
-            Text::make('Code')
+            TextUppercase::make('Code')
                 ->sortable()
                 ->help('If you want to generate code automatically, leave the field blank.')
-                ->rules('nullable', 'string', 'max:20', 'space')
+                ->rules('nullable', 'string', 'max:20', 'space', 'alpha_num')
                 ->creationRules([
                     Rule::unique('fabrics', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])

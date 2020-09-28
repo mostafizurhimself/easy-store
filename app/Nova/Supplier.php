@@ -93,7 +93,7 @@ class Supplier extends Resource
                 ]),
 
             Text::make('Name')
-                ->rules('required', 'max:45')
+                ->rules('required', 'max:45', 'alpha_space', 'multi_space')
                 ->creationRules('unique:suppliers,name')
                 ->updateRules('unique:suppliers,name,{{resourceId}}'),
 
