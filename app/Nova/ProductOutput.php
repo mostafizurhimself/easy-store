@@ -104,8 +104,7 @@ class ProductOutput extends Resource
 
             Date::make('Date')
                 ->rules('required')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
+                ->default(Carbon::now()),
 
             BelongsTo::make('Location')
                 ->searchable()

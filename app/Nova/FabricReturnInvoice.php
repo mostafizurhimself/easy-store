@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
+use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
@@ -127,6 +128,10 @@ class FabricReturnInvoice extends Resource
 
             Date::make('Date')
                 ->rules('required')
+                ->default(Carbon::now())
+                ->readonly(),
+
+            Hidden::make('Date')
                 ->default(Carbon::now())
                 ->hideWhenUpdating(),
 

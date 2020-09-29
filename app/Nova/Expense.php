@@ -115,6 +115,10 @@ class Expense extends Resource
                     'label' => $this->readableId,
                 ]),
 
+            Date::make('Date')
+                ->rules('required')
+                ->default(Carbon::now()),
+
             BelongsTo::make('Location')
                 ->searchable()
                 ->showOnCreating(function ($request) {
@@ -140,12 +144,6 @@ class Expense extends Resource
                     }
                     return false;
                 }),
-
-
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
 
             AjaxSelect::make('Expenser', 'expenser_id')
                 ->rules('required')

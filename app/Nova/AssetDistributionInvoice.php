@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
 use Illuminate\Support\Optional;
 use Laravel\Nova\Fields\HasMany;
@@ -103,8 +104,11 @@ class AssetDistributionInvoice extends Resource
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
-                ->hideWhenUpdating()
                 ->readonly(),
+
+            Hidden::make('Date')
+                ->default(Carbon::now())
+                ->hideWhenUpdating(),
 
             BelongsTo::make('Location')
             ->searchable()

@@ -11,6 +11,7 @@ use App\Models\Setting as SettingModel;
 use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
+use OptimistDigital\MultiselectField\Multiselect;
 use Epartment\NovaDependencyContainer\HasDependencies;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 
@@ -128,6 +129,15 @@ class Setting extends Resource
                     return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
                 }),
 
+            Text::make('Approvers')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->approvers ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
+                }),
+
             NovaDependencyContainer::make([
 
                 Json::make('Settings', [
@@ -142,7 +152,13 @@ class Setting extends Resource
                         ->onlyCustomFormats()
                         ->rules('nullable'),
 
-                    
+                    Multiselect::make('Approvers', 'approvers')
+                        ->options(\App\Models\Employee::toSelectOptions())
+                        ->placeholder('Choose options') // Placeholder text
+                        ->max(10) // Maximum number of items the user can choose
+                        ->saveAsJSON() // Saves value as JSON if the database column is of JSON type
+                        ->optionsLimit(5) // How many items to display at once
+                        ->reorderable() // Allows reordering functionality
 
                 ])
                     ->flatten(),

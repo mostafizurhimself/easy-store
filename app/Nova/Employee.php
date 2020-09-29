@@ -311,7 +311,6 @@ class Employee extends Resource
 
                     Date::make('Joining Date')
                         ->rules('required')
-                        ->default(Carbon::now())
                         ->hideFromIndex(),
 
                     Date::make('Resign Date')

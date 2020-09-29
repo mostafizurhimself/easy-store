@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Trix;
 use App\Enums\FinishingStatus;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
@@ -105,6 +106,10 @@ class FinishingInvoice extends Resource
 
             Date::make('Date')
                 ->rules('required')
+                ->default(Carbon::now())
+                ->readonly(),
+
+            Hidden::make('Date')
                 ->default(Carbon::now())
                 ->hideWhenUpdating(),
 

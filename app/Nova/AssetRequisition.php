@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
+use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
 use App\Enums\RequisitionStatus;
 use Laravel\Nova\Fields\HasMany;
@@ -107,9 +108,13 @@ class AssetRequisition extends Resource
                 ]),
 
             Date::make('Date')
+                ->rules('required')
                 ->default(Carbon::now())
-                ->hideWhenUpdating()
                 ->readonly(),
+
+            Hidden::make('Date')
+                ->default(Carbon::now())
+                ->hideWhenUpdating(),
 
             BelongsTo::make('Location')
             ->searchable()

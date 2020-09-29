@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
+use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
@@ -85,6 +86,10 @@ class FabricReceiveItem extends Resource
 
             Date::make('Date')
                 ->rules('required')
+                ->default(Carbon::now())
+                ->readonly(),
+
+            Hidden::make('Date')
                 ->default(Carbon::now())
                 ->hideWhenUpdating(),
 

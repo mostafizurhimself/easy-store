@@ -27,6 +27,7 @@
         "easystore/permission-checkbox": "*",
         "easystore/prevent-direct-create": "*",
         "easystore/router-link": "*",
+        "easystore/text-uppercase": "*",
         "ebess/advanced-nova-media-library": "^3.1",
         "eminiarts/nova-permissions": "^1.0",
         "eminiarts/nova-tabs": "^1.2",
@@ -44,12 +45,12 @@
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "myclabs/php-enum": "^1.7",
+        "optimistdigital/nova-multiselect-field": "^1.10",
         "orlyapps/nova-belongsto-depend": "^2.0",
         "pdmfc/nova-action-button": "^0.4.0",
         "pusher/pusher-php-server": "^4.1",
         "titasgailius/search-relations": "^1.0",
-        "yassi/nova-nested-form": "^3.0",
-        "easystore/text-uppercase": "*"
+        "yassi/nova-nested-form": "^3.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
