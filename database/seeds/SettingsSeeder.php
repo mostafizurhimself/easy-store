@@ -18,6 +18,11 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'name' => Setting::APPLICATION_SETTINGS,
+                'settings' => [
+                    'name'   => null,
+                    'email'  => null,
+                    'mobile' => null,
+                ]
             ]
         );
 
@@ -27,6 +32,11 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'name' => Setting::COMPANY_SETTINGS,
+                'settings' => [
+                    'name'   => null,
+                    'email'  => null,
+                    'mobile' => null,
+                ]
             ]
         );
 
@@ -37,6 +47,11 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'name' => Setting::PREFIX_SETTINGS,
+                'settings' => [
+                    'location' => null,
+                    'provider' => null,
+                    'supplier' => null,
+                ]
             ]
         );
     }

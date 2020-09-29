@@ -38,7 +38,7 @@ class Setting extends Resource
      */
     public static function label()
     {
-      return "App Settings";
+        return "App Settings";
     }
 
     /**
@@ -61,7 +61,7 @@ class Setting extends Resource
      * @var array
      */
     public static $sort = [
-      'id' => 'asc'
+        'id' => 'asc'
     ];
     /**
      * The icon of the resource.
@@ -70,7 +70,7 @@ class Setting extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-cogs';
+        return 'fas fa-cogs';
     }
 
     /**
@@ -82,41 +82,149 @@ class Setting extends Resource
     public function fields(Request $request)
     {
         return [
-            RouterLink::make('Name', 'id')
+            RouterLink::make('Settings Name', 'id')
                 ->withMeta([
                     'label' => $this->name,
                 ]),
 
-            Text::make('Name')
+            Text::make('Setting Name', 'name')
                 ->onlyOnForms()
                 ->readonly(),
 
             Images::make('Logo', 'settings')
                 ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
                 ->croppable()
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS ||   $this->resource->name == SettingModel::COMPANY_SETTINGS;
+                }),
+
+
+            // Application Settings
+            Text::make('App Name')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->name ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
+                }),
+
+            Email::make('Email')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->email ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
+                }),
+
+            PhoneNumber::make('Mobile')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->mobile ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
+                }),
 
             NovaDependencyContainer::make([
 
                 Json::make('Settings', [
-                    Text::make('Name', 'name')
+                    Text::make('App Name', 'name')
                         ->rules('nullable', 'string', 'max:100'),
 
                     Email::make('Email', 'email')
                         ->rules('nullable', 'email'),
 
-                    PhoneNumber::make('Mobile')
+                    PhoneNumber::make('Mobile', 'mobile')
+                        ->withCustomFormats('+88 ### #### ####')
+                        ->onlyCustomFormats()
+                        ->rules('nullable'),
+
+                    
+
+                ])
+                    ->flatten(),
+            ])
+                ->dependsOn('name', SettingModel::APPLICATION_SETTINGS),
+
+            // Company Settings
+
+            Text::make('Company Name')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->name ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::COMPANY_SETTINGS;
+                }),
+
+            Email::make('Email')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->email ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::COMPANY_SETTINGS;
+                }),
+
+            PhoneNumber::make('Mobile')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->mobile ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::COMPANY_SETTINGS;
+                }),
+
+            NovaDependencyContainer::make([
+
+                Json::make('Settings', [
+                    Text::make('Company Name', 'name')
+                        ->rules('nullable', 'string', 'max:100'),
+
+                    Email::make('Email', 'email')
+                        ->rules('nullable', 'email'),
+
+                    PhoneNumber::make('Mobile', 'mobile')
                         ->withCustomFormats('+88 ### #### ####')
                         ->onlyCustomFormats()
                         ->rules('nullable'),
 
                 ])
-                ->flatten()
-                ->hideFromIndex(),
+                    ->flatten(),
             ])
-            ->dependsOn('name', SettingModel::APPLICATION_SETTINGS)
-            ->dependsOn('name', SettingModel::COMPANY_SETTINGS),
+                ->dependsOn('name', SettingModel::COMPANY_SETTINGS),
 
+
+            // Prefix Settings
+            Text::make('Location Prefix', 'location')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->location ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::PREFIX_SETTINGS;
+                }),
+
+            Text::make('Supplier Prefix', 'supplier')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->supplier ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::PREFIX_SETTINGS;
+                }),
+
+            Text::make('Provider Prefix', 'provider')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->provider ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::PREFIX_SETTINGS;
+                }),
             NovaDependencyContainer::make([
 
                 Json::make('Settings', [
@@ -129,10 +237,10 @@ class Setting extends Resource
                     Text::make('Provider Prefix', 'provider')
                         ->rules('nullable', 'string', 'max:4'),
                 ])
-                ->flatten()
-                ->hideFromIndex(),
+                    ->flatten()
+                    ->hideFromIndex(),
             ])
-            ->dependsOn('name', SettingModel::PREFIX_SETTINGS),
+                ->dependsOn('name', SettingModel::PREFIX_SETTINGS),
         ];
     }
 
@@ -179,5 +287,4 @@ class Setting extends Resource
     {
         return [];
     }
-
 }

@@ -153,18 +153,25 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::updateOrCreate(['name' => 'assign permissions'],['group' => 'permissions', 'name' => 'assign permissions', 'group_order' => 4653]);
 
         //Super Admin Permissions
-        $superAdminCollection = collect([
-            ['name' => 'activity logs', 'order' => 10000],
-            ['name' => 'settings', 'order' => 10000],
-        ]);
+        // $superAdminCollection = collect([
+        //     ['name' => 'activity logs', 'order' => 10000],
+        //     ['name' => 'settings', 'order' => 10000],
+        // ]);
 
-        $superAdminCollection->each(function ($item, $key) {
-            // create permissions for each collection item
-            Permission::updateOrCreate(['name' => 'view ' .$item['name'] ],['group' => 'super admin', 'name' => 'view ' . $item['name'], 'group_order' => $item['order']]);
-            Permission::updateOrCreate(['name' => 'view any ' .$item['name'] ],['group' => 'super admin', 'name' => 'view any ' . $item['name'], 'group_order' => $item['order']]);
-        });
+        // $superAdminCollection->each(function ($item, $key) {
+        //     // create permissions for each collection item
+        //     Permission::updateOrCreate(['name' => 'view ' .$item['name'] ],['group' => 'super admin', 'name' => 'view ' . $item['name'], 'group_order' => $item['order']]);
+        //     Permission::updateOrCreate(['name' => 'view any ' .$item['name'] ],['group' => 'super admin', 'name' => 'view any ' . $item['name'], 'group_order' => $item['order']]);
+        //     Permission::updateOrCreate(['name' => 'update ' .$item['name'] ],['group' => 'super admin', 'name' => 'update ' . $item['name'], 'group_order' => $item['order']]);
+        //     Permission::updateOrCreate(['name' => 'update ' .$item['name'] ],['group' => 'super admin', 'name' => 'update ' . $item['name'], 'group_order' => $item['order']]);
+        // });
 
         //Only For Super Admin Permissions
+        Permission::updateOrCreate(['name' => 'view any settings'],['group' => 'super admin', 'name' => 'view any settings', 'group_order' => 10001]);
+        Permission::updateOrCreate(['name' => 'view settings'],['group' => 'super admin', 'name' => 'view settings', 'group_order' => 10002]);
+        Permission::updateOrCreate(['name' => 'update settings'],['group' => 'super admin', 'name' => 'update settings', 'group_order' => 10003]);
+        Permission::updateOrCreate(['name' => 'view any activity logs'],['group' => 'super admin', 'name' => 'view any activity logs', 'group_order' => 10004]);
+        Permission::updateOrCreate(['name' => 'view activity logs'],['group' => 'super admin', 'name' => 'view activity logs', 'group_order' => 10005]);
         Permission::updateOrCreate(['name' => 'view all locations data'],['group' => 'super admin', 'name' => 'view all locations data', 'group_order' => 20001]);
         Permission::updateOrCreate(['name' => 'view any locations data'],['group' => 'super admin', 'name' => 'view any locations data', 'group_order' => 20002]);
         Permission::updateOrCreate(['name' => 'create all locations data'],['group' => 'super admin', 'name' => 'create all locations data', 'group_order' => 20003]);

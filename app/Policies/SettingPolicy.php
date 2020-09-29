@@ -53,7 +53,7 @@ class SettingPolicy
      */
     public function update(User $user, Setting $setting)
     {
-        return $user->isSuperAdmin();
+        return $user->isSuperAdmin() || $user->hasPermissionTo('update settings');
     }
 
     /**
@@ -65,7 +65,7 @@ class SettingPolicy
      */
     public function delete(User $user, Setting $setting)
     {
-        return $user->isSuperAdmin();
+        return false;
     }
 
     /**
@@ -89,6 +89,6 @@ class SettingPolicy
      */
     public function forceDelete(User $user, Setting $setting)
     {
-        return $user->isSuperAdmin();
+        return false;
     }
 }
