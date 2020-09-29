@@ -92,16 +92,18 @@ class Setting extends Resource
                 ->onlyOnForms()
                 ->readonly(),
 
+            // Application Settings
             Images::make('Logo', 'settings')
                 ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
                 ->croppable()
                 ->hideFromIndex()
+                ->readonly(function($request){
+                    return !$request->user()->isSuperAdmin();
+                })
                 ->canSee(function () {
-                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS ||   $this->resource->name == SettingModel::COMPANY_SETTINGS;
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
                 }),
 
-
-            // Application Settings
             Text::make('App Name')
                 ->displayUsing(function () {
                     return json_decode($this->resource->settings)->name ?? null;
@@ -153,12 +155,21 @@ class Setting extends Resource
 
                 Json::make('Settings', [
                     Text::make('App Name', 'name')
+                        ->readonly(function($request){
+                            return !$request->user()->isSuperAdmin();
+                        })
                         ->rules('nullable', 'string', 'max:100'),
 
                     Email::make('Email', 'email')
+                        ->readonly(function($request){
+                            return !$request->user()->isSuperAdmin();
+                        })
                         ->rules('nullable', 'email'),
 
                     PhoneNumber::make('Mobile', 'mobile')
+                        ->readonly(function($request){
+                            return !$request->user()->isSuperAdmin();
+                        })
                         ->withCustomFormats('+88 ### #### ####')
                         ->onlyCustomFormats()
                         ->rules('nullable'),
@@ -177,6 +188,14 @@ class Setting extends Resource
                 ->dependsOn('name', SettingModel::APPLICATION_SETTINGS),
 
             // Company Settings
+
+            Images::make('Logo', 'settings')
+                ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
+                ->croppable()
+                ->hideFromIndex()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::COMPANY_SETTINGS;
+                }),
 
             Text::make('Company Name')
                 ->displayUsing(function () {
