@@ -51,7 +51,11 @@ class ContactPerson extends Resource
     {
         return [
             Text::make('Name')
-                ->rules('required', 'max:50', 'alpha_space', 'multi_space'),
+                ->rules('required', 'max:50', 'alpha_space', 'multi_space')
+                ->fillUsing(function($request, $model){
+                    $model['name'] = Str::title($request->name);
+                })
+                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             PhoneNumber::make('Mobile', 'mobile')
                 ->withCustomFormats('+88 ### #### ####')

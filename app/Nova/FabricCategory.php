@@ -138,7 +138,11 @@ class FabricCategory extends Resource
                 ])
                 ->updateRules([
                     Rule::unique('fabric_categories', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
-                ]),
+                ])
+                ->fillUsing(function($request, $model){
+                    $model['name'] = Str::title($request->name);
+                })
+                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             Textarea::make('Description')
                 ->nullable()

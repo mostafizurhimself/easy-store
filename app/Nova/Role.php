@@ -145,7 +145,11 @@ class Role extends Resource
                 ->updateRules('unique:' . config('permission.table_names.roles') . ',display_name,{{resourceId}}'),
 
             Text::make('Name')
-                ->onlyOnDetail(),
+                ->onlyOnDetail()
+                ->fillUsing(function($request, $model){
+                    $model['name'] = Str::title($request->name);
+                })
+                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             Slug::make('Name')
                 ->rules(['required', 'string', 'max:255'])

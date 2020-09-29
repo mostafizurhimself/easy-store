@@ -95,7 +95,11 @@ class Supplier extends Resource
             Text::make('Name')
                 ->rules('required', 'max:45', 'alpha_space', 'multi_space')
                 ->creationRules('unique:suppliers,name')
-                ->updateRules('unique:suppliers,name,{{resourceId}}'),
+                ->updateRules('unique:suppliers,name,{{resourceId}}')
+                ->fillUsing(function($request, $model){
+                    $model['name'] = Str::title($request->name);
+                })
+                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             PhoneNumber::make('Mobile')
                 ->withCustomFormats('+88 ### #### ####')

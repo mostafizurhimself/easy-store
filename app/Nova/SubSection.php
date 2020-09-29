@@ -97,13 +97,17 @@ class SubSection extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:45', 'alpha_space', 'multi_space')
+                ->rules('required', 'string', 'max:45', 'alpha_num_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('sub_sections', 'name')->where('section_id', request()->get('section_id'))
                 ])
                 ->updateRules([
                     Rule::unique('sub_sections', 'name')->where('section_id', request()->get('section_id'))->ignore($this->resource->id)
-                ]),
+                ])
+                ->fillUsing(function($request, $model){
+                    $model['name'] = Str::title($request->name);
+                })
+                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             BelongsTo::make('Location')
                 ->searchable()

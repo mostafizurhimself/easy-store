@@ -143,7 +143,11 @@ class Designation extends Resource
                 ->updateRules([
                     Rule::unique('designations', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                         ->ignore($this->resource->id)
-                ]),
+                ])
+                ->fillUsing(function($request, $model){
+                    $model['name'] = Str::title($request->name);
+                })
+                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             TextUppercase::make('Code')
                 ->sortable()

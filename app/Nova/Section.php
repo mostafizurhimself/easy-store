@@ -99,13 +99,17 @@ class Section extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:45', 'alpha_space', 'multi_space')
+                ->rules('required', 'string', 'max:45', 'alpha_num_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('sections', 'name')->where('department_id', request()->get('department') ?? request()->get('department_id'))
                 ])
                 ->updateRules([
                     Rule::unique('sections', 'name')->where('department_id', request()->get('department') ?? request()->get('department_id'))->ignore($this->resource->id)
-                ]),
+                ])
+                ->fillUsing(function($request, $model){
+                    $model['name'] = Str::title($request->name);
+                })
+                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             BelongsTo::make('Location')
                 ->searchable()

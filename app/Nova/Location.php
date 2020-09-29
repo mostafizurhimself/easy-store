@@ -99,7 +99,11 @@ class Location extends Resource
             Text::make('Name')
                 ->rules('required', 'max:45', 'alpha_space', 'multi_space')
                 ->creationRules('unique:locations,name')
-                ->updateRules('unique:locations,name,{{resourceId}}'),
+                ->updateRules('unique:locations,name,{{resourceId}}')
+                ->fillUsing(function($request, $model){
+                    $model['name'] = Str::title($request->name);
+                })
+                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             Select::make('Type')
                 ->options(LocationType::titleCaseOptions())

@@ -57,7 +57,11 @@ class UserProfile extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'max:255', 'alpha_space', 'multi_space'),
+                ->rules('required', 'max:255', 'alpha_space', 'multi_space')
+                ->fillUsing(function($request, $model){
+                    $model['name'] = Str::title($request->name);
+                })
+                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             Text::make('Email')
                 ->sortable()
