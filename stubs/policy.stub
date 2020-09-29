@@ -101,4 +101,16 @@ class {{ class }}
                 ($user->hasPermissionTo('force delete permissions') && $user->locationId == ${{ modelVariable }}->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data');
     }
+
+    /**
+     * Determine whether the user can add a model item to the model.
+     *
+     * @param  \{{ namespacedUserModel }}  $user
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return mixed
+     */
+    public function addModel({{ user }} $user, {{ model }} ${{ modelVariable }})
+    {
+        return true;
+    }
 }

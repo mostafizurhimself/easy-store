@@ -25,9 +25,9 @@ class ReturnQuantityRule implements Rule
             $this->item = Fabric::find($itemId);
         }
 
-        // if($uriKey == \App\Nova\MaterialDistribution::uriKey()){
-        //     $this->item = Material::find($itemId);
-        // }
+        if($uriKey == \App\Nova\MaterialReturnItem::uriKey()){
+            $this->item = Material::find($itemId);
+        }
 
         // if($uriKey == \App\Nova\AssetDistributionItem::uriKey()){
         //     $this->item = Asset::find($itemId);

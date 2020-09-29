@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Carbon\Carbon;
 use App\Enums\ReturnStatus;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
@@ -17,6 +18,7 @@ use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\MaterialReturnInvoice\ConfirmInvoice;
 
 class MaterialReturnInvoice extends Resource
 {
@@ -231,6 +233,8 @@ class MaterialReturnInvoice extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new ConfirmInvoice
+        ];
     }
 }

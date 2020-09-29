@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Actions\FabricReturnInvoices;
+namespace App\Nova\Actions\MaterialReturnInvoice;
 
 use App\Enums\ReturnStatus;
 use Illuminate\Bus\Queueable;
@@ -33,7 +33,7 @@ class ConfirmInvoice extends Action
                     if($returnItem->status == ReturnStatus::DRAFT()){
 
                         //Decrease the item quantity
-                        $returnItem->fabric->decrement('quantity', $returnItem->quantity);
+                        $returnItem->material->decrement('quantity', $returnItem->quantity);
                         $returnItem->status =  ReturnStatus::CONFIRMED();
                         $returnItem->save();
                     }

@@ -2,9 +2,10 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-use App\FabricReturnInvoice;
 use App\Models\User;
+use App\Enums\ReturnStatus;
+use App\Models\FabricReturnInvoice;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FabricReturnInvoicePolicy
 {
@@ -101,4 +102,18 @@ class FabricReturnInvoicePolicy
                 ($user->hasPermissionTo('force delete fabric return invoices') && $user->locationId == $fabricReturnInvoice->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data');
     }
+
+    /**
+     * Determine whether the user can add a purchase item to the purchase.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\FabricReturnInvoice  $fabricReturnInvoice
+     * @return mixed
+     */
+    public function addFabricReturnItem(User $user, FabricReturnInvoice $fabricReturnInvoice)
+    {
+        return $fabricReturnInvoice->status == ReturnStatus::DRAFT();
+    }
+
+
 }

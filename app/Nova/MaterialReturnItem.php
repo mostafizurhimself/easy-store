@@ -2,14 +2,18 @@
 
 namespace App\Nova;
 
+use App\Enums\ReturnStatus;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Number;
+use App\Rules\ReturnQuantityRule;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Rules\ReturnQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 
@@ -78,8 +82,8 @@ class MaterialReturnItem extends Resource
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ReturnQuantityRule(\App\Nova\MaterialReturnItem::uriKey(), $request->get('Material')))
-                ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\MaterialReturnItem::uriKey(), $request->get('fabric'), $this->resource->quantity, $this->resource->materialId))
+                ->creationRules(new ReturnQuantityRule(\App\Nova\MaterialReturnItem::uriKey(), $request->get('material')))
+                ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\MaterialReturnItem::uriKey(), $request->get('material'), $this->resource->quantity, $this->resource->materialId))
                 ->onlyOnForms(),
 
             Text::make('Quantity', function(){

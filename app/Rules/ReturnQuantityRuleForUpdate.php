@@ -41,10 +41,10 @@ class ReturnQuantityRuleForUpdate implements Rule
             $this->previousItem = Fabric::find($previousItemId);
         }
 
-        // if($uriKey == \App\Nova\MaterialDistribution::uriKey()){
-        //     $this->item = Material::find($itemId);
-        // $this->previousItem = Material::find($previousItemId);
-        // }
+        if($uriKey == \App\Nova\MaterialReturnItem::uriKey()){
+            $this->item = Material::find($itemId);
+            $this->previousItem = Material::find($previousItemId);
+        }
 
         // if($uriKey == \App\Nova\AssetDistributionItem::uriKey()){
         //     $this->item = Asset::find($itemId);

@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-use App\FabricReturnItem;
 use App\Models\User;
+use App\Models\FabricReturnItem;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FabricReturnItemPolicy
 {
