@@ -60,7 +60,7 @@ class ConfirmPurchase extends Action
         return [
             Select::make('Approved By')
                 ->rules('required')
-                ->options(\App\Models\Employee::toSelectOptions())
+                ->options(\App\Models\Employee::approvers())
         ];
     }
 }

@@ -128,4 +128,17 @@ class Employee extends Model implements HasMedia
         });
     }
 
+
+    /**
+     * Get the approvers list
+     *
+     * @return array
+     */
+    public static function approvers()
+    {
+        return static::whereIn('id', Settings::application()->approvers)->get()->map(function($employee){
+            return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
+        });
+    }
+
 }

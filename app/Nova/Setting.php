@@ -131,8 +131,19 @@ class Setting extends Resource
 
             Text::make('Approvers')
                 ->displayUsing(function () {
-                    return json_decode($this->resource->settings)->approvers ?? null;
+                    $value = '';
+
+                    if(!empty(json_decode($this->resource->settings)->approvers)){
+                        foreach(json_decode($this->resource->settings)->approvers as $approver){
+                            $employee = \App\Models\Employee::find($approver);
+                            $value .= "<p class='pb-4'>{$employee->name}({$employee->readableId})</p>";
+                        }
+                        return $value;
+                    }else{
+                        return null;
+                    }
                 })
+                ->asHtml()
                 ->onlyOnDetail()
                 ->canSee(function () {
                     return $this->resource->name == SettingModel::APPLICATION_SETTINGS;

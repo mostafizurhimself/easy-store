@@ -1,4 +1,4 @@
-{{-- {{dd(\Laravel\Nova\Nova::resourceInformation(request()))}} --}}
+{{-- {{dd(Settings::application()->approvers)}} --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full font-sans antialiased">
 <head>
