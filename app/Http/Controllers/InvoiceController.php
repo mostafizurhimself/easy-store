@@ -17,6 +17,6 @@ class InvoiceController extends Controller
      */
     public function assetDsitributionInvoice(Request $request, AssetDistributionInvoice $invoice )
     {
-        return view('invoices.layout');
+        return view('invoices.pages.asset-distribution-invoice', compact('invoice'));
     }
 }

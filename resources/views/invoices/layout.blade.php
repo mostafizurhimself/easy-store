@@ -6,14 +6,11 @@
 
         <title>Invoice | @yield('title')</title>
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link rel="stylesheet" href="{{asset('css/app.css')}}">
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            <div class="content">
-                <div class="title m-b-md">
-                    Asset Distribution Invoice
-                </div>
-            </div>
-        </div>
+        @yield('content')
+
+        <script src="{{asset('js/app.js')}}"></script>
     </body>
 </html>
