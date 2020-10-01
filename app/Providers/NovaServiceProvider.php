@@ -8,10 +8,8 @@ use App\Nova\Location;
 use App\Nova\Department;
 use App\Nova\Permission;
 use Laravel\Nova\Cards\Help;
-use Easystore\Invoice\Invoice;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\NovaApplicationServiceProvider;
-use Easystore\PreventDirectCreate\PreventDirectCreate;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -96,10 +94,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             ->permissionResource(Permission::class),
 
             \ChrisWare\NovaBreadcrumbs\NovaBreadcrumbs::make()->withoutStyles(),
-
-            PreventDirectCreate::make(),
-
-            // Invoice::make(),
         ];
     }
 

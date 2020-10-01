@@ -1,6 +1,6 @@
 {
     "name": "easystore/prevent-direct-create",
-    "description": "A Laravel Nova tool.",
+    "description": "A Laravel Nova asset.",
     "keywords": [
         "laravel",
         "nova"
@@ -17,7 +17,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Easystore\\PreventDirectCreate\\ToolServiceProvider"
+                "Easystore\\PreventDirectCreate\\AssetServiceProvider"
             ]
         }
     },

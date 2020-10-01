@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "195dbb2af60ef29d4290534cf7e70567",
+    "content-hash": "b0b29d3837baece9c377fc438e8f1647",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -1442,42 +1442,6 @@
             "time": "2019-03-31T00:38:28+00:00"
         },
         {
-            "name": "easystore/invoice",
-            "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "./nova-components/Invoice",
-                "reference": "90dcbb2a49c80d64d8a1f1b6c887cb3edb1d1c26"
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Easystore\\Invoice\\ToolServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Easystore\\Invoice\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova tool.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "transport-options": {
-                "relative": true
-            }
-        },
-        {
             "name": "easystore/notification",
             "version": "dev-master",
             "dist": {
@@ -1591,7 +1555,7 @@
             "dist": {
                 "type": "path",
                 "url": "./nova-components/PreventDirectCreate",
-                "reference": "4aa3f0839c2bba537e9e15e55941c31486a029ce"
+                "reference": "6fffd38cf7d8e268fdff7eb5009c9b7933194741"
             },
             "require": {
                 "php": ">=7.1.0"
@@ -1600,7 +1564,7 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Easystore\\PreventDirectCreate\\ToolServiceProvider"
+                        "Easystore\\PreventDirectCreate\\AssetServiceProvider"
                     ]
                 }
             },
@@ -1612,7 +1576,7 @@
             "license": [
                 "MIT"
             ],
-            "description": "A Laravel Nova tool.",
+            "description": "A Laravel Nova asset.",
             "keywords": [
                 "laravel",
                 "nova"

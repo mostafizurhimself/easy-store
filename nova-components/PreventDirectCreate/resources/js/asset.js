@@ -200,11 +200,6 @@ Nova.booting((Vue, router, store) => {
         next();
     });
 
-    //   router.addRoutes([
-    //     {
-    //       name: 'prevent-direct-create',
-    //       path: '/prevent-direct-create',
-    //       component: require('./components/Tool'),
-    //     },
-    //   ])
+
 });
+

@@ -22,10 +22,8 @@
         "david-griffiths/nova-dark-theme": "^1.0",
         "dillingham/nova-ajax-select": "^1.0",
         "dillingham/nova-attach-many": "^1.0",
-        "easystore/invoice": "*",
         "easystore/nova-theme": "*",
         "easystore/permission-checkbox": "*",
-        "easystore/prevent-direct-create": "*",
         "easystore/router-link": "*",
         "easystore/text-uppercase": "*",
         "ebess/advanced-nova-media-library": "^3.1",
@@ -51,7 +49,8 @@
         "pusher/pusher-php-server": "^4.1",
         "titasgailius/search-relations": "^1.0",
         "yassi/nova-nested-form": "^3.0",
-        "easystore/notification": "*"
+        "easystore/notification": "*",
+        "easystore/prevent-direct-create": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
@@ -117,19 +116,15 @@
         },
         {
             "type": "path",
-            "url": "./nova-components/PreventDirectCreate"
-        },
-        {
-            "type": "path",
-            "url": "./nova-components/Invoice"
-        },
-        {
-            "type": "path",
             "url": "./nova-components/TextUppercase"
         },
         {
             "type": "path",
             "url": "./nova-components/Notification"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/PreventDirectCreate"
         }
     ]
 }
