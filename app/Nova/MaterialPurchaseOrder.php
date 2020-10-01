@@ -151,7 +151,7 @@ class MaterialPurchaseOrder extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Supplier', 'supplier', 'App\Nova\Supplier')->searchable(),
+            BelongsTo::make('Supplier', 'supplier', 'App\Nova\Supplier')->searchable()->hideWhenUpdating(),
 
             Currency::make('Purchase Amount', 'total_purchase_amount')
                 ->currency('BDT')

@@ -93,13 +93,25 @@ class Asset extends Model implements HasMedia
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function returnItems()
+    {
+       return $this->hasMany(AssetReturnItem::class);
+    }
+
+    /**
      * Get the remaining stock attribute of the item
      *
      * @return double
      */
     public function getStockAttribute()
     {
-        return $this->quantity - $this->distributionItems()->draft()->sum('distribution_quantity');
+        return $this->quantity -
+                $this->distributionItems()->draft()->sum('distribution_quantity') -
+                $this->returnItems()->draft()->sum('quantity');
     }
 
 

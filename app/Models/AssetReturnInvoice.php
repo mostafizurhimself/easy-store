@@ -9,7 +9,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class FabricReturnInvoice extends Model implements HasMedia
+class AssetReturnInvoice extends Model implements HasMedia
 {
     use LogsActivity, HasReadableIdWithDate, SoftDeletes, InteractsWithMedia;
 
@@ -27,7 +27,7 @@ class FabricReturnInvoice extends Model implements HasMedia
      */
     protected static $logUnguarded = true;
 
-     /**
+    /**
      * The relations to eager load on every query.
      *
      * @var array
@@ -58,7 +58,7 @@ class FabricReturnInvoice extends Model implements HasMedia
      */
     public static function readableIdPrefix()
     {
-        return "FR";
+        return "AR";
     }
 
     /**
@@ -95,17 +95,17 @@ class FabricReturnInvoice extends Model implements HasMedia
      */
     public function returnItems()
     {
-       return $this->hasMany(FabricReturnItem::class, 'invoice_id');
+       return $this->hasMany(AssetReturnItem::class, 'invoice_id');
     }
 
      /**
-     * Get the purchase fabrics ids as an array
+     * Get the purchase assets ids as an array
      *
      * @return array
      */
-    public function fabricIds($id = null)
+    public function assetIds($id = null)
     {
-        return $this->returnItems->whereNotIn('fabric_id', [$id])->pluck('fabric_id')->toArray();
+        return $this->returnItems->whereNotIn('asset_id', [$id])->pluck('asset_id')->toArray();
     }
 
     /**
@@ -132,6 +132,7 @@ class FabricReturnInvoice extends Model implements HasMedia
         }
         return false;
     }
+
 
     /**
      * Update the purchase status

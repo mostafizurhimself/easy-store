@@ -39,6 +39,7 @@ use App\Models\FabricCategory;
 use App\Models\ServiceInvoice;
 use App\Models\ServiceReceive;
 use App\Policies\FabricPolicy;
+use App\Models\AssetReturnItem;
 use App\Models\ExpenseCategory;
 use App\Models\ProductCategory;
 use App\Models\ServiceCategory;
@@ -64,8 +65,10 @@ use App\Models\AssetPurchaseItem;
 use App\Models\FabricReceiveItem;
 use App\Policies\FinishingPolicy;
 use App\Models\AssetPurchaseOrder;
+use App\Models\AssetReturnInvoice;
 use App\Models\FabricDistribution;
 use App\Models\FabricPurchaseItem;
+use App\Models\MaterialReturnItem;
 use App\Policies\DepartmentPolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\SubSectionPolicy;
@@ -82,11 +85,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\AssetDistributionItem;
 use App\Models\MaterialPurchaseOrder;
+use App\Models\MaterialReturnInvoice;
 use App\Policies\AssetCategoryPolicy;
 use App\Policies\ProductOutputPolicy;
 use App\Policies\FabricCategoryPolicy;
 use App\Policies\ServiceInvoicePolicy;
 use App\Policies\ServiceReceivePolicy;
+use App\Policies\AssetReturnItemPolicy;
 use App\Policies\ExpenseCategoryPolicy;
 use App\Policies\ProductCategoryPolicy;
 use App\Policies\ServiceCategoryPolicy;
@@ -101,8 +106,10 @@ use App\Policies\MaterialCategoryPolicy;
 use App\Policies\AssetPurchaseItemPolicy;
 use App\Policies\FabricReceiveItemPolicy;
 use App\Policies\AssetPurchaseOrderPolicy;
+use App\Policies\AssetReturnInvoicePolicy;
 use App\Policies\FabricDistributionPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
+use App\Policies\MaterialReturnItemPolicy;
 use App\Policies\FabricPurchaseOrderPolicy;
 use App\Policies\FabricReturnInvoicePolicy;
 use App\Policies\MaterialReceiveItemPolicy;
@@ -112,6 +119,7 @@ use App\Policies\MaterialDistributionPolicy;
 use App\Policies\MaterialPurchaseItemPolicy;
 use App\Policies\AssetDistributionItemPolicy;
 use App\Policies\MaterialPurchaseOrderPolicy;
+use App\Policies\MaterialReturnInvoicePolicy;
 use App\Policies\AssetDistributionInvoicePolicy;
 use App\Policies\AssetDistributionReceiveItemPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -144,12 +152,16 @@ class AuthServiceProvider extends ServiceProvider
         MaterialPurchaseOrder::class        => MaterialPurchaseOrderPolicy::class,
         MaterialPurchaseItem::class         => MaterialPurchaseItemPolicy::class,
         MaterialReceiveItem::class          => MaterialReceiveItemPolicy::class,
+        MaterialReturnInvoice::class        => MaterialReturnInvoicePolicy::class,
+        MaterialReturnItem::class           => MaterialReturnItemPolicy::class,
         MaterialDistribution::class         => MaterialDistributionPolicy::class,
         AssetCategory::class                => AssetCategoryPolicy::class,
         Asset::class                        => AssetPolicy::class,
         AssetPurchaseOrder::class           => AssetPurchaseOrderPolicy::class,
         AssetPurchaseItem::class            => AssetPurchaseItemPolicy::class,
         AssetReceiveItem::class             => AssetReceiveItemPolicy::class,
+        AssetReturnInvoice::class           => AssetReturnInvoicePolicy::class,
+        AssetReturnItem::class              => AssetReturnItemPolicy::class,
         AssetRequisition::class             => AssetRequisitionPolicy::class,
         AssetRequisitionItem::class         => AssetRequisitionItemPolicy::class,
         AssetDistributionInvoice::class     => AssetDistributionInvoicePolicy::class,

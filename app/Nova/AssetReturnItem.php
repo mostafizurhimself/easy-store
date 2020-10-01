@@ -18,17 +18,17 @@ use App\Rules\ReturnQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
-use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
 
-class FabricReturnItem extends Resource
+class AssetReturnItem extends Resource
 {
     use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\FabricReturnItem::class;
+    public static $model = \App\Models\AssetReturnItem::class;
 
     /**
      * Indicates if the resource should be globally searchable.
@@ -52,6 +52,15 @@ class FabricReturnItem extends Resource
     public static $title = 'readable_id';
 
     /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
+
+    /**
      * Get the displayable label of the resource.
      *
      * @return string
@@ -60,15 +69,6 @@ class FabricReturnItem extends Resource
     {
       return "Return Items";
     }
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
-    public static $search = [
-        'readable_id',
-    ];
 
     /**
      * The relationship columns that should be searched.
@@ -88,15 +88,15 @@ class FabricReturnItem extends Resource
     public function fields(Request $request)
     {
         return [
-            BelongsTo::make('Invoice', 'invoice', \App\Nova\FabricReturnINvoice::class)
+            BelongsTo::make('Invoice', 'invoice', \App\Nova\AssetReturnINvoice::class)
                 ->onlyOnDetail(),
 
-            BelongsTo::make('Fabric'),
+            BelongsTo::make('Asset'),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ReturnQuantityRule(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric')))
-                ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId))
+                ->creationRules(new ReturnQuantityRule(\App\Nova\AssetReturnItem::uriKey(), $request->get('asset')))
+                ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\AssetReturnItem::uriKey(), $request->get('asset'), $this->resource->quantity, $this->resource->assetId))
                 ->onlyOnForms(),
 
             Text::make('Quantity', function(){
@@ -141,7 +141,6 @@ class FabricReturnItem extends Resource
         return [];
     }
 
-
     /**
      * Get the filters available for the resource.
      *
@@ -150,9 +149,7 @@ class FabricReturnItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [
-
-        ];
+        return [];
     }
 
     /**
@@ -186,18 +183,18 @@ class FabricReturnItem extends Resource
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function relatableFabrics(NovaRequest $request, $query)
+    public static function relatableAssets(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\FabricReturnInvoice::find($request->viaResourceId);
+        $invoice = \App\Models\AssetReturnInvoice::find($request->viaResourceId);
         try {
-            $fabricId = $request->findResourceOrFail()->fabricId;
+            $assetId = $request->findResourceOrFail()->assetId;
         } catch (\Throwable $th) {
-           $fabricId = null;
+           $assetId = null;
         }
         return $query->whereHas('suppliers', function($supplier) use($invoice){
                 $supplier->where('supplier_id', $invoice->supplierId)
                         ->where('location_id', $invoice->locationId);
-        })->whereNotIn('id', $invoice->fabricIds($fabricId));
+        })->whereNotIn('id', $invoice->assetIds($assetId));
     }
 
       /**

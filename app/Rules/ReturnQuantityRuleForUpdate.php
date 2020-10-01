@@ -46,10 +46,10 @@ class ReturnQuantityRuleForUpdate implements Rule
             $this->previousItem = Material::find($previousItemId);
         }
 
-        // if($uriKey == \App\Nova\AssetDistributionItem::uriKey()){
-        //     $this->item = Asset::find($itemId);
-        //     $this->previousItem = Asset::find($previousItemId);
-        // }
+        if($uriKey == \App\Nova\AssetReturnItem::uriKey()){
+            $this->item = Asset::find($itemId);
+            $this->previousItem = Asset::find($previousItemId);
+        }
 
         $this->previousQuantity = $previousQuantity;
     }

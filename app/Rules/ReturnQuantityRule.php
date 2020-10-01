@@ -29,9 +29,9 @@ class ReturnQuantityRule implements Rule
             $this->item = Material::find($itemId);
         }
 
-        // if($uriKey == \App\Nova\AssetDistributionItem::uriKey()){
-        //     $this->item = Asset::find($itemId);
-        // }
+        if($uriKey == \App\Nova\AssetReturnItem::uriKey()){
+            $this->item = Asset::find($itemId);
+        }
     }
 
     /**

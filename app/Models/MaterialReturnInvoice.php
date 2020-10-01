@@ -134,33 +134,6 @@ class MaterialReturnInvoice extends Model implements HasMedia
     }
 
     /**
-     * Check all the purchase items status is received or not
-     *
-     * @return bool
-     */
-    public function isReceived()
-    {
-        $status = $this->receiveItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == ReturnStatus::RECEIVED()){
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Check any of the purchase items status is partial or not
-     *
-     * @return bool
-     */
-    public function isPartial()
-    {
-        if($this->receiveItems()->exists()){
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Update the purchase status
      *
      * @return void
@@ -171,18 +144,6 @@ class MaterialReturnInvoice extends Model implements HasMedia
 
             if($this->isConfirmed()){
                 $this->status = ReturnStatus::CONFIRMED();
-                $this->save();
-                return;
-            }
-
-            if($this->isReceived()){
-                $this->status = ReturnStatus::RECEIVED();
-                $this->save();
-                return;
-            }
-
-            if($this->isPartial()){
-                $this->status = ReturnStatus::PARTIAL();
                 $this->save();
                 return;
             }

@@ -95,7 +95,7 @@ class Fabric extends Model implements HasMedia
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function returns()
+    public function returnItems()
     {
        return $this->hasMany(FabricReturnItem::class);
     }
@@ -109,7 +109,7 @@ class Fabric extends Model implements HasMedia
     {
         return $this->quantity -
                 $this->distributions()->draft()->sum('quantity') -
-                $this->returns()->draft()->sum('quantity') ;
+                $this->returnItems()->draft()->sum('quantity') ;
     }
 
 }

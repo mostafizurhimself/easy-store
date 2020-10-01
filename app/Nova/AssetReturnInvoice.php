@@ -19,24 +19,25 @@ use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
-use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
+use App\Nova\Actions\AssetReturnInvoices\ConfirmInvoice;
 
-class FabricReturnInvoice extends Resource
+class AssetReturnInvoice extends Resource
 {
     use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\FabricReturnInvoice::class;
+    public static $model = \App\Models\AssetReturnInvoice::class;
 
     /**
      * The group associated with the resource.
      *
      * @return string
      */
-    public static $group = '<span class="hidden">04</span>Fabrics Section';
+    public static $group = '<span class="hidden">06</span>Asset Section';
 
 
     /**
@@ -46,7 +47,6 @@ class FabricReturnInvoice extends Resource
      */
     public static $priority = 4;
 
-
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
@@ -54,7 +54,7 @@ class FabricReturnInvoice extends Resource
      */
     public static $title = 'readable_id';
 
-    /**
+     /**
      * Get the search result subtitle for the resource.
      *
      * @return string
@@ -163,7 +163,8 @@ class FabricReturnInvoice extends Resource
 
             BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")
                     // ->searchable()
-                    ->sortable()->hideWhenUpdating(),
+                    ->sortable()
+                    ->hideWhenUpdating(),
 
             Currency::make('Total Amount', 'total_return_amount')
                 ->currency('BDT')
@@ -189,7 +190,7 @@ class FabricReturnInvoice extends Resource
                 })
                 ->onlyOnDetail(),
 
-            HasMany::make('Return Items', 'returnItems', \App\Nova\FabricReturnItem::class),
+            HasMany::make('Return Items', 'returnItems', \App\Nova\AssetReturnItem::class),
         ];
     }
 
@@ -227,9 +228,7 @@ class FabricReturnInvoice extends Resource
      */
     public function lenses(Request $request)
     {
-        return [
-
-        ];
+        return [];
     }
 
     /**
