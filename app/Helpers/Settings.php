@@ -36,6 +36,16 @@ class Settings
         return Setting::where('name', Setting::COMPANY_SETTINGS)->first()->getMedia('settings')->first() ? Setting::where('name', Setting::COMPANY_SETTINGS)->first()->getMedia('settings')->first() : null;
     }
 
+     /**
+     * Get the application logo
+     *
+     * @return object
+     */
+    public function applicationLogo()
+    {
+        return Setting::where('name', Setting::APPLICATION_SETTINGS)->first()->getMedia('settings')->first() ? Setting::where('name', Setting::APPLICATION_SETTINGS)->first()->getMedia('settings')->first() : null;
+    }
+
     /**
      * Get the prefix settings
      *

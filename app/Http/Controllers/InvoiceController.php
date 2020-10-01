@@ -2,25 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Enums\DistributionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\AssetDistributionInvoice;
+use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
     /**
-     * Generate Asset Distribution Invoice
+     * Generate asset distribution invoice
      *
-     * @return mixed
+     * @param  \Illuminate\Http\Request             $request
+     * @param  \App\Models\AssetDistributionInvoice $invoice
+     * @return \Illuminate\Http\Response
      */
-    public function assetDistributionInvoice(Request $request, AssetDistributionInvoice $invoice)
+    public function assetDsitributionInvoice(Request $request, AssetDistributionInvoice $invoice )
     {
-        if($request->user()->hasPermissionTo('can generate asset distribution invoices') && $invoice->status == DistributionStatus::CONFIRMED()){
-
-            return view('invoices.pages.distribution', compact('invoice'));
-        }else{
-            abort(403);
-        }
+        return view('invoices.layout');
     }
 }

@@ -44,8 +44,9 @@ Route::group(['middleware' => 'nova'], function () {
     Route::get('locations/{location}/expensers', 'AjaxController@expensersViaLocation');
     Route::get('locations/{location}/expense-categories', 'AjaxController@expenseCategoriesViaLocation');
 
-
     // Invoice Routes
-    Route::get('/asset-distribution-invoices/{invoice}', 'InvoiceController@assetDistributionInvoice');
+    Route::group(['prefix' => 'invoices'], function () {
+        Route::get('asset-distribution-invoices/{invoice}', 'InvoiceController@assetDsitributionInvoice');
+    });
 
 });
