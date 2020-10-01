@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb0cf954480bc84f9b7d791ea39372a8",
+    "content-hash": "195dbb2af60ef29d4290534cf7e70567",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -206,16 +206,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.155.4",
+            "version": "3.157.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "892ec081f4466ea023d6158d78b6a8b82d38c9ae"
+                "reference": "ad2c0183d7ebc695acb1ba39d528f2328f2c0de3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/892ec081f4466ea023d6158d78b6a8b82d38c9ae",
-                "reference": "892ec081f4466ea023d6158d78b6a8b82d38c9ae",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ad2c0183d7ebc695acb1ba39d528f2328f2c0de3",
+                "reference": "ad2c0183d7ebc695acb1ba39d528f2328f2c0de3",
                 "shasum": ""
             },
             "require": {
@@ -287,7 +287,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-09-28T18:13:43+00:00"
+            "time": "2020-09-30T18:58:20+00:00"
         },
         {
             "name": "benjacho/belongs-to-many-field",
@@ -478,16 +478,16 @@
         },
         {
             "name": "brick/math",
-            "version": "0.8.17",
+            "version": "0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "e6f8e7d04346a95be89580f8c2c22d6c3fa65556"
+                "reference": "283a40c901101e66de7061bd359252c013dcc43c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/e6f8e7d04346a95be89580f8c2c22d6c3fa65556",
-                "reference": "e6f8e7d04346a95be89580f8c2c22d6c3fa65556",
+                "url": "https://api.github.com/repos/brick/math/zipball/283a40c901101e66de7061bd359252c013dcc43c",
+                "reference": "283a40c901101e66de7061bd359252c013dcc43c",
                 "shasum": ""
             },
             "require": {
@@ -526,24 +526,24 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-18T23:41:20+00:00"
+            "time": "2020-08-18T23:57:15+00:00"
         },
         {
             "name": "brick/money",
-            "version": "0.4.5",
+            "version": "0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/money.git",
-                "reference": "91f2b5bc35646f172b038e46bb496ad18db59c3c"
+                "reference": "f922b357dc56f78c398c6cd055fbaa75eaffdbeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/money/zipball/91f2b5bc35646f172b038e46bb496ad18db59c3c",
-                "reference": "91f2b5bc35646f172b038e46bb496ad18db59c3c",
+                "url": "https://api.github.com/repos/brick/money/zipball/f922b357dc56f78c398c6cd055fbaa75eaffdbeb",
+                "reference": "f922b357dc56f78c398c6cd055fbaa75eaffdbeb",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "~0.7.3 || ~0.8.0",
+                "brick/math": "~0.7.3 || ~0.8.0 || ~0.9.0",
                 "php": "^7.1|^8.0"
             },
             "require-dev": {
@@ -578,7 +578,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-31T14:17:02+00:00"
+            "time": "2020-08-19T22:52:38+00:00"
         },
         {
             "name": "caddydz/nova-preview-resource",
@@ -1478,6 +1478,42 @@
             }
         },
         {
+            "name": "easystore/notification",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./nova-components/Notification",
+                "reference": "2478ea09678b165d794fcd2e2d53a087a97b91d5"
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Easystore\\Notification\\AssetServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Easystore\\Notification\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova asset.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "easystore/nova-theme",
             "version": "dev-master",
             "dist": {
@@ -2138,23 +2174,23 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "v1.3.1",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
+                "reference": "60d379c243457e073cff02bc323a2a86cb355631"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
-                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/60d379c243457e073cff02bc323a2a86cb355631",
+                "reference": "60d379c243457e073cff02bc323a2a86cb355631",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0"
+                "php": ">=5.5"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.0"
+                "symfony/phpunit-bridge": "^4.4 || ^5.1"
             },
             "type": "library",
             "extra": {
@@ -2185,20 +2221,20 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20T10:07:11+00:00"
+            "time": "2020-09-30T07:37:28+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.6.1",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "239400de7a173fe9901b9ac7c06497751f00727a"
+                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/239400de7a173fe9901b9ac7c06497751f00727a",
-                "reference": "239400de7a173fe9901b9ac7c06497751f00727a",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/53330f47520498c0ae1f61f7e2c90f55690c06a3",
+                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3",
                 "shasum": ""
             },
             "require": {
@@ -2211,15 +2247,15 @@
             },
             "require-dev": {
                 "ext-zlib": "*",
-                "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.8"
+                "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.14 || ^7.5.20 || ^8.5.8 || ^9.3.10"
             },
             "suggest": {
-                "zendframework/zend-httphandlerrunner": "Emit PSR-7 responses"
+                "laminas/laminas-httphandlerrunner": "Emit PSR-7 responses"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -2256,7 +2292,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2019-07-01T23:21:34+00:00"
+            "time": "2020-09-30T07:37:11+00:00"
         },
         {
             "name": "hubertnnn/laravel-nova-field-dynamic-select",
@@ -2666,14 +2702,14 @@
             "dist": {
                 "type": "path",
                 "url": "./nova",
-                "reference": "c3b875c3d472526bc117b998e0ab2d4d4bb806e3"
+                "reference": "30a02bbfefb7ee6ef32ee95099cc53d98d679336"
             },
             "require": {
-                "brick/money": "^0.4.2",
+                "brick/money": "^0.5.0",
                 "cakephp/chronos": "^1.0|^2.0",
                 "doctrine/dbal": "^2.9",
-                "illuminate/support": "^7.0",
-                "laravel/ui": "^2.0",
+                "illuminate/support": "^7.0|^8.0",
+                "laravel/ui": "^2.0|^3.0",
                 "moontoast/math": "^1.1",
                 "php": "^7.2.5",
                 "spatie/once": "^1.1 | ^2.0",
@@ -2683,8 +2719,9 @@
                 "symfony/process": "^5.0"
             },
             "require-dev": {
+                "laravel/legacy-factories": "^1.0",
                 "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^5.0",
+                "orchestra/testbench": "^6.0",
                 "phpunit/phpunit": "^8.4",
                 "predis/predis": "^1.1"
             },
@@ -4962,16 +4999,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "8.7.3",
+            "version": "8.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "97c5ca096c92798224e605495ad73c6927fd5b5a"
+                "reference": "464562a667b2f8ca0ed75aaa3bbf270decbb73a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/97c5ca096c92798224e605495ad73c6927fd5b5a",
-                "reference": "97c5ca096c92798224e605495ad73c6927fd5b5a",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/464562a667b2f8ca0ed75aaa3bbf270decbb73a7",
+                "reference": "464562a667b2f8ca0ed75aaa3bbf270decbb73a7",
                 "shasum": ""
             },
             "require": {
@@ -5058,7 +5095,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-28T12:21:36+00:00"
+            "time": "2020-09-30T21:55:16+00:00"
         },
         {
             "name": "spatie/laravel-permission",
@@ -8821,16 +8858,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.12.0",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "765cd5d5d237525f8bbadaec5dc161c83a369119"
+                "reference": "8ce87516be71aae9b956f81906aaf0338e0d8a2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/765cd5d5d237525f8bbadaec5dc161c83a369119",
-                "reference": "765cd5d5d237525f8bbadaec5dc161c83a369119",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/8ce87516be71aae9b956f81906aaf0338e0d8a2d",
+                "reference": "8ce87516be71aae9b956f81906aaf0338e0d8a2d",
                 "shasum": ""
             },
             "require": {
@@ -8880,7 +8917,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2020-09-28T12:23:07+00:00"
+            "time": "2020-09-29T09:10:42+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
