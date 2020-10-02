@@ -67,6 +67,8 @@
                         <global-search dusk="global-search-component"></global-search>
                     @endif
 
+                    {{-- <notification></notification> --}}
+
                     <dropdown class="ml-auto h-9 flex items-center dropdown-right">
                         @include('nova::partials.user')
                     </dropdown>
