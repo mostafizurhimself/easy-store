@@ -186,6 +186,9 @@ class AssetReturnItem extends Resource
     public static function relatableAssets(NovaRequest $request, $query)
     {
         $invoice = \App\Models\AssetReturnInvoice::find($request->viaResourceId);
+        if(empty($invoice)){
+            $invoice = \App\Models\AssetReturnItem::find($request->resourceId)->invoice;
+        }
         try {
             $assetId = $request->findResourceOrFail()->assetId;
         } catch (\Throwable $th) {

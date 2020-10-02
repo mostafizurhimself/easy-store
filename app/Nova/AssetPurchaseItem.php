@@ -171,6 +171,10 @@ class AssetPurchaseItem extends Resource
     public static function relatableAssets(NovaRequest $request, $query)
     {
         $purchase = \App\Models\AssetPurchaseOrder::find($request->viaResourceId);
+
+        if(empty($purchase)){
+            $purchase = $request->findResourceOrFail()->purchaseOrder;
+        }
         try {
             $assetId = $request->findResourceOrFail()->assetId;
         } catch (\Throwable $th) {

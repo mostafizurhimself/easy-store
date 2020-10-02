@@ -172,6 +172,11 @@ class FabricPurchaseItem extends Resource
     public static function relatableFabrics(NovaRequest $request, $query)
     {
         $purchase = \App\Models\FabricPurchaseOrder::find($request->viaResourceId);
+
+        if(empty($purchase)){
+            $purchase = $request->findResourceOrFail()->purchaseOrder;
+        }
+
         try {
             $fabricId = $request->findResourceOrFail()->fabricId;
         } catch (\Throwable $th) {

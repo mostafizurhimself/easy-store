@@ -167,6 +167,11 @@ class MaterialPurchaseItem extends Resource
     public static function relatableMaterials(NovaRequest $request, $query)
     {
         $purchase = \App\Models\MaterialPurchaseOrder::find($request->viaResourceId);
+
+        if(empty($purchase)){
+            $purchase = $request->findResourceOrFail()->purchaseOrder;
+        }
+
         try {
             $materialId = $request->findResourceOrFail()->materialId;
         } catch (\Throwable $th) {

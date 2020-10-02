@@ -75,7 +75,7 @@ class MaterialReturnItem extends Resource
     public function fields(Request $request)
     {
         return [
-            BelongsTo::make('Invoice', 'invoice', \App\Nova\MaterialReturnINvoice::class)
+            BelongsTo::make('Invoice', 'invoice', \App\Nova\MaterialReturnInvoice::class)
                 ->onlyOnDetail(),
 
             BelongsTo::make('Material'),
@@ -173,6 +173,10 @@ class MaterialReturnItem extends Resource
     public static function relatableMaterials(NovaRequest $request, $query)
     {
         $invoice = \App\Models\MaterialReturnInvoice::find($request->viaResourceId);
+
+        if(empty($invoice)){
+            $invoice = \App\Models\MaterialReturnItem::find($request->resourceId)->invoice;
+        }
         try {
             $materialId = $request->findResourceOrFail()->materialId;
         } catch (\Throwable $th) {

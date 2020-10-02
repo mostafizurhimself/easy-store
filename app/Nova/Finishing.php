@@ -182,6 +182,9 @@ class Finishing extends Resource
     public static function relatableProducts(NovaRequest $request, $query)
     {
         $invoice = \App\Models\FinishingInvoice::find($request->viaResourceId);
+        if(empty($invoice)){
+            $invoice = $request->findResourceOrFail()->invoice;
+        }
         try {
             $productId = $request->findResourceOrFail()->productId;
         } catch (\Throwable $th) {

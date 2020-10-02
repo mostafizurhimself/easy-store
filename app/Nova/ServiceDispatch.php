@@ -189,6 +189,9 @@ class ServiceDispatch extends Resource
     public static function relatableServices(NovaRequest $request, $query)
     {
         $invoice = \App\Models\ServiceInvoice::find($request->viaResourceId);
+        if(empty($invoice)){
+            $invoice = $request->findResourceOrFail()->invoice;
+        }
         try {
             $serviceId = $request->findResourceOrFail()->serviceId;
         } catch (\Throwable $th) {

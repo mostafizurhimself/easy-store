@@ -99,32 +99,6 @@ class AssetDistributionItem extends Resource
 
             BelongsTo::make('Asset'),
 
-            // Select::make('Asset', 'asset_id')
-            //     ->onlyOnForms()
-            //     ->options(function(){
-            //         //Get the invoice form the request
-            //         $invoice = \App\Models\AssetDistributionInvoice::find(request()->viaResourceId);
-
-            //         //Get the invoice after create
-            //         if(empty($invoice)){
-            //             $invoice = $this->resource->invoice;
-            //         }
-
-            //         try {
-            //             $assetId = request()->findResourceOrFail()->assetId;
-            //         } catch (\Throwable $th) {
-            //             $assetId = $this->resource->assetId;
-            //         }
-
-            //         if(!empty($invoice->requisitionId)){
-            //             return \App\Models\Asset::whereIn('id',$invoice->requisition->assetIds())
-            //                 ->whereNotIn('id', $invoice->assetIds($assetId))->get()->map(function($asset){
-            //                     return [ 'value' => $asset->id, 'label' => $asset->name."({$asset->code})" ];
-            //                 });
-            //         }
-            //     })
-            //     ->rules('required'),
-
             Number::make('Quantity', 'distribution_quantity')
                 ->rules('required', 'numeric', 'min:0')
                 ->creationRules(new DistributionQuantityRule(\App\Nova\AssetDistributionItem::uriKey(), $request->get('asset_id') ?? $request->get('asset')),

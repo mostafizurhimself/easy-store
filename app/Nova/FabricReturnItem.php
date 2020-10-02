@@ -189,6 +189,9 @@ class FabricReturnItem extends Resource
     public static function relatableFabrics(NovaRequest $request, $query)
     {
         $invoice = \App\Models\FabricReturnInvoice::find($request->viaResourceId);
+        if(empty($invoice)){
+            $invoice = \App\Models\FabricReturnItem::find($request->resourceId)->invoice;
+        }
         try {
             $fabricId = $request->findResourceOrFail()->fabricId;
         } catch (\Throwable $th) {
