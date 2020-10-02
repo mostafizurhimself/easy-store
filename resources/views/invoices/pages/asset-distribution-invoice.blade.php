@@ -12,43 +12,71 @@
     <div class="toolbar hidden-print d-print-none">
         <div class="text-right">
             <button id="printInvoice" class="btn btn-light border"><i class="fa fa-print"></i> Print</button>
-            <button class="btn btn-light border"><i class="fa fa-file-pdf-o"></i> Export as PDF</button>
+            <button class="btn btn-light border" id="exportPdf"><i class="fa fa-file-pdf-o"></i> Export as PDF</button>
         </div>
         <hr>
     </div>
-    <div class="invoice overflow-auto">
-        <div style="min-width: 600px">
-            <header>
-                <div class="row">
-                    <div class="col">
-                        <a target="_blank" href="#">
-                            <h1>COMPANY LOGO</h1>
-                            </a>
+    <div class="invoice p-2" id="invoice">
+        <div class="invoice-container">
+            @include('invoices.partials.header')
+            <main class="flex-grow-1">
+                <div class="row contacts">
+                    <div class="col ">
+                        <div class="text-gray-light text-uppercase">INVOICE FROM:</div>
+                        <h3 class="to">{{$invoice->location->name}}</h3>
+                         @if ($invoice->location->locationAddress)
+                            <div class="address">
+                                @if ($invoice->location->locationAddress->street)
+                                    {{$invoice->location->locationAddress->street}}
+                                @endif
+
+                                @if ($invoice->location->locationAddress->city)
+                                    <span>, </span>{{$invoice->location->locationAddress->city}}
+                                @endif
+
+                                @if ($invoice->location->locationAddress->zip)
+                                    <span>- </span>{{$invoice->location->locationAddress->zip}}
+                                @endif
+
+                                @if ($invoice->location->locationAddress->country)
+                                    <span>, </span>{{$invoice->location->locationAddress->country}}
+                                @endif
+                            </div>
+                        @endif
+                        <div class="email"><a href="mailto:{{$invoice->location->email}}">{{$invoice->location->email}}</a></div>
+                        <div class="email"><a href="tel:{{$invoice->location->mobile}}">{{$invoice->location->mobile}}</a></div>
                     </div>
-                    <div class="col company-details">
-                        <h2 class="name">
-                            <a target="_blank" href="#">
-                            Company Name
-                            </a>
-                        </h2>
-                        <div>26 Tower Name, City 123456, INDIA</div>
-                        <div>(123) 456-789</div>
-                        <div>info@company.com</div>
+
+                    <div class="col text-right">
+                        <div class="text-gray-light text-uppercase">INVOICE TO:</div>
+                        <h3 class="from">{{$invoice->receiver->name}}</h3>
+                        @if ($invoice->receiver->locationAddress)
+                            <div class="address">
+                                @if ($invoice->receiver->locationAddress->street)
+                                    {{$invoice->receiver->locationAddress->street}}
+                                @endif
+
+                                @if ($invoice->receiver->locationAddress->city)
+                                    <span>, </span>{{$invoice->receiver->locationAddress->city}}
+                                @endif
+
+                                @if ($invoice->receiver->locationAddress->zip)
+                                    <span>- </span>{{$invoice->receiver->locationAddress->zip}}
+                                @endif
+
+                                @if ($invoice->receiver->locationAddress->country)
+                                    <span>, </span>{{$invoice->receiver->locationAddress->country}}
+                                @endif
+                            </div>
+                        @endif
+                        <div class="email"><a href="mailto:{{$invoice->receiver->email}}">{{$invoice->receiver->email}}</a></div>
+                        <div class="email"><a href="tel:{{$invoice->receiver->mobile}}">{{$invoice->location->mobile}}</a></div>
                     </div>
                 </div>
-            </header>
-            <main>
-                <div class="row contacts">
-                    <div class="col invoice-to">
-                        <div class="text-gray-light">INVOICE TO:</div>
-                        <h2 class="to">Rohit Chauhan</h2>
-                        <div class="address">B-56 Bulding Name, City, State - India</div>
-                        <div class="email"><a href="mailto:test@example.com">test@example.com</a></div>
-                    </div>
-                    <div class="col invoice-details">
-                        <h1 class="invoice-id">INVOICE 121</h1>
-                        <div class="date">Date of Invoice: 28/11/2018</div>
-                        <div class="date">Due Date: 28/11/2018</div>
+                <div class="row pt-3">
+                    <div class="col-12 text-center">
+                        <h5 class="text-uppercase">Invoice #<span>{{$invoice->readableId}}</span></h5>
+                        <p>Date of Invoice: <span>{{$invoice->date->format('d/m/Y')}}</span></p>
                     </div>
                 </div>
                 <table border="0" cellspacing="0" cellpadding="0">
@@ -57,69 +85,57 @@
                             <th>SR NO.</th>
                             <th class="text-left">DESCRIPTION</th>
                             <th class="text-right">PRICE</th>
-                            <th class="text-right">TAX (13%)</th>
+                            <th class="text-right">QUANTITY</th>
                             <th class="text-right">TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="no">01</td>
-                            <td class="text-left"><h3>Description 1</h3>Testing Description 1</td>
-                            <td class="unit">₹ 0.00</td>
-                            <td class="tax">10%</td>
-                            <td class="total">₹ 0.00</td>
-                        </tr>
-                        <tr>
-                            <td class="no">02</td>
-                            <td class="text-left"><h3>Description 2</h3>Testing Description 2</td>
-                            <td class="unit">₹ 40.00</td>
-                            <td class="tax">13%</td>
-                            <td class="total">₹ 1,200.00</td>
-                        </tr>
-                        <tr>
-                            <td class="no">03</td>
-                            <td class="text-left"><h3>Description 3</h3>Testing Description 3</td>
-                            <td class="unit">₹ 40.00</td>
-                            <td class="tax">13%</td>
-                            <td class="total">₹ 3,200.00</td>
-                        </tr>
-                        <tr>
-                            <td class="no">04</td>
-                            <td class="text-left"><h3>Description 4</h3>Testing Description 4</td>
-                            <td class="unit">₹ 40.00</td>
-                            <td class="tax">13%</td>
-                            <td class="total">₹ 800.00</td>
-                        </tr>
+                        @foreach ($invoice->distributionItems as $item)
+                            <tr>
+                                <td class="no">{{$loop->iteration}}</td>
+                                <td class="text-left"><h3>{{$item->asset->name}}</h3>({{$item->asset->code}})</td>
+                                <td class="unit">{{Helper::currencyShort($item->distributionRate)}}</td>
+                                <td class="tax">{{$item->distributionQuantity}} {{$item->unit}}</td>
+                                <td class="total">{{Helper::currencyShort($item->distributionAmount)}}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="2"></td>
-                            <td colspan="2">SUBTOTAL</td>
-                            <td>₹ 5,200.00</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td colspan="2">TAX 25%</td>
-                            <td>₹ 1,300.00</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"></td>
                             <td colspan="2">GRAND TOTAL</td>
-                            <td>₹ 6,500.00</td>
+                            <td>{{Helper::currency($invoice->totalDistributionAmount)}}</td>
                         </tr>
                     </tfoot>
                 </table>
                 <div class="thanks">Thank you!</div>
                 <div class="notices">
-                    <div>NOTICE:</div>
-                    <div class="notice">System Generated Invoice.</div>
+                    <div>Note:</div>
+                    <div class="notice">{{$invoice->note}}</div>
                 </div>
             </main>
-            <footer>
-                Invoice was generated on a computer and is valid without the signature and seal.
-            </footer>
+            @include('invoices.partials.footer')
         </div>
-        <div></div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+    <script>
+        window.onload = function () {
+        document.getElementById("exportPdf")
+            .addEventListener("click", () => {
+                const invoice = this.document.getElementById("invoice");
+                var opt = {
+                    margin: 0.5,
+                    filename: "{{$invoice->readableId}}",
+                    image: { type: 'jpg', quality: 1 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+                html2pdf().from(invoice).set(opt).save();
+            })
+    }
+    </script>
 @endsection

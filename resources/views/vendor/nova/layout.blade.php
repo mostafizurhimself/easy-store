@@ -9,7 +9,7 @@
     <title>{{ \Laravel\Nova\Nova::name() }}</title>
 
     <!-- Favicon -->
-    <link rel="icon" href="{{asset('images/logo.jpg')}}" type="image/gif" sizes="16x16">
+    <link rel="icon" href="{{Settings::applicationLogo() ?? asset('images/logo.jpg')}}" type="image/gif" sizes="16x16">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,800,800i,900,900i" rel="stylesheet">
@@ -66,8 +66,6 @@
                     @if (count(\Laravel\Nova\Nova::globallySearchableResources(request())) > 0)
                         <global-search dusk="global-search-component"></global-search>
                     @endif
-
-                    {{-- <notification></notification> --}}
 
                     <dropdown class="ml-auto h-9 flex items-center dropdown-right">
                         @include('nova::partials.user')

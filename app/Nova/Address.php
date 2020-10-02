@@ -68,7 +68,9 @@ class Address extends Resource
                 ->hideFromIndex()
                 ->rules('required', 'max:500'),
 
-            Place::make('City')->onlyCities(),
+            Place::make('City')
+                ->rules('required', 'max:500')
+                ->onlyCities(),
 
             Text::make('State')
                 ->rules('nullable', 'max:45'),

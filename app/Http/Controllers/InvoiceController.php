@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use App\Enums\DistributionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\AssetDistributionInvoice;
-use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
@@ -17,6 +18,11 @@ class InvoiceController extends Controller
      */
     public function assetDsitributionInvoice(Request $request, AssetDistributionInvoice $invoice )
     {
-        return view('invoices.pages.asset-distribution-invoice', compact('invoice'));
+        if($request->user()->hasPermissionTo('can generate asset distribution invoices') && $invoice->status != DistributionStatus::DRAFT()){
+
+            return view('invoices.pages.asset-distribution-invoice', compact('invoice'));
+        }else{
+            abort(403);
+        }
     }
 }

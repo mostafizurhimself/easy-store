@@ -33,7 +33,7 @@ class Settings
      */
     public function companyLogo()
     {
-        return Setting::where('name', Setting::COMPANY_SETTINGS)->first()->getMedia('settings')->first() ? Setting::where('name', Setting::COMPANY_SETTINGS)->first()->getMedia('settings')->first() : null;
+        return Setting::where('name', Setting::COMPANY_SETTINGS)->first()->getMedia('settings')->first() ? Setting::where('name', Setting::COMPANY_SETTINGS)->first()->getMedia('settings')->first()->getUrl()  : null;
     }
 
      /**
@@ -43,7 +43,7 @@ class Settings
      */
     public function applicationLogo()
     {
-        return Setting::where('name', Setting::APPLICATION_SETTINGS)->first()->getMedia('settings')->first() ? Setting::where('name', Setting::APPLICATION_SETTINGS)->first()->getMedia('settings')->first() : null;
+        return Setting::where('name', Setting::APPLICATION_SETTINGS)->first()->getMedia('settings')->first() ? Setting::where('name', Setting::APPLICATION_SETTINGS)->first()->getMedia('settings')->first()->getUrl() : null;
     }
 
     /**

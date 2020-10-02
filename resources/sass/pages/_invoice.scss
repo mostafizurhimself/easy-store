@@ -3,19 +3,19 @@
 }
 #inventory-invoice a{
     text-decoration:none !important;
-    color: $invoice-primary !important;
+    color: $dark !important;
 }
 .invoice {
     position: relative;
-    background-color: #FFF;
+    background-color: $white;
     min-height: 680px;
-    padding: 15px
+    padding: 15px;
 }
 
 .invoice header {
     padding: 10px 0;
     margin-bottom: 20px;
-    border-bottom: 1px solid $invoice-primary
+    border-bottom: 1px solid $grey;
 }
 
 .invoice .company-details {
@@ -31,11 +31,7 @@
     margin-bottom: 20px
 }
 
-.invoice .invoice-to {
-    text-align: left
-}
-
-.invoice .invoice-to .to {
+.invoice .contacts .to, .invoice .contacts .from {
     margin-top: 0;
     margin-bottom: 0
 }
@@ -54,7 +50,6 @@
 }
 
 .invoice main .thanks {
-    margin-top: -100px;
     font-size: 2em;
     margin-bottom: 50px
 }
@@ -77,18 +72,18 @@
 
 .invoice table td,.invoice table th {
     padding: 15px;
-    background: #eee;
-    border-bottom: 1px solid #fff
+    background: $grey-light;
+    border-bottom: 1px solid $white
 }
 
 .invoice table th{
     white-space: nowrap;
     font-weight: 400;
     font-size: 16px;
-    border:1px solid #fff;
+    border:1px solid $white;
 }
 .invoice table td{
-    border:1px solid #fff;
+    border:1px solid $white;
 }
 .invoice table td h3 {
     margin: 0;
@@ -103,19 +98,9 @@
 }
 
 .invoice table .no {
-    color: #fff;
     font-size: 1.6em;
-    background: $invoice-background;
 }
 
-.invoice table .unit {
-    background: #ddd
-}
-
-.invoice table .total {
-    background: $invoice-background;
-    color: #fff
-}
 
 .invoice table tfoot td {
     background: 0 0;
@@ -124,7 +109,6 @@
     text-align: right;
     padding: 10px 20px;
     font-size: 1.2em;
-    border-top: 1px solid #aaa
 }
 
 .invoice table tfoot tr:first-child td {
@@ -151,17 +135,7 @@
 
 @media print {
     .invoice {
-        font-size: 11px!important;
+        font-size: 14px!important;
         overflow: hidden!important
-    }
-
-    .invoice footer {
-        position: absolute;
-        bottom: 10px;
-        page-break-after: always
-    }
-
-    .invoice>div:last-child {
-        page-break-before: always
     }
 }

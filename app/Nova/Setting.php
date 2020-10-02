@@ -14,6 +14,7 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use OptimistDigital\MultiselectField\Multiselect;
 use Epartment\NovaDependencyContainer\HasDependencies;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
+use Laravel\Nova\Fields\Textarea;
 
 class Setting extends Resource
 {
@@ -224,6 +225,15 @@ class Setting extends Resource
                     return $this->resource->name == SettingModel::COMPANY_SETTINGS;
                 }),
 
+            Textarea::make('Address')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->address ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::COMPANY_SETTINGS;
+                }),
+
             NovaDependencyContainer::make([
 
                 Json::make('Settings', [
@@ -236,6 +246,9 @@ class Setting extends Resource
                     PhoneNumber::make('Mobile', 'mobile')
                         ->withCustomFormats('+88 ### #### ####')
                         ->onlyCustomFormats()
+                        ->rules('nullable'),
+
+                    Textarea::make('Address', 'address')
                         ->rules('nullable'),
 
                 ])
