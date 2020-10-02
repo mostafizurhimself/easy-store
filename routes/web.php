@@ -46,11 +46,16 @@ Route::group(['middleware' => 'nova'], function () {
 
     // Invoice Routes
     Route::group(['prefix' => 'invoices'], function () {
-        Route::get('asset-distributions/{invoice}', 'InvoiceController@assetDsitributionInvoice')->name('invoices.asset-distributions');
+        Route::get('asset-distributions/{invoice}', 'InvoiceController@assetDistributionInvoice')->name('invoices.asset-distributions');
         Route::get('services/{invoice}', 'InvoiceController@serviceInvoice')->name('invoices.services');
         Route::get('fabric-returns/{invoice}', 'InvoiceController@fabricReturnInvoice')->name('invoices.fabric-returns');
         Route::get('material-returns/{invoice}', 'InvoiceController@materialReturnInvoice')->name('invoices.material-returns');
         Route::get('asset-returns/{invoice}', 'InvoiceController@assetReturnInvoice')->name('invoices.asset-returns');
+    });
+
+    // Requisitions
+    Route::group(['prefix' => 'requisitions'], function () {
+        Route::get('assets/{requisition}', 'RequisitionController@assetRequisition')->name('requisitions.assets');
     });
 
     // Invoice Routes

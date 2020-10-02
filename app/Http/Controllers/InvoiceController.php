@@ -6,6 +6,7 @@ use App\Enums\ReturnStatus;
 use Illuminate\Http\Request;
 use App\Enums\DispatchStatus;
 use App\Models\ServiceInvoice;
+use App\Enums\RequisitionStatus;
 use App\Enums\DistributionStatus;
 use App\Models\AssetReturnInvoice;
 use App\Models\FabricReturnInvoice;
@@ -22,7 +23,7 @@ class InvoiceController extends Controller
      * @param  \App\Models\AssetDistributionInvoice $invoice
      * @return \Illuminate\Http\Response
      */
-    public function assetDsitributionInvoice(Request $request, AssetDistributionInvoice $invoice )
+    public function assetDistributionInvoice(Request $request, AssetDistributionInvoice $invoice )
     {
         if($request->user()->hasPermissionTo('can generate asset distribution invoices') && $invoice->status != DistributionStatus::DRAFT()){
 

@@ -23,6 +23,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Lenses\AssetRequisition\Requisitions;
 use App\Nova\Actions\AssetRequisitions\ConfirmRequisition;
+use App\Nova\Actions\AssetRequisitions\GenerateRequisition;
 
 class AssetRequisition extends Resource
 {
@@ -237,6 +238,16 @@ class AssetRequisition extends Resource
             (new ConfirmRequisition)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm asset requisitions');
             }),
+
+            (new GenerateRequisition)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate asset requisitions');
+            })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate asset requisitions') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Generate')
+            ->confirmText('Are you sure want to generate requisition now?')
+            ->onlyOnDetail(),
         ];
     }
 }
