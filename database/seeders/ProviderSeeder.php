@@ -1,8 +1,11 @@
 <?php
 
+namespace Database\Seeders;
+
+use App\Models\Provider;
 use Illuminate\Database\Seeder;
 
-class EmployeeSeeder extends Seeder
+class ProviderSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +14,6 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory(Provider::class, 10)->create();
     }
 }

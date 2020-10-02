@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Enums\ReturnStatus;
 use App\Models\FabricReturnItem;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -55,9 +56,10 @@ class FabricReturnItemPolicy
      */
     public function update(User $user, FabricReturnItem $fabricReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update fabric return items') && $user->locationId == $fabricReturnItem->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+                $user->hasPermissionTo('update all locations data')) &&
+                $fabricReturnItem->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -69,9 +71,10 @@ class FabricReturnItemPolicy
      */
     public function delete(User $user, FabricReturnItem $fabricReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete fabric return items') && $user->locationId == $fabricReturnItem->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+                $user->hasPermissionTo('delete all locations data')) &&
+                $fabricReturnItem->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -83,9 +86,10 @@ class FabricReturnItemPolicy
      */
     public function restore(User $user, FabricReturnItem $fabricReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore fabric return items') && $user->locationId == $fabricReturnItem->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+                $user->hasPermissionTo('restore all locations data')) &&
+                $fabricReturnItem->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -97,8 +101,9 @@ class FabricReturnItemPolicy
      */
     public function forceDelete(User $user, FabricReturnItem $fabricReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete fabric return items') && $user->locationId == $fabricReturnItem->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+                $user->hasPermissionTo('force delete all locations data')) &&
+                $fabricReturnItem->status == ReturnStatus::DRAFT();
     }
 }

@@ -1,9 +1,11 @@
 <?php
 
-use App\Models\Floor;
+namespace Database\Seeders;
+
+use App\Models\Department;
 use Illuminate\Database\Seeder;
 
-class FloorSeeder extends Seeder
+class DepartmentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,103 +14,94 @@ class FloorSeeder extends Seeder
      */
     public function run()
     {
-        Floor::updateOrCreate(
+        Department::updateOrCreate(
             [
                 'location_id' => 1,
-                'name' => '3rd Floor',
+                'name' => 'Finishing Department'
             ],
             [
                 'location_id' => 1,
-                'name' => '3rd Floor',
-                'number' => '3rd'
+                'name' => 'Finishing Department',
             ]
         );
 
-        Floor::updateOrCreate(
+        Department::updateOrCreate(
             [
                 'location_id' => 1,
-                'name' => '4th Floor',
+                'name' => 'Sewing Department',
             ],
             [
                 'location_id' => 1,
-                'name' => '4th Floor',
-                'number' => '4th'
+                'name' => 'Sewing Department',
             ]
         );
 
-        Floor::updateOrCreate(
+        Department::updateOrCreate(
             [
                 'location_id' => 1,
-                'name' => '5th Floor',
+                'name' => 'Audit Department',
             ],
             [
                 'location_id' => 1,
-                'name' => '5th Floor',
-                'number' => '5th'
+                'name' => 'Audit Department',
             ]
         );
 
-        Floor::updateOrCreate(
+        Department::updateOrCreate(
             [
                 'location_id' => 1,
-                'name' => '6th Floor',
+                'name' => 'Distribution Department',
             ],
             [
                 'location_id' => 1,
-                'name' => '6th Floor',
-                'number' => '6th'
+                'name' => 'Distribution Department',
             ]
         );
 
         //Chowdhurypara
 
-        Floor::updateOrCreate(
+        Department::updateOrCreate(
             [
                 'location_id' => 2,
-                'name' => '3rd Floor',
+                'name' => 'Finishing Department',
             ],
             [
                 'location_id' => 2,
-                'name' => '3rd Floor',
-                'number' => '3rd'
+                'name' => 'Finishing Department',
             ]
         );
 
-        Floor::updateOrCreate(
+        Department::updateOrCreate(
             [
                 'location_id' => 2,
-                'name' => '4th Floor',
+                'name' => 'Sewing Department',
             ],
             [
                 'location_id' => 2,
-                'name' => '4th Floor',
-                'number' => '4th'
+                'name' => 'Sewing Department',
             ]
         );
 
-        Floor::updateOrCreate(
+        Department::updateOrCreate(
             [
                 'location_id' => 2,
-                'name' => '5th Floor',
+                'name' => 'Audit Department',
             ],
             [
                 'location_id' => 2,
-                'name' => '5th Floor',
-                'number' => '5th'
+                'name' => 'Audit Department',
             ]
         );
 
-        Floor::updateOrCreate(
+        Department::updateOrCreate(
             [
                 'location_id' => 2,
-                'name' => '6th Floor',
+                'name' => 'Distribution Department',
             ],
             [
                 'location_id' => 2,
-                'name' => '6th Floor',
-                'number' => '6th'
+                'name' => 'Distribution Department',
             ]
         );
-
     }
 }

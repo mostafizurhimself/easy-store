@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Enums\ReturnStatus;
 use App\Models\MaterialReturnItem;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -55,9 +56,10 @@ class MaterialReturnItemPolicy
      */
     public function update(User $user, MaterialReturnItem $materialReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update material return items') && $user->locationId == $materialReturnItem->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+                $user->hasPermissionTo('update all locations data')) &&
+                $materialReturnItem->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -69,9 +71,10 @@ class MaterialReturnItemPolicy
      */
     public function delete(User $user, MaterialReturnItem $materialReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete material return items') && $user->locationId == $materialReturnItem->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+                $user->hasPermissionTo('delete all locations data')) &&
+                $materialReturnItem->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -83,9 +86,10 @@ class MaterialReturnItemPolicy
      */
     public function restore(User $user, MaterialReturnItem $materialReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore material return items') && $user->locationId == $materialReturnItem->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+                $user->hasPermissionTo('restore all locations data')) &&
+                $materialReturnItem->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -97,8 +101,9 @@ class MaterialReturnItemPolicy
      */
     public function forceDelete(User $user, MaterialReturnItem $materialReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete material return items') && $user->locationId == $materialReturnItem->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+                $user->hasPermissionTo('force delete all locations data')) &&
+                $materialReturnItem->status == ReturnStatus::DRAFT();
     }
 }

@@ -1,8 +1,11 @@
 <?php
 
+namespace Database\Seeders;
+
+use App\Models\Supplier;
 use Illuminate\Database\Seeder;
 
-class SubSectionSeeder extends Seeder
+class SupplierSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +14,6 @@ class SubSectionSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory(Supplier::class, 10)->create();
     }
 }

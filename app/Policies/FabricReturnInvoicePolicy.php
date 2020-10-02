@@ -31,9 +31,9 @@ class FabricReturnInvoicePolicy
      */
     public function view(User $user, FabricReturnInvoice $fabricReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('view fabric return invoices') && $user->locationId == $fabricReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('view all locations data');
+                $user->hasPermissionTo('view all locations data'));
     }
 
     /**
@@ -56,9 +56,10 @@ class FabricReturnInvoicePolicy
      */
     public function update(User $user, FabricReturnInvoice $fabricReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update fabric return invoices') && $user->locationId == $fabricReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+                $user->hasPermissionTo('update all locations data')) &&
+                $fabricReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -70,9 +71,10 @@ class FabricReturnInvoicePolicy
      */
     public function delete(User $user, FabricReturnInvoice $fabricReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete fabric return invoices') && $user->locationId == $fabricReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+                $user->hasPermissionTo('delete all locations data')) &&
+                $fabricReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -84,9 +86,10 @@ class FabricReturnInvoicePolicy
      */
     public function restore(User $user, FabricReturnInvoice $fabricReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore fabric return invoices') && $user->locationId == $fabricReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+                $user->hasPermissionTo('restore all locations data')) &&
+                $fabricReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -98,9 +101,10 @@ class FabricReturnInvoicePolicy
      */
     public function forceDelete(User $user, FabricReturnInvoice $fabricReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete fabric return invoices') && $user->locationId == $fabricReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+                $user->hasPermissionTo('force delete all locations data')) &&
+                $fabricReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**

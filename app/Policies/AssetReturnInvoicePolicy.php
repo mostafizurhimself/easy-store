@@ -56,9 +56,10 @@ class AssetReturnInvoicePolicy
      */
     public function update(User $user, AssetReturnInvoice $assetReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update asset return invoices') && $user->locationId == $assetReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+                $user->hasPermissionTo('update all locations data')) &&
+                $assetReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -70,9 +71,10 @@ class AssetReturnInvoicePolicy
      */
     public function delete(User $user, AssetReturnInvoice $assetReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete asset return invoices') && $user->locationId == $assetReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+                $user->hasPermissionTo('delete all locations data')) &&
+                $assetReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -84,9 +86,10 @@ class AssetReturnInvoicePolicy
      */
     public function restore(User $user, AssetReturnInvoice $assetReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return( $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore asset return invoices') && $user->locationId == $assetReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+                $user->hasPermissionTo('restore all locations data')) &&
+                $assetReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -98,9 +101,10 @@ class AssetReturnInvoicePolicy
      */
     public function forceDelete(User $user, AssetReturnInvoice $assetReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete asset return invoices') && $user->locationId == $assetReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+                $user->hasPermissionTo('force delete all locations data')) &&
+                $assetReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**

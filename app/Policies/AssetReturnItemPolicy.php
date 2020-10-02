@@ -2,8 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\AssetReturnItem;
 use App\Models\User;
+use App\Enums\ReturnStatus;
+use App\Models\AssetReturnItem;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AssetReturnItemPolicy
@@ -55,9 +56,10 @@ class AssetReturnItemPolicy
      */
     public function update(User $user, AssetReturnItem $assetReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update asset return items') && $user->locationId == $assetReturnItem->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+                $user->hasPermissionTo('update all locations data')) &&
+                $assetReturnItem->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -69,9 +71,10 @@ class AssetReturnItemPolicy
      */
     public function delete(User $user, AssetReturnItem $assetReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete asset return items') && $user->locationId == $assetReturnItem->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+                $user->hasPermissionTo('delete all locations data')) &&
+                $assetReturnItem->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -83,9 +86,10 @@ class AssetReturnItemPolicy
      */
     public function restore(User $user, AssetReturnItem $assetReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore asset return items') && $user->locationId == $assetReturnItem->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+                $user->hasPermissionTo('restore all locations data')) &&
+                $assetReturnItem->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -97,8 +101,9 @@ class AssetReturnItemPolicy
      */
     public function forceDelete(User $user, AssetReturnItem $assetReturnItem)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete asset return items') && $user->locationId == $assetReturnItem->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+                $user->hasPermissionTo('force delete all locations data')) &&
+                $assetReturnItem->status == ReturnStatus::DRAFT();
     }
 }

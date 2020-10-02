@@ -20,6 +20,7 @@ use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
+use App\Nova\Actions\FabricReturnInvoices\GenerateInvoice;
 
 class FabricReturnInvoice extends Resource
 {
@@ -241,7 +242,19 @@ class FabricReturnInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmInvoice
+            (new ConfirmInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can confirm fabric return invoices');
+            }),
+
+            (new GenerateInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate fabric return invoices');
+            })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate fabric return invoices') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Generate')
+            ->confirmText('Are you sure want to generate invoice now?')
+            ->onlyOnDetail(),
         ];
     }
 }

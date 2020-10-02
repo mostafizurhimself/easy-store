@@ -1,4 +1,5 @@
 <?php
+namespace Database\Seeders;
 
 use App\Models\AssetCategory;
 use App\Models\FabricCategory;

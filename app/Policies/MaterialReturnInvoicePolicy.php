@@ -56,9 +56,10 @@ class MaterialReturnInvoicePolicy
      */
     public function update(User $user, MaterialReturnInvoice $materialReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update material return invoices') && $user->locationId == $materialReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+                $user->hasPermissionTo('update all locations data')) &&
+                $materialReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -70,9 +71,10 @@ class MaterialReturnInvoicePolicy
      */
     public function delete(User $user, MaterialReturnInvoice $materialReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete material return invoices') && $user->locationId == $materialReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+                $user->hasPermissionTo('delete all locations data')) &&
+                $materialReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -84,9 +86,10 @@ class MaterialReturnInvoicePolicy
      */
     public function restore(User $user, MaterialReturnInvoice $materialReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore material return invoices') && $user->locationId == $materialReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+                $user->hasPermissionTo('restore all locations data')) &&
+                $materialReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**
@@ -98,9 +101,10 @@ class MaterialReturnInvoicePolicy
      */
     public function forceDelete(User $user, MaterialReturnInvoice $materialReturnInvoice)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete material return invoices') && $user->locationId == $materialReturnInvoice->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+                $user->hasPermissionTo('force delete all locations data')) &&
+                $materialReturnInvoice->status == ReturnStatus::DRAFT();
     }
 
     /**

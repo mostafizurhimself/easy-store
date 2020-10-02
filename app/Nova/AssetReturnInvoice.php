@@ -20,6 +20,7 @@ use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetReturnInvoices\ConfirmInvoice;
+use App\Nova\Actions\AssetReturnInvoices\GenerateInvoice;
 
 class AssetReturnInvoice extends Resource
 {
@@ -240,7 +241,19 @@ class AssetReturnInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmInvoice
+            (new ConfirmInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can confirm asset return invoices');
+            }),
+
+            (new GenerateInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate asset return invoices');
+            })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate asset return invoices') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Generate')
+            ->confirmText('Are you sure want to generate invoice now?')
+            ->onlyOnDetail(),
         ];
     }
 }

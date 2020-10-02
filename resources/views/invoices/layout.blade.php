@@ -12,7 +12,7 @@
         <div id="inventory-invoice">
 
             {{-- Toolbar --}}
-            @include('invoices.partials.toolbar');
+            @include('invoices.partials.toolbar')
             <div class="invoice p-2" id="invoice">
 
                 <div class="invoice-container">

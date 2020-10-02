@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Actions\MaterialReturnInvoice;
+namespace App\Nova\Actions\MaterialReturnInvoices;
 
 use App\Enums\ReturnStatus;
 use Illuminate\Bus\Queueable;

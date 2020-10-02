@@ -1,9 +1,10 @@
 <?php
 
-use App\Models\Provider;
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
-class ProviderSeeder extends Seeder
+class SubSectionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +13,6 @@ class ProviderSeeder extends Seeder
      */
     public function run()
     {
-        factory(Provider::class, 10)->create();
+        //
     }
 }

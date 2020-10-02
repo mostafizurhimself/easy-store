@@ -19,7 +19,8 @@ use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
-use App\Nova\Actions\MaterialReturnInvoice\ConfirmInvoice;
+use App\Nova\Actions\MaterialReturnInvoices\ConfirmInvoice;
+use App\Nova\Actions\MaterialReturnInvoices\GenerateInvoice;
 
 class MaterialReturnInvoice extends Resource
 {
@@ -239,7 +240,19 @@ class MaterialReturnInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            new ConfirmInvoice
+            (new ConfirmInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can confirm material return invoices');
+            }),
+
+            (new GenerateInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate material return invoices');
+            })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate material return invoices') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Generate')
+            ->confirmText('Are you sure want to generate invoice now?')
+            ->onlyOnDetail(),
         ];
     }
 }

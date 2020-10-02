@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReturnStatus;
 use Illuminate\Http\Request;
 use App\Enums\DispatchStatus;
 use App\Models\ServiceInvoice;
 use App\Enums\DistributionStatus;
+use App\Models\AssetReturnInvoice;
+use App\Models\FabricReturnInvoice;
 use App\Http\Controllers\Controller;
+use App\Models\MaterialReturnInvoice;
 use App\Models\AssetDistributionInvoice;
 
 class InvoiceController extends Controller
@@ -40,6 +44,57 @@ class InvoiceController extends Controller
         if($request->user()->hasPermissionTo('can generate service invoices') && $invoice->status != DispatchStatus::DRAFT()){
 
             return view('invoices.pages.service-invoice', compact('invoice'));
+        }else{
+            abort(403);
+        }
+    }
+
+    /**
+     * Generate service fabric return invoice
+     *
+     * @param  \Illuminate\Http\Request   $request
+     * @param  \App\Models\FabricReturnInvoice $invoice
+     * @return \Illuminate\Http\Response
+     */
+    public function fabricReturnInvoice(Request $request, FabricReturnInvoice $invoice )
+    {
+        if($request->user()->hasPermissionTo('can generate fabric return invoices') && $invoice->status != ReturnStatus::DRAFT()){
+
+            return view('invoices.pages.fabric-return-invoice', compact('invoice'));
+        }else{
+            abort(403);
+        }
+    }
+
+    /**
+     * Generate service material return invoice
+     *
+     * @param  \Illuminate\Http\Request   $request
+     * @param  \App\Models\MaterialReturnInvoice $invoice
+     * @return \Illuminate\Http\Response
+     */
+    public function materialReturnInvoice(Request $request, MaterialReturnInvoice $invoice )
+    {
+        if($request->user()->hasPermissionTo('can generate material return invoices') && $invoice->status != ReturnStatus::DRAFT()){
+
+            return view('invoices.pages.material-return-invoice', compact('invoice'));
+        }else{
+            abort(403);
+        }
+    }
+
+    /**
+     * Generate service asset return invoice
+     *
+     * @param  \Illuminate\Http\Request   $request
+     * @param  \App\Models\AssetReturnInvoice $invoice
+     * @return \Illuminate\Http\Response
+     */
+    public function assetReturnInvoice(Request $request, AssetReturnInvoice $invoice )
+    {
+        if($request->user()->hasPermissionTo('can generate asset return invoices') && $invoice->status != ReturnStatus::DRAFT()){
+
+            return view('invoices.pages.asset-return-invoice', compact('invoice'));
         }else{
             abort(403);
         }
