@@ -36,28 +36,28 @@
 
         <div class="col text-right">
             <div class="text-gray-light text-uppercase">INVOICE TO:</div>
-            <h3 class="from">{{$invoice->receiver->name}}</h3>
-            @if ($invoice->receiver->locationAddress)
+            <h3 class="from">{{$invoice->provider->name}}</h3>
+            @if ($invoice->provider->locationAddress)
                 <div class="address">
-                    @if ($invoice->receiver->locationAddress->street)
-                        {{$invoice->receiver->locationAddress->street}}
+                    @if ($invoice->provider->locationAddress->street)
+                        {{$invoice->provider->locationAddress->street}}
                     @endif
 
-                    @if ($invoice->receiver->locationAddress->city)
-                        <span>, </span>{{$invoice->receiver->locationAddress->city}}
+                    @if ($invoice->provider->locationAddress->city)
+                        <span>, </span>{{$invoice->provider->locationAddress->city}}
                     @endif
 
-                    @if ($invoice->receiver->locationAddress->zipcode)
-                        <span>- </span>{{$invoice->receiver->locationAddress->zipcode}}
+                    @if ($invoice->provider->locationAddress->zipcode)
+                        <span>- </span>{{$invoice->provider->locationAddress->zipcode}}
                     @endif
 
-                    @if ($invoice->receiver->locationAddress->country)
-                        <span>, </span>{{$invoice->receiver->locationAddress->country}}
+                    @if ($invoice->provider->locationAddress->country)
+                        <span>, </span>{{$invoice->provider->locationAddress->country}}
                     @endif
                 </div>
             @endif
-            <div class="email"><a href="mailto:{{$invoice->receiver->email}}">{{$invoice->receiver->email}}</a></div>
-            <div class="email"><a href="tel:{{$invoice->receiver->mobile}}">{{$invoice->receiver->mobile}}</a></div>
+            <div class="email"><a href="mailto:{{$invoice->provider->email}}">{{$invoice->provider->email}}</a></div>
+            <div class="email"><a href="tel:{{$invoice->provider->mobile}}">{{$invoice->provider->mobile}}</a></div>
         </div>
     </div>
     <div class="row pt-3">
@@ -71,19 +71,22 @@
             <tr>
                 <th>SR NO.</th>
                 <th class="text-left">DESCRIPTION</th>
-                <th class="text-right">PRICE</th>
+                <th class="text-right">RATE</th>
                 <th class="text-right">QUANTITY</th>
                 <th class="text-right">TOTAL</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($invoice->distributionItems as $item)
+            @foreach ($invoice->dispatches as $item)
                 <tr>
                     <td class="no">{{$loop->iteration}}</td>
-                    <td class="text-left"><h3>{{$item->asset->name}}</h3>({{$item->asset->code}})</td>
-                    <td class="unit">{{Helper::currencyShort($item->distributionRate)}}</td>
-                    <td class="tax">{{$item->distributionQuantity}} {{$item->unit}}</td>
-                    <td class="total">{{Helper::currencyShort($item->distributionAmount)}}</td>
+                    <td class="text-left">
+                        <h3>{{$item->service->name}} ({{$item->service->code}})</h3>
+                        <span>{!! $item->description !!}</span>
+                    </td>
+                    <td class="unit">{{Helper::currencyShort($item->rate)}}</td>
+                    <td class="tax">{{$item->dispatchQuantity}} {{$item->unit}}</td>
+                    <td class="total">{{Helper::currencyShort($item->dispatchAmount)}}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -91,16 +94,16 @@
             <tr>
                 <td colspan="2"></td>
                 <td colspan="2">GRAND TOTAL</td>
-                <td>{{Helper::currency($invoice->totalDistributionAmount)}}</td>
+                <td>{{Helper::currency($invoice->totalDispatchAmount)}}</td>
             </tr>
         </tfoot>
     </table>
     <div class="thanks">Thank you!</div>
     <div class="notices">
         <div>Note:</div>
-        <div class="notice">{!! $invoice->note !!}</div>
+        <div class="notice">{!! $invoice->description !!}</div>
     </div>
 </main>
-@endsection
 
+@endsection
 

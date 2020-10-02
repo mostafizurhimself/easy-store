@@ -27,7 +27,7 @@ class GeneratePurchaseOrder extends Action
             return Action::openInNewTab(route('purchase-orders.fabrics', $models->first()));
         }
 
-        return Action::danger('You can not generate purchase order not.');
+        return Action::danger('You can not generate purchase order now.');
     }
 
     /**

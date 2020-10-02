@@ -9,10 +9,29 @@
         <link rel="stylesheet" href="{{asset('css/app.css')}}">
     </head>
     <body>
-        @yield('content')
+        <div id="inventory-invoice">
 
-        <script src="{{asset('js/app.js')}}"></script>
+            {{-- Toolbar --}}
+            @include('invoices.partials.toolbar');
+            <div class="invoice p-2" id="invoice">
+
+                <div class="invoice-container">
+
+                    {{-- Invoice Header --}}
+                    @include('invoices.partials.header')
+
+                    {{-- Invoice Content --}}
+                    @yield('content')
+
+                    {{-- Invoice Footer --}}
+                    @include('invoices.partials.footer')
+                </div>
+            </div>
+        </div>
+
+        @include('invoices.partials.scripts')
 
         @yield('scripts')
+
     </body>
 </html>

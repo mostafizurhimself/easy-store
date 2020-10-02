@@ -21,6 +21,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\ServiceInvoices\Recalculate;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceInvoices\ConfirmInvoice;
+use App\Nova\Actions\ServiceInvoices\GenerateInvoice;
 
 class ServiceInvoice extends Resource
 {
@@ -231,6 +232,16 @@ class ServiceInvoice extends Resource
             (new ConfirmInvoice)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm service invoices');
             })->confirmButtonText('Confirm'),
+
+            (new GenerateInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate service invoices');
+            })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate service invoices') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Generate')
+            ->confirmText('Are you sure want to generate invoice now?')
+            ->onlyOnDetail(),
         ];
     }
 }

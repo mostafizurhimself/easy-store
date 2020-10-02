@@ -25,6 +25,7 @@ use App\Nova\Lenses\DistributionHistory;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\AssetDistributionInvoices\ConfirmInvoice;
+use App\Nova\Actions\AssetDistributionInvoices\GenerateInvoice;
 use App\Nova\Lenses\AssetDistributionInvoice\DistributionInvoices;
 
 class AssetDistributionInvoice extends Resource
@@ -240,6 +241,16 @@ class AssetDistributionInvoice extends Resource
             (new ConfirmInvoice)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm asset distribution invoices');
             }),
+
+            (new GenerateInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate asset distribution invoices');
+            })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate asset distribution invoices') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Generate')
+            ->confirmText('Are you sure want to generate invoice now?')
+            ->onlyOnDetail(),
         ];
     }
 }

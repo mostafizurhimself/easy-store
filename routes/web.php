@@ -47,6 +47,7 @@ Route::group(['middleware' => 'nova'], function () {
     // Invoice Routes
     Route::group(['prefix' => 'invoices'], function () {
         Route::get('asset-distributions/{invoice}', 'InvoiceController@assetDsitributionInvoice')->name('invoices.asset-distributions');
+        Route::get('services/{invoice}', 'InvoiceController@serviceInvoice')->name('invoices.services');
     });
 
     // Invoice Routes

@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Nova\Actions\MaterialPurchaseOrders;
+namespace App\Nova\Actions\AssetDistributionInvoices;
 
-use App\Enums\PurchaseStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
+use App\Enums\DistributionStatus;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class GeneratePurchaseOrder extends Action
+class GenerateInvoice extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -23,12 +23,11 @@ class GeneratePurchaseOrder extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        if($models->first()->status != PurchaseStatus::DRAFT()){
-            return Action::openInNewTab(route('purchase-orders.materials', $models->first()));
+        if($models->first()->status != DistributionStatus::DRAFT()){
+            return Action::openInNewTab(route('invoices.asset-distributions', $models->first()));
         }
 
-        return Action::danger('You can not generate purchase order now.');
-
+        return Action::danger('You can not generate invoice now.');
     }
 
     /**
