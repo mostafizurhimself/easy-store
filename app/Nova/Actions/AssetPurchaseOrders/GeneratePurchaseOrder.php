@@ -1,18 +1,18 @@
 <?php
 
-namespace {{ namespace }};
+namespace App\Nova\Actions\AssetPurchaseOrders;
 
+use App\Enums\PurchaseStatus;
 use Illuminate\Bus\Queueable;
+use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Laravel\Nova\Actions\DestructiveAction;
 
-class {{ class }} extends DestructiveAction
+class GeneratePurchaseOrder extends Action
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue, Queueable;
 
     /**
      * Perform the action on the given models.
@@ -23,7 +23,11 @@ class {{ class }} extends DestructiveAction
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        //
+        if($models->first()->status != PurchaseStatus::DRAFT()){
+            return Action::openInNewTab(route('purchase-orders.assets', $models->first()));
+        }
+
+        return Action::danger('You can not generate purchase order not.');
     }
 
     /**

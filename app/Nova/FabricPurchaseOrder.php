@@ -5,6 +5,7 @@ namespace App\Nova;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
+use App\Enums\PaymentMethod;
 use Illuminate\Http\Request;
 use App\Enums\PurchaseStatus;
 use Laravel\Nova\Fields\Date;
@@ -22,6 +23,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricPurchaseOrders\Recalculate;
 use App\Nova\Actions\FabricPurchaseOrders\ConfirmPurchase;
+use App\Nova\Actions\FabricPurchaseOrders\GeneratePurchaseOrder;
 
 class FabricPurchaseOrder extends Resource
 {
@@ -162,6 +164,17 @@ class FabricPurchaseOrder extends Resource
                 ->currency('BDT')
                 ->onlyOnDetail(),
 
+            // Select::make('Payment Method', 'payment_method')
+            //     ->options(PaymentMethod::titleCaseOptions())
+            //     ->default(PaymentMethod::CASH())
+            //     ->rules('required')
+            //     ->onlyOnForms(),
+
+            // Text::make('Payment Method', function(){
+            //     return Str::title(Str::of($this->paymentMethod)->replace('_', " "));
+            // })
+            //     ->onlyOnDetail(),
+
             Badge::make('Status')->map([
                     PurchaseStatus::DRAFT()->getValue()     => 'warning',
                     PurchaseStatus::CONFIRMED()->getValue() => 'info',
@@ -172,6 +185,9 @@ class FabricPurchaseOrder extends Resource
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
+
+            // Trix::make('Message')
+            //     ->rules('nullable', 'max:500'),
 
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
@@ -246,6 +262,17 @@ class FabricPurchaseOrder extends Resource
             (new ConfirmPurchase)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm fabric purchase orders');
             }),
+
+
+            (new GeneratePurchaseOrder)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate fabric purchase orders');
+            })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate fabric purchase orders') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Generate')
+            ->confirmText('Are you sure want to generate purchase order?')
+            ->onlyOnDetail(),
         ];
     }
 }

@@ -11043,6 +11043,11 @@ a.text-dark:focus {
   border: none;
 }
 
+.invoice ol,
+ul {
+  margin-left: -25px !important;
+}
+
 .invoice footer {
   width: 100%;
   text-align: center;

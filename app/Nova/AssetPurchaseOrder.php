@@ -5,6 +5,7 @@ namespace App\Nova;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
+use App\Enums\PaymentMethod;
 use Illuminate\Http\Request;
 use App\Enums\PurchaseStatus;
 use Laravel\Nova\Fields\Date;
@@ -12,6 +13,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
@@ -21,6 +23,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetPurchaseOrders\Recalculate;
 use App\Nova\Actions\AssetPurchaseOrders\ConfirmPurchase;
+use App\Nova\Actions\AssetPurchaseOrders\GeneratePurchaseOrder;
 
 class AssetPurchaseOrder extends Resource
 {
@@ -161,6 +164,17 @@ class AssetPurchaseOrder extends Resource
                 ->currency('BDT')
                 ->onlyOnDetail(),
 
+            // Select::make('Payment Method', 'payment_method')
+            //     ->options(PaymentMethod::titleCaseOptions())
+            //     ->default(PaymentMethod::CASH())
+            //     ->rules('required')
+            //     ->onlyOnForms(),
+
+            // Text::make('Payment Method', function(){
+            //     return Str::title(Str::of($this->paymentMethod)->replace('_', " "));
+            // })
+            //     ->onlyOnDetail(),
+
             Badge::make('Status')->map([
                     PurchaseStatus::DRAFT()->getValue()     => 'warning',
                     PurchaseStatus::CONFIRMED()->getValue() => 'info',
@@ -172,7 +186,8 @@ class AssetPurchaseOrder extends Resource
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
-
+            // Trix::make('Message')
+            //     ->rules('nullable', 'max:500'),
 
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
@@ -247,6 +262,16 @@ class AssetPurchaseOrder extends Resource
             (new ConfirmPurchase)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm asset purchase orders');
             }),
+
+            (new GeneratePurchaseOrder)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate asset purchase orders');
+            })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate asset purchase orders') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Generate')
+            ->confirmText('Are you sure want to generate purchase order?')
+            ->onlyOnDetail(),
         ];
     }
 }

@@ -34,8 +34,8 @@
                                     <span>, </span>{{$invoice->location->locationAddress->city}}
                                 @endif
 
-                                @if ($invoice->location->locationAddress->zip)
-                                    <span>- </span>{{$invoice->location->locationAddress->zip}}
+                                @if ($invoice->location->locationAddress->zipcode)
+                                    <span>- </span>{{$invoice->location->locationAddress->zipcode}}
                                 @endif
 
                                 @if ($invoice->location->locationAddress->country)
@@ -60,8 +60,8 @@
                                     <span>, </span>{{$invoice->receiver->locationAddress->city}}
                                 @endif
 
-                                @if ($invoice->receiver->locationAddress->zip)
-                                    <span>- </span>{{$invoice->receiver->locationAddress->zip}}
+                                @if ($invoice->receiver->locationAddress->zipcode)
+                                    <span>- </span>{{$invoice->receiver->locationAddress->zipcode}}
                                 @endif
 
                                 @if ($invoice->receiver->locationAddress->country)
@@ -70,7 +70,7 @@
                             </div>
                         @endif
                         <div class="email"><a href="mailto:{{$invoice->receiver->email}}">{{$invoice->receiver->email}}</a></div>
-                        <div class="email"><a href="tel:{{$invoice->receiver->mobile}}">{{$invoice->location->mobile}}</a></div>
+                        <div class="email"><a href="tel:{{$invoice->receiver->mobile}}">{{$invoice->receiver->mobile}}</a></div>
                     </div>
                 </div>
                 <div class="row pt-3">

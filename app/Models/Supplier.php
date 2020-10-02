@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Facades\Settings;
+use App\Enums\AddressType;
 use App\Traits\ActiveScope;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
@@ -62,7 +63,7 @@ class Supplier extends Model
      */
     public function contactPerson()
     {
-        return $this->morphMany(ContactPerson::class, 'contactable', 'contactable_type', 'contactable_id');
+        return $this->morphOne(ContactPerson::class, 'contactable', 'contactable_type', 'contactable_id');
     }
 
     /**
@@ -93,5 +94,20 @@ class Supplier extends Model
     public function materials()
     {
         return $this->belongsToMany(Material::class)->withTrashed();
+    }
+
+    /**
+     * Get the location address of the location
+     *
+     * @return \App\Models\Address
+     */
+    public function getLocationAddressAttribute()
+    {
+        if($this->address()->exists()){
+
+            return $this->address->where('type', AddressType::LOCATION_ADDRESS())->first();
+        }
+
+        return null;
     }
 }

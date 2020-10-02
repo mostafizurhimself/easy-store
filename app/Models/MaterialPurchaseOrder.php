@@ -214,4 +214,13 @@ class MaterialPurchaseOrder extends Model implements HasMedia
         }
     }
 
+    /**
+     * Get the approver details of the purchase order
+     *
+     * @return \App\Models\Employee
+     */
+    public function getApproverAttribute()
+    {
+        return $this->approve->employee;
+    }
 }

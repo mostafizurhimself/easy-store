@@ -2,8 +2,8 @@
 
 namespace {{ namespace }};
 
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Partition;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class {{ class }} extends Partition
 {

@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Illuminate\Support\Str;
 use Inspheric\Fields\Email;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;

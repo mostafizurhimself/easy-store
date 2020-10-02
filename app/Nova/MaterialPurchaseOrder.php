@@ -5,6 +5,7 @@ namespace App\Nova;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
+use App\Enums\PaymentMethod;
 use Illuminate\Http\Request;
 use App\Enums\PurchaseStatus;
 use Laravel\Nova\Fields\Date;
@@ -12,6 +13,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
@@ -21,6 +23,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialPurchaseOrders\Recalculate;
 use App\Nova\Actions\MaterialPurchaseOrders\ConfirmPurchase;
+use App\Nova\Actions\MaterialPurchaseOrders\GeneratePurchaseOrder;
 
 class MaterialPurchaseOrder extends Resource
 {
@@ -244,6 +247,16 @@ class MaterialPurchaseOrder extends Resource
             (new ConfirmPurchase)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm material purchase orders');
             }),
+
+            (new GeneratePurchaseOrder)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate material purchase orders');
+            })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate material purchase orders') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Generate')
+            ->confirmText('Are you sure want to generate purchase order?')
+            ->onlyOnDetail(),
         ];
     }
 }

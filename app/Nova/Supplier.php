@@ -151,7 +151,7 @@ class Supplier extends Resource
 
             MorphMany::make('Address'),
 
-            MorphMany::make('Contact Person', 'contactPerson', 'App\Nova\ContactPerson'),
+            MorphOne::make('Contact Person', 'contactPerson', 'App\Nova\ContactPerson'),
 
         ];
     }
