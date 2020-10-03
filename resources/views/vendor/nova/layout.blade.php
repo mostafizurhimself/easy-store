@@ -1,4 +1,9 @@
-{{-- {{dd(Settings::application()->approvers)}} --}}
+
+{{-- @php
+     $users = \App\Models\User::permission('view fabric purchase orders')->get();
+
+        dd($users);
+@endphp --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full font-sans antialiased">
 <head>
@@ -88,6 +93,7 @@
     </script>
 
     <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ mix('manifest.js', 'vendor/nova') }}"></script>
     <script src="{{ mix('vendor.js', 'vendor/nova') }}"></script>
     <script src="{{ mix('app.js', 'vendor/nova') }}"></script>

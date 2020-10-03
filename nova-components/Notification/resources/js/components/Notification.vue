@@ -52,8 +52,17 @@ export default {
 
         toggleNotificationsPanel: function () {
             this.isNotificationsPanelVisible = !this.isNotificationsPanelVisible
-        },
+        }
+    },
+
+    created(){
+        Echo.private('App.Models.User.' + Nova.config.userId)
+            .listen('.FabricPurchaseOrderConfirmed', function(e){
+                console.log(e.purchaseOrder);
+            })
+        // console.log(Nova.config.userId);
     }
+
 };
 </script>
 

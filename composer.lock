@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d34f24e1f03c5cdd51688dad327b456",
+    "content-hash": "b5ca00ec3d6324b1e7b45349448c3d00",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -206,16 +206,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.158.0",
+            "version": "3.158.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "59345aa45161a8f83c3a0027a7df9567ae72cc85"
+                "reference": "55ae8bdf2eb2f9774193fa79c6fc436835c42db4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/59345aa45161a8f83c3a0027a7df9567ae72cc85",
-                "reference": "59345aa45161a8f83c3a0027a7df9567ae72cc85",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/55ae8bdf2eb2f9774193fa79c6fc436835c42db4",
+                "reference": "55ae8bdf2eb2f9774193fa79c6fc436835c42db4",
                 "shasum": ""
             },
             "require": {
@@ -287,7 +287,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-10-01T18:41:53+00:00"
+            "time": "2020-10-02T18:16:40+00:00"
         },
         {
             "name": "benjacho/belongs-to-many-field",
@@ -5109,16 +5109,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "8.9.1",
+            "version": "8.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "fca3f6ca7b847d389ffe4fedeec14a0c64588122"
+                "reference": "101bb63d411db177037ef71b55c9f325c6149efd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/fca3f6ca7b847d389ffe4fedeec14a0c64588122",
-                "reference": "fca3f6ca7b847d389ffe4fedeec14a0c64588122",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/101bb63d411db177037ef71b55c9f325c6149efd",
+                "reference": "101bb63d411db177037ef71b55c9f325c6149efd",
                 "shasum": ""
             },
             "require": {
@@ -5205,7 +5205,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-01T22:58:43+00:00"
+            "time": "2020-10-03T00:03:18+00:00"
         },
         {
             "name": "spatie/laravel-permission",

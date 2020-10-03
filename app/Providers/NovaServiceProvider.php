@@ -3,12 +3,13 @@
 namespace App\Providers;
 
 use App\Nova\Role;
-use Laravel\Nova\Nova;
 use App\Nova\Location;
+use Laravel\Nova\Nova;
 use App\Nova\Department;
 use App\Nova\Permission;
 use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider

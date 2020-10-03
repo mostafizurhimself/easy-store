@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Events\FabricPurchaseOrderConfirmed;
 
 class ConfirmPurchase extends Action
 {
@@ -46,6 +47,8 @@ class ConfirmPurchase extends Action
                 $model->approve()->create(['employee_id' => $fields->approved_by]);
                 $model->status = PurchaseStatus::CONFIRMED();
                 $model->save();
+
+                event(new FabricPurchaseOrderConfirmed($model));
             }
         }
     }
