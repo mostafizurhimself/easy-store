@@ -16,15 +16,11 @@
         "benjaminhirsch/nova-slug-field": "^1.2",
         "bissolli/nova-phone-field": "^0.0.4",
         "bolechen/nova-activitylog": "^0.2.1",
-        "caddydz/nova-preview-resource": "^0.0.2",
         "chris-ware/nova-breadcrumbs": "^2.0",
         "cloudcake/nova-fixed-bars": "^1.1",
-        "coreproc/nova-echo": "^0.2.0",
-        "coreproc/nova-notification-feed": "^1.4",
         "david-griffiths/nova-dark-theme": "^1.0",
         "dillingham/nova-ajax-select": "^1.0",
         "dillingham/nova-attach-many": "^1.0",
-        "easystore/notification": "*",
         "easystore/nova-theme": "*",
         "easystore/permission-checkbox": "*",
         "easystore/prevent-direct-create": "*",
@@ -38,9 +34,7 @@
         "fruitcake/laravel-cors": "^1.0",
         "gregoriohc/laravel-nova-theme-responsive": "^0.8.1",
         "guzzlehttp/guzzle": "^7.0.1",
-        "hubertnnn/laravel-nova-field-dynamic-select": "^0.2.0",
         "inspheric/nova-email-field": "^1.42",
-        "kirschbaum-development/nova-inline-relationship": "^0.3.0",
         "klepak/nova-dynamic-page-title": "^1.0",
         "laravel/framework": "^8.0",
         "laravel/nova": "*",
@@ -50,10 +44,8 @@
         "myclabs/php-enum": "^1.7",
         "optimistdigital/nova-multiselect-field": "^1.10",
         "orlyapps/nova-belongsto-depend": "^2.0",
-        "pdmfc/nova-action-button": "^0.4.0",
         "pusher/pusher-php-server": "^4.1",
-        "titasgailius/search-relations": "^1.0",
-        "yassi/nova-nested-form": "^3.0"
+        "titasgailius/search-relations": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
@@ -118,10 +110,6 @@
         {
             "type": "path",
             "url": "./nova-components/TextUppercase"
-        },
-        {
-            "type": "path",
-            "url": "./nova-components/Notification"
         },
         {
             "type": "path",

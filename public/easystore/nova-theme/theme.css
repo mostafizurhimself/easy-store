@@ -36,7 +36,18 @@ nav{
     .w-sidebar{
         z-index: 10;
     }
+
+    .h-header .dropdown-trigger span, .h-header .dropdown-trigger svg {
+        display: block;
+    }
+
+    .h-header .dropdown-trigger #username,  .h-header .dropdown-trigger #username + svg{
+        display: none;
+    }
 }
+
+
+
 
 .breadcrumbs {
     padding: 0;

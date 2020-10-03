@@ -14,13 +14,24 @@ class PurchaseOrderConfirmed extends Notification
     use Queueable;
 
     /**
+     * Resource name of the purchase order
+     */
+    private $resourceName;
+
+    /**
+     * Resource id or the purchase order
+     */
+    private $purchaseOrder;
+
+    /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($resourceName, $purchaseOrder)
     {
-        //
+        $this->resourceName = $resourceName;
+        $this->purchaseOrder = $purchaseOrder;
     }
 
     /**
@@ -35,20 +46,6 @@ class PurchaseOrderConfirmed extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
-    {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
-    }
-
-    /**
      * Get the array representation of the notification.
      *
      * @param  mixed  $notifiable
@@ -57,9 +54,9 @@ class PurchaseOrderConfirmed extends Notification
     public function toArray($notifiable)
     {
         return \Mirovit\NovaNotifications\Notification::make()
-                ->info('A new user was created.')
-                ->subtitle('There is a new user in the system!')
-                ->routeDetail('users', 1)
+                ->info('A new purchase order has been confirmed')
+                ->subtitle("Order No: {$this->purchaseOrder->readableId}, Approved By: {$this->purchaseOrder->approver->name}")
+                ->routeDetail($this->resourceName, $this->purchaseOrder->id)
                 ->toArray();
     }
 }

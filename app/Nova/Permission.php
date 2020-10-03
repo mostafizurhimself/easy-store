@@ -14,9 +14,12 @@ use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\BelongsToMany;
 // use Eminiarts\NovaPermissions\Nova\Role;
 use App\Models\Permission as PermissionModel;
+use ChrisWare\NovaBreadcrumbs\Traits\Breadcrumbs;
 
 class Permission extends Resource
 {
+    use Breadcrumbs;
+
     /**
      * The model the resource corresponds to.
      *

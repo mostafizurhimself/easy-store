@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions\FabricPurchaseOrders;
 
+use App\Models\Role;
 use App\Enums\PurchaseStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Fields\Select;
@@ -11,6 +12,8 @@ use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Events\FabricPurchaseOrderConfirmed;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\PurchaseOrderConfirmed;
 
 class ConfirmPurchase extends Action
 {
@@ -48,7 +51,14 @@ class ConfirmPurchase extends Action
                 $model->status = PurchaseStatus::CONFIRMED();
                 $model->save();
 
-                event(new FabricPurchaseOrderConfirmed($model));
+                //Notify the users
+                $users = \App\Models\User::permission(['view fabric purchase orders', 'view any fabric purchase orders'])->where('location_id', $model->locationId)->get();
+                Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\FabricPurchaseOrder::uriKey(), $model));
+
+                //Notify super admins
+                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+                Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\FabricPurchaseOrder::uriKey(), $model));
+
             }
         }
     }
