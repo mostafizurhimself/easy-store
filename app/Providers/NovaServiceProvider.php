@@ -97,6 +97,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             ->permissionResource(Permission::class),
 
             \ChrisWare\NovaBreadcrumbs\NovaBreadcrumbs::make()->withoutStyles(),
+
+            \Mirovit\NovaNotifications\NovaNotifications::make(),
         ];
     }
 

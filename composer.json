@@ -46,6 +46,7 @@
         "laravel/nova": "*",
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "mirovit/nova-notifications": "^1.0",
         "myclabs/php-enum": "^1.7",
         "optimistdigital/nova-multiselect-field": "^1.10",
         "orlyapps/nova-belongsto-depend": "^2.0",

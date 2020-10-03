@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c3febb9ceee8810bd0e4ff5c6c54cf7",
+    "content-hash": "a65c5701d11ea2f9d4a937ad172a8959",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -3452,6 +3452,49 @@
                 }
             ],
             "time": "2020-05-30T13:11:16+00:00"
+        },
+        {
+            "name": "mirovit/nova-notifications",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mirovit/nova-notifications.git",
+                "reference": "ba5f682369a90aeb25631de693c69d4a30f2c790"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mirovit/nova-notifications/zipball/ba5f682369a90aeb25631de693c69d4a30f2c790",
+                "reference": "ba5f682369a90aeb25631de693c69d4a30f2c790",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": ">=5.6",
+                "nesbot/carbon": "^2.00",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mirovit\\NovaNotifications\\NovaNotificationsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mirovit\\NovaNotifications\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova tool to display user notifications.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "time": "2020-04-17T13:50:40+00:00"
         },
         {
             "name": "monolog/monolog",

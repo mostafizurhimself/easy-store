@@ -69,7 +69,8 @@
                         @include('nova::partials.user')
                     </dropdown>
                     {{-- <notification></notification> --}}
-                    @include('nova_notification_feed::notification_feed')
+                    {{-- @include('nova_notification_feed::notification_feed') --}}
+                    @include('nova-notifications::dropdown')
                 </div>
 
                 <div data-testid="content" class="px-view py-view mx-auto">
@@ -86,6 +87,7 @@
     </script>
 
     <!-- Scripts -->
+    {{-- <script src="{{asset('js/app.js')}}"></script> --}}
     <script src="{{ mix('manifest.js', 'vendor/nova') }}"></script>
     <script src="{{ mix('vendor.js', 'vendor/nova') }}"></script>
     <script src="{{ mix('app.js', 'vendor/nova') }}"></script>

@@ -53,7 +53,7 @@ class TestNotification extends Notification
         return [
             'level' => $this->level,
             'message' => $this->message,
-            'url' => 'https://coreproc.com',
+            'url' => 'http://ahmedshakil.com',
             'target' => '_blank'
         ];
     }
