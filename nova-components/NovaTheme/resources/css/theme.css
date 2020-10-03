@@ -27,6 +27,17 @@ nav{
     align-items: center;
 }
 
+@media (max-width: 992px){
+
+    html:not([dir="rtl"]) .h-header .dropdown-trigger img.mr-3 {
+        margin-right: 2.25rem;
+    }
+
+    .w-sidebar{
+        z-index: 10;
+    }
+}
+
 .breadcrumbs {
     padding: 0;
     list-style: none;
@@ -78,4 +89,17 @@ nav{
 .breadcrumbs .breadcrumbs__item:last-of-type:after,
 .breadcrumbs .breadcrumbs__item span:after {
     content: "";
+}
+
+
+
+
+@keyframes slide-in-sidebar{
+    0%{
+        transform: translateX(-220px);
+    }
+
+    100%{
+        transform: translateX(220px);
+    }
 }
