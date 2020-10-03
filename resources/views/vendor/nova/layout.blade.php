@@ -1,15 +1,10 @@
-
-{{-- @php
-     $users = \App\Models\User::permission('view fabric purchase orders')->get();
-
-        dd($users);
-@endphp --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full font-sans antialiased">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=1280">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @include('nova-echo::meta') <!-- INCLUDE THIS LINE HERE -->
 
     <title>{{ \Laravel\Nova\Nova::name() }}</title>
 
@@ -29,9 +24,6 @@
     @foreach(\Laravel\Nova\Nova::availableStyles(request()) as $name => $path)
         <link rel="stylesheet" href="/nova-api/styles/{{ $name }}">
     @endforeach
-
-    <!-- Custom Meta Data -->
-    @include('nova::partials.meta')
 
     <!-- Theme Styles -->
     @foreach(\Laravel\Nova\Nova::themeStyles() as $publicPath)
@@ -76,7 +68,8 @@
                     <dropdown class="ml-auto h-9 flex items-center dropdown-right">
                         @include('nova::partials.user')
                     </dropdown>
-                    <notification></notification>
+                    {{-- <notification></notification> --}}
+                    @include('nova_notification_feed::notification_feed')
                 </div>
 
                 <div data-testid="content" class="px-view py-view mx-auto">
@@ -93,7 +86,6 @@
     </script>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ mix('manifest.js', 'vendor/nova') }}"></script>
     <script src="{{ mix('vendor.js', 'vendor/nova') }}"></script>
     <script src="{{ mix('app.js', 'vendor/nova') }}"></script>

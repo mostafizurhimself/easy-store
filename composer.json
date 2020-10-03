@@ -19,6 +19,8 @@
         "caddydz/nova-preview-resource": "^0.0.2",
         "chris-ware/nova-breadcrumbs": "^2.0",
         "cloudcake/nova-fixed-bars": "^1.1",
+        "coreproc/nova-echo": "^0.2.0",
+        "coreproc/nova-notification-feed": "^1.4",
         "david-griffiths/nova-dark-theme": "^1.0",
         "dillingham/nova-ajax-select": "^1.0",
         "dillingham/nova-attach-many": "^1.0",

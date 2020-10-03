@@ -54,7 +54,7 @@ class TestNotification extends Notification
             'level' => $this->level,
             'message' => $this->message,
             'url' => 'https://coreproc.com',
-            'target' => '_self'
+            'target' => '_blank'
         ];
     }
 

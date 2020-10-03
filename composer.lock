@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5ca00ec3d6324b1e7b45349448c3d00",
+    "content-hash": "0c3febb9ceee8810bd0e4ff5c6c54cf7",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -759,6 +759,100 @@
                 "nova"
             ],
             "time": "2020-01-10T22:36:36+00:00"
+        },
+        {
+            "name": "coreproc/nova-echo",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CoreProc/nova-echo.git",
+                "reference": "8986cde5847d8cf2b9d1622420b1bbd7817e5525"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CoreProc/nova-echo/zipball/8986cde5847d8cf2b9d1622420b1bbd7817e5525",
+                "reference": "8986cde5847d8cf2b9d1622420b1bbd7817e5525",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Coreproc\\NovaEcho\\NovaEchoServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Coreproc\\NovaEcho\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Adds Laravel Echo with your broadcast configuration to your Laravel Nova app",
+            "keywords": [
+                "Broadcasting",
+                "WebSockets",
+                "echo",
+                "laravel",
+                "nova",
+                "real-time",
+                "socket-io"
+            ],
+            "time": "2019-03-27T08:02:16+00:00"
+        },
+        {
+            "name": "coreproc/nova-notification-feed",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CoreProc/nova-notification-feed.git",
+                "reference": "fae40a065e3986f032fb694f6944e00f07bb2d1a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CoreProc/nova-notification-feed/zipball/fae40a065e3986f032fb694f6944e00f07bb2d1a",
+                "reference": "fae40a065e3986f032fb694f6944e00f07bb2d1a",
+                "shasum": ""
+            },
+            "require": {
+                "coreproc/nova-echo": "^0.2.0",
+                "php": ">=7.1.0",
+                "pusher/pusher-php-server": "^4.1.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Coreproc\\NovaNotificationFeed\\NovaNotificationFeedServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Coreproc\\NovaNotificationFeed\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova package that adds a notification feed in your Nova app.",
+            "keywords": [
+                "Broadcast",
+                "bell",
+                "laravel",
+                "notice board",
+                "notifications",
+                "nova",
+                "sidebar"
+            ],
+            "time": "2020-03-20T15:08:53+00:00"
         },
         {
             "name": "david-griffiths/nova-dark-theme",
