@@ -145,6 +145,7 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::updateOrCreate(['name' => 'delete ' .$item['name'] ],['group' => $item['name'], 'name' => 'delete ' . $item['name'], 'group_order' => ($item['order'] + 5)]);
             Permission::updateOrCreate(['name' => 'restore ' .$item['name'] ],['group' => $item['name'], 'name' => 'restore ' . $item['name'], 'group_order' => ($item['order'] + 6)]);
             Permission::updateOrCreate(['name' => 'force delete ' .$item['name'] ],['group' => $item['name'], 'name' => 'force delete ' . $item['name'], 'group_order' => ($item['order'] + 7)]);
+            Permission::updateOrCreate(['name' => 'download ' .$item['name'] ],['group' => $item['name'], 'name' => 'download ' . $item['name'], 'group_order' => ($item['order'] + 8)]);
         });
 
         //Action Permissions
@@ -152,10 +153,10 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::updateOrCreate(['name' => 'can ' .$item['name'] ],['group' => $item['group'], 'name' => 'can ' . $item['name'], 'group_order' => $item['order']]);
         });
 
-            //Exceptional Permissions
-            Permission::updateOrCreate(['name' => 'view permissions'],['group' => 'permissions', 'name' => 'view permissions', 'group_order' => 4651]);
-            Permission::updateOrCreate(['name' => 'view any permissions'],['group' => 'permissions', 'name' => 'view any permissions', 'group_order' => 4652]);
-            Permission::updateOrCreate(['name' => 'assign permissions'],['group' => 'permissions', 'name' => 'assign permissions', 'group_order' => 4653]);
+        //Exceptional Permissions
+        Permission::updateOrCreate(['name' => 'view permissions'],['group' => 'permissions', 'name' => 'view permissions', 'group_order' => 4651]);
+        Permission::updateOrCreate(['name' => 'view any permissions'],['group' => 'permissions', 'name' => 'view any permissions', 'group_order' => 4652]);
+        Permission::updateOrCreate(['name' => 'assign permissions'],['group' => 'permissions', 'name' => 'assign permissions', 'group_order' => 4653]);
 
         //Super Admin Permissions
         // $superAdminCollection = collect([

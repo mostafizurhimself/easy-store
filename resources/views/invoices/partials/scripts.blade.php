@@ -1,6 +1,19 @@
 <script src="{{asset('js/app.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 <script>
+    // Invoice print function
+
+    $(function(){
+        $('#printInvoice').click(function(){
+            Popup($('.invoice')[0].outerHTML);
+            function Popup(data)
+            {
+                window.print();
+                return true;
+            }
+        });
+    })
+
     window.onload = function () {
     document.getElementById("exportPdf")
         .addEventListener("click", () => {
