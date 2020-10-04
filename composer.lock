@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a8678c98dd93c4c42057ead05d72f72",
+    "content-hash": "b499300c0268a7fe407919e30efd4999",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -579,47 +579,6 @@
                 }
             ],
             "time": "2020-08-19T22:52:38+00:00"
-        },
-        {
-            "name": "caddydz/nova-preview-resource",
-            "version": "0.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/CaddyDz/NovaPreviewResource.git",
-                "reference": "ecbea4d6815fce9b7d99bb984ac64366c3c5d0de"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/CaddyDz/NovaPreviewResource/zipball/ecbea4d6815fce9b7d99bb984ac64366c3c5d0de",
-                "reference": "ecbea4d6815fce9b7d99bb984ac64366c3c5d0de",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Caddydz\\NovaPreviewResource\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Caddydz\\NovaPreviewResource\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "time": "2020-07-31T13:19:41+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -2316,47 +2275,6 @@
             "time": "2020-09-30T07:37:11+00:00"
         },
         {
-            "name": "hubertnnn/laravel-nova-field-dynamic-select",
-            "version": "0.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hubertnnn/laravel-nova-field-dynamic-select.git",
-                "reference": "5deb4142725fe7be7947d45a6fb4d70b64c7f660"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hubertnnn/laravel-nova-field-dynamic-select/zipball/5deb4142725fe7be7947d45a6fb4d70b64c7f660",
-                "reference": "5deb4142725fe7be7947d45a6fb4d70b64c7f660",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Hubertnnn\\LaravelNova\\Fields\\DynamicSelect\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Hubertnnn\\LaravelNova\\Fields\\DynamicSelect\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "time": "2019-03-14T12:01:21+00:00"
-        },
-        {
             "name": "inspheric/nova-email-field",
             "version": "v1.42",
             "source": {
@@ -2469,54 +2387,6 @@
                 "watermark"
             ],
             "time": "2019-11-02T09:15:47+00:00"
-        },
-        {
-            "name": "kirschbaum-development/nova-inline-relationship",
-            "version": "0.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kirschbaum-development/nova-inline-relationship.git",
-                "reference": "e1d05de11ae1271e99ba20597fb6988a0f402e3e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kirschbaum-development/nova-inline-relationship/zipball/e1d05de11ae1271e99ba20597fb6988a0f402e3e",
-                "reference": "e1d05de11ae1271e99ba20597fb6988a0f402e3e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "require-dev": {
-                "codedungeon/phpunit-result-printer": "^0.26.2",
-                "laravel/nova": "*",
-                "mockery/mockery": "^1.1",
-                "orchestra/testing": "^4.0",
-                "phpunit/phpunit": "^8.3"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "KirschbaumDevelopment\\NovaInlineRelationship\\NovaInlineRelationshipServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "KirschbaumDevelopment\\NovaInlineRelationship\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field for displaying relationship properties inline.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "time": "2020-03-05T22:07:37+00:00"
         },
         {
             "name": "klepak/nova-dynamic-page-title",
@@ -4036,55 +3906,6 @@
                 "side-channel resistant"
             ],
             "time": "2020-03-20T21:48:09+00:00"
-        },
-        {
-            "name": "pdmfc/nova-action-button",
-            "version": "v0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pdmfc/nova-action-button.git",
-                "reference": "4f9a9313ac4b6344d1d44bb829e2bc01c4efaafc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pdmfc/nova-action-button/zipball/4f9a9313ac4b6344d1d44bb829e2bc01c4efaafc",
-                "reference": "4f9a9313ac4b6344d1d44bb829e2bc01c4efaafc",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Pdmfc\\NovaFields\\ActionButtonFieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Pdmfc\\NovaFields\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "João Santos",
-                    "email": "joao.santos@pdmfc.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A Laravel Nova field to run actions.",
-            "homepage": "https://github.com/pdmfc/nova-action-button",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "time": "2020-06-19T22:15:04+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -8061,53 +7882,6 @@
                 }
             ],
             "time": "2020-07-22T23:32:04+00:00"
-        },
-        {
-            "name": "yassi/nova-nested-form",
-            "version": "v3.0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yassipad/laravel-nova-nested-form.git",
-                "reference": "98e9ef2b84a94440a9ac022ca0b0b996a251ab25"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yassipad/laravel-nova-nested-form/zipball/98e9ef2b84a94440a9ac022ca0b0b996a251ab25",
-                "reference": "98e9ef2b84a94440a9ac022ca0b0b996a251ab25",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "require-dev": {
-                "laravel/nova": "~2.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Yassi\\NestedForm\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Yassi\\NestedForm\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova package that allows you to create/update/delete nested related fields from a parent form.",
-            "keywords": [
-                "form",
-                "laravel",
-                "nested",
-                "nova",
-                "relationship"
-            ],
-            "time": "2020-03-14T07:13:09+00:00"
         }
     ],
     "packages-dev": [

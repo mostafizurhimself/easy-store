@@ -14,13 +14,13 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::updateOrCreate(
-            ['email' => 'admin@easystore.com'],
-            [
-                'name'     => 'Super Admin',
-                'email'    => 'admin@easystore.com',
-                'password' => bcrypt('mama@1234')
-            ]
-        );
+        // User::updateOrCreate(
+        //     ['email' => 'admin@easystore.com'],
+        //     [
+        //         'name'     => 'Super Admin',
+        //         'email'    => 'admin@easystore.com',
+        //         'password' => bcrypt('mama@1234')
+        //     ]
+        // );
     }
 }

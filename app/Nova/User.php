@@ -117,7 +117,7 @@ class User extends Resource
 
                     Text::make('Name')
                         ->sortable()
-                        ->rules('required', 'max:255', 'alpha_space', 'multi_space')
+                        ->rules('required', 'max:50', 'alpha_space', 'multi_space')
                         ->fillUsing(function($request, $model){
                             $model['name'] = Str::title($request->name);
                         })
@@ -152,7 +152,7 @@ class User extends Resource
                     Email::make('Email')
                         ->alwaysClickable()
                         ->sortable()
-                        ->rules('required', 'email', 'max:254')
+                        ->rules('required', 'email', 'max:50')
                         ->creationRules('unique:users,email')
                         ->updateRules('unique:users,email,{{resourceId}}'),
 

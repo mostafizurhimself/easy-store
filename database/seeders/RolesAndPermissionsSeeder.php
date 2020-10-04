@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class RolesAndPermissionsSeeder extends Seeder
@@ -190,10 +190,10 @@ class RolesAndPermissionsSeeder extends Seeder
         $role->givePermissionTo(Permission::all());
 
 
-        // Give User Super-Admin Role
-        $user = \App\Models\User::whereEmail('admin@easystore.com')->first(); // Change this to your email.
-        if(!$user->hasRole(Role::SUPER_ADMIN)){
-            $user->assignRole(Role::SUPER_ADMIN);
-        }
+        // // Give User Super-Admin Role
+        // $user = \App\Models\User::whereEmail('admin@easystore.com')->first(); // Change this to your email.
+        // if(!$user->hasRole(Role::SUPER_ADMIN)){
+        //     $user->assignRole(Role::SUPER_ADMIN);
+        // }
     }
 }
