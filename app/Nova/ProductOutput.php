@@ -251,7 +251,6 @@ class ProductOutput extends Resource
                 ->exceptOnForms(),
 
             AjaxSelect::make('Sub Section', 'sub_section_id')
-                ->rules('required')
                 ->get('/sections/{section_id}/sub-sections')
                 ->parent('section_id')
                 ->onlyOnForms()
