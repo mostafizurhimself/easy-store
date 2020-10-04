@@ -23,7 +23,7 @@ class SettingsSeeder extends Seeder
                 'settings' => [
                     'name'   => null,
                     'email'  => null,
-                    'mobile' => null,
+                    'mobile' => null
                 ]
             ]
         );
@@ -37,7 +37,7 @@ class SettingsSeeder extends Seeder
                 'settings' => [
                     'name'   => null,
                     'email'  => null,
-                    'mobile' => null,
+                    'mobile' => null
                 ]
             ]
         );
@@ -52,7 +52,7 @@ class SettingsSeeder extends Seeder
                 'settings' => [
                     'location' => null,
                     'provider' => null,
-                    'supplier' => null,
+                    'supplier' => null
                 ]
             ]
         );
