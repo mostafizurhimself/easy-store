@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
@@ -62,7 +63,7 @@ class Section extends Resource
      */
     public function subtitle()
     {
-        return "Location: {$this->location->name} Floor: {$this->floor->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
