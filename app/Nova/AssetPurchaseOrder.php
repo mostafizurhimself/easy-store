@@ -164,17 +164,6 @@ class AssetPurchaseOrder extends Resource
                 ->currency('BDT')
                 ->onlyOnDetail(),
 
-            // Select::make('Payment Method', 'payment_method')
-            //     ->options(PaymentMethod::titleCaseOptions())
-            //     ->default(PaymentMethod::CASH())
-            //     ->rules('required')
-            //     ->onlyOnForms(),
-
-            // Text::make('Payment Method', function(){
-            //     return Str::title(Str::of($this->paymentMethod)->replace('_', " "));
-            // })
-            //     ->onlyOnDetail(),
-
             Badge::make('Status')->map([
                     PurchaseStatus::DRAFT()->getValue()     => 'warning',
                     PurchaseStatus::CONFIRMED()->getValue() => 'info',

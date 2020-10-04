@@ -6,6 +6,8 @@ use R64\NovaFields\JSON;
 use Inspheric\Fields\Email;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use App\Traits\WithOutLocation;
+use Laravel\Nova\Fields\Textarea;
 use Easystore\RouterLink\RouterLink;
 use App\Models\Setting as SettingModel;
 use Bissolli\NovaPhoneField\PhoneNumber;
@@ -14,11 +16,10 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use OptimistDigital\MultiselectField\Multiselect;
 use Epartment\NovaDependencyContainer\HasDependencies;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
-use Laravel\Nova\Fields\Textarea;
 
 class Setting extends Resource
 {
-    use HasDependencies;
+    use HasDependencies, WithOutLocation;
     /**
      * The model the resource corresponds to.
      *
