@@ -20,11 +20,11 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'name' => Setting::APPLICATION_SETTINGS,
-                'settings' => [
+                'settings' => \json_encode([
                     'name'   => null,
                     'email'  => null,
                     'mobile' => null
-                ]
+                ])
             ]
         );
 
@@ -34,11 +34,11 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'name' => Setting::COMPANY_SETTINGS,
-                'settings' => [
+                'settings' => \json_encode([
                     'name'   => null,
                     'email'  => null,
                     'mobile' => null
-                ]
+                ])
             ]
         );
 
@@ -49,11 +49,11 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'name' => Setting::PREFIX_SETTINGS,
-                'settings' => [
+                'settings' => \json_encode([
                     'location' => null,
                     'provider' => null,
                     'supplier' => null
-                ]
+                ])
             ]
         );
     }
