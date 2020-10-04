@@ -2,13 +2,16 @@
 
 namespace App\Nova\Actions\AssetRequisitions;
 
+use App\Models\Role;
 use Illuminate\Bus\Queueable;
 use App\Enums\RequisitionStatus;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Notifications\RequisitionConfirmed;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Notification;
 
 class ConfirmRequisition extends Action
 {
@@ -43,6 +46,14 @@ class ConfirmRequisition extends Action
 
                 $model->status = RequisitionStatus::CONFIRMED();
                 $model->save();
+
+                //Notify the users
+                $users = \App\Models\User::permission(['view asset requisitions', 'view any asset requisitions'])->where('location_id', $model->receiverId)->get();
+                Notification::send($users, new RequisitionConfirmed(\App\Nova\AssetRequisition::uriKey(), $model));
+
+                //Notify super admins
+                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+                Notification::send($users, new RequisitionConfirmed(\App\Nova\AssetRequisition::uriKey(), $model));
             }
         }
     }
