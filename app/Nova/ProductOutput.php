@@ -182,6 +182,7 @@ class ProductOutput extends Resource
                 }),
 
             BelongsTo::make('Style', 'style', 'App\Nova\Style')
+                ->showCreateRelationButton()
                 ->exceptOnForms(),
 
             BelongsTo::make('Style', 'style', 'App\Nova\Style')->searchable()
