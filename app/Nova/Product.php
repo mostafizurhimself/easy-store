@@ -124,12 +124,12 @@ class Product extends Resource
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'string', 'max:100', 'alpha_num_space', 'multi_space')
-                ->creationRules([
-                    Rule::unique('products', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
-                ])
-                ->updateRules([
-                    Rule::unique('products', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
-                ])
+                // ->creationRules([
+                //     Rule::unique('products', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
+                // ])
+                // ->updateRules([
+                //     Rule::unique('products', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
+                // ])
                 ->fillUsing(function($request, $model){
                     $model['name'] = Str::title($request->name);
                 })
