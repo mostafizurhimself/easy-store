@@ -55,4 +55,14 @@ class Settings
     {
         return json_decode(Setting::where('name', Setting::PREFIX_SETTINGS)->first()->settings);
     }
+
+    /**
+     * Get the approver employees
+     *
+     * @return array
+     */
+    public function approvers()
+    {
+        return !empty(self::application()->approvers) ? self::application()->approvers : [];
+    }
 }

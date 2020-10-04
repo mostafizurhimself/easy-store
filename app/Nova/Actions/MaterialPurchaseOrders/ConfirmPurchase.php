@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions\MaterialPurchaseOrders;
 
+use App\Models\Role;
 use App\Enums\PurchaseStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Fields\Select;
@@ -10,6 +11,8 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\PurchaseOrderConfirmed;
 
 class ConfirmPurchase extends Action
 {
@@ -46,6 +49,14 @@ class ConfirmPurchase extends Action
                 $model->approve()->create(['employee_id' => $fields->approved_by]);
                 $model->status = PurchaseStatus::CONFIRMED();
                 $model->save();
+
+                //Notify the users
+                $users = \App\Models\User::permission(['view material purchase orders', 'view any material purchase orders'])->where('location_id', $model->locationId)->get();
+                Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\MaterialPurchaseOrder::uriKey(), $model));
+
+                //Notify super admins
+                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+                Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\MaterialPurchaseOrder::uriKey(), $model));
             }
         }
     }

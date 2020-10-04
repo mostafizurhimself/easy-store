@@ -2,14 +2,17 @@
 
 namespace App\Nova\Actions\AssetPurchaseOrders;
 
+use App\Models\Role;
 use App\Enums\PurchaseStatus;
 use Illuminate\Bus\Queueable;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Laravel\Nova\Fields\Select;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\PurchaseOrderConfirmed;
 
 class ConfirmPurchase extends Action
 {
@@ -46,6 +49,14 @@ class ConfirmPurchase extends Action
                 $model->approve()->create(['employee_id' => $fields->approved_by]);
                 $model->status = PurchaseStatus::CONFIRMED();
                 $model->save();
+
+                //Notify the users
+                $users = \App\Models\User::permission(['view asset purchase orders', 'view any asset purchase orders'])->where('location_id', $model->locationId)->get();
+                Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\AssetPurchaseOrder::uriKey(), $model));
+
+                //Notify super admins
+                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+                Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\AssetPurchaseOrder::uriKey(), $model));
             }
         }
     }
