@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RequisitionConfirmed extends Notification
+class DistributionConfirmed extends Notification
 {
     use Queueable;
 
@@ -19,17 +19,18 @@ class RequisitionConfirmed extends Notification
     /**
      * Resource id or the purchase order
      */
-    private $requisition;
+    private $distribution;
+
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($resourceName, $requisition)
+    public function __construct($resourceName, $distribution)
     {
         $this->resourceName = $resourceName;
-        $this->requisition  = $requisition;
+        $this->distribution  = $distribution;
     }
 
     /**
@@ -52,9 +53,9 @@ class RequisitionConfirmed extends Notification
     public function toArray($notifiable)
     {
         return \Mirovit\NovaNotifications\Notification::make()
-            ->info('A new new requisition has been sent.')
-            ->subtitle("Requisition No: {$this->requisition->readableId}, Location: {$this->requisition->location->name}")
-            ->routeDetail($this->resourceName, $this->requisition->id)
+            ->info('A new new distribution invoice has been sent.')
+            ->subtitle("Invoice No: {$this->distribution->readableId}, Location: {$this->distribution->location->name}")
+            ->routeDetail($this->resourceName, $this->distribution->id)
             ->toArray();
     }
 }

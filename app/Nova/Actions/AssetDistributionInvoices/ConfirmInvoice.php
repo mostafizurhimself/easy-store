@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions\AssetDistributionInvoices;
 
+use App\Models\Role;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use App\Enums\DistributionStatus;
@@ -9,6 +10,8 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Notifications\DistributionConfirmed;
+use Illuminate\Support\Facades\Notification;
 
 class ConfirmInvoice extends Action
 {
@@ -67,6 +70,14 @@ class ConfirmInvoice extends Action
             //Update the distribution invoice status
             $model->status = DistributionStatus::CONFIRMED();
             $model->save();
+
+            //Notify the users
+            $users = \App\Models\User::permission(['view asset distribution invoices', 'view any asset distribution invoices'])->where('location_id', $model->receiverId)->get();
+            Notification::send($users, new DistributionConfirmed(\App\Nova\AssetDistributionInvoice::uriKey(), $model));
+
+            //Notify super admins
+            $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+            Notification::send($users, new DistributionConfirmed(\App\Nova\AssetDistributionInvoice::uriKey(), $model));
         }
     }
 
