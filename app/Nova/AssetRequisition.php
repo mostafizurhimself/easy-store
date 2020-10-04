@@ -166,8 +166,7 @@ class AssetRequisition extends Resource
                     return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
                 })
                 ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
-                ->onlyOnForms()
-                ->hideWhenUpdating(),
+                ->onlyOnForms(),
 
             Text::make('Receiver', function(){
                 return $this->receiver->name;

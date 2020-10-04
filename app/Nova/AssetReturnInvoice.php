@@ -163,9 +163,8 @@ class AssetReturnInvoice extends Resource
                 }),
 
             BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")
-                    // ->searchable()
-                    ->sortable()
-                    ->hideWhenUpdating(),
+                    ->searchable()
+                    ->sortable(),
 
             Currency::make('Total Amount', 'total_return_amount')
                 ->currency('BDT')

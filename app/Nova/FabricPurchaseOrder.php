@@ -154,7 +154,7 @@ class FabricPurchaseOrder extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")->searchable()->hideWhenUpdating(),
+            BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")->searchable(),
 
             Currency::make('Purchase Amount', 'total_purchase_amount')
                 ->currency('BDT')
@@ -163,17 +163,6 @@ class FabricPurchaseOrder extends Resource
             Currency::make('Receive Amount', 'total_receive_amount')
                 ->currency('BDT')
                 ->onlyOnDetail(),
-
-            // Select::make('Payment Method', 'payment_method')
-            //     ->options(PaymentMethod::titleCaseOptions())
-            //     ->default(PaymentMethod::CASH())
-            //     ->rules('required')
-            //     ->onlyOnForms(),
-
-            // Text::make('Payment Method', function(){
-            //     return Str::title(Str::of($this->paymentMethod)->replace('_', " "));
-            // })
-            //     ->onlyOnDetail(),
 
             Badge::make('Status')->map([
                     PurchaseStatus::DRAFT()->getValue()     => 'warning',

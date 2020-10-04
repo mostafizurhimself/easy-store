@@ -2,14 +2,14 @@
 
 namespace App\Observers;
 
-use App\Models\Models\AssetPurchaseOrder;
+use App\Models\AssetPurchaseOrder;
 
 class AssetPurchaseOrderObserver
 {
     /**
      * Handle the asset purchase order "created" event.
      *
-     * @param  \App\Models\Models\AssetPurchaseOrder  $assetPurchaseOrder
+     * @param  \App\Models\AssetPurchaseOrder  $assetPurchaseOrder
      * @return void
      */
     public function created(AssetPurchaseOrder $assetPurchaseOrder)
@@ -18,20 +18,22 @@ class AssetPurchaseOrderObserver
     }
 
     /**
-     * Handle the asset purchase order "updated" event.
+     * Handle the asset purchase order "updating" event.
      *
-     * @param  \App\Models\Models\AssetPurchaseOrder  $assetPurchaseOrder
+     * @param  \App\Models\AssetPurchaseOrder  $assetPurchaseOrder
      * @return void
      */
-    public function updated(AssetPurchaseOrder $assetPurchaseOrder)
+    public function updating(AssetPurchaseOrder $assetPurchaseOrder)
     {
-        //
+        if($assetPurchaseOrder->isDirty('location_id') || $assetPurchaseOrder->isDirty('supplier_id')){
+            $assetPurchaseOrder->purchaseItems()->forceDelete();
+        }
     }
 
     /**
      * Handle the asset purchase order "deleted" event.
      *
-     * @param  \App\Models\Models\AssetPurchaseOrder  $assetPurchaseOrder
+     * @param  \App\Models\AssetPurchaseOrder  $assetPurchaseOrder
      * @return void
      */
     public function deleted(AssetPurchaseOrder $assetPurchaseOrder)
@@ -42,7 +44,7 @@ class AssetPurchaseOrderObserver
     /**
      * Handle the asset purchase order "restored" event.
      *
-     * @param  \App\Models\Models\AssetPurchaseOrder  $assetPurchaseOrder
+     * @param  \App\Models\AssetPurchaseOrder  $assetPurchaseOrder
      * @return void
      */
     public function restored(AssetPurchaseOrder $assetPurchaseOrder)
@@ -53,7 +55,7 @@ class AssetPurchaseOrderObserver
     /**
      * Handle the asset purchase order "force deleted" event.
      *
-     * @param  \App\Models\Models\AssetPurchaseOrder  $assetPurchaseOrder
+     * @param  \App\Models\AssetPurchaseOrder  $assetPurchaseOrder
      * @return void
      */
     public function forceDeleted(AssetPurchaseOrder $assetPurchaseOrder)

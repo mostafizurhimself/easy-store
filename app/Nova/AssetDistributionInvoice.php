@@ -157,8 +157,7 @@ class AssetDistributionInvoice extends Resource
                     return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
                 })
                 ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
-                ->onlyOnForms()
-                ->hideWhenUpdating(),
+                ->onlyOnForms(),
 
             Text::make('Receiver', function(){
                 return $this->receiver->name;
@@ -168,8 +167,7 @@ class AssetDistributionInvoice extends Resource
             AjaxSelect::make('Requisition', 'requisition_id')
                 ->get('/locations/{receiver_id}/asset-requisitions')
                 ->parent('receiver_id')
-                ->onlyOnForms()
-                ->hideWhenUpdating(),
+                ->onlyOnForms(),
 
             BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
                 ->searchable()

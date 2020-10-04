@@ -158,7 +158,7 @@ class ServiceInvoice extends Resource
                 ->currency('BDT')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Provider', 'provider', 'App\Nova\Provider')->searchable()->hideWhenUpdating(),
+            BelongsTo::make('Provider', 'provider', 'App\Nova\Provider')->searchable(),
 
             Badge::make('Status')->map([
                 DispatchStatus::DRAFT()->getValue()     => 'warning',
