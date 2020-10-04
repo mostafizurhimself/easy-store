@@ -123,7 +123,7 @@ class Product extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:100', 'alpha_space', 'multi_space')
+                ->rules('required', 'string', 'max:100', 'alpha_num_space', 'multi_space')
                 ->creationRules([
                     Rule::unique('products', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
