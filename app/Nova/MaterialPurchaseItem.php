@@ -39,7 +39,7 @@ class MaterialPurchaseItem extends Resource
      */
     public static function label()
     {
-      return "Purchase Item";
+      return "Purchase Items";
     }
 
     /**

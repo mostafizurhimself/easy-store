@@ -21,6 +21,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Lenses\DistributionItems;
 use App\Nova\Lenses\DistributionHistory;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
@@ -224,6 +225,7 @@ class AssetDistributionInvoice extends Resource
     {
         return [
             new DistributionInvoices,
+            new DistributionItems,
         ];
     }
 

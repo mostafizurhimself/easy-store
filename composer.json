@@ -37,6 +37,7 @@
         "inspheric/nova-email-field": "^1.42",
         "klepak/nova-dynamic-page-title": "^1.0",
         "laravel/framework": "^8.0",
+        "laravel/legacy-factories": "^1.0",
         "laravel/nova": "*",
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
@@ -45,7 +46,8 @@
         "optimistdigital/nova-multiselect-field": "^1.10",
         "orlyapps/nova-belongsto-depend": "^2.0",
         "pusher/pusher-php-server": "^4.1",
-        "titasgailius/search-relations": "^1.0"
+        "titasgailius/search-relations": "^1.0",
+        "easystore/redirect": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
@@ -114,6 +116,10 @@
         {
             "type": "path",
             "url": "./nova-components/PreventDirectCreate"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Redirect"
         }
     ]
 }

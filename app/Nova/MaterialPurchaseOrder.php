@@ -15,7 +15,9 @@ use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\HasMany;
+use App\Nova\Lenses\ReceiveItems;
 use Laravel\Nova\Fields\Currency;
+use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
@@ -119,15 +121,6 @@ class MaterialPurchaseOrder extends Resource
                     'label' => $this->readableId,
                 ]),
 
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->readonly(),
-
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
-
             BelongsTo::make('Location')
                 ->searchable()
                 ->showOnCreating(function ($request) {
@@ -154,6 +147,15 @@ class MaterialPurchaseOrder extends Resource
                     return false;
                 }),
 
+            Date::make('Date')
+                ->rules('required')
+                ->default(Carbon::now())
+                ->readonly(),
+
+            Hidden::make('Date')
+                ->default(Carbon::now())
+                ->hideWhenUpdating(),
+
             BelongsTo::make('Supplier', 'supplier', 'App\Nova\Supplier')->searchable(),
 
             Currency::make('Purchase Amount', 'total_purchase_amount')
@@ -162,7 +164,7 @@ class MaterialPurchaseOrder extends Resource
 
             Currency::make('Receive Amount', 'total_receive_amount')
                 ->currency('BDT')
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             Badge::make('Status')->map([
                     PurchaseStatus::DRAFT()->getValue()     => 'warning',
@@ -226,7 +228,10 @@ class MaterialPurchaseOrder extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new PurchaseItems,
+            new ReceiveItems,
+        ];
     }
 
     /**

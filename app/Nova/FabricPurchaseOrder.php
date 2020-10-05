@@ -16,6 +16,7 @@ use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
+use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
@@ -24,6 +25,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricPurchaseOrders\Recalculate;
 use App\Nova\Actions\FabricPurchaseOrders\ConfirmPurchase;
 use App\Nova\Actions\FabricPurchaseOrders\GeneratePurchaseOrder;
+use App\Nova\Lenses\ReceiveItems;
 
 class FabricPurchaseOrder extends Resource
 {
@@ -119,15 +121,6 @@ class FabricPurchaseOrder extends Resource
                     'label' => $this->readableId,
                 ]),
 
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->readonly(),
-
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
-
             BelongsTo::make('Location')
                 ->searchable()
                 ->showOnCreating(function ($request) {
@@ -154,6 +147,16 @@ class FabricPurchaseOrder extends Resource
                     return false;
                 }),
 
+            Date::make('Date')
+                ->rules('required')
+                ->default(Carbon::now())
+                ->readonly(),
+
+            Hidden::make('Date')
+                ->default(Carbon::now())
+                ->hideWhenUpdating(),
+
+
             BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")->searchable(),
 
             Currency::make('Purchase Amount', 'total_purchase_amount')
@@ -162,7 +165,7 @@ class FabricPurchaseOrder extends Resource
 
             Currency::make('Receive Amount', 'total_receive_amount')
                 ->currency('BDT')
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             Badge::make('Status')->map([
                     PurchaseStatus::DRAFT()->getValue()     => 'warning',
@@ -229,7 +232,10 @@ class FabricPurchaseOrder extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new PurchaseItems,
+            new ReceiveItems,
+        ];
     }
 
     /**

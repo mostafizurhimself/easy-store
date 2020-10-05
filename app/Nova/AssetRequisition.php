@@ -19,6 +19,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Lenses\RequisitionItems;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Lenses\AssetRequisition\Requisitions;
@@ -221,7 +222,8 @@ class AssetRequisition extends Resource
     public function lenses(Request $request)
     {
         return [
-            new Requisitions
+            new Requisitions,
+            new RequisitionItems
         ];
     }
 

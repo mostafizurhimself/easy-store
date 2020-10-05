@@ -135,7 +135,7 @@ class Service extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:100', 'alpha_space', 'multi_space')
+                ->rules('required', 'string', 'max:100', 'multi_space')
                 ->creationRules([
                     Rule::unique('services', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])

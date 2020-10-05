@@ -52,7 +52,22 @@ class Product extends Resource
      *
      * @var string
      */
-    public static $title = 'code';
+    public function title()
+    {
+        return "{$this->name} ({$this->code})";
+    }
+
+    /**
+     * Get the search result subtitle for the resource.
+     *
+     * @return string
+     */
+    public function subtitle()
+    {
+        $subtitle = " Location: " . $this->location->name;
+
+        return $subtitle;
+    }
 
     /**
      * The columns that should be searched.
@@ -60,7 +75,7 @@ class Product extends Resource
      * @var array
      */
     public static $search = [
-        'code',
+        'code', 'name'
     ];
 
     /**
@@ -123,7 +138,7 @@ class Product extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:100', 'alpha_num_space', 'multi_space')
+                ->rules('required', 'string', 'max:100', 'multi_space')
                 // ->creationRules([
                 //     Rule::unique('products', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 // ])

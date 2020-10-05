@@ -97,7 +97,7 @@ class Location extends Resource
                 ]),
 
             Text::make('Name')
-                ->rules('required', 'max:45', 'alpha_space', 'multi_space')
+                ->rules('required', 'max:45', 'multi_space')
                 ->creationRules('unique:locations,name')
                 ->updateRules('unique:locations,name,{{resourceId}}')
                 ->fillUsing(function($request, $model){

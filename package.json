@@ -33,7 +33,9 @@
         "build-text-titlecase": "cd nova-components/TextTitlecase && npm run dev",
         "build-text-titlecase-prod": "cd nova-components/TextTitlecase && npm run prod",
         "build-notification": "cd nova-components/Notification && npm run dev",
-        "build-notification-prod": "cd nova-components/Notification && npm run prod"
+        "build-notification-prod": "cd nova-components/Notification && npm run prod",
+        "build-redirect": "cd nova-components/Redirect && npm run dev",
+        "build-redirect-prod": "cd nova-components/Redirect && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.19",

@@ -13,7 +13,9 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\HasMany;
+use App\Nova\Lenses\ReceiveItems;
 use Laravel\Nova\Fields\Currency;
+use App\Nova\Lenses\DispatchItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
@@ -210,7 +212,10 @@ class ServiceInvoice extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new DispatchItems,
+            new ReceiveItems
+        ];
     }
 
     /**
