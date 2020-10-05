@@ -34,6 +34,13 @@ class Product extends Resource
     public static $model = \App\Models\Product::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can update opening quantity of'];
+
+    /**
      * The group associated with the resource.
      *
      * @return string
@@ -312,7 +319,7 @@ class Product extends Resource
     {
         return [
             (new UpdateOpeningQuantity)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can update products opening quantity');
+                return $request->user()->hasPermissionTo('can update opening quantity of');
             })->onlyOnDetail(),
         ];
     }

@@ -23,17 +23,25 @@ use Easystore\RouterLink\RouterLink;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReceiveItems\ConfirmReceiveItem;
 
 class FabricReceiveItem extends Resource
 {
-    use WithOutLocation;
+    use WithOutLocation, SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
     public static $model = 'App\Models\FabricReceiveItem';
+
+    /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm', 'can download'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -66,6 +74,25 @@ class FabricReceiveItem extends Resource
       return "Receive Items";
     }
 
+     /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
+
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'purchaseOrder' => ['name'],
+        'fabric' => ['name'],
+    ];
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -78,7 +105,7 @@ class FabricReceiveItem extends Resource
             // ID::make()->sortable(),
 
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\FabricPurchaseOrder")
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             BelongsTo::make('Fabric')
                 ->hideWhenCreating()

@@ -33,6 +33,13 @@ class Role extends Resource
     public static $model = RoleModel::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = [];
+
+    /**
      * The group associated with the resource.
      *
      * @var string
@@ -45,6 +52,16 @@ class Role extends Resource
      * @var int
      */
     public static $priority = 2;
+
+    /**
+     * Get the human readable name of the resource
+     *
+     * @return string
+     */
+    public static function readableName()
+    {
+        return str_replace('-', ' ', static::uriKey());
+    }
 
     /**
      * The columns that should be searched.

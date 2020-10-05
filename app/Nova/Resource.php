@@ -28,6 +28,13 @@ abstract class Resource extends NovaResource
     ];
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = [];
+
+    /**
      * Get the navigation label of the resource
      *
      * @return string
@@ -35,6 +42,16 @@ abstract class Resource extends NovaResource
     public static function navigationLabel()
     {
         return static::label();
+    }
+
+    /**
+     * Get the human readable name of the resource
+     *
+     * @return string
+     */
+    public static function readableName()
+    {
+        return str_replace('-', ' ', static::uriKey());
     }
 
     /**

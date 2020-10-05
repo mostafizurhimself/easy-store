@@ -16,6 +16,7 @@ use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
+use App\Nova\Lenses\ReceiveItems;
 use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
@@ -25,7 +26,6 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricPurchaseOrders\Recalculate;
 use App\Nova\Actions\FabricPurchaseOrders\ConfirmPurchase;
 use App\Nova\Actions\FabricPurchaseOrders\GeneratePurchaseOrder;
-use App\Nova\Lenses\ReceiveItems;
 
 class FabricPurchaseOrder extends Resource
 {
@@ -57,6 +57,13 @@ class FabricPurchaseOrder extends Resource
      * @var string
      */
     public static $title = 'readable_id';
+
+    /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm', 'can generate'];
 
     /**
      * Get the search result subtitle for the resource.

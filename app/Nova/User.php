@@ -40,6 +40,13 @@ class User extends Resource
     public static $model = 'App\\Models\\User';
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can mark as active', 'can mark as inactive'];
+
+    /**
      * The group associated with the resource.
      *
      * @var string
@@ -259,10 +266,10 @@ class User extends Resource
     {
         return [
             (new MakeAsActive)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can mark as active');
+                return $request->user()->hasPermissionTo('can mark as active users');
             }),
             (new MakeAsInactive)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can mark as inactive');
+                return $request->user()->hasPermissionTo('can mark as inactive users');
             }),
         ];
     }

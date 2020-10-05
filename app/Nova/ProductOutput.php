@@ -30,6 +30,13 @@ class ProductOutput extends Resource
     public static $model = \App\Models\ProductOutput::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * The group associated with the resource.
      *
      * @return string

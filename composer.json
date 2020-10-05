@@ -24,6 +24,7 @@
         "easystore/nova-theme": "*",
         "easystore/permission-checkbox": "*",
         "easystore/prevent-direct-create": "*",
+        "easystore/redirect": "*",
         "easystore/router-link": "*",
         "easystore/text-uppercase": "*",
         "ebess/advanced-nova-media-library": "^3.1",
@@ -35,6 +36,7 @@
         "gregoriohc/laravel-nova-theme-responsive": "^0.8.1",
         "guzzlehttp/guzzle": "^7.0.1",
         "inspheric/nova-email-field": "^1.42",
+        "jimmyjs/laravel-report-generator": "^2.0",
         "klepak/nova-dynamic-page-title": "^1.0",
         "laravel/framework": "^8.0",
         "laravel/legacy-factories": "^1.0",
@@ -46,8 +48,7 @@
         "optimistdigital/nova-multiselect-field": "^1.10",
         "orlyapps/nova-belongsto-depend": "^2.0",
         "pusher/pusher-php-server": "^4.1",
-        "titasgailius/search-relations": "^1.0",
-        "easystore/redirect": "*"
+        "titasgailius/search-relations": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

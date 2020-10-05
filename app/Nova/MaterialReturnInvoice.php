@@ -34,6 +34,13 @@ class MaterialReturnInvoice extends Resource
      */
     public static $model = \App\Models\MaterialReturnInvoice::class;
 
+    /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm', 'can generate'];
+
      /**
      * The group associated with the resource.
      *

@@ -36,6 +36,13 @@ class Material extends Resource
     public static $model = 'App\Models\Material';
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can update opening quantity of'];
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @return string
@@ -44,7 +51,6 @@ class Material extends Resource
     {
         return "{$this->name} ({$this->code})";
     }
-
 
     /**
      * Get the search result subtitle for the resource.
@@ -315,7 +321,7 @@ class Material extends Resource
     {
         return [
             (new UpdateOpeningQuantity)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can update materials opening quantity');
+                return $request->user()->hasPermissionTo('can update opening quantity of materials');
             })->onlyOnDetail(),
         ];
     }

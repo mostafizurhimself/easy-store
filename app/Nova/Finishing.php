@@ -25,6 +25,13 @@ class Finishing extends Resource
     public static $model = \App\Models\Finishing::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * The group associated with the resource.
      *
      * @return string

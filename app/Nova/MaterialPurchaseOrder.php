@@ -37,6 +37,13 @@ class MaterialPurchaseOrder extends Resource
     public static $model = 'App\Models\MaterialPurchaseOrder';
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm', 'can generate'];
+
+    /**
      * The side nav menu order.
      *
      * @var int

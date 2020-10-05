@@ -33,6 +33,13 @@ class ServiceReceive extends Resource
     public static $model = \App\Models\ServiceReceive::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm', 'can download'];
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
@@ -82,7 +89,7 @@ class ServiceReceive extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', "App\Nova\ServiceInvoice")
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             BelongsTo::make('Dispatch', 'dispatch', "App\Nova\ServiceDispatch")
                 ->onlyOnDetail(),

@@ -33,6 +33,13 @@ class AssetDistributionReceiveItem extends Resource
     public static $model = \App\Models\AssetDistributionReceiveItem::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm', 'can download'];
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
@@ -84,7 +91,7 @@ class AssetDistributionReceiveItem extends Resource
             // ID::make(__('ID'), 'id')->sortable(),
 
             BelongsTo::make('Invoice', 'invoice', \App\Nova\AssetDistributionInvoice::class)
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             BelongsTo::make('Asset')
                 ->hideWhenCreating()

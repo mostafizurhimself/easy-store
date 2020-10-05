@@ -34,6 +34,13 @@ class MaterialDistribution extends Resource
     public static $model = 'App\Models\MaterialDistribution';
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm', 'can download'];
+
+    /**
      * The group associated with the resource.
      *
      * @return string

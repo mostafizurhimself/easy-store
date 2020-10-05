@@ -37,6 +37,13 @@ class ServiceInvoice extends Resource
     public static $model = \App\Models\ServiceInvoice::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm', 'can generate'];
+
+    /**
      * The group associated with the resource.
      *
      * @return string

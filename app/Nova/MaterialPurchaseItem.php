@@ -14,16 +14,24 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Titasgailius\SearchRelations\SearchesRelations;
 
 class MaterialPurchaseItem extends Resource
 {
-    use WithOutLocation;
+    use WithOutLocation, SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
     public static $model = 'App\Models\MaterialPurchaseItem';
+
+    /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -56,6 +64,25 @@ class MaterialPurchaseItem extends Resource
      */
     public static $displayInNavigation = false;
 
+     /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
+
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'purchaseOrder' => ['name'],
+        'material' => ['name'],
+    ];
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -66,7 +93,7 @@ class MaterialPurchaseItem extends Resource
     {
         return [
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\MaterialPurchaseOrder")
-            ->onlyOnDetail(),
+            ->exceptOnForms(),
 
             BelongsTo::make('Material'),
 

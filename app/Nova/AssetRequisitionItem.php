@@ -33,6 +33,13 @@ class AssetRequisitionItem extends Resource
     public static $priority = 5;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * The group associated with the resource.
      *
      * @return string

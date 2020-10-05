@@ -14,10 +14,11 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Titasgailius\SearchRelations\SearchesRelations;
 
 class AssetPurchaseItem extends Resource
 {
-    use WithOutLocation;
+    use WithOutLocation, SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
@@ -33,6 +34,13 @@ class AssetPurchaseItem extends Resource
     public static $title = 'readable_id';
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * Get the displayable label of the resource.
      *
      * @return string
@@ -41,6 +49,25 @@ class AssetPurchaseItem extends Resource
     {
       return "Purchase Items";
     }
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
+
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'purchaseOrder' => ['name'],
+        'asset' => ['name'],
+    ];
 
     /**
      * Indicates if the resource should be globally searchable.
@@ -68,7 +95,7 @@ class AssetPurchaseItem extends Resource
             // ID::make()->sortable(),
 
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\AssetPurchaseOrder")
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             BelongsTo::make('Asset'),
 

@@ -42,11 +42,29 @@ class Permission extends Resource
     public static $priority = 3;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = [];
+
+    /**
+     * Get the human readable name of the resource
+     *
+     * @return string
+     */
+    public static function readableName()
+    {
+        return str_replace('-', ' ', static::uriKey());
+    }
+
+
+    /**
      * The columns that should be searched.
      *
      * @var array
      */
-    public static $search = [];
+    public static $search = ['name'];
 
     /**
      * Indicates if the resource should be globally searchable.

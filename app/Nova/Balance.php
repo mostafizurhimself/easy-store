@@ -35,6 +35,13 @@ class Balance extends Resource
     public static $model = \App\Models\Balance::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm'];
+
+    /**
      * The group associated with the resource.
      *
      * @return string

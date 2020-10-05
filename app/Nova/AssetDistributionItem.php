@@ -39,6 +39,13 @@ class AssetDistributionItem extends Resource
     public static $priority = 7;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * The group associated with the resource.
      *
      * @return string
@@ -95,7 +102,7 @@ class AssetDistributionItem extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', "App\Nova\AssetDistributionInvoice")
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             BelongsTo::make('Asset'),
 

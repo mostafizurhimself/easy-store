@@ -1,4 +1,4 @@
-{{-- {{dd(Settings::approvers())}} --}}
+{{-- {{dd(\Laravel\Nova\Nova::availableResources(request())[0]::uriKey())}} --}}
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full font-sans antialiased">

@@ -27,6 +27,13 @@ class ServiceDispatch extends Resource
     public static $model = \App\Models\ServiceDispatch::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
@@ -77,7 +84,7 @@ class ServiceDispatch extends Resource
         return [
             // ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Invoice', 'invoice', "App\Nova\ServiceInvoice")
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             BelongsTo::make('Service', 'service', 'App\Nova\Service'),
 

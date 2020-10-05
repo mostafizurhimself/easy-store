@@ -43,6 +43,13 @@ class Supplier extends Resource
     public static $group = '<span class="hidden">10</span>Vendor Section';
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can update opening balance of'];
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
@@ -201,7 +208,7 @@ class Supplier extends Resource
     {
         return [
             (new UpdateOpeningBalance)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can update suppliers opening balance');
+                return $request->user()->hasPermissionTo('can update opening balance of suppliers');
             })->onlyOnDetail(),
         ];
     }

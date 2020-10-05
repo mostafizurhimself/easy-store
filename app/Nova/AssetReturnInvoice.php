@@ -41,6 +41,13 @@ class AssetReturnInvoice extends Resource
      */
     public static $group = '<span class="hidden">06</span>Asset Section';
 
+    /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm', 'can generate'];
+
 
     /**
      * The side nav menu order.

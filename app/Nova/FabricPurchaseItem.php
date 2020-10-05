@@ -14,10 +14,11 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Titasgailius\SearchRelations\SearchesRelations;
 
 class FabricPurchaseItem extends Resource
 {
-    use WithOutLocation;
+    use WithOutLocation, SearchesRelations;
 
     /**
      * The model the resource corresponds to.
@@ -27,11 +28,38 @@ class FabricPurchaseItem extends Resource
     public static $model = 'App\Models\FabricPurchaseItem';
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'readable_id';
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
+
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'purchaseOrder' => ['name'],
+        'fabric' => ['name'],
+    ];
+
 
     /**
      * Get the displayable label of the resource.
@@ -69,7 +97,7 @@ class FabricPurchaseItem extends Resource
             // ID::make()->sortable(),
 
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\FabricPurchaseOrder")
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             BelongsTo::make('Fabric'),
 

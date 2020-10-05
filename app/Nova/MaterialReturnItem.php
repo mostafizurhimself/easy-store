@@ -27,6 +27,13 @@ class MaterialReturnItem extends Resource
     public static $model = \App\Models\MaterialReturnItem::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * Indicates if the resource should be globally searchable.
      *
      * @var bool
@@ -76,7 +83,7 @@ class MaterialReturnItem extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', \App\Nova\MaterialReturnInvoice::class)
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             BelongsTo::make('Material'),
 

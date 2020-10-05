@@ -31,6 +31,13 @@ class AssetReturnItem extends Resource
     public static $model = \App\Models\AssetReturnItem::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * Indicates if the resource should be globally searchable.
      *
      * @var bool
@@ -89,7 +96,7 @@ class AssetReturnItem extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', \App\Nova\AssetReturnINvoice::class)
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             BelongsTo::make('Asset'),
 

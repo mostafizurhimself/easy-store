@@ -40,6 +40,13 @@ class FabricDistribution extends Resource
     public static $group = '<span class="hidden">04</span>Fabrics Section';
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm'];
+
+    /**
      * The side nav menu order.
      *
      * @var int

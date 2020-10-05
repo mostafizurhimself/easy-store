@@ -43,6 +43,13 @@ class Asset extends Resource
     public static $group = '<span class="hidden">06</span>Asset Section';
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can consume', 'can update opening quantity of'];
+
+    /**
      * The side nav menu order.
      *
      * @var int
@@ -318,7 +325,7 @@ class Asset extends Resource
                         }),
 
             (new UpdateOpeningQuantity)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can update assets opening quantity');
+                return $request->user()->hasPermissionTo('can update opening quantity of assets');
             })->onlyOnDetail(),
         ];
     }

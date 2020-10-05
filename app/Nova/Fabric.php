@@ -41,6 +41,13 @@ class Fabric extends Resource
     public static $priority = 2;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can update opening quantity of'];
+
+    /**
      * The group associated with the resource.
      *
      * @return string
@@ -308,7 +315,7 @@ class Fabric extends Resource
     {
         return [
             (new UpdateOpeningQuantity)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can update fabrics opening quantity');
+                return $request->user()->hasPermissionTo('can update opening quantity of fabrics');
             })->onlyOnDetail(),
         ];
     }
