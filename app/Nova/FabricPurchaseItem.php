@@ -15,6 +15,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\FabricPurchaseItems\DownloadPdf;
 
 class FabricPurchaseItem extends Resource
 {
@@ -185,7 +186,13 @@ class FabricPurchaseItem extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadPdf)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
+            })
+        ];
     }
 
     /**

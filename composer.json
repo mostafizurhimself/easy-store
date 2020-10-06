@@ -36,7 +36,6 @@
         "gregoriohc/laravel-nova-theme-responsive": "^0.8.1",
         "guzzlehttp/guzzle": "^7.0.1",
         "inspheric/nova-email-field": "^1.42",
-        "jimmyjs/laravel-report-generator": "^2.0",
         "klepak/nova-dynamic-page-title": "^1.0",
         "laravel/framework": "^8.0",
         "laravel/legacy-factories": "^1.0",

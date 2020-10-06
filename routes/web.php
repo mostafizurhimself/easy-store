@@ -65,4 +65,10 @@ Route::group(['middleware' => 'nova'], function () {
         Route::get('assets/{purchaseOrder}', 'PurchaseOrderController@assetPurchaseOrder')->name('purchase-orders.assets');
     });
 
+    // Pdf Routes
+
+    Route::group(['prefix' => 'pdf'], function () {
+        Route::get('fabric-purchase-items', 'PdfController@fabricPurchaseItem')->name('pdf.fabric-purchase-items');
+    });
+
 });
