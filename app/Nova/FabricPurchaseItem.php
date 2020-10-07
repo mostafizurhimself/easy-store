@@ -12,7 +12,9 @@ use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
+use App\Nova\Filters\FabricFilter;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricPurchaseItems\DownloadPdf;
@@ -164,7 +166,10 @@ class FabricPurchaseItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new PurchaseStatusFilter,
+            new FabricFilter
+        ];
     }
 
     /**
@@ -191,7 +196,7 @@ class FabricPurchaseItem extends Resource
                 return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
             })->canRun(function($request){
                 return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
-            })
+            }),
         ];
     }
 

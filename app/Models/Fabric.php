@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Enums\DistributionStatus;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Fabric extends Model implements HasMedia
@@ -110,6 +111,22 @@ class Fabric extends Model implements HasMedia
         return $this->quantity -
                 $this->distributions()->draft()->sum('quantity') -
                 $this->returnItems()->draft()->sum('quantity') ;
+    }
+
+    /**
+     * Get the filter options of fabrics
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        return Cache::remember('nova-fabric-filter-options', 3600, function () {
+            $fabrics = self::setEagerLoads([])->get(['id', 'name']);
+
+            return $fabrics->mapWithKeys(function ($fabric) {
+                return [$fabric->name => $fabric->id];
+            })->toArray();
+        });
     }
 
 }

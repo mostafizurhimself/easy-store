@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions\FabricPurchaseItems;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
@@ -22,7 +23,11 @@ class DownloadPdf extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        //
+        $filename = "fabric_purchase_order_".Carbon::now()->format('Y_m_d_h_i').".pdf";
+        $pdf = \PDF::loadView('pdf.pages.fabric-purchase-items', compact('models'));
+        $pdf->save(storage_path($filename));
+
+        return Action::redirect( route('dump-download', compact('filename')) );
     }
 
     /**

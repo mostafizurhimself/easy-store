@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Dhaka',
 
     /*
     |--------------------------------------------------------------------------
@@ -167,6 +167,7 @@ return [
          */
         Easystore\NovaTheme\ThemeServiceProvider::class,
         Akaunting\Money\Provider::class,
+        niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -235,6 +236,7 @@ return [
         'Money' => App\Helpers\Money::class,
         'Helper' => App\Facades\Helper::class,
         'Settings' => App\Facades\Settings::class,
+        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
 
     ],
 

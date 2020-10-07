@@ -65,10 +65,13 @@ Route::group(['middleware' => 'nova'], function () {
         Route::get('assets/{purchaseOrder}', 'PurchaseOrderController@assetPurchaseOrder')->name('purchase-orders.assets');
     });
 
-    // Pdf Routes
+    // Helper Controller
+    Route::get('dump-download/{filename}', "HelperController@dumpDownload")->name('dump-download');
+    Route::get('test', function(){
+        $models = \App\Models\FabricPurchaseItem::all();
 
-    Route::group(['prefix' => 'pdf'], function () {
-        Route::get('fabric-purchase-items', 'PdfController@fabricPurchaseItem')->name('pdf.fabric-purchase-items');
+        return view('pdf.pages.fabric-purchase-items', compact('models'));
     });
+
 
 });

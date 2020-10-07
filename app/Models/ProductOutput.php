@@ -55,19 +55,29 @@ class ProductOutput extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function section()
+    public function floor()
     {
-       return $this->belongsTo(Section::class)->withTrashed();
+       return $this->belongsTo(Floor::class)->withTrashed();
     }
 
-    /**
-     * Determines one-to-many relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function subSection()
-    {
-       return $this->belongsTo(SubSection::class)->withTrashed();
-    }
+    // /**
+    //  * Determines one-to-many relation
+    //  *
+    //  * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    //  */
+    // public function section()
+    // {
+    //    return $this->belongsTo(Section::class)->withTrashed();
+    // }
+
+    // /**
+    //  * Determines one-to-many relation
+    //  *
+    //  * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    //  */
+    // public function subSection()
+    // {
+    //    return $this->belongsTo(SubSection::class)->withTrashed();
+    // }
 
 }

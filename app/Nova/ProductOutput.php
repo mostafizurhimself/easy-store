@@ -222,9 +222,9 @@ class ProductOutput extends Resource
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
 
-            AjaxSelect::make('Section', 'section_id')
+            AjaxSelect::make('Floor', 'floor_id')
                 ->rules('required')
-                ->get('/locations/{location}/sections')
+                ->get('/locations/{location}/floors')
                 ->parent('location')
                 ->onlyOnForms()
                 ->showOnCreating(function ($request) {
@@ -239,7 +239,7 @@ class ProductOutput extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Section')
+            BelongsTo::make('Floor')
                 ->onlyOnForms()
                 ->hideWhenCreating(function ($request) {
                     if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
@@ -254,41 +254,7 @@ class ProductOutput extends Resource
                 }),
 
 
-            BelongsTo::make('Section')
-                ->exceptOnForms(),
-
-            AjaxSelect::make('Sub Section', 'sub_section_id')
-                ->get('/sections/{section_id}/sub-sections')
-                ->parent('section_id')
-                ->onlyOnForms()
-                ->showOnCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
-
-            BelongsTo::make('Sub Section', 'subSection')
-                ->onlyOnForms()
-                ->hideWhenCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
-
-
-            BelongsTo::make('Sub Section', 'subSection')
+            BelongsTo::make('Floor')
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
