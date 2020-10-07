@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\PurchaseStatus;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
@@ -104,6 +105,12 @@ class FabricPurchaseItem extends Resource
 
             BelongsTo::make('Fabric'),
 
+            Date::make('Date', function(){
+                return $this->date;
+            })
+                ->exceptOnForms(),
+
+
             Number::make('Quantity', 'purchase_quantity')
                 ->rules('required', 'numeric', 'min:0')
                 ->onlyOnForms(),
@@ -196,7 +203,8 @@ class FabricPurchaseItem extends Resource
                 return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
             })->canRun(function($request){
                 return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
-            }),
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
         ];
     }
 

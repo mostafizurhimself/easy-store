@@ -6,15 +6,17 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\PurchaseStatus;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
-use Laravel\Nova\Fields\Number;
 use App\Traits\WithOutLocation;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\AssetPurchaseItems\DownloadPdf;
 
 class AssetPurchaseItem extends Resource
 {
@@ -98,6 +100,11 @@ class AssetPurchaseItem extends Resource
                 ->exceptOnForms(),
 
             BelongsTo::make('Asset'),
+
+            Date::make('Date', function(){
+                return $this->date;
+            })
+                ->exceptOnForms(),
 
             Number::make('Quantity', 'purchase_quantity')
                 ->rules('required', 'numeric', 'min:0')
@@ -183,7 +190,14 @@ class AssetPurchaseItem extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadPdf)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download asset purchase items') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download asset purchase items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+        ];
     }
 
     /**

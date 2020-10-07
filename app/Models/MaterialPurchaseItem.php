@@ -74,6 +74,17 @@ class MaterialPurchaseItem extends Model
         return $this->material->unit->name;
     }
 
+       /**
+     * Get the date of the purchase order
+     *
+     * @return string
+     */
+    public function getDateAttribute()
+    {
+        return $this->purchaseOrder->date->format('Y-m-d');
+    }
+
+
     /**
      * Determines one-to-many relation
      *

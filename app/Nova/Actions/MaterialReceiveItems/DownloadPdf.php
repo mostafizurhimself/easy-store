@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Nova\Actions\FabricPurchaseItems;
+namespace App\Nova\Actions\MaterialReceiveItems;
 
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Actions\Action;
@@ -24,10 +23,10 @@ class DownloadPdf extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        $filename = "fabric_purchase_items_".time().".pdf";
+        $filename = "material_receive_items_".time().".pdf";
         $subtitle = $fields->subtitle;
 
-        $pdf = \PDF::loadView('pdf.pages.fabric-purchase-items', compact('models', 'subtitle'), [], [
+        $pdf = \PDF::loadView('pdf.pages.material-receive-items', compact('models', 'subtitle'), [], [
             'mode' => 'utf-8',
             'orientation' => 'L'
         ]);

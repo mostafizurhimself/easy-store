@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\PurchaseStatus;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
@@ -15,6 +16,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\MaterialPurchaseItems\DownloadPdf;
 
 class MaterialPurchaseItem extends Resource
 {
@@ -96,6 +98,11 @@ class MaterialPurchaseItem extends Resource
             ->exceptOnForms(),
 
             BelongsTo::make('Material'),
+
+            Date::make('Date', function(){
+                return $this->date;
+            })
+                ->exceptOnForms(),
 
             Number::make('Quantity', 'purchase_quantity')
                 ->rules('required', 'numeric', 'min:0')
@@ -179,7 +186,14 @@ class MaterialPurchaseItem extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+
+            (new DownloadPdf)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download'),
+        ];
     }
 
         /**

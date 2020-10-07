@@ -23,6 +23,7 @@ use Easystore\RouterLink\RouterLink;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use App\Nova\Actions\AssetReceiveItems\DownloadPdf;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetReceiveItems\ConfirmReceiveItem;
 
@@ -211,6 +212,13 @@ class AssetReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
+            (new DownloadPdf)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download asset receive items') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download asset receive items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
             (new ConfirmReceiveItem)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm asset receive items');
             }),

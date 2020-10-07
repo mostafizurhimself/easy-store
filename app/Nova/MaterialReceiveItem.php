@@ -24,6 +24,7 @@ use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\MaterialReceiveItems\DownloadPdf;
 use App\Nova\Actions\MaterialReceiveItems\ConfirmReceiveItem;
 
 class MaterialReceiveItem extends Resource
@@ -207,6 +208,12 @@ class MaterialReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
+            (new DownloadPdf)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download material receive items') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download material receive items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+
             (new ConfirmReceiveItem)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm material receive items');
             }),

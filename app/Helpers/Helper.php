@@ -78,4 +78,24 @@ class Helper
     {
         return money($value, config('nova.currency', 'BDT'));
     }
+
+    /**
+     * Format Currency
+     *
+     * @return string
+     */
+    public function currencyPdf($value)
+    {
+        return config('nova.currency', 'BDT') . " " . $this->currencyShortPdf($value);
+    }
+
+    /**
+     * Format Currency
+     *
+     * @return string
+     */
+    public function currencyShortPdf($value)
+    {
+        return $value." /=";
+    }
 }

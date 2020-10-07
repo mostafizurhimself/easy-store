@@ -75,6 +75,16 @@ class FabricPurchaseItem extends Model
     }
 
     /**
+     * Get the date of the purchase order
+     *
+     * @return string
+     */
+    public function getDateAttribute()
+    {
+        return $this->purchaseOrder->date->format('Y-m-d');
+    }
+
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

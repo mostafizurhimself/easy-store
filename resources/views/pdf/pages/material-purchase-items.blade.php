@@ -1,11 +1,11 @@
 @extends('pdf.layout')
 
 @section('title')
-    Fabric Purchase Items
+    Material Purchase Items
 @endsection
 
 @section('content')
-    <h1>Fabric Purchase Items</h1>
+    <h1>Material Purchase Items</h1>
     @if (!empty($subtitle))
         <p>{{$subtitle}}</p>
     @else
@@ -19,7 +19,7 @@
                 <td>#</td>
                 <td>Date</td>
                 <td>Order No</td>
-                <td>Fabric</td>
+                <td>Material</td>
                 <td>Quantity</td>
                 <td>Rate</td>
                 <td>Amount</td>
@@ -30,7 +30,7 @@
                     <td>{{$loop->iteration}}</td>
                     <td>{{$model->date}}</td>
                     <td>{{$model->purchaseOrder->readableId}}</td>
-                    <td>{{$model->fabric->name}} ({{$model->fabric->code}})</td>
+                    <td>{{$model->material->name}} ({{$model->material->code}})</td>
                     <td>{{$model->purchaseQuantity}} {{$model->unit}}</td>
                     <td>{{Helper::currencyShortPdf($model->purchaseRate)}}</td>
                     <td>{{Helper::currencyPdf($model->purchaseAmount)}}</td>

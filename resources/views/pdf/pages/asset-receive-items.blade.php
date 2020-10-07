@@ -1,11 +1,11 @@
 @extends('pdf.layout')
 
 @section('title')
-    Fabric Purchase Items
+    Asset Receive Items
 @endsection
 
 @section('content')
-    <h1>Fabric Purchase Items</h1>
+    <h1>Asset Receive Items</h1>
     @if (!empty($subtitle))
         <p>{{$subtitle}}</p>
     @else
@@ -19,7 +19,7 @@
                 <td>#</td>
                 <td>Date</td>
                 <td>Order No</td>
-                <td>Fabric</td>
+                <td>Asset</td>
                 <td>Quantity</td>
                 <td>Rate</td>
                 <td>Amount</td>
@@ -30,16 +30,16 @@
                     <td>{{$loop->iteration}}</td>
                     <td>{{$model->date}}</td>
                     <td>{{$model->purchaseOrder->readableId}}</td>
-                    <td>{{$model->fabric->name}} ({{$model->fabric->code}})</td>
-                    <td>{{$model->purchaseQuantity}} {{$model->unit}}</td>
-                    <td>{{Helper::currencyShortPdf($model->purchaseRate)}}</td>
-                    <td>{{Helper::currencyPdf($model->purchaseAmount)}}</td>
+                    <td>{{$model->asset->name}} ({{$model->asset->code}})</td>
+                    <td>{{$model->quantity}} {{$model->unit}}</td>
+                    <td>{{Helper::currencyShortPdf($model->rate)}}</td>
+                    <td>{{Helper::currencyPdf($model->amount)}}</td>
                     <td>{{Str::title($model->status)}}</td>
                 </tr>
             @endforeach
             <tr class="tfoot">
                 <td colspan="6">Grand Total</td>
-                <td>{{Helper::currencyPdf($models->sum('purchaseAmount'))}}</td>
+                <td>{{Helper::currencyPdf($models->sum('amount'))}}</td>
                 <td></td>
             </tr>
         </tbody>
