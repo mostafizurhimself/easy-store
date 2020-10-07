@@ -73,6 +73,8 @@ class RolesAndPermissionsSeeder extends Seeder
             \App\Nova\ProductOutput::class,
             \App\Nova\FinishingInvoice::class,
             \App\Nova\Finishing::class,
+            \App\Nova\ProductRequisition::class,
+            \App\Nova\ProductRequisitionItem::class,
 
             // Expense Section
             \App\Nova\Expenser::class,

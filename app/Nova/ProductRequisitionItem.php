@@ -16,15 +16,16 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 
-class AssetRequisitionItem extends Resource
+class ProductRequisitionItem extends Resource
 {
     use WithOutLocation, SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\AssetRequisitionItem::class;
+    public static $model = \App\Models\ProductRequisitionItem::class;
 
     /**
      * Get the custom permissions name of the resource
@@ -38,7 +39,7 @@ class AssetRequisitionItem extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">06</span>Asset Section';
+    public static $group = '<span class="hidden">08</span>Product Section';
 
     /**
      * Indicates if the resource should be globally searchable.
@@ -53,6 +54,7 @@ class AssetRequisitionItem extends Resource
      * @var bool
      */
     public static $displayInNavigation = false;
+
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -86,7 +88,7 @@ class AssetRequisitionItem extends Resource
      * @var array
      */
     public static $searchRelations = [
-        'asset' => ['name'],
+        'product' => ['name'],
     ];
 
     /**
@@ -98,32 +100,32 @@ class AssetRequisitionItem extends Resource
     public function fields(Request $request)
     {
         return [
-            BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
+            BelongsTo::make('Requisition', 'requisition', \App\Nova\ProductRequisition::class)
                 ->onlyOnDetail(),
 
-            Text::make('Asset', function(){
-                return $this->asset->name."({$this->asset->code})";
+            Text::make('Product', function(){
+                return $this->product->name."({$this->product->code})";
             })
                 ->exceptOnForms(),
 
-            Select::make('Asset', 'asset_id')
+            Select::make('product', 'product_id')
                 ->options(function(){
                     //Get the requisition from request on create
-                    $requisition = \App\Models\AssetRequisition::find(request()->viaResourceId);
+                    $requisition = \App\Models\ProductRequisition::find(request()->viaResourceId);
 
                     //Get the requisition without request/after create
                     if(empty($requisition)){
-                        $requisition = \App\Models\AssetRequisition::find($this->resource->requisitionId);
+                        $requisition = \App\Models\ProductRequisition::find($this->resource->requisitionId);
                     }
 
                     try {
-                        $assetId = request()->findResourceOrFail()->assetId;
+                        $productId = request()->findResourceOrFail()->productId;
                     } catch (\Throwable $th) {
-                        $assetId = null;
+                        $productId = null;
                     }
-                    return \App\Models\Asset::where('location_id', $requisition->receiverId)
-                        ->whereNotIn('id', $requisition->assetIds($assetId))->get()->map(function($asset){
-                            return [ 'value' => $asset->id, 'label' => $asset->name."({$asset->code})" ];
+                    return \App\Models\Product::where('location_id', $requisition->receiverId)
+                        ->whereNotIn('id', $requisition->productIds($productId))->get()->map(function($product){
+                            return [ 'value' => $product->id, 'label' => $product->name."({$product->code})" ];
                         });
                 })
                 ->rules('required')
@@ -138,11 +140,6 @@ class AssetRequisitionItem extends Resource
             })
             ->exceptOnForms(),
 
-            Text::make('Distribution Quantity', function(){
-                return $this->distributionQuantity." ".$this->unit;
-            })
-            ->exceptOnForms(),
-
             Currency::make('Requisition Rate')
                 ->currency('BDT')
                 ->exceptOnForms(),
@@ -150,10 +147,6 @@ class AssetRequisitionItem extends Resource
             Currency::make('Requisition Amount')
                 ->currency('BDT')
                 ->exceptOnForms(),
-
-            Currency::make('Distribution Amount')
-                ->currency('BDT')
-                ->onlyOnDetail(),
 
             Badge::make('Status')->map([
                     RequisitionStatus::DRAFT()->getValue()     => 'warning',

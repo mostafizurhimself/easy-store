@@ -184,6 +184,16 @@ class Style extends Resource
     }
 
     /**
+     * Get the human readable name of the resource
+     *
+     * @return string
+     */
+    public static function readableName()
+    {
+        return 'styles';
+    }
+
+    /**
      * Return the location to redirect the user after creation.
      *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request

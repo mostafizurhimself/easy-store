@@ -60,6 +60,6 @@ class AssetRequisitionObserver
      */
     public function forceDeleted(AssetRequisition $assetRequisition)
     {
-        //
+
     }
 }

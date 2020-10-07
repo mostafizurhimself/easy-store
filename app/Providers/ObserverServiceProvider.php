@@ -30,6 +30,7 @@ use App\Models\AssetReturnInvoice;
 use App\Models\FabricDistribution;
 use App\Models\FabricPurchaseItem;
 use App\Models\MaterialReturnItem;
+use App\Models\ProductRequisition;
 use App\Observers\ProductObserver;
 use App\Observers\ServiceObserver;
 use App\Models\FabricPurchaseOrder;
@@ -48,6 +49,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\AssetDistributionItem;
 use App\Models\MaterialPurchaseOrder;
 use App\Models\MaterialReturnInvoice;
+use App\Models\ProductRequisitionItem;
 use Illuminate\Support\ServiceProvider;
 use App\Models\AssetDistributionInvoice;
 use App\Observers\ProductOutputObserver;
@@ -67,6 +69,7 @@ use App\Observers\AssetReturnInvoiceObserver;
 use App\Observers\FabricDistributionObserver;
 use App\Observers\FabricPurchaseItemObserver;
 use App\Observers\MaterialReturnItemObserver;
+use App\Observers\ProductRequisitionObserver;
 use App\Observers\FabricPurchaseOrderObserver;
 use App\Observers\FabricReturnInvoiceObserver;
 use App\Observers\MaterialReceiveItemObserver;
@@ -76,6 +79,7 @@ use App\Observers\MaterialPurchaseItemObserver;
 use App\Observers\AssetDistributionItemObserver;
 use App\Observers\MaterialPurchaseOrderObserver;
 use App\Observers\MaterialReturnInvoiceObserver;
+use App\Observers\ProductRequisitionItemObserver;
 use App\Observers\AssetDistributionInvoiceObserver;
 use App\Observers\AssetDistributionReceiveItemObserver;
 
@@ -134,6 +138,8 @@ class ObserverServiceProvider extends ServiceProvider
         ProductOutput::observe(ProductOutputObserver::class);
         FinishingInvoice::observe(FinishingInvoiceObserver::class);
         Finishing::observe(FinishingObserver::class);
+        ProductRequisition::observe(ProductRequisitionObserver::class);
+        ProductRequisitionItem::observe(ProductRequisitionItemObserver::class);
         Expenser::observe(ExpenserObserver::class);
     }
 }

@@ -7,6 +7,7 @@ use App\Nova\Location;
 use Laravel\Nova\Nova;
 use App\Nova\Department;
 use App\Nova\Permission;
+use Illuminate\Http\Request;
 use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Events\ServingNova;
@@ -26,6 +27,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         //Sort the resources by its priority property
         Nova::sortResourcesBy(function ($resource) {
             return $resource::$priority ?? 9999;
+        });
+
+        Nova::userTimezone(function (Request $request) {
+            return $request->user()->timezone;
         });
     }
 

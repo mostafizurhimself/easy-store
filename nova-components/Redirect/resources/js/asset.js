@@ -87,6 +87,14 @@ Nova.booting((Vue, router, store) => {
             return;
         }
 
+        // Product Section
+
+        if (to.params.resourceName === 'product-requisitions' && to.params.lens === 'requisition-items') {
+            router.push({'name' : 'index', params: {resourceName : 'product-requisition-items'}});
+
+            return;
+        }
+
 
         next();
     });

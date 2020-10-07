@@ -35,7 +35,7 @@ class AjaxController extends Controller
     public function stylesViaLocation(Location $location)
     {
         return $location->styles->map(function($style) {
-            return [ 'value' => $style->id, 'display' => $style->code ];
+            return [ 'value' => $style->id, 'display' => "$style->name({$style->code})" ];
         });
     }
 

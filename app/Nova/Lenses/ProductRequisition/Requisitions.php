@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Lenses\AssetRequisition;
+namespace App\Nova\Lenses\ProductRequisition;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -8,16 +8,11 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Fields\Badge;
 use App\Enums\RequisitionStatus;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
-use Laravel\Nova\Fields\BelongsTo;
-use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\LensRequest;
-use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 
 class Requisitions extends Lens
 {
@@ -46,24 +41,23 @@ class Requisitions extends Lens
     public function fields(Request $request)
     {
         return [
-
             ID::make('ID', 'id'),
 
             Text::make('Requisition', function(){
                 return $this->readableId;
             }),
 
-            Date::make('Date'),
+            Date::make('Date', 'date'),
 
             Text::make('Location', function(){
                     return $this->location->name;
                 }),
 
-
             Currency::make('Requisition Amount', 'total_requisition_amount')
-                ->currency('BDT'),
+                ->currency('BDT')
+                ->exceptOnForms(),
 
-            Date::make('Deadline'),
+            Date::make('Deadline','deadline'),
 
             Text::make('Receiver', function(){
                 return $this->receiver->name;
@@ -121,6 +115,6 @@ class Requisitions extends Lens
      */
     public function uriKey()
     {
-        return 'asset-requisition-requisitions';
+        return 'product-requisition-requisitions';
     }
 }

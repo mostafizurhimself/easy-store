@@ -56,6 +56,7 @@ Route::group(['middleware' => 'nova'], function () {
     // Requisitions
     Route::group(['prefix' => 'requisitions'], function () {
         Route::get('assets/{requisition}', 'RequisitionController@assetRequisition')->name('requisitions.assets');
+        Route::get('products/{requisition}', 'RequisitionController@productRequisition')->name('requisitions.products');
     });
 
     // Invoice Routes

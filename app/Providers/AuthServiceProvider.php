@@ -69,6 +69,7 @@ use App\Models\AssetReturnInvoice;
 use App\Models\FabricDistribution;
 use App\Models\FabricPurchaseItem;
 use App\Models\MaterialReturnItem;
+use App\Models\ProductRequisition;
 use App\Policies\DepartmentPolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\SubSectionPolicy;
@@ -88,6 +89,7 @@ use App\Models\MaterialPurchaseOrder;
 use App\Models\MaterialReturnInvoice;
 use App\Policies\AssetCategoryPolicy;
 use App\Policies\ProductOutputPolicy;
+use App\Models\ProductRequisitionItem;
 use App\Policies\FabricCategoryPolicy;
 use App\Policies\ServiceInvoicePolicy;
 use App\Policies\ServiceReceivePolicy;
@@ -110,6 +112,7 @@ use App\Policies\AssetReturnInvoicePolicy;
 use App\Policies\FabricDistributionPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
 use App\Policies\MaterialReturnItemPolicy;
+use App\Policies\ProductRequisitionPolicy;
 use App\Policies\FabricPurchaseOrderPolicy;
 use App\Policies\FabricReturnInvoicePolicy;
 use App\Policies\MaterialReceiveItemPolicy;
@@ -120,6 +123,7 @@ use App\Policies\MaterialPurchaseItemPolicy;
 use App\Policies\AssetDistributionItemPolicy;
 use App\Policies\MaterialPurchaseOrderPolicy;
 use App\Policies\MaterialReturnInvoicePolicy;
+use App\Policies\ProductRequisitionItemPolicy;
 use App\Policies\AssetDistributionInvoicePolicy;
 use App\Policies\AssetDistributionReceiveItemPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -178,6 +182,8 @@ class AuthServiceProvider extends ServiceProvider
         ProductOutput::class                => ProductOutputPolicy::class,
         FinishingInvoice::class             => FinishingInvoicePolicy::class,
         Finishing::class                    => FinishingPolicy::class,
+        ProductRequisition::class           => ProductRequisitionPolicy::class,
+        ProductRequisitionItem::class       => ProductRequisitionItemPolicy::class,
         Supplier::class                     => SupplierPolicy::class,
         Expenser::class                     => ExpenserPolicy::class,
         ExpenseCategory::class              => ExpenseCategoryPolicy::class,
