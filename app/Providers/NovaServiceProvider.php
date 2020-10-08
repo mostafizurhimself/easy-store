@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Events\ServingNova;
+use App\Nova\Metrics\TotalAssetPurchase;
+use App\Nova\Metrics\TotalFabricPurchase;
+use App\Nova\Metrics\TotalMaterialPurchase;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -73,7 +76,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function cards()
     {
         return [
-            new Help,
+            // new Help,
+            new TotalFabricPurchase(),
+            new TotalMaterialPurchase(),
+            new TotalAssetPurchase(),
         ];
     }
 
