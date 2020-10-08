@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class HelperController extends Controller
 {
@@ -16,6 +17,6 @@ class HelperController extends Controller
      */
     public function dumpDownload($filename, Request $request)
     {
-        return response()->download( storage_path($filename), $filename )->deleteFileAfterSend(true);
+        return response()->download( Storage::path($filename), $filename )->deleteFileAfterSend(true);
     }
 }

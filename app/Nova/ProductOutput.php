@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\ProductOutputs\DownloadPdf;
+use App\Nova\Actions\ProductOutputs\DownloadExcel;
 use Titasgailius\SearchRelations\SearchesRelations;
 
 class ProductOutput extends Resource
@@ -328,6 +329,13 @@ class ProductOutput extends Resource
                 return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
         ];
     }
 

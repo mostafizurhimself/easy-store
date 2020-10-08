@@ -16,11 +16,12 @@ use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\FinishingStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Finishings\DownloadPdf;
+use App\Nova\Actions\Finishings\DownloadExcel;
 use Titasgailius\SearchRelations\SearchesRelations;
 
 class Finishing extends Resource
 {
-    use WithOutLocation;
+    use WithOutLocation, SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
@@ -84,10 +85,10 @@ class Finishing extends Resource
      *
      * @var array
      */
-    // public static $searchRelations = [
-    //     'product' => ['name', 'code'],
-    //     'style'   => ['name', 'code'],
-    // ];
+    public static $searchRelations = [
+        'product' => ['name', 'code'],
+        'style'   => ['name', 'code'],
+    ];
 
     /**
      * Get the fields displayed by the resource.
@@ -184,11 +185,17 @@ class Finishing extends Resource
     {
         return [
             (new DownloadPdf)->canSee(function($request){
-                return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
+                return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
             })->canRun(function($request){
-                return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
+                return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download'),
+
+            (new DownloadExcel)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
-                ->confirmText("Are you sure want to download pdf?"),
+                ->confirmText("Are you sure want to download Excel?"),
         ];
     }
 

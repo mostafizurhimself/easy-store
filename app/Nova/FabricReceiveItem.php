@@ -25,6 +25,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReceiveItems\DownloadPdf;
+use App\Nova\Actions\FabricReceiveItems\DownloadExcel;
 use App\Nova\Actions\FabricReceiveItems\ConfirmReceiveItem;
 
 class FabricReceiveItem extends Resource
@@ -218,6 +219,13 @@ class FabricReceiveItem extends Resource
             })->canRun(function($request){
                 return ($request->user()->hasPermissionTo('can download fabric receive items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download'),
+
+            (new DownloadExcel)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download fabric receive items') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download fabric receive items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+            ->confirmText('Are you sure want to download excel?'),
 
             (new ConfirmReceiveItem)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm fabric receive items');

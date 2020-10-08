@@ -19,6 +19,7 @@ use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricPurchaseItems\DownloadPdf;
+use App\Nova\Actions\FabricPurchaseItems\DownloadExcel;
 
 class FabricPurchaseItem extends Resource
 {
@@ -205,6 +206,13 @@ class FabricPurchaseItem extends Resource
                 return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
         ];
     }
 

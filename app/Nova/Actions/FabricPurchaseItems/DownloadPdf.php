@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -31,7 +32,7 @@ class DownloadPdf extends Action
             'mode' => 'utf-8',
             'orientation' => 'L'
         ]);
-        $pdf->save(storage_path($filename));
+        $pdf->save(Storage::path($filename));
 
         return Action::redirect( route('dump-download', compact('filename')) );
     }

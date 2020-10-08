@@ -17,6 +17,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialPurchaseItems\DownloadPdf;
+use App\Nova\Actions\MaterialPurchaseItems\DownloadExcel;
 
 class MaterialPurchaseItem extends Resource
 {
@@ -193,6 +194,13 @@ class MaterialPurchaseItem extends Resource
             })->canRun(function($request){
                 return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download'),
+
+            (new DownloadExcel)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+            ->confirmText('Are you sure want to download excel?'),
         ];
     }
 

@@ -5,12 +5,13 @@ namespace App\Nova\Actions\AssetPurchaseItems;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Fields\ActionFields;
-use Illuminate\Support\Facades\Storage;
+use App\Exports\AssetPurchaseItemExport;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class DownloadPdf extends Action
+class DownloadExcel extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -23,16 +24,11 @@ class DownloadPdf extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        $filename = "asset_purchase_items_".time().".pdf";
-        $subtitle = $fields->subtitle;
+         // Store on default disk
+         $filename = "asset_purchase_items_".time().".xlsx";
+         Excel::store(new AssetPurchaseItemExport($models), $filename, 'local');
 
-        $pdf = \PDF::loadView('pdf.pages.asset-purchase-items', compact('models', 'subtitle'), [], [
-            'mode' => 'utf-8',
-            'orientation' => 'L'
-        ]);
-        $pdf->save(Storage::path($filename));
-
-        return Action::redirect( route('dump-download', compact('filename')) );
+         return Action::redirect( route('dump-download', compact('filename')) );
     }
 
     /**
@@ -42,9 +38,6 @@ class DownloadPdf extends Action
      */
     public function fields()
     {
-        return [
-            Text::make('Subtitle', 'subtitle')
-                ->rules('nullable', 'string', 'max:100')
-        ];
+        return [];
     }
 }

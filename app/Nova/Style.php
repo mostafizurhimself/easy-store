@@ -28,7 +28,10 @@ class Style extends Resource
      *
      * @var string
      */
-    public static $title = 'name';
+    public function title()
+    {
+        return "{$this->name}({$this->code})";
+    }
 
     /**
      * Get the search result subtitle for the resource.
