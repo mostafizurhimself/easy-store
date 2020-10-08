@@ -2,11 +2,14 @@
 
 namespace App\Nova;
 
+use App\Models\Unit;
 use R64\NovaFields\JSON;
 use Inspheric\Fields\Email;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use App\Traits\WithOutLocation;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Textarea;
 use Easystore\RouterLink\RouterLink;
 use App\Models\Setting as SettingModel;
@@ -153,6 +156,32 @@ class Setting extends Resource
                     return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
                 }),
 
+            Boolean::make('Super Admin Notification', 'super_admin_notification')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->super_admin_notification ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
+                }),
+
+            Text::make('Output Unit')
+                ->displayUsing(function () {
+
+                    if(!empty(json_decode($this->resource->settings)->output_unit)){
+                        return Unit::find(json_decode($this->resource->settings)->output_unit)->name;
+                    }
+
+                })
+                ->asHtml()
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
+                }),
+
+
+
+
             NovaDependencyContainer::make([
 
                 Json::make('Settings', [
@@ -182,7 +211,17 @@ class Setting extends Resource
                         ->max(10) // Maximum number of items the user can choose
                         ->saveAsJSON() // Saves value as JSON if the database column is of JSON type
                         ->optionsLimit(5) // How many items to display at once
-                        ->reorderable() // Allows reordering functionality
+                        ->reorderable(), // Allows reordering functionality
+
+                    Boolean::make('Super Admin Notification', 'super_admin_notification')
+                        ->readonly(function($request){
+                            return !$request->user()->isSuperAdmin();
+                        }),
+
+                    Select::make("Output Unit", 'output_unit')
+                        ->rules('required')
+                        ->options(Unit::all()->pluck('name', 'id')),
+
 
                 ])
                     ->flatten(),

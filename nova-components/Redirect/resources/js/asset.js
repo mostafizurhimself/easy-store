@@ -95,6 +95,12 @@ Nova.booting((Vue, router, store) => {
             return;
         }
 
+        if (to.params.resourceName === 'finishing-invoices' && to.params.lens === 'finishings') {
+            router.push({'name' : 'index', params: {resourceName : 'finishings'}});
+
+            return;
+        }
+
 
         next();
     });

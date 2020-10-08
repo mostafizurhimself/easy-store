@@ -16,21 +16,21 @@ class UnitSeeder extends Seeder
     {
         Unit::updateOrCreate(
             [
-                'name' => 'roll'
-            ],
-            [
-                'name'         => 'roll',
-                'display_name' => 'Roll'
-            ]
-        );
-
-        Unit::updateOrCreate(
-            [
                 'name' => 'pcs'
             ],
             [
                 'name'         => 'pcs',
                 'display_name' => 'Pices'
+            ]
+        );
+
+        Unit::updateOrCreate(
+            [
+                'name' => 'roll'
+            ],
+            [
+                'name'         => 'roll',
+                'display_name' => 'Roll'
             ]
         );
 

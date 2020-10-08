@@ -2,7 +2,11 @@
 
 namespace App\Observers;
 
+use App\Models\Role;
+use App\Facades\Settings;
 use App\Models\MaterialPurchaseOrder;
+use App\Notifications\NewPurchaseOrder;
+use Illuminate\Support\Facades\Notification;
 
 class MaterialPurchaseOrderObserver
 {
@@ -14,7 +18,16 @@ class MaterialPurchaseOrderObserver
      */
     public function created(MaterialPurchaseOrder $materialPurchaseOrder)
     {
-        //
+        //Notify the users
+        $users = \App\Models\User::permission(['can confirm material purchase orders'])->where('location_id', $materialPurchaseOrder->locationId)->get();
+        Notification::send($users, new NewPurchaseOrder(\App\Nova\MaterialPurchaseOrder::uriKey(), $materialPurchaseOrder));
+
+        //Notify super admins
+        if(Settings::superAdminNotification())
+        {
+            $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+            Notification::send($users, new NewPurchaseOrder(\App\Nova\MaterialPurchaseOrder::uriKey(), $materialPurchaseOrder));
+        }
     }
 
     /**

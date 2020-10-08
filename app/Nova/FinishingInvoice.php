@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Trix;
 use App\Enums\FinishingStatus;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use App\Nova\Lenses\Finishings;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
@@ -270,7 +271,9 @@ class FinishingInvoice extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new Finishings
+        ];
     }
 
     /**

@@ -65,4 +65,14 @@ class Settings
     {
         return !empty(self::application()->approvers) ? self::application()->approvers : [];
     }
+
+    /**
+     * Get the approver employees
+     *
+     * @return array
+     */
+    public function superAdminNotification()
+    {
+        return !empty(self::application()->super_admin_notification) ? self::application()->super_admin_notification : false;
+    }
 }

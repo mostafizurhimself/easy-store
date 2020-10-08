@@ -2,7 +2,11 @@
 
 namespace App\Observers;
 
+use App\Models\Role;
+use App\Facades\Settings;
 use App\Models\AssetPurchaseOrder;
+use App\Notifications\NewPurchaseOrder;
+use Illuminate\Support\Facades\Notification;
 
 class AssetPurchaseOrderObserver
 {
@@ -14,7 +18,16 @@ class AssetPurchaseOrderObserver
      */
     public function created(AssetPurchaseOrder $assetPurchaseOrder)
     {
-        //
+        //Notify the users
+        $users = \App\Models\User::permission(['can confirm asset purchase orders'])->where('location_id', $assetPurchaseOrder->locationId)->get();
+        Notification::send($users, new NewPurchaseOrder(\App\Nova\AssetPurchaseOrder::uriKey(), $assetPurchaseOrder));
+
+        //Notify super admins
+        if(Settings::superAdminNotification())
+        {
+            $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+            Notification::send($users, new NewPurchaseOrder(\App\Nova\AssetPurchaseOrder::uriKey(), $assetPurchaseOrder));
+        }
     }
 
     /**

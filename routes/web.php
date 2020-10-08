@@ -69,9 +69,9 @@ Route::group(['middleware' => 'nova'], function () {
     // Helper Controller
     Route::get('dump-download/{filename}', "HelperController@dumpDownload")->name('dump-download');
     Route::get('test', function(){
-        $models = \App\Models\FabricReceiveItem::all();
+        $models = \App\Models\Finishing::all();
 
-        return view('pdf.pages.fabric-receive-items', compact('models'));
+        return view('pdf.pages.finishings', compact('models'));
     });
 
 

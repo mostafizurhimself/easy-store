@@ -73,4 +73,14 @@ class Finishing extends Model
        return $this->belongsTo(Style::class)->withTrashed();
     }
 
+     /**
+     * Get the unit of the product
+     *
+     * @return string
+     */
+    public function getUnitAttribute()
+    {
+        return $this->product->unit->name;
+    }
+
 }

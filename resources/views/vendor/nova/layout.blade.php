@@ -1,4 +1,4 @@
-{{-- {{dd(\Laravel\Nova\Nova::availableResources(request())[0]::uriKey())}} --}}
+{{-- {{dd(Settings::superAdminNotification())}} --}}
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full font-sans antialiased">

@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
@@ -16,6 +17,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\ProductOutputs\DownloadPdf;
 use Titasgailius\SearchRelations\SearchesRelations;
 
 class ProductOutput extends Resource
@@ -207,7 +209,13 @@ class ProductOutput extends Resource
                 }),
 
             Number::make('Quantity')
-                ->rules('required', 'numeric', 'min:0'),
+                ->rules('required', 'numeric', 'min:0')
+                ->onlyOnForms(),
+
+            Text::make('Quantity', function(){
+                    return $this->quantity." ".$this->unit;
+                })
+                ->exceptOnForms(),
 
             Currency::make('rate')
                 ->currency("BDT")
@@ -313,6 +321,37 @@ class ProductOutput extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadPdf)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+        ];
+    }
+
+    /**
+     * Return the location to redirect the user after creation.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Laravel\Nova\Resource  $resource
+     * @return string
+     */
+    public static function redirectAfterCreate(NovaRequest $request, $resource)
+    {
+        return '/resources/'.static::uriKey();
+    }
+
+    /**
+     * Return the location to redirect the user after update.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Laravel\Nova\Resource  resource
+     * @return string
+     */
+    public static function redirectAfterUpdate(NovaRequest $request, $resource)
+    {
+        return '/resources/'.static::uriKey();
     }
 }

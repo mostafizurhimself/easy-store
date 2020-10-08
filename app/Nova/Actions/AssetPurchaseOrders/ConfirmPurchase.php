@@ -3,6 +3,7 @@
 namespace App\Nova\Actions\AssetPurchaseOrders;
 
 use App\Models\Role;
+use App\Facades\Settings;
 use App\Enums\PurchaseStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Fields\Select;
@@ -55,8 +56,11 @@ class ConfirmPurchase extends Action
                 Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\AssetPurchaseOrder::uriKey(), $model));
 
                 //Notify super admins
-                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
-                Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\AssetPurchaseOrder::uriKey(), $model));
+                if(Settings::superAdminNotification())
+                {
+                    $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+                    Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\AssetPurchaseOrder::uriKey(), $model));
+                }
             }
         }
     }

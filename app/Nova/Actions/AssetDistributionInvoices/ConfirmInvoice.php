@@ -3,6 +3,7 @@
 namespace App\Nova\Actions\AssetDistributionInvoices;
 
 use App\Models\Role;
+use App\Facades\Settings;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use App\Enums\DistributionStatus;
@@ -76,8 +77,11 @@ class ConfirmInvoice extends Action
             Notification::send($users, new DistributionConfirmed(\App\Nova\AssetDistributionInvoice::uriKey(), $model));
 
             //Notify super admins
-            $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
-            Notification::send($users, new DistributionConfirmed(\App\Nova\AssetDistributionInvoice::uriKey(), $model));
+            if(Settings::superAdminNotification())
+            {
+                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+                Notification::send($users, new DistributionConfirmed(\App\Nova\AssetDistributionInvoice::uriKey(), $model));
+            }
         }
     }
 

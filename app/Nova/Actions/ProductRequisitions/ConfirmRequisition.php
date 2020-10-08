@@ -3,6 +3,7 @@
 namespace App\Nova\Actions\ProductRequisitions;
 
 use App\Models\Role;
+use App\Facades\Settings;
 use Illuminate\Bus\Queueable;
 use App\Enums\RequisitionStatus;
 use Laravel\Nova\Actions\Action;
@@ -45,8 +46,11 @@ class ConfirmRequisition extends Action
                 Notification::send($users, new RequisitionConfirmed(\App\Nova\ProductRequisition::uriKey(), $model));
 
                 //Notify super admins
-                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
-                Notification::send($users, new RequisitionConfirmed(\App\Nova\ProductRequisition::uriKey(), $model));
+                if(Settings::superAdminNotification())
+                {
+                    $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+                    Notification::send($users, new RequisitionConfirmed(\App\Nova\ProductRequisition::uriKey(), $model));
+                }
             }
         }
     }

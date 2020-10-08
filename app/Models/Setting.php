@@ -10,15 +10,6 @@ class Setting extends Model implements HasMedia
 {
     use LogsActivity, InteractsWithMedia;
 
-    // /**
-    //  * The attributes that should be cast.
-    //  *
-    //  * @var array
-    //  */
-    // protected $casts = [
-    //     'settings' => 'json',
-    // ];
-
     /**
      * The setting name of application settings
      *

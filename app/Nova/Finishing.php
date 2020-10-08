@@ -7,12 +7,16 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use App\Enums\FinishingStatus;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Badge;
+use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
+use App\Nova\Filters\FinishingStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\Finishings\DownloadPdf;
+use Titasgailius\SearchRelations\SearchesRelations;
 
 class Finishing extends Resource
 {
@@ -53,16 +57,6 @@ class Finishing extends Resource
     public static $displayInNavigation = false;
 
     /**
-     * The icon of the resource.
-     *
-     * @return string
-     */
-    public static function icon()
-    {
-      return 'fas fa-gift';
-    }
-
-    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
@@ -86,6 +80,16 @@ class Finishing extends Resource
     ];
 
     /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    // public static $searchRelations = [
+    //     'product' => ['name', 'code'],
+    //     'style'   => ['name', 'code'],
+    // ];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -97,10 +101,12 @@ class Finishing extends Resource
             BelongsTo::make('Invoice', 'invoice', "App\Nova\FinishingInvoice")
                 ->exceptOnForms(),
 
-            BelongsTo::make('Product')->searchable(),
+            BelongsTo::make('Product')
+                // ->searchable()
+                ,
 
             BelongsTo::make('Style')
-                ->searchable()
+                // ->searchable()
                 ->showCreateRelationButton(),
 
             Number::make('Quantity')
@@ -152,7 +158,9 @@ class Finishing extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new FinishingStatusFilter,
+        ];
     }
 
     /**
@@ -174,7 +182,14 @@ class Finishing extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadPdf)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+        ];
     }
 
     /**
@@ -188,6 +203,9 @@ class Finishing extends Resource
      */
     public static function relatableProducts(NovaRequest $request, $query)
     {
+        if ($request->isResourceIndexRequest() || $request->isResourceDetailRequest()) {
+            return ;
+        }
         $invoice = \App\Models\FinishingInvoice::find($request->viaResourceId);
         if(empty($invoice)){
             $invoice = $request->findResourceOrFail()->invoice;
@@ -212,8 +230,14 @@ class Finishing extends Resource
      */
     public static function relatableStyles(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\FinishingInvoice::find($request->viaResourceId);
+        if ($request->isResourceIndexRequest() || $request->isResourceDetailRequest()) {
+            return ;
+        }
 
+        $invoice = \App\Models\FinishingInvoice::find($request->viaResourceId);
+        if(empty($invoice)){
+            $invoice = $request->findResourceOrFail()->invoice;
+        }
         return $query->where('location_id', $invoice->locationId);
     }
 

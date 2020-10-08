@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Unit;
+use App\Facades\Settings;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -22,6 +24,21 @@ class ProductOutput extends Model
      * @var boolean
      */
     protected static $logUnguarded = true;
+
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['category'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $append = ['unit'];
+
 
     /**
      * The attributes that should be mutated to dates.
@@ -60,24 +77,21 @@ class ProductOutput extends Model
        return $this->belongsTo(Floor::class)->withTrashed();
     }
 
-    // /**
-    //  * Determines one-to-many relation
-    //  *
-    //  * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-    //  */
-    // public function section()
-    // {
-    //    return $this->belongsTo(Section::class)->withTrashed();
-    // }
+    /**
+     * Get the unit of the product
+     *
+     * @return string
+     */
+    public function getUnitAttribute()
+    {
+        if(empty(Settings::application()->output_unit))
+        {
+            return Unit::first()->name;
+        }
 
-    // /**
-    //  * Determines one-to-many relation
-    //  *
-    //  * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-    //  */
-    // public function subSection()
-    // {
-    //    return $this->belongsTo(SubSection::class)->withTrashed();
-    // }
+        return Unit::find(Settings::application()->output_unit)->name;
+    }
+
+
 
 }
