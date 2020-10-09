@@ -22,6 +22,10 @@ class AssetPurchaseOrderObserver
         $users = \App\Models\User::permission(['can confirm asset purchase orders'])->where('location_id', $assetPurchaseOrder->locationId)->get();
         Notification::send($users, new NewPurchaseOrder(\App\Nova\AssetPurchaseOrder::uriKey(), $assetPurchaseOrder));
 
+        //Notify global users
+        $users = \App\Models\User::permission(['can confirm asset purchase orders', 'view all locations data', 'view any locations data'])->where('location_id', "!=", $assetPurchaseOrder->locationId)->get();
+        Notification::send($users, new NewPurchaseOrder(\App\Nova\AssetPurchaseOrder::uriKey(), $assetPurchaseOrder));
+
         //Notify super admins
         if(Settings::superAdminNotification())
         {

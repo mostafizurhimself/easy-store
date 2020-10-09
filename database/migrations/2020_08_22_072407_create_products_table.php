@@ -27,7 +27,7 @@ class CreateProductsTable extends Migration
             $table->double('opening_quantity')->default(0);
             $table->double('quantity')->default(0);
             $table->double('alert_quantity')->default(0);
-            $table->bigInteger('unit_id')->unsigned()->nullable();
+           $table->bigInteger('unit_id')->unsigned();
             $table->string('status')->default(App\Enums\ActiveStatus::ACTIVE()->getValue());
             $table->timestamps();
             $table->softDeletes();

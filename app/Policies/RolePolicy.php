@@ -56,10 +56,12 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        if($role->name == Role::SUPER_ADMIN && !$user->isSuperAdmin()){
+        if($role->name == Role::SUPER_ADMIN){
             return false;
         }
-        return $user->isSuperAdmin() || $user->hasPermissionTo('update roles');
+        return $user->isSuperAdmin() ||
+                ($user->hasPermissionTo('update roles') && $user->locationId == $role->locationId) ||
+                ($user->hasPermissionTo('update all locations data')  && !in_array($user->roles()->pluck('id'), $role->id));
     }
 
     /**
@@ -71,10 +73,12 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        if($role->name == Role::SUPER_ADMIN && !$user->isSuperAdmin()){
+        if($role->name == Role::SUPER_ADMIN){
             return false;
         }
-        return $user->isSuperAdmin() || $user->hasPermissionTo('delete roles');
+        return $user->isSuperAdmin() ||
+                ($user->hasPermissionTo('delete roles') && $user->locationId == $role->locationId) ||
+                ($user->hasPermissionTo('delete all locations data')  && !in_array($user->roles()->pluck('id'), $role->id));
     }
 
     /**
@@ -86,7 +90,13 @@ class RolePolicy
      */
     public function restore(User $user, Role $role)
     {
-        return $user->isSuperAdmin() || $user->hasPermissionTo('restore roles');
+        if($role->name == Role::SUPER_ADMIN){
+            return false;
+        }
+
+        return $user->isSuperAdmin() ||
+            ($user->hasPermissionTo('restore roles') && $user->locationId == $role->locationId) ||
+            ($user->hasPermissionTo('restore all locations data')  && !in_array($user->roles()->pluck('id'), $role->id));
     }
 
     /**
@@ -98,6 +108,12 @@ class RolePolicy
      */
     public function forceDelete(User $user, Role $role)
     {
-        return $user->isSuperAdmin() || $user->hasPermissionTo('force delete roles');
+        if($role->name == Role::SUPER_ADMIN){
+            return false;
+        }
+
+        return $user->isSuperAdmin() ||
+            ($user->hasPermissionTo('force delete roles') && $user->locationId == $role->locationId) ||
+            ($user->hasPermissionTo('force delete all locations data')  && !in_array($user->roles()->pluck('id'), $role->id));
     }
 }

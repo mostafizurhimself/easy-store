@@ -100,7 +100,7 @@ class Style extends Resource
                 }),
 
             Text::make('Name')
-                ->rules('required', 'max:45', 'string', 'alpha_num_space', 'multi_space')
+                ->rules('required', 'max:45', 'string', 'multi_space')
                 ->creationRules([
                     Rule::unique('styles', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])

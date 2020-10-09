@@ -2,6 +2,7 @@
 
 namespace App\Nova\Metrics;
 
+use Laravel\Nova\Nova;
 use Laravel\Nova\Metrics\Value;
 use App\Models\FabricPurchaseOrder;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -16,7 +17,13 @@ class TotalFabricPurchase extends Value
      */
     public function calculate(NovaRequest $request)
     {
-        return $this->sum($request, FabricPurchaseOrder::class, 'total_purchase_amount');
+         // Query for superadmin
+         if($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data')){
+            return $this->sum($request, FabricPurchaseOrder::class, 'total_purchase_amount', 'date');
+        }
+
+        // Query for users
+        return $this->sum($request, FabricPurchaseOrder::query()->where('location_id', $request->user()->locationId), 'total_purchase_amount', 'date');
     }
 
     /**
@@ -44,7 +51,7 @@ class TotalFabricPurchase extends Value
      */
     public function cacheFor()
     {
-        return now()->addMinutes(5);
+        // return now()->addMinutes(5);
     }
 
     /**

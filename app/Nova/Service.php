@@ -109,25 +109,8 @@ class Service extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
-                ->showOnCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnDetail(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnIndex(function ($request) {
-                    if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -196,13 +179,8 @@ class Service extends Resource
                 ->rules('required')
                 ->get('/locations/{location}/service-categories')
                 ->parent('location')->onlyOnForms()
-                ->showOnCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                 ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -213,16 +191,11 @@ class Service extends Resource
 
             BelongsTo::make('Category', 'category', 'App\Nova\ServiceCategory')
                 ->onlyOnForms()
-                ->hideWhenCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
+               ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return false;
                     }
-                    return false;
-                })->hideWhenUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }),
 
             BelongsToManyField::make('Providers', 'providers', 'App\Nova\Provider')

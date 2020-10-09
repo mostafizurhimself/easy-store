@@ -63,14 +63,14 @@ class UserPolicy
     {
         //Check the user is super admin
         //Then skip it if the user is not super admin
-        if($model->isSuperAdmin() && !$user->isSuperAdmin()){
+        if($model->isSuperAdmin()){
             return false;
         }
 
         //Else check the permission
-        return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update users') && $user->locationId == $model->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+        return ($user->isSuperAdmin() ||
+                ($user->hasPermissionTo('update users') && $user->locationId == $model->locationId) ||
+                $user->hasPermissionTo('update all locations data')) && $user->id != $model->id;
     }
 
     /**
@@ -84,14 +84,14 @@ class UserPolicy
     {
         //Check the user is super admin
         //Then skip it if the user is not super admin
-        if($model->isSuperAdmin() && !$user->isSuperAdmin()){
+        if($model->isSuperAdmin()){
             return false;
         }
 
         //Else check the permission
-        return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete users') && $user->locationId == $model->locationId ) ||
-                $user->hasPermissionTo('view all locations data');
+        return ($user->isSuperAdmin() ||
+                ($user->hasPermissionTo('delete users') && $user->locationId == $model->locationId) ||
+                $user->hasPermissionTo('delete all locations data')) && $user->id != $model->id;
     }
 
     /**
@@ -105,14 +105,14 @@ class UserPolicy
     {
         //Check the user is super admin
         //Then skip it if the user is not super admin
-        if($model->isSuperAdmin() && !$user->isSuperAdmin()){
+        if($model->isSuperAdmin()){
             return false;
         }
 
         //Else check the permission
-        return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore users') && $user->locationId == $model->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+        return ($user->isSuperAdmin() ||
+                ($user->hasPermissionTo('restore users') && $user->locationId == $model->locationId) ||
+                $user->hasPermissionTo('restore all locations data')) && $user->id != $model->id;
     }
 
     /**
@@ -126,13 +126,13 @@ class UserPolicy
     {
         //Check the user is super admin
         //Then skip it if the user is not super admin
-        if($model->isSuperAdmin() && !$user->isSuperAdmin()){
+        if($model->isSuperAdmin()){
             return false;
         }
 
         //Else check the permission
-        return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete users') && $user->locationId == $model->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+        return ($user->isSuperAdmin() ||
+                ($user->hasPermissionTo('force delete users') && $user->locationId == $model->locationId) ||
+                $user->hasPermissionTo('force delete all locations data')) && $user->id != $model->id;
     }
 }

@@ -97,25 +97,8 @@ class AssetCategory extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
-                ->showOnCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnDetail(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnIndex(function ($request) {
-                    if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -123,7 +106,7 @@ class AssetCategory extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'string', 'max:45', 'alpha_space', 'multi_space')
+                ->rules('required', 'string', 'max:45', 'multi_space')
                 ->creationRules([
                     Rule::unique('asset_categories', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])

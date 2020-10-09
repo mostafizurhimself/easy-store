@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Role;
+use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 
@@ -71,6 +73,15 @@ class ValidationServiceProvider extends ServiceProvider
 
         Validator::replacer('alpha_num_space', function($message, $attribute, $rule, $parameters) {
             return str_replace(':field', str_replace('_', ' ', $attribute), 'The :field may only contain letters, numbers and white space.');
+        });
+
+        // Super Admin Role Validation
+        Validator::extend('super_admin', function($attr, $value){
+            return Str::kebab($value) != Role::SUPER_ADMIN;
+        });
+
+        Validator::replacer('super_admin', function($message, $attribute, $rule, $parameters) {
+            return str_replace(':field', str_replace('_', ' ', $attribute), 'You are not allowed to use this name.');
         });
 
     }

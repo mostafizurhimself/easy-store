@@ -11,9 +11,14 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Events\ServingNova;
+use App\Nova\Metrics\DailyProductOutput;
 use App\Nova\Metrics\TotalAssetPurchase;
+use App\Nova\Metrics\TotalPurchaseOrder;
 use App\Nova\Metrics\TotalFabricPurchase;
+use App\Nova\Metrics\TotalServiceDispatch;
+use App\Nova\Metrics\DailyProductFinishing;
 use App\Nova\Metrics\TotalMaterialPurchase;
+use Coroowicaksono\ChartJsIntegration\LineChart;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -76,10 +81,64 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function cards()
     {
         return [
-            // new Help,
-            new TotalFabricPurchase(),
-            new TotalMaterialPurchase(),
-            new TotalAssetPurchase(),
+            // Line 1,
+            (new TotalFabricPurchase())->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any fabric purchase orders');
+            }),
+            (new TotalMaterialPurchase())->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any material purchase orders');
+            }),
+            (new TotalAssetPurchase())->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any asset purchase orders');
+            }),
+
+            // Line 2
+            (new LineChart())
+                ->title('Purhcase Graph')
+                ->animations([
+                    'enabled' => true,
+                    'easing' => 'easeinout',
+                ])
+                ->series(array([
+                    'barPercentage' => 0.5,
+                    'label' => 'Fabric Purchase',
+                    'borderColor' => '#f7a35c',
+                    'data' => [80, 90, 80, 40, 62, 79, 79, 90, 90, 90, 92, 91],
+                ],
+                [
+                    'barPercentage' => 0.5,
+                    'label' => 'Material Purchase',
+                    'borderColor' => '#90ed7d',
+                    'data' => [90, 80, 40, 22, 79, 129, 90, 150, 90, 92, 91, 80],
+                ],
+                [
+                    'barPercentage' => 0.5,
+                    'label' => 'Asset Purchase',
+                    'borderColor' => '#03a9f4',
+                    'data' => [80, 30, 50, 80, 129, 50, 30, 50, 100, 102, 81, 90],
+                ]
+                ))
+                ->options([
+                    'xaxis' => [
+                        'categories' => [ 'Jan', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct' ]
+                    ],
+                ])
+                ->width('2/3'),
+
+            (new TotalPurchaseOrder())->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasAllPermissions(['view any fabric purchase orders', 'view any material purchase orders', 'view any asset purchase orders']);
+            }),
+
+            // Line 3
+            (new DailyProductOutput())->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any product outputs');
+            }),
+            (new DailyProductFinishing())->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any finishing invoices');
+            }),
+            (new TotalServiceDispatch())->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any service invoices');
+            }),
         ];
     }
 

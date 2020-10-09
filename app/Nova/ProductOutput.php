@@ -146,13 +146,8 @@ class ProductOutput extends Resource
                 ->rules('required')
                 ->get('/locations/{location}/product-categories')
                 ->parent('location')->onlyOnForms()
-                ->showOnCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                 ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -163,29 +158,19 @@ class ProductOutput extends Resource
 
             BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
                 ->onlyOnForms()
-                ->hideWhenCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
+               ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return false;
                     }
-                    return false;
-                })->hideWhenUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }),
 
             AjaxSelect::make('Style', 'style_id')
                 ->rules('required')
                 ->get('/locations/{location}/styles')
                 ->parent('location')->onlyOnForms()
-                ->showOnCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                 ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -197,16 +182,11 @@ class ProductOutput extends Resource
 
             BelongsTo::make('Style', 'style', 'App\Nova\Style')->searchable()
                 ->onlyOnForms()
-                ->hideWhenCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
+               ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return false;
                     }
-                    return false;
-                })->hideWhenUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }),
 
             Number::make('Quantity')
@@ -236,13 +216,8 @@ class ProductOutput extends Resource
                 ->get('/locations/{location}/floors')
                 ->parent('location')
                 ->onlyOnForms()
-                ->showOnCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                 ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -250,16 +225,11 @@ class ProductOutput extends Resource
 
             BelongsTo::make('Floor')
                 ->onlyOnForms()
-                ->hideWhenCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
+               ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return false;
                     }
-                    return false;
-                })->hideWhenUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }),
 
 

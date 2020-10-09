@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Authorize;
 use App\Traits\CamelCasing;
 use App\Traits\Locationable;
 use Spatie\MediaLibrary\HasMedia;
@@ -15,7 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements HasMedia
 {
-    use Notifiable, HasRoles, SoftDeletes, InteractsWithMedia, LogsActivity, Locationable, CamelCasing;
+    use Notifiable, HasRoles, SoftDeletes, InteractsWithMedia, LogsActivity, Locationable, CamelCasing, Authorize;
 
     /**
      * The attributes that are mass assignable.

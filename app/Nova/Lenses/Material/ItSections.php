@@ -43,25 +43,8 @@ class ItSections extends Lens
             ID::make(__('ID'), 'id')->sortable(),
 
             BelongsTo::make('Location')
-                ->showOnCreating(function ($request) {
-                    if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function ($request) {
-                    if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnDetail(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnIndex(function ($request) {
-                    if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;

@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Authorize;
 use App\Traits\CamelCasing;
 use App\Traits\Locationable;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
 class Model extends BaseModel
 {
-    use CamelCasing, Locationable;
+    use CamelCasing, Locationable, Authorize;
 
      /**
      * Set the model readable id prefix

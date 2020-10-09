@@ -2,12 +2,11 @@
 
 namespace App\Nova\Metrics;
 
-use Laravel\Nova\Nova;
+use App\Models\ServiceInvoice;
 use Laravel\Nova\Metrics\Value;
-use App\Models\MaterialPurchaseOrder;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class TotalMaterialPurchase extends Value
+class TotalServiceDispatch extends Value
 {
     /**
      * Calculate the value of the metric.
@@ -17,13 +16,13 @@ class TotalMaterialPurchase extends Value
      */
     public function calculate(NovaRequest $request)
     {
-         // Query for superadmin
-         if($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data')){
-            return $this->sum($request, MaterialPurchaseOrder::class, 'total_purchase_amount', 'date');
+        // Query for superadmin
+        if($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data')){
+            return $this->sum($request, ServiceInvoice::class, 'total_dispatch_amount', 'date');
         }
 
         // Query for users
-        return $this->sum($request, MaterialPurchaseOrder::query()->where('location_id', $request->user()->locationId), 'total_purchase_amount', 'date');
+        return $this->sum($request, ServiceInvoice::query()->where('location_id', $request->user()->locationId), 'total_dispatch_amount', 'date');
     }
 
     /**
@@ -61,6 +60,6 @@ class TotalMaterialPurchase extends Value
      */
     public function uriKey()
     {
-        return 'total-material-purchase';
+        return 'total-service-dispatch';
     }
 }

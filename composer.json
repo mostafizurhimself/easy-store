@@ -18,6 +18,7 @@
         "bolechen/nova-activitylog": "^0.2.1",
         "chris-ware/nova-breadcrumbs": "^2.0",
         "cloudcake/nova-fixed-bars": "^1.1",
+        "coroowicaksono/chart-js-integration": "^0.3.2",
         "david-griffiths/nova-dark-theme": "^1.0",
         "dillingham/nova-ajax-select": "^1.0",
         "dillingham/nova-attach-many": "^1.0",

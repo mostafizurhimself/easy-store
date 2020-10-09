@@ -2,12 +2,11 @@
 
 namespace App\Nova\Metrics;
 
-use Laravel\Nova\Nova;
-use Laravel\Nova\Metrics\Value;
-use App\Models\MaterialPurchaseOrder;
+use Laravel\Nova\Metrics\Trend;
+use App\Models\FinishingInvoice;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class TotalMaterialPurchase extends Value
+class DailyProductFinishing extends Trend
 {
     /**
      * Calculate the value of the metric.
@@ -17,13 +16,11 @@ class TotalMaterialPurchase extends Value
      */
     public function calculate(NovaRequest $request)
     {
-         // Query for superadmin
-         if($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data')){
-            return $this->sum($request, MaterialPurchaseOrder::class, 'total_purchase_amount', 'date');
-        }
+        if($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data')){
 
-        // Query for users
-        return $this->sum($request, MaterialPurchaseOrder::query()->where('location_id', $request->user()->locationId), 'total_purchase_amount', 'date');
+            return $this->sumByDays($request, FinishingInvoice::class, 'total_amount');
+        }
+        return $this->sumByDays($request, FinishingInvoice::query()->where('location_id', $request->user()->locationId), 'total_amount');
     }
 
     /**
@@ -36,11 +33,7 @@ class TotalMaterialPurchase extends Value
         return [
             30 => __('30 Days'),
             60 => __('60 Days'),
-            365 => __('365 Days'),
-            'TODAY' => __('Today'),
-            'MTD' => __('Month To Date'),
-            'QTD' => __('Quarter To Date'),
-            'YTD' => __('Year To Date'),
+            90 => __('90 Days'),
         ];
     }
 
@@ -61,6 +54,6 @@ class TotalMaterialPurchase extends Value
      */
     public function uriKey()
     {
-        return 'total-material-purchase';
+        return 'daily-product-finishing';
     }
 }

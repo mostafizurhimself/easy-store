@@ -132,25 +132,8 @@ class User extends Resource
 
                     BelongsTo::make('Location')
                         ->searchable()
-                        ->showOnCreating(function ($request) {
-                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                                return true;
-                            }
-                            return false;
-                        })->showOnUpdating(function ($request) {
-                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                                return true;
-                            }
-                            return false;
-                        })
-                        ->showOnDetail(function ($request) {
+                        ->canSee(function ($request) {
                             if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                                return true;
-                            }
-                            return false;
-                        })
-                        ->showOnIndex(function ($request) {
-                            if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
                                 return true;
                             }
                             return false;
@@ -272,5 +255,19 @@ class User extends Resource
                 return $request->user()->hasPermissionTo('can mark as inactive users');
             }),
         ];
+    }
+
+    /**
+     * Build a "relatable" query for the given resource.
+     *
+     * This query determines which instances of the model may be attached to other resources.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableRoles(NovaRequest $request, $query)
+    {
+      return $query->where('name', '!=', \App\Models\Role::SUPER_ADMIN);
     }
 }

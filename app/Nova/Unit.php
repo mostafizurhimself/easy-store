@@ -66,16 +66,16 @@ class Unit extends Resource
             Text::make('Name')
                 ->rules('required', 'max:45', 'alpha_space', 'multi_space')
                 ->creationRules('unique:units,name')
-                ->updateRules('unique:units,name,{{resourceId}}')
-                ->fillUsing(function($request, $model){
-                    $model['name'] = Str::title($request->name);
-                })
-                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
+                ->updateRules('unique:units,name,{{resourceId}}'),
 
             Text::make('Display Name')
                 ->rules('required', 'max:45')
                 ->creationRules('unique:units,name')
-                ->updateRules('unique:units,name,{{resourceId}}'),
+                ->updateRules('unique:units,name,{{resourceId}}')
+                ->fillUsing(function($request, $model){
+                    $model['display_name'] = Str::title($request->display_name);
+                })
+                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
         ];
     }
 
