@@ -18,8 +18,8 @@ class CreateSectionsTable extends Migration
             $table->id();
             $table->string('readable_id')->nullable();
             $table->bigInteger('location_id')->unsigned()->nullable();
-            $table->bigInteger('department_id')->unsigned()->nullable();
-            $table->bigInteger('floor_id')->unsigned()->nullable();
+            $table->bigInteger('department_id')->unsigned();
+            $table->bigInteger('floor_id')->unsigned();
             $table->string('name')->index('section_name_index');
             $table->string('code')->nullable()->index('section_code_index');
             $table->timestamps();

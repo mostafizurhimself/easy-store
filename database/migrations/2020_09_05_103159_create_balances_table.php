@@ -17,7 +17,7 @@ class CreateBalancesTable extends Migration
             $table->id();
             $table->string('readable_id')->nullable();
             $table->bigInteger('location_id')->unsigned()->nullable();
-            $table->bigInteger('expenser_id')->unsigned()->nullable();
+            $table->bigInteger('expenser_id')->unsigned();
             $table->date('date');
             $table->text('description')->nullable();
             $table->string('reference')->nullable()->index('balance_reference_index');

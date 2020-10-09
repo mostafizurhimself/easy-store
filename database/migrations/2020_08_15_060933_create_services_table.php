@@ -23,7 +23,7 @@ class CreateServicesTable extends Migration
             $table->double('rate')->default(0);
             $table->double('total_dispatch_quantity')->default(0);
             $table->double('total_receive_quantity')->default(0);
-           $table->bigInteger('unit_id')->unsigned();
+            $table->bigInteger('unit_id')->unsigned();
             $table->bigInteger('category_id')->unsigned()->nullable();
             $table->string('status')->default(App\Enums\ActiveStatus::ACTIVE()->getValue());
             $table->timestamps();

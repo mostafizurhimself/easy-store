@@ -24,7 +24,7 @@ class CreateMaterialsTable extends Migration
             $table->double('opening_quantity')->default(0);
             $table->double('quantity')->default(0);
             $table->double('alert_quantity')->default(0);
-           $table->bigInteger('unit_id')->unsigned();
+            $table->bigInteger('unit_id')->unsigned();
             $table->bigInteger('category_id')->unsigned()->nullable();
             $table->string('status')->default(App\Enums\ActiveStatus::ACTIVE()->getValue());
             $table->timestamps();

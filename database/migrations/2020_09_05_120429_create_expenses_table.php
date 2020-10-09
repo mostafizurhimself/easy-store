@@ -17,7 +17,7 @@ class CreateExpensesTable extends Migration
             $table->id();
             $table->string('readable_id')->nullable();
             $table->bigInteger('location_id')->unsigned()->nullable();
-            $table->bigInteger('expenser_id')->unsigned()->nullable();
+            $table->bigInteger('expenser_id')->unsigned();
             $table->bigInteger('category_id')->unsigned();
             $table->date('date')->index('expense_date_index');
             $table->text('description')->nullable();
