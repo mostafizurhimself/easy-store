@@ -24,11 +24,13 @@ class CreateServiceDispatchesTable extends Migration
             $table->double('dispatch_amount')->default(0);
             $table->double('receive_amount')->default(0);
             $table->text('description')->nullable();
+            $table->bigInteger('unit_id')->unsigned();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('service_id')->references('id')->on('services');
             $table->foreign('invoice_id')->references('id')->on('service_invoices');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

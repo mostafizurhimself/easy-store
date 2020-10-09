@@ -133,13 +133,15 @@ class AssetRequisitionItem extends Resource
                 ->rules('required', 'numeric', 'min:0')
                 ->onlyOnForms(),
 
+            BelongsTo::make('Unit')->onlyOnForms(),
+
             Text::make('Requisition Quantity', function(){
-                return $this->requisitionQuantity." ".$this->unit;
+                return $this->requisitionQuantity." ".$this->unitName;
             })
             ->exceptOnForms(),
 
             Text::make('Distribution Quantity', function(){
-                return $this->distributionQuantity." ".$this->unit;
+                return $this->distributionQuantity." ".$this->unitName;
             })
             ->exceptOnForms(),
 

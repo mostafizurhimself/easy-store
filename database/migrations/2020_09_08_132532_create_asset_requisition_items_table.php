@@ -23,11 +23,13 @@ class CreateAssetRequisitionItemsTable extends Migration
             $table->double('requisition_rate')->default(0);
             $table->double('requisition_amount')->default(0);
             $table->double('distribution_amount')->default(0);
+            $table->bigInteger('unit_id')->unsigned();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('requisition_id')->references('id')->on('asset_requisitions');
             $table->foreign('asset_id')->references('id')->on('assets');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

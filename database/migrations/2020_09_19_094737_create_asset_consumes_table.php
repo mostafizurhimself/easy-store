@@ -21,10 +21,12 @@ class CreateAssetConsumesTable extends Migration
             $table->double('rate')->default(0);
             $table->double('amount')->default(0);
             $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('unit_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('asset_id')->references('id')->on('assets');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

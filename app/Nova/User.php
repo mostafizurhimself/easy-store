@@ -44,7 +44,7 @@ class User extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can mark as active', 'can mark as inactive'];
+    public static $permissions = ['can attach', 'can mark as active', 'can mark as inactive'];
 
     /**
      * The group associated with the resource.

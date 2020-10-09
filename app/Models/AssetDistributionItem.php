@@ -115,15 +115,26 @@ class AssetDistributionItem extends Model
         return $query->where('status', DistributionStatus::DRAFT());
     }
 
+        /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+       return $this->belongsTo(Unit::class)->withTrashed();
+    }
+
     /**
-     * Get the unit for the assets
+     * Get the unit for the model
      *
      * @return string
      */
-    public function getUnitAttribute()
+    public function getUnitNameAttribute()
     {
-        return $this->asset->unit->name;
+        return $this->unit->name;
     }
+
 
     /**
      * Update total receive quantity

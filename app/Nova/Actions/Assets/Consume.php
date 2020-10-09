@@ -30,7 +30,8 @@ class Consume extends Action
                     'quantity' => $fields->quantity,
                     'rate'     => $model->rate,
                     'amount'   => $fields->quantity * $model->rate,
-                    'user_id'  => request()->user()->id
+                    'user_id'  => request()->user()->id,
+                    'unit_id'  => $model->unitId
                 ]);
 
                 $model->decrement('quantity', $fields->quantity);

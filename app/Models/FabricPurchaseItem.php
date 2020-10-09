@@ -65,13 +65,23 @@ class FabricPurchaseItem extends Model
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+       return $this->belongsTo(Unit::class)->withTrashed();
+    }
+
+    /**
      * Get the unit for the fabrics
      *
      * @return string
      */
-    public function getUnitAttribute()
+    public function getUnitNameAttribute()
     {
-        return $this->fabric->unit->name;
+        return $this->unit->name;
     }
 
     /**

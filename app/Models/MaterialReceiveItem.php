@@ -92,13 +92,24 @@ class MaterialReceiveItem extends Model implements HasMedia
        return $this->belongsTo(Material::class, 'material_id')->withTrashed();
     }
 
+        /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+       return $this->belongsTo(Unit::class)->withTrashed();
+    }
+
     /**
-     * Get the unit for the materials
+     * Get the unit for the model
      *
      * @return string
      */
-    public function getUnitAttribute()
+    public function getUnitNameAttribute()
     {
-        return $this->material->unit->name;
+        return $this->unit->name;
     }
+
 }

@@ -136,9 +136,11 @@ class ProductRequisitionItem extends Resource
                 ->onlyOnForms(),
 
             Text::make('Requisition Quantity', function(){
-                return $this->requisitionQuantity." ".$this->unit;
+                return $this->requisitionQuantity." ".$this->unitName;
             })
             ->exceptOnForms(),
+
+            BelongsTo::make('Unit')->onlyOnForms(),
 
             Currency::make('Requisition Rate')
                 ->currency('BDT')

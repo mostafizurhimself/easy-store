@@ -110,12 +110,14 @@ class MaterialPurchaseItem extends Resource
                 ->onlyOnForms(),
 
             Text::make('Purchase Quantity', function(){
-                return $this->purchaseQuantity." ".$this->unit;
+                return $this->purchaseQuantity." ".$this->unitName;
             })
             ->exceptOnForms(),
 
+            BelongsTo::make('Unit')->onlyOnForms(),
+
             Text::make('Receive Quantity', function(){
-                return $this->receiveQuantity." ".$this->unit;
+                return $this->receiveQuantity." ".$this->unitName;
             })
             ->exceptOnForms(),
 

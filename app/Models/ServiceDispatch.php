@@ -75,14 +75,25 @@ class ServiceDispatch extends Model
     }
 
     /**
-     * Get the unit of the service
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+       return $this->belongsTo(Unit::class)->withTrashed();
+    }
+
+    /**
+     * Get the unit for the model
      *
      * @return string
      */
-    public function getUnitAttribute()
+    public function getUnitNameAttribute()
     {
-        return $this->service->unit->name;
+        return $this->unit->name;
     }
+
 
     /**
      * Scope a query to only include draft distributions.

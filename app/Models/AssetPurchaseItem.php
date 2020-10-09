@@ -64,15 +64,26 @@ class AssetPurchaseItem extends Model
        return $this->belongsTo(Asset::class)->withTrashed();
     }
 
+        /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+       return $this->belongsTo(Unit::class)->withTrashed();
+    }
+
     /**
-     * Get the unit of the assets
+     * Get the unit for the model
      *
      * @return string
      */
-    public function getUnitAttribute()
+    public function getUnitNameAttribute()
     {
-        return $this->asset->unit->name;
+        return $this->unit->name;
     }
+
 
        /**
      * Get the date of the purchase order

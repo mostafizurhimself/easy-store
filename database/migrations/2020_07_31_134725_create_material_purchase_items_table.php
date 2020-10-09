@@ -23,11 +23,13 @@ class CreateMaterialPurchaseItemsTable extends Migration
             $table->double('purchase_rate')->default(0);
             $table->double('purchase_amount')->default(0);
             $table->double('receive_amount')->default(0);
+            $table->bigInteger('unit_id')->unsigned();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('purchase_order_id')->references('id')->on('material_purchase_orders');
             $table->foreign('material_id')->references('id')->on('materials');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

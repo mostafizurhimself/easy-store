@@ -21,11 +21,13 @@ class CreateProductRequisitionItemsTable extends Migration
             $table->double('requisition_quantity')->default(0);
             $table->double('requisition_rate')->default(0);
             $table->double('requisition_amount')->default(0);
+            $table->bigInteger('unit_id')->unsigned();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('requisition_id')->references('id')->on('product_requisitions');
             $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

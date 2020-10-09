@@ -14,9 +14,9 @@ trait Authorize
          * @return void
          */
         static::creating(function($model){
-            if($model->locationId != request()->user()->locationId)
+            if(!empty(request()->user()->locationId) && ($model->locationId != request()->user()->locationId))
             {
-                if(!request()->user()->hasPermissionTo('create all locations data') && !request()->user()->isSuperAdmin())
+                if(!request()->user()->hasPermissionTo('create all locations data'))
                 {
                     throw new Exception('Sorry! You are not authorize to create this resource.');
                 }

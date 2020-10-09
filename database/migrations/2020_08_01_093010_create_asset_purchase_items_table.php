@@ -24,10 +24,12 @@ class CreateAssetPurchaseItemsTable extends Migration
             $table->double('purchase_amount')->default(0);
             $table->double('receive_amount')->default(0);
             $table->string('status')->default('draft');
+            $table->bigInteger('unit_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('purchase_order_id')->references('id')->on('asset_purchase_orders');
             $table->foreign('asset_id')->references('id')->on('assets');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

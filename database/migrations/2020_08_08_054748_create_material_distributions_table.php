@@ -23,12 +23,14 @@ class CreateMaterialDistributionsTable extends Migration
             $table->double('amount')->default(0);
             $table->text('description')->nullable();
             $table->bigInteger('receiver_id')->unsigned();
+            $table->bigInteger('unit_id')->unsigned();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');
             $table->foreign('material_id')->references('id')->on('materials');
             $table->foreign('receiver_id')->references('id')->on('employees');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

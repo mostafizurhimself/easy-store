@@ -78,19 +78,25 @@ class ProductOutput extends Model
     }
 
     /**
-     * Get the unit of the product
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+       return $this->belongsTo(Unit::class)->withTrashed();
+    }
+
+    /**
+     * Get the unit for the model
      *
      * @return string
      */
-    public function getUnitAttribute()
+    public function getUnitNameAttribute()
     {
-        if(empty(Settings::application()->output_unit))
-        {
-            return Unit::first()->name;
-        }
-
-        return Unit::find(Settings::application()->output_unit)->name;
+        return $this->unit->name;
     }
+
 
 
 

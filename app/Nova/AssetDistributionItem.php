@@ -124,7 +124,7 @@ class AssetDistributionItem extends Resource
                 ->onlyOnForms(),
 
             Text::make('Distribution Quantity', function(){
-                return $this->distributionQuantity." ".$this->unit;
+                return $this->distributionQuantity." ".$this->unitName;
             })
             ->exceptOnForms(),
 
@@ -136,8 +136,10 @@ class AssetDistributionItem extends Resource
                 ->currency('BDT')
                 ->exceptOnForms(),
 
+            BelongsTo::make('Unit')->onlyOnForms(),
+
             Text::make('Receive Quantity', function(){
-                    return $this->receiveQuantity." ".$this->unit;
+                    return $this->receiveQuantity." ".$this->unitName;
                 })
                 ->exceptOnForms(),
 

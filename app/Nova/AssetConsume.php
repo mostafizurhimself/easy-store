@@ -68,7 +68,7 @@ class AssetConsume extends Resource
             ->searchable(),
 
             Text::make('Quantity', function(){
-                return $this->quantity ." ".$this->unit;
+                return $this->quantity ." ".$this->unitName;
             }),
 
             Currency::make('Rate')

@@ -25,6 +25,7 @@ class CreateAssetDistributionItemsTable extends Migration
             $table->double('distribution_rate')->default(0);
             $table->double('distribution_amount')->default(0);
             $table->double('receive_amount')->default(0);
+            $table->bigInteger('unit_id')->unsigned();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
@@ -32,6 +33,7 @@ class CreateAssetDistributionItemsTable extends Migration
             $table->foreign('requisition_id')->references('id')->on('asset_requisitions');
             $table->foreign('requisition_item_id')->references('id')->on('asset_requisition_items');
             $table->foreign('asset_id')->references('id')->on('assets');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

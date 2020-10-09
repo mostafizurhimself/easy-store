@@ -135,4 +135,16 @@ class UserPolicy
                 ($user->hasPermissionTo('force delete users') && $user->locationId == $model->locationId) ||
                 $user->hasPermissionTo('force delete all locations data')) && $user->id != $model->id;
     }
+
+    /**
+     * Determine whether the user can add a receive item to the purchase.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\User  $model
+     * @return mixed
+     */
+    public function attachAnyRole(User $user, User $model)
+    {
+        return $user->hasPermissionTo('can attach roles') || $user->isSuperAdmin();
+    }
 }

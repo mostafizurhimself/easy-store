@@ -119,9 +119,11 @@ class ServiceReceive extends Resource
 
 
             Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unit;
+                    return $this->quantity." ".$this->unitName;
                 })
                 ->exceptOnForms(),
+
+            BelongsTo::make('Unit')->onlyOnForms(),
 
             Currency::make('Rate')
                 ->currency('BDT')

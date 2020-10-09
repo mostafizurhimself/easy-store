@@ -74,15 +74,26 @@ class AssetRequisitionItem extends Model
        return $this->hasMany(AssetDistributionItem::class, 'requisition_item_id');
     }
 
+        /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+       return $this->belongsTo(Unit::class)->withTrashed();
+    }
+
     /**
-     * Get the unit for the assets
+     * Get the unit for the model
      *
      * @return string
      */
-    public function getUnitAttribute()
+    public function getUnitNameAttribute()
     {
-        return $this->asset->unit->name;
+        return $this->unit->name;
     }
+
 
     /**
      * Get the remaining requisition quantity

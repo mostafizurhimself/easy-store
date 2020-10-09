@@ -93,12 +93,22 @@ class FabricReceiveItem extends Model implements HasMedia
     }
 
     /**
-     * Get the unit for the fabrics
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+       return $this->belongsTo(Unit::class)->withTrashed();
+    }
+
+    /**
+     * Get the unit for the model
      *
      * @return string
      */
-    public function getUnitAttribute()
+    public function getUnitNameAttribute()
     {
-        return $this->fabric->unit->name;
+        return $this->unit->name;
     }
 }

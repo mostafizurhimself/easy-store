@@ -25,12 +25,14 @@ class CreateMaterialReceiveItemsTable extends Migration
             $table->double('rate')->default(0);
             $table->double('amount')->default(0);
             $table->text('note')->nullable();
+            $table->bigInteger('unit_id')->unsigned();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('purchase_order_id')->references('id')->on('material_purchase_orders');
             $table->foreign('material_id')->references('id')->on('materials');
             $table->foreign('purchase_item_id')->references('id')->on('material_purchase_items');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

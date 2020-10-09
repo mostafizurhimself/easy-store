@@ -68,7 +68,7 @@ class AssetConsume extends Model
      *
      * @return string
      */
-    public function getUnitAttribute()
+    public function getUnitNameAttribute()
     {
         return $this->asset->unit->name;
     }

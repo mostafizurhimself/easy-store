@@ -92,13 +92,24 @@ class AssetReceiveItem extends Model implements HasMedia
        return $this->belongsTo(Asset::class, 'asset_id')->withTrashed();
     }
 
+        /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+       return $this->belongsTo(Unit::class)->withTrashed();
+    }
+
     /**
-     * Get the unit for the assets
+     * Get the unit for the model
      *
      * @return string
      */
-    public function getUnitAttribute()
+    public function getUnitNameAttribute()
     {
-        return $this->asset->unit->name;
+        return $this->unit->name;
     }
+
 }

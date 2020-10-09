@@ -12,10 +12,8 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Eminiarts\Tabs\TabsOnEdit;
 use Illuminate\Validation\Rule;
-use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
 use App\Models\Role as RoleModel;
-use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\MorphToMany;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Eminiarts\NovaPermissions\Checkboxes;
@@ -39,7 +37,7 @@ class Role extends Resource
      *
      * @var array
      */
-    public static $permissions = [];
+    public static $permissions = ['can attach'];
 
     /**
      * The group associated with the resource.
@@ -150,48 +148,24 @@ class Role extends Resource
 
         $userResource = Nova::resourceForModel(getModelForGuard($this->guard_name));
 
-        // dd($this->resource->locationId);
-
         return [
 
             ID::make('Id', 'id')
                 ->rules('required')
+                ->hideFromIndex()
                 ->hideFromDetail(),
 
-            BelongsTo::make('Location')
-                ->searchable()
-                ->nullable()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
-
-            Text::make('Display Name')
-                // ->slug('name')
-                ->rules(['required', 'string', 'max:255', 'alpha_space', 'multi_space', 'super_admin'])
-                ->creationRules([
-                    Rule::unique('roles', 'display_name')->where('location_id', request()->get('location'))
-                ])
-                ->updateRules([
-                    Rule::unique('roles', 'display_name')->where('location_id', $this->resource->locationId)->ignore($this->resource->id, 'id')
-                ]),
+            TextWithSlug::make('Display Name')
+                ->slug('name')
+                ->rules(['required', 'string', 'max:255', 'alpha_space', 'multi_space'])
+                ->creationRules('unique:' . config('permission.table_names.roles'))
+                ->updateRules('unique:' . config('permission.table_names.roles') . ',display_name,{{resourceId}}'),
 
             Text::make('Name')
                 ->onlyOnDetail(),
 
-            Hidden::make('Name')
-                ->rules(['required', 'string', 'max:255', 'super_admin', 'multi_space'])
-                ->fillUsing(function($request, $model){
-                    $model['name'] = Str::kebab($request->display_name);
-                })
-                ->creationRules([
-                    Rule::unique('roles', 'name')->where('location_id', request()->get('location'))
-                ])
-                ->updateRules([
-                    Rule::unique('roles', 'name')->where('location_id', $this->resource->locationId)->ignore($this->resource->id, 'id')
-                ])
+            Slug::make('Name')
+                ->rules(['required', 'string', 'max:255'])
                 ->onlyOnForms(),
 
 
@@ -216,14 +190,12 @@ class Role extends Resource
                     ->groupBy('group')->toArray())
                     ->canSee(function ($request) {
                         return $request->user()->hasPermissionTo('assign permissions') || $request->user()->isSuperAdmin();
-                    })
-                    ->hideFromIndex(),
+                    }),
 
             Text::make(__('Users'), function () {
                 return count($this->users);
             })
                 ->exceptOnForms(),
-
 
             MorphToMany::make($userResource::label(), 'users', $userResource),
         ];
@@ -256,7 +228,7 @@ class Role extends Resource
         return __('Role');
     }
 
-     /**
+    /**
      * Build an "index" query for the given resource.
      *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
@@ -268,14 +240,23 @@ class Role extends Resource
         if (empty($request->get('orderBy'))) {
             $query->getQuery()->orders = [];
 
-            $query->orderBy(key(static::$sort), reset(static::$sort));
-        }
-
-        if($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data'))
-        {
-            $query->where('location_id', $request->user()->location_id);
+            return $query->orderBy(key(static::$sort), reset(static::$sort));
         }
 
         return $query;
+    }
+
+    /**
+     * Build a "relatable" query for the given resource.
+     *
+     * This query determines which instances of the model may be attached to other resources.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableRoles(NovaRequest $request, $query)
+    {
+      return $query->where('name' != RoleModel::SUPER_ADMIN);
     }
 }

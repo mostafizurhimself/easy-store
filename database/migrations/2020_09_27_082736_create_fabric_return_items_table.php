@@ -23,10 +23,12 @@ class CreateFabricReturnItemsTable extends Migration
             $table->double('amount')->default(0);
             $table->text('note')->nullable();
             $table->string('status')->default('draft');
+            $table->bigInteger('unit_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('invoice_id')->references('id')->on('fabric_return_invoices');
             $table->foreign('fabric_id')->references('id')->on('fabrics');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

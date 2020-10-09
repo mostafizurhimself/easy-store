@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\CamelCasing;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Setting extends Model implements HasMedia
 {
-    use LogsActivity, InteractsWithMedia;
+    use LogsActivity, InteractsWithMedia, CamelCasing;
 
     /**
      * The setting name of application settings

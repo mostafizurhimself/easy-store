@@ -25,6 +25,7 @@ class CreateProductOutputsTable extends Migration
             $table->bigInteger('floor_id')->unsigned();
             $table->bigInteger('employee_id')->unsigned()->nullable();
             $table->text('note')->nullable();
+            $table->bigInteger('unit_id')->unsigned();
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
@@ -32,6 +33,7 @@ class CreateProductOutputsTable extends Migration
             $table->foreign('style_id')->references('id')->on('styles');
             $table->foreign('floor_id')->references('id')->on('floors');
             $table->foreign('employee_id')->references('id')->on('employees');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 
