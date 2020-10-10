@@ -20,7 +20,7 @@ class GenerateAssets extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Do not run this command.';
 
     /**
      * Create a new command instance.
