@@ -172,7 +172,7 @@ class Fabric extends Resource
 
             Text::make('Opening Quantity')
                 ->displayUsing(function(){
-                    return $this->openingQuantity ." ".$this->unitName->name;
+                    return $this->openingQuantity ." ".$this->unitName;
                 })
                 ->onlyOnDetail(),
 
@@ -183,13 +183,13 @@ class Fabric extends Resource
 
             Text::make('Alert Quantity')
                 ->displayUsing(function(){
-                    return $this->alertQuantity ." ".$this->unitName->name;
+                    return $this->alertQuantity ." ".$this->unitName;
                 })
                 ->onlyOnDetail(),
 
             Text::make('Quantity')
                 ->displayUsing(function(){
-                    return $this->quantity ." ".$this->unitName->name;
+                    return $this->quantity ." ".$this->unitName;
                 })
                 ->exceptOnForms(),
 
