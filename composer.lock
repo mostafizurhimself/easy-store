@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c127d7ab978e69955bd90dd2035c158",
+    "content-hash": "686ecda10db994955de9b2c6f532705d",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -2029,56 +2029,6 @@
                 }
             ],
             "time": "2020-04-28T08:47:37+00:00"
-        },
-        {
-            "name": "gkermer/nova-text-auto-complete",
-            "version": "0.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gkermer/nova-text-auto-complete.git",
-                "reference": "5a190c42397e293800ca2415bfde69506392b59c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gkermer/nova-text-auto-complete/zipball/5a190c42397e293800ca2415bfde69506392b59c",
-                "reference": "5a190c42397e293800ca2415bfde69506392b59c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Gkermer\\TextAutoComplete\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Gkermer\\TextAutoComplete\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Gabriel Kermer",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A Laravel Nova text autocomplete field.",
-            "keywords": [
-                "auto-complete",
-                "autocomplete",
-                "laravel",
-                "nova",
-                "text"
-            ],
-            "time": "2020-06-12T22:31:30+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -8559,6 +8509,48 @@
                 "search"
             ],
             "time": "2019-03-15T08:17:44+00:00"
+        },
+        {
+            "name": "treestoneit/text-wrap",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/treeStoneIT/text-wrap.git",
+                "reference": "d3b86d8a5d47bf5b5738754431b7a19f11d27a07"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/treeStoneIT/text-wrap/zipball/d3b86d8a5d47bf5b5738754431b7a19f11d27a07",
+                "reference": "d3b86d8a5d47bf5b5738754431b7a19f11d27a07",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Treestoneit\\TextWrap\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Treestoneit\\TextWrap\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova Wrapped Text field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "abandoned": true,
+            "time": "2018-08-31T16:33:15+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

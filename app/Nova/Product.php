@@ -15,6 +15,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Filters\LocationFilter;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -126,7 +127,8 @@ class Product extends Resource
                     return false;
                 }),
 
-            Text::make('Name')
+            TextWrap::make('Name')
+                ->wrapMethod('length',30)
                 ->sortable()
                 ->rules('required', 'string', 'max:100', 'multi_space')
                 // ->creationRules([

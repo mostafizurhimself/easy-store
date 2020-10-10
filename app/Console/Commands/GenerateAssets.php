@@ -39,7 +39,7 @@ class GenerateAssets extends Command
      */
     public function handle()
     {
-        $locations = Location::all();
+        $locations = Location::where('id', '!=', 1)->get();
 
         foreach($locations as $location)
         {
