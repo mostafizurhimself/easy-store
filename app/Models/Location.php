@@ -47,6 +47,16 @@ class Location extends Model
     protected static $readableIdLength = 3;
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function users()
+    {
+       return $this->hasMany(User::class);
+    }
+
+    /**
      * Determines a morph one relationship
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
