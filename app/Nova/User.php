@@ -117,7 +117,7 @@ class User extends Resource
 
             (new Tabs('User Details', [
                 'User Info'    => [
-                    // ID::make()->sortable()->onlyOnIndex(),
+                    ID::make()->sortable()->onlyOnIndex(),
 
                     Images::make('Avatar', 'avatar')
                         ->onlyOnIndex(),

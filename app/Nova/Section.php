@@ -107,9 +107,9 @@ class Section extends Resource
                 ->updateRules([
                     Rule::unique('sections', 'name')->where('department_id', request()->get('department') ?? request()->get('department_id'))->ignore($this->resource->id)
                 ])
-                ->fillUsing(function($request, $model){
-                    $model['name'] = Str::title($request->name);
-                })
+                // ->fillUsing(function($request, $model){
+                //     $model['name'] = Str::title($request->name);
+                // })
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             BelongsTo::make('Location')
