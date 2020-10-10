@@ -33,7 +33,7 @@
                     <td>{{$model->location->name}}</td>
                     <td>{{$model->category->name}}</td>
                     <td>{{$model->style->name}} ({{$model->style->code}})</td>
-                    <td>{{$model->quantity}} {{$model->unitName}}</td>
+                    <td>{{$model->quantity}} {{Name}}</td>
                     <td>{{Helper::currencyShortPdf($model->rate)}}</td>
                     <td>{{Helper::currencyPdf($model->amount)}}</td>
                     <td>{{Str::title($model->status)}}</td>

@@ -27,11 +27,11 @@ class ConvertUnit extends Action
     {
         foreach($models as $model)
         {
-            $model->openingQuantity = $model->openingQuantity / $fields->conversion_rate;
-            $model->quantity = $model->quantity / $fields->conversion_rate;
-            $model->alertQuantity = $model->alertQuantity / $fields->conversion_rate;
+            // $model->openingQuantity = $model->openingQuantity == 0 ? 0 : ( $model->openingQuantity / $fields->conversion_rate);
+            // $model->quantity = $model->quantity == 0 ? 0 : ( $model->quantity / $fields->conversion_rate);
+            // $model->alertQuantity = $model->alertQuantity == 0 ? 0 : ( $model->alertQuantity / $fields->conversion_rate);
 
-            $model->unitId = $fields->unit;
+            // $model->unitId = $fields->unit;
         }
 
         return Action::message('Unit converted successfully.');

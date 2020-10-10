@@ -25,7 +25,7 @@
                     <td>{{$model->date}}</td>
                     <td>{{$model->purchaseOrder->readableId}}</td>
                     <td>{{$model->material->name}} ({{$model->material->code}})</td>
-                    <td>{{$model->quantity}} {{$model->unit}}</td>
+                    <td>{{$model->quantity}} {{$model->unitName}}</td>
                     <td>{{Helper::currencyShortPdf($model->rate)}}</td>
                     <td>{{Helper::currencyPdf($model->amount)}}</td>
                     <td>{{Str::title($model->status)}}</td>

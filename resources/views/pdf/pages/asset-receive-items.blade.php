@@ -31,7 +31,7 @@
                     <td>{{$model->date}}</td>
                     <td>{{$model->purchaseOrder->readableId}}</td>
                     <td>{{$model->asset->name}} ({{$model->asset->code}})</td>
-                    <td>{{$model->quantity}} {{$model->unit}}</td>
+                    <td>{{$model->quantity}} {{$model->unitName}}</td>
                     <td>{{Helper::currencyShortPdf($model->rate)}}</td>
                     <td>{{Helper::currencyPdf($model->amount)}}</td>
                     <td>{{Str::title($model->status)}}</td>
