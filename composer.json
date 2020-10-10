@@ -34,6 +34,7 @@
         "epartment/nova-dependency-container": "^1.2",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
+        "gkermer/nova-text-auto-complete": "^0.0.4",
         "gregoriohc/laravel-nova-theme-responsive": "^0.8.1",
         "guzzlehttp/guzzle": "^7.0.1",
         "inspheric/nova-email-field": "^1.42",
