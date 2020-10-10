@@ -27,11 +27,26 @@ class ConvertUnit extends Action
     {
         foreach($models as $model)
         {
-            // $model->openingQuantity = $model->openingQuantity == 0 ? 0 : ( $model->openingQuantity / $fields->conversion_rate);
-            // $model->quantity = $model->quantity == 0 ? 0 : ( $model->quantity / $fields->conversion_rate);
-            // $model->alertQuantity = $model->alertQuantity == 0 ? 0 : ( $model->alertQuantity / $fields->conversion_rate);
+            if($model->unitId == $fields->unit){
+                return Action::danger('Same unit value, conversion failed!');
+            }else{
+                if($model->openingQuantity != 0){
+                    $model->openingQuantity = ( $model->openingQuantity / $fields->conversion_rate);
+                }
 
-            // $model->unitId = $fields->unit;
+                if($model->quantity != 0){
+
+                    $model->quantity = ( $model->quantity / $fields->conversion_rate);
+                }
+
+                if($model->alertQuantity != 0){
+
+                    $model->alertQuantity = ( $model->alertQuantity / $fields->conversion_rate);
+                }
+
+                $model->unitId = $fields->unit;
+                $model->save();
+            }
         }
 
         return Action::message('Unit converted successfully.');
@@ -49,7 +64,7 @@ class ConvertUnit extends Action
                 ->rules('required')
                 ->options(Unit::all()->pluck('name', 'id')),
 
-            Number::make('Coversion Rate')
+            Number::make('Conversion Rate')
                 ->rules('required', 'numeric'),
         ];
     }

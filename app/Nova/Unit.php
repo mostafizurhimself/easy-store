@@ -68,7 +68,7 @@ class Unit extends Resource
                 ->creationRules('unique:units,name')
                 ->updateRules('unique:units,name,{{resourceId}}'),
 
-            Text::make('Display Name')
+            Text::make('Full Name', 'display_name')
                 ->rules('required', 'max:45')
                 ->creationRules('unique:units,name')
                 ->updateRules('unique:units,name,{{resourceId}}')

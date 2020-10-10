@@ -299,9 +299,9 @@ class Asset extends Resource
                             return $request->user()->hasPermissionTo('can consume assets') || $request->user()->isSuperAdmin();
                         }),
 
-            (new ConvertUnit)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can convert unit of assets') || $request->user()->isSuperAdmin();
-            })->confirmButtonText('Confirm'),
+            // (new ConvertUnit)->canSee(function($request){
+            //     return $request->user()->hasPermissionTo('can convert unit of assets') || $request->user()->isSuperAdmin();
+            // })->confirmButtonText('Confirm'),
 
             (new UpdateOpeningQuantity)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can update opening quantity of assets') || $request->user()->isSuperAdmin();
