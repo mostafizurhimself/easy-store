@@ -82,15 +82,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         return [
             // Line 1,
-            (new TotalFabricPurchase())->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any fabric purchase orders');
-            }),
-            (new TotalMaterialPurchase())->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any material purchase orders');
-            }),
-            (new TotalAssetPurchase())->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any asset purchase orders');
-            }),
+            new TotalFabricPurchase(),
+            new TotalMaterialPurchase(),
+            new TotalAssetPurchase(),
 
             // Line 2
             (new LineChart())
@@ -125,20 +119,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 ])
                 ->width('2/3'),
 
-            (new TotalPurchaseOrder())->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasAllPermissions(['view any fabric purchase orders', 'view any material purchase orders', 'view any asset purchase orders']);
-            }),
+            new TotalPurchaseOrder(),
 
             // Line 3
-            (new DailyProductOutput())->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any product outputs');
-            }),
-            (new DailyProductFinishing())->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any finishing invoices');
-            }),
-            (new TotalServiceDispatch())->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any service invoices');
-            }),
+            new DailyProductOutput(),
+            new DailyProductFinishing(),
+            new TotalServiceDispatch(),
         ];
     }
 
