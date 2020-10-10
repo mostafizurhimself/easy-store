@@ -77,9 +77,7 @@ class ProductOutput extends Resource
     public static $searchRelations = [
         'location' => ['name'],
         'category' => ['name'],
-        'style' => ['code'],
-        'section' => ['name'],
-        'subSection' => ['name'],
+        'style' => ['code']
     ];
     /**
      * The icon of the resource.
