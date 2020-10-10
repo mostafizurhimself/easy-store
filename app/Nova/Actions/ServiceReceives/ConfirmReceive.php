@@ -31,9 +31,14 @@ class ConfirmReceive extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach($models as $model){
-            $model->service->increment('total_receive_quantity', $model->quantity);
-            $model->status = DispatchStatus::CONFIRMED();
-            $model->save();
+            if($model->unitId == $model->service->unitId)
+            {
+                $model->service->increment('total_receive_quantity', $model->quantity);
+                $model->status = DispatchStatus::CONFIRMED();
+                $model->save();
+            }else{
+                return Action::danger("Unit mismatch! You can't confirm it now.");
+            }
         }
 
         if($models->count() > 1){

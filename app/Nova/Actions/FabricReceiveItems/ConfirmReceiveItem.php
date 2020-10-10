@@ -31,9 +31,15 @@ class ConfirmReceiveItem extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach($models as $model){
-            $model->fabric->increment('quantity', $model->quantity);
-            $model->status = PurchaseStatus::CONFIRMED();
-            $model->save();
+            if($model->unitId == $model->fabric->unitId)
+            {
+
+                $model->fabric->increment('quantity', $model->quantity);
+                $model->status = PurchaseStatus::CONFIRMED();
+                $model->save();
+            }else{
+                return Action::danger("Unit mismatch! You can't confirm it now.");
+            }
         }
     }
 

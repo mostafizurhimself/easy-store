@@ -20,7 +20,9 @@ class AssetRequisitionItemObserver
 
         //Set the purchase amount
         $assetRequisitionItem->requisitionRate = $asset->rate;
-        $assetRequisitionItem->unitId = $asset->unitId;
+        if(empty($assetRequisitionItem->unitId)){
+            $assetRequisitionItem->unitId = $asset->unitId;
+        }
         $assetRequisitionItem->requisitionAmount = $asset->rate * $assetRequisitionItem->requisitionQuantity;
     }
 

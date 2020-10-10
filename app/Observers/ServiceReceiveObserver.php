@@ -26,7 +26,10 @@ class ServiceReceiveObserver
         if (empty($serviceReceive->rate)) {
             $serviceReceive->rate = $dispatch->rate;
         }
-        $serviceReceive->unitId = $dispatch->service->unitId;
+
+        if(empty($serviceReceive->unitId)){
+            $serviceReceive->unitId = $dispatch->service->unitId;
+        }
         //Set Amount
         $serviceReceive->amount = $serviceReceive->rate * $serviceReceive->quantity;
     }

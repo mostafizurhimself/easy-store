@@ -20,6 +20,7 @@ class ProductOutputObserver
 
         //Set the rate & amount
         $productOutput->rate = $style->rate;
+        $productOutput->unitId = Settings::application()->output_unit;
         $productOutput->amount = $style->rate * $productOutput->quantity;
     }
 

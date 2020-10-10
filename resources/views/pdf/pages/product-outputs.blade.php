@@ -33,7 +33,7 @@
                     <td>{{$model->location->name}}</td>
                     <td>{{$model->category->name}}</td>
                     <td>{{$model->style->name}} ({{$model->style->code}})</td>
-                    <td>{{$model->quantity}} {{$model->unit}}</td>
+                    <td>{{$model->quantity}} {{$model->unitName}}</td>
                     <td>{{Helper::currencyShortPdf($model->rate)}}</td>
                     <td>{{Helper::currencyPdf($model->amount)}}</td>
                     <td>{{Str::title($model->status)}}</td>
@@ -41,7 +41,7 @@
             @endforeach
             <tr class="tfoot">
                 <td colspan="5">Grand Total</td>
-                <td>{{$models->sum('quantity')}} {{$model->unit}}</td>
+                <td>{{$models->sum('quantity')}} {{$model->unitName}}</td>
                 <td></td>
                 <td>{{Helper::currencyPdf($models->sum('amount'))}}</td>
                 <td></td>

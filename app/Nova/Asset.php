@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Actions\Assets\Consume;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Actions\Assets\ConvertUnit;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -47,7 +48,7 @@ class Asset extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can consume', 'can update opening quantity of'];
+    public static $permissions = ['can consume', 'can convert unit of', 'can update opening quantity of'];
 
     /**
      * The side nav menu order.
@@ -294,11 +295,15 @@ class Asset extends Resource
             (new Consume)->onlyOnTableRow()
                         ->confirmButtonText('Consume')
                         ->canSee(function($request){
-                            return $request->user()->hasPermissionTo('can consume assets');
+                            return $request->user()->hasPermissionTo('can consume assets') || $request->user()->isSuperAdmin();
                         }),
 
+            // (new ConvertUnit)->canSee(function($request){
+            //     return $request->user()->hasPermissionTo('can convert unit of assets') || $request->user()->isSuperAdmin();
+            // })->confirmButtonText('Confirm'),
+
             (new UpdateOpeningQuantity)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can update opening quantity of assets');
+                return $request->user()->hasPermissionTo('can update opening quantity of assets') || $request->user()->isSuperAdmin();
             })->onlyOnDetail(),
         ];
     }

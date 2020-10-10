@@ -20,7 +20,10 @@ class FinishingObserver
 
         //Set the amount
         $finishing->rate = $product->costPrice;
-        $finishing->unitId = $product->unitId;
+
+        if(empty($finishing->unitId)){
+            $finishing->unitId = $product->unitId;
+        }
         $finishing->amount = $product->costPrice * $finishing->quantity;
     }
 

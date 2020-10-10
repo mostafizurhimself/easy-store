@@ -27,7 +27,9 @@ class MaterialReceiveItemObserver
         if(empty($materialReceiveItem->rate)){
             $materialReceiveItem->rate = $purchaseItem->purchaseRate;
         }
-        $materialReceiveItem->unitId = $purchaseItem->material->unitId;
+        if(empty($materialReceiveItem->unitId)){
+            $materialReceiveItem->unitId = $purchaseItem->material->unitId;
+        }
         //Set Amount
         $materialReceiveItem->amount = $purchaseItem->purchaseRate * $materialReceiveItem->quantity;
     }

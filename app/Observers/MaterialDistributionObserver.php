@@ -17,7 +17,10 @@ class MaterialDistributionObserver
     {
         $material = Material::find($materialDistribution->materialId);
         $materialDistribution->rate = $material->rate;
-        $materialDistribution->unitId = $material->unitId;
+
+        if(empty($materialDistribution->unitId)){
+            $materialDistribution->unitId = $material->unitId;
+        }
         $materialDistribution->amount = $material->rate * $materialDistribution->quantity;
     }
 

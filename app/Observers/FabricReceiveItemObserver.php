@@ -27,7 +27,9 @@ class FabricReceiveItemObserver
         if(empty($fabricReceiveItem->rate)){
             $fabricReceiveItem->rate = $purchaseItem->purchaseRate;
         }
-        $fabricReceiveItem->unitId = $purchaseItem->fabric->unitId;
+        if(empty($fabricReceiveItem->unitId)){
+            $fabricReceiveItem->unitId = $purchaseItem->fabric->unitId;
+        }
         //Set Amount
         $fabricReceiveItem->amount = $purchaseItem->purchaseRate * $fabricReceiveItem->quantity;
     }

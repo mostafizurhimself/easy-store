@@ -22,7 +22,10 @@ class AssetReturnItemObserver
         if (empty($assetReturnItem->rate)) {
             $assetReturnItem->rate = $asset->rate;
         }
-        $assetReturnItem->unitId = $asset->unitId;
+
+        if(empty($assetReturnItem->unitId)){
+            $assetReturnItem->unitId = $asset->unitId;
+        }
         $assetReturnItem->amount = $asset->rate * $assetReturnItem->quantity;
     }
 

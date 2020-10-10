@@ -29,7 +29,9 @@ class AssetDistributionItemObserver
 
         //Set the purchase amount
         $assetDistributionItem->distributionRate = $asset->rate;
-        $assetDistributionItem->unitId = $asset->unitId;
+        if(empty($assetDistributionItem->unitId)){
+            $assetDistributionItem->unitId = $asset->unitId;
+        }
         $assetDistributionItem->distributionAmount = $asset->rate * $assetDistributionItem->distributionQuantity;
     }
 

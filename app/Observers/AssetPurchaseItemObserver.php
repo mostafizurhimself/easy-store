@@ -21,7 +21,9 @@ class AssetPurchaseItemObserver
 
         //Set the purchase amount
         $assetPurchaseItem->purchaseRate = $asset->rate;
-        $assetPurchaseItem->unitId = $asset->unitId;
+        if(empty($assetPurchaseItem->unitId)){
+            $assetPurchaseItem->unitId = $asset->unitId;
+        }
         $assetPurchaseItem->purchaseAmount = $asset->rate * $assetPurchaseItem->purchaseQuantity;
     }
 
