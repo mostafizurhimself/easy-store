@@ -203,6 +203,7 @@ class Product extends Resource
 
             BelongsTo::make('Unit')
                 ->hideFromIndex()
+                // ->hideWhenUpdating()
                 ->showCreateRelationButton(),
 
             AjaxSelect::make('Category', 'category_id')
