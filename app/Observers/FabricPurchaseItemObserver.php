@@ -21,6 +21,7 @@ class FabricPurchaseItemObserver
 
         //Set the purchase amount
         $fabricPurchaseItem->purchaseRate = $fabric->rate;
+        $fabricPurchaseItem->unitId = $fabric->unitId;
         $fabricPurchaseItem->purchaseAmount = $fabric->rate * $fabricPurchaseItem->purchaseQuantity;
     }
 

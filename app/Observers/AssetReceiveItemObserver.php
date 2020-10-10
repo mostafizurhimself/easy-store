@@ -24,9 +24,12 @@ class AssetReceiveItemObserver
         //Set asset id
         $assetReceiveItem->assetId = $purchaseItem->assetId;
         //Set rate
-        $assetReceiveItem->rate = $purchaseItem->asset->rate;
+        if(empty($assetReceiveItem->rate)){
+            $assetReceiveItem->rate = $purchaseItem->purchaseRate;
+        }
+        $assetReceiveItem->unitId = $purchaseItem->asset->unitId;
         //Set Amount
-        $assetReceiveItem->amount = $purchaseItem->asset->rate * $assetReceiveItem->quantity;
+        $assetReceiveItem->amount = $purchaseItem->purchaseRate * $assetReceiveItem->quantity;
     }
 
     /**

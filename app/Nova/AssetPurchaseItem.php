@@ -100,7 +100,7 @@ class AssetPurchaseItem extends Resource
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\AssetPurchaseOrder")
                 ->exceptOnForms(),
 
-            BelongsTo::make('Asset'),
+            BelongsTo::make('Asset')->searchable(),
 
             Date::make('Date', function(){
                 return $this->date;
@@ -121,7 +121,7 @@ class AssetPurchaseItem extends Resource
             })
             ->exceptOnForms(),
 
-            BelongsTo::make('Unit')->onlyOnForms(),
+
 
             Currency::make('Purchase Rate')
                 ->currency('BDT')

@@ -21,6 +21,7 @@ class MaterialPurchaseItemObserver
 
         //Set the purchase amount
         $materialPurchaseItem->purchaseRate = $material->rate;
+        $materialPurchaseItem->unitId = $material->unitId;
         $materialPurchaseItem->purchaseAmount = $material->rate * $materialPurchaseItem->purchaseQuantity;
     }
 

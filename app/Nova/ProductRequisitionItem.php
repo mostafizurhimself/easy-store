@@ -140,7 +140,7 @@ class ProductRequisitionItem extends Resource
             })
             ->exceptOnForms(),
 
-            BelongsTo::make('Unit')->onlyOnForms(),
+
 
             Currency::make('Requisition Rate')
                 ->currency('BDT')

@@ -85,7 +85,7 @@ class MaterialReturnItem extends Resource
             BelongsTo::make('Invoice', 'invoice', \App\Nova\MaterialReturnInvoice::class)
                 ->exceptOnForms(),
 
-            BelongsTo::make('Material'),
+            BelongsTo::make('Material')->searchable(),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
@@ -98,7 +98,7 @@ class MaterialReturnItem extends Resource
                 })
                 ->exceptOnForms(),
 
-            BelongsTo::make('Unit')->onlyOnForms(),
+
 
             Currency::make('Rate')
                 ->currency('BDT')

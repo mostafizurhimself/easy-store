@@ -131,7 +131,7 @@ class MaterialReceiveItem extends Resource
                 })
                 ->exceptOnForms(),
 
-            BelongsTo::make('Unit')->onlyOnForms(),
+
 
             Currency::make('Rate')
                 ->currency('BDT')

@@ -198,7 +198,7 @@ class ProductOutput extends Resource
                 })
                 ->exceptOnForms(),
 
-            BelongsTo::make('Unit')->onlyOnForms(),
+
 
             Currency::make('rate')
                 ->currency("BDT")

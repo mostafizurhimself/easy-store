@@ -17,6 +17,7 @@ class FabricDistributionObserver
     {
         $fabric = Fabric::find($fabricDistribution->fabricId);
         $fabricDistribution->rate = $fabric->rate;
+        $fabricDistribution->unitId = $fabric->unitId;
         $fabricDistribution->amount = $fabric->rate * $fabricDistribution->quantity;
     }
 

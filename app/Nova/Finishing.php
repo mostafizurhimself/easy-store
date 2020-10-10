@@ -103,11 +103,11 @@ class Finishing extends Resource
                 ->exceptOnForms(),
 
             BelongsTo::make('Product')
-                // ->searchable()
+                ->searchable()
                 ,
 
             BelongsTo::make('Style')
-                // ->searchable()
+                ->searchable()
                 ->showCreateRelationButton(),
 
             Number::make('Quantity')
@@ -119,7 +119,7 @@ class Finishing extends Resource
                 })
                 ->exceptOnForms(),
 
-            BelongsTo::make('Unit')->onlyOnForms(),
+
 
             Currency::make('Rate')
                 ->currency('BDT')

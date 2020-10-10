@@ -20,6 +20,7 @@ class ServiceDispatchObserver
 
         //Set the dispatch amount
         $serviceDispatch->rate = $service->rate;
+        $serviceDispatch->unitId = $service->unitId;
         $serviceDispatch->dispatchAmount = $service->rate * $serviceDispatch->dispatchQuantity;
     }
 

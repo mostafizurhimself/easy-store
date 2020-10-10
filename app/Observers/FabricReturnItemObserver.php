@@ -22,6 +22,7 @@ class FabricReturnItemObserver
         if(empty($fabricReturnItem->rate)){
             $fabricReturnItem->rate = $fabric->rate;
         }
+        $fabricReturnItem->unitId = $fabric->unitId;
         $fabricReturnItem->amount = $fabric->rate * $fabricReturnItem->quantity;
     }
 

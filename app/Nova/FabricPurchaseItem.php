@@ -104,7 +104,7 @@ class FabricPurchaseItem extends Resource
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\FabricPurchaseOrder")
                 ->exceptOnForms(),
 
-            BelongsTo::make('Fabric'),
+            BelongsTo::make('Fabric')->searchable(),
 
             Date::make('Date', function(){
                 return $this->date;
@@ -121,7 +121,7 @@ class FabricPurchaseItem extends Resource
             })
             ->exceptOnForms(),
 
-            BelongsTo::make('Unit')->onlyOnForms(),
+
 
             Text::make('Receive Quantity', function(){
                 return $this->receiveQuantity." ".$this->unitName;

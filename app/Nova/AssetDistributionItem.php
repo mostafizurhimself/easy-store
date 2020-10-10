@@ -20,6 +20,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use App\Rules\DistributionQuantityRuleOnRequisition;
 use App\Rules\DistributionQuantityRuleOnRequisitionForUpdate;
+use Laravel\Nova\Fields\Hidden;
 
 class AssetDistributionItem extends Resource
 {
@@ -104,7 +105,8 @@ class AssetDistributionItem extends Resource
             BelongsTo::make('Invoice', 'invoice', "App\Nova\AssetDistributionInvoice")
                 ->exceptOnForms(),
 
-            BelongsTo::make('Asset'),
+            BelongsTo::make('Asset')
+                ->searchable(),
 
             Number::make('Quantity', 'distribution_quantity')
                 ->rules('required', 'numeric', 'min:0')
@@ -136,7 +138,7 @@ class AssetDistributionItem extends Resource
                 ->currency('BDT')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Unit')->onlyOnForms(),
+
 
             Text::make('Receive Quantity', function(){
                     return $this->receiveQuantity." ".$this->unitName;

@@ -101,7 +101,7 @@ class ServiceDispatch extends Resource
             })
                 ->exceptOnForms(),
 
-            BelongsTo::make('Unit')->onlyOnForms(),
+
 
             Text::make('Receive Quantity', function () {
                 return $this->receiveQuantity . " " . $this->unit;

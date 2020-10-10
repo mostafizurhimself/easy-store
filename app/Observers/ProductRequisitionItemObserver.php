@@ -20,6 +20,7 @@ class ProductRequisitionItemObserver
 
         //Set the purchase amount
         $productRequisitionItem->requisitionRate = $product->salePrice;
+        $productRequisitionItem->unitId = $product->unitId;
         $productRequisitionItem->requisitionAmount = $product->salePrice * $productRequisitionItem->requisitionQuantity;
     }
 

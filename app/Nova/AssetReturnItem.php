@@ -98,7 +98,7 @@ class AssetReturnItem extends Resource
             BelongsTo::make('Invoice', 'invoice', \App\Nova\AssetReturnINvoice::class)
                 ->exceptOnForms(),
 
-            BelongsTo::make('Asset'),
+            BelongsTo::make('Asset')->searchable(),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
@@ -111,7 +111,7 @@ class AssetReturnItem extends Resource
                 })
                 ->exceptOnForms(),
 
-            BelongsTo::make('Unit')->onlyOnForms(),
+
 
             Currency::make('Rate')
                 ->currency('BDT')
