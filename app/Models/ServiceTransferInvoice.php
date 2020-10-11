@@ -33,7 +33,7 @@ class ServiceTransferInvoice extends Model
      */
     public static function readableIdPrefix()
     {
-        return "SI";
+        return "ST";
     }
 
     /**
