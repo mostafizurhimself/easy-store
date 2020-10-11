@@ -71,7 +71,7 @@
             <tr>
                 <th>SR NO.</th>
                 <th class="text-left">DESCRIPTION</th>
-                <th class="text-right">RATE</th>
+                {{-- <th class="text-right">RATE</th> --}}
                 <th class="text-right">QUANTITY</th>
                 {{-- <th class="text-right">TOTAL</th> --}}
             </tr>
