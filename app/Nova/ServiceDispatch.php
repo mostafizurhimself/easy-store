@@ -97,19 +97,19 @@ class ServiceDispatch extends Resource
                 ->exceptOnForms(),
 
             Text::make('Dispatch Quantity', function () {
-                return $this->dispatchQuantity . " " . $this->unit;
+                return $this->dispatchQuantity . " " . $this->unit->name;
             })
                 ->exceptOnForms(),
 
 
 
             Text::make('Receive Quantity', function () {
-                return $this->receiveQuantity . " " . $this->unit;
+                return $this->receiveQuantity . " " . $this->unit->name;
             })
                 ->exceptOnForms(),
 
             Text::make('Remaining Quantity', function () {
-                return $this->remainingQuantity . " " . $this->unit;
+                return $this->remainingQuantity . " " . $this->unit->name;
             })
                 ->exceptOnForms(),
 
