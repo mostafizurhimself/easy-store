@@ -128,8 +128,8 @@ class Fabric extends Resource
                     return false;
                 }),
 
-            TextWrap::make('Name')
-                ->wrapMethod('length',30)
+            Text::make('Name')
+                ->hideFromIndex()
                 ->sortable()
                 ->rules('required', 'string', 'max:100', 'multi_space')
                 ->creationRules([
@@ -142,6 +142,10 @@ class Fabric extends Resource
                     $model['name'] = Str::title($request->name);
                 })
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
+
+            TextWrap::make('Name')
+                ->onlyOnIndex()
+                ->wrapMethod('length',30),
 
             TextUppercase::make('Code')
                 ->sortable()

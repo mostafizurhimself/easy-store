@@ -32,6 +32,12 @@ class ServiceInvoice extends Model
      */
     protected $dates = ['date'];
 
+
+    /**
+     * Set teh models readable prefix
+     *
+     * @return string
+     */
     public static function readableIdPrefix()
     {
         return "SI";

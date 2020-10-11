@@ -15,11 +15,24 @@ class CreateServiceTransferReceiveItemsTable extends Migration
     {
         Schema::create('service_transfer_receive_items', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable();
-            $table->bigInteger('location_id')->unsigned()->nullable();
+            $table->string('readable_id')->nullable()->index('service_transfer_receive_number_index');
+            $table->date('date')->index('service_transfer_receive_date_index');
+            $table->bigInteger('invoice_id')->unsigned();
+            $table->bigInteger('transfer_id')->unsigned();
+            $table->bigInteger('service_id')->unsigned();
+            $table->string('reference')->nullable()->index('service_transfer_receive_reference_index');
+            $table->double('quantity')->default(0);
+            $table->double('rate')->default(0);
+            $table->double('amount')->default(0);
+            $table->text('note')->nullable();
+            $table->bigInteger('unit_id')->unsigned();
+            $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('location_id')->references('id')->on('locations');
+            $table->foreign('invoice_id')->references('id')->on('service_transfer_invoices');
+            $table->foreign('transfer_id')->references('id')->on('service_transfer_items');
+            $table->foreign('service_id')->references('id')->on('services');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

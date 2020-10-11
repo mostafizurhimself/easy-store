@@ -16,10 +16,21 @@ class CreateServiceTransferItemsTable extends Migration
         Schema::create('service_transfer_items', function (Blueprint $table) {
             $table->id();
             $table->string('readable_id')->nullable();
-            $table->bigInteger('location_id')->unsigned()->nullable();
+            $table->bigInteger('service_id')->unsigned();
+            $table->bigInteger('invoice_id')->unsigned();
+            $table->double('transfer_quantity')->default(0);
+            $table->double('receive_quantity')->default(0);
+            $table->double('rate')->default(0);
+            $table->double('transfer_amount')->default(0);
+            $table->double('receive_amount')->default(0);
+            $table->text('description')->nullable();
+            $table->bigInteger('unit_id')->unsigned();
+            $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('location_id')->references('id')->on('locations');
+            $table->foreign('service_id')->references('id')->on('services');
+            $table->foreign('invoice_id')->references('id')->on('service_transfer_invoices');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 
