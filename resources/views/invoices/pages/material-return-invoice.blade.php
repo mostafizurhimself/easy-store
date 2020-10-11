@@ -85,7 +85,7 @@
                         <span>{!! $item->note !!}</span>
                     </td>
                     <td class="unit">{{Helper::currencyShort($item->rate)}}</td>
-                    <td class="tax">{{$item->quantity}} {{$item->unit}}</td>
+                    <td class="tax">{{$item->quantity}} {{$item->unit->name}}</td>
                     <td class="total">{{Helper::currencyShort($item->amount)}}</td>
                 </tr>
             @endforeach

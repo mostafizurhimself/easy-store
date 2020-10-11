@@ -82,7 +82,7 @@
                     <td class="no">{{$loop->iteration}}</td>
                     <td class="text-left"><h3>{{$item->product->name}}</h3>({{$item->product->code}})</td>
                     <td class="unit">{{Helper::currencyShort($item->requisitionRate)}}</td>
-                    <td class="tax">{{$item->requisitionQuantity}} {{$item->unit}}</td>
+                    <td class="tax">{{$item->requisitionQuantity}} {{$item->unit->name}}</td>
                     <td class="total">{{Helper::currencyShort($item->requisitionAmount)}}</td>
                 </tr>
             @endforeach
