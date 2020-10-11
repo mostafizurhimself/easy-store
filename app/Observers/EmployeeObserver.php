@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Facades\Helper;
 use App\Models\Employee;
 use App\Models\Designation;
