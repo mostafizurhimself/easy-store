@@ -114,7 +114,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 ))
                 ->options([
                     'xaxis' => [
-                        'categories' => [ 'Jan', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct' ]
+                        'categories' => [ 'Jan', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ]
                     ],
                 ])
                 ->width('2/3'),

@@ -66,6 +66,9 @@ class RolesAndPermissionsSeeder extends Seeder
             \App\Nova\ServiceInvoice::class,
             \App\Nova\ServiceDispatch::class,
             \App\Nova\ServiceReceive::class,
+            // \App\Nova\ServiceTransferInvoice::class,
+            // \App\Nova\ServiceTransferItem::class,
+            // \App\Nova\ServiceTransferReceiveItem::class,
 
             // Product Section
             \App\Nova\ProductCategory::class,
