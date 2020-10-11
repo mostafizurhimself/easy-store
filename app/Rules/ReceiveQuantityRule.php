@@ -59,6 +59,6 @@ class ReceiveQuantityRule implements Rule
      */
     public function message()
     {
-        return "You can not receive more than {$this->item->remainingQuantity} {$this->item->unit}";
+        return "You can not receive more than {$this->item->remainingQuantity} {$this->item->unit->name}";
     }
 }

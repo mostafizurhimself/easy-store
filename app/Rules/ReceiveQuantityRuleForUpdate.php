@@ -73,6 +73,6 @@ class ReceiveQuantityRuleForUpdate implements Rule
      */
     public function message()
     {
-        return "You can not receive more than {$this->allowedQuantity} {$this->item->unit}";
+        return "You can not receive more than {$this->allowedQuantity} {$this->item->unit->name}";
     }
 }

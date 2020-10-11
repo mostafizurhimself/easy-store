@@ -44,6 +44,6 @@ class ServiceReceiveQuantityRule implements Rule
      */
     public function message()
     {
-        return "You can not receive more than {$this->dispatch->remainingQuantity} {$this->dispatch->unit}";
+        return "You can not receive more than {$this->dispatch->remainingQuantity} {$this->dispatch->unit->name}";
     }
 }

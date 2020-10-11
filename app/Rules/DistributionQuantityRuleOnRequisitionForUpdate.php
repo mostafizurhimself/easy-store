@@ -80,6 +80,6 @@ class DistributionQuantityRuleOnRequisitionForUpdate implements Rule
      */
     public function message()
     {
-        return "You can not distribute more than requisition quantity. Remaining quantity is {$this->allowedQuantity} {$this->requisitionItem->unit}";
+        return "You can not distribute more than requisition quantity. Remaining quantity is {$this->allowedQuantity} {$this->requisitionItem->unit->name}";
     }
 }
