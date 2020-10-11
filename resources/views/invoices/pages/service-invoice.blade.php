@@ -84,7 +84,7 @@
                         <h3>{{$item->service->name}} ({{$item->service->code}})</h3>
                         <span>{!! $item->description !!}</span>
                     </td>
-                    <td class="unit">{{Helper::currencyShort($item->rate)}}</td>
+                    {{-- <td class="unit">{{Helper::currencyShort($item->rate)}}</td> --}}
                     <td class="tax">{{$item->dispatchQuantity}} {{$item->unit->name}}</td>
                     {{-- <td class="total">{{Helper::currencyShort($item->dispatchAmount)}}</td> --}}
                 </tr>
@@ -93,7 +93,7 @@
         <tfoot>
             <tr>
                 <td></td>
-                <td colspan="2">GRAND TOTAL</td>
+                <td>GRAND TOTAL</td>
                 <td>{{$invoice->dispatches()->sum('dispatch_quantity')}} {{$invoice->dispatches()->first()->unit->name}}</td>
             </tr>
         </tfoot>
