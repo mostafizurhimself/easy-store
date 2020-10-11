@@ -123,11 +123,11 @@ class Supplier extends Resource
                 ->rules('nullable', 'email'),
 
             Text::make('Fax')
-                ->rules("nullable",'string', 'max:200')
+                ->rules("nullable", 'max:200')
                 ->hideFromIndex(),
 
             Text::make('Vat Number')
-                ->rules('nullable','string', 'max:200')
+                ->rules('nullable', 'max:200')
                 ->hideFromIndex(),
 
             Currency::make('Opening Balance')

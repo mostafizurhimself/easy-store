@@ -123,12 +123,12 @@ class Provider extends Resource
 
             Text::make('Fax')
                 ->nullable()
-                ->rules('string', 'max:200')
+                ->rules('max:200')
                 ->hideFromIndex(),
 
             Text::make('Vat Number')
                 ->nullable()
-                ->rules('string', 'max:200')
+                ->rules('max:200')
                 ->hideFromIndex(),
 
             Currency::make('Opening Balance')
