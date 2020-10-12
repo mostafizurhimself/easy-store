@@ -77,9 +77,9 @@ class ServiceTransferReceiveItem extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function transferItem()
+    public function transfer()
     {
-       return $this->belongsTo(ServiceTransferItem::class, 'dispatch_id')->withTrashed();
+       return $this->belongsTo(ServiceTransferItem::class, 'transfer_id')->withTrashed();
     }
 
     /**

@@ -66,7 +66,20 @@ class ServiceReceiveObserver
      */
     public function deleted(ServiceReceive $serviceReceive)
     {
-        //
+        // Update the invoice  Receive Amount
+        $serviceReceive->invoice->updateReceiveAmount();
+
+        //Update the dispatch receive quantity
+        $serviceReceive->dispatch->updateReceiveQuantity();
+
+        //Update the dispatch receive amount
+        $serviceReceive->dispatch->updateReceiveAmount();
+
+        //Change the dispatch status
+        $serviceReceive->dispatch->updateStatus();
+
+        //Change the purchase status
+        $serviceReceive->invoice->updateStatus();
     }
 
     /**
@@ -77,7 +90,20 @@ class ServiceReceiveObserver
      */
     public function restored(ServiceReceive $serviceReceive)
     {
-        //
+        // Update the invoice  Receive Amount
+        $serviceReceive->invoice->updateReceiveAmount();
+
+        //Update the dispatch receive quantity
+        $serviceReceive->dispatch->updateReceiveQuantity();
+
+        //Update the dispatch receive amount
+        $serviceReceive->dispatch->updateReceiveAmount();
+
+        //Change the dispatch status
+        $serviceReceive->dispatch->updateStatus();
+
+        //Change the purchase status
+        $serviceReceive->invoice->updateStatus();
     }
 
     /**
@@ -88,6 +114,19 @@ class ServiceReceiveObserver
      */
     public function forceDeleted(ServiceReceive $serviceReceive)
     {
-        //
+        // Update the invoice  Receive Amount
+        $serviceReceive->invoice->updateReceiveAmount();
+
+        //Update the dispatch receive quantity
+        $serviceReceive->dispatch->updateReceiveQuantity();
+
+        //Update the dispatch receive amount
+        $serviceReceive->dispatch->updateReceiveAmount();
+
+        //Change the dispatch status
+        $serviceReceive->dispatch->updateStatus();
+
+        //Change the purchase status
+        $serviceReceive->invoice->updateStatus();
     }
 }

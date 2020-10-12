@@ -26,6 +26,13 @@ class ServiceTransferInvoice extends Model
     protected static $logUnguarded = true;
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['date'];
+
+    /**
      * Set teh models readable prefix
      *
      * @return string
@@ -49,7 +56,7 @@ class ServiceTransferInvoice extends Model
      */
     public function transferItems()
     {
-       return $this->hasMany(ServiceDispatch::class, 'invoice_id');
+       return $this->hasMany(ServiceTransferItem::class, 'invoice_id');
     }
 
     /**
@@ -59,7 +66,7 @@ class ServiceTransferInvoice extends Model
      */
     public function receiveItems()
     {
-       return $this->hasMany(ServiceReceive::class, 'invoice_id');
+       return $this->hasMany(ServiceTransferReceiveItem::class, 'invoice_id');
     }
 
     /**

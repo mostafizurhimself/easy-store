@@ -59,7 +59,7 @@ class Asset extends Model implements HasMedia
      */
     public function category()
     {
-       return $this->belongsTo(MaterialCategory::class, 'category_id')->withTrashed();
+       return $this->belongsTo(AssetCategory::class, 'category_id')->withTrashed();
     }
 
     /**

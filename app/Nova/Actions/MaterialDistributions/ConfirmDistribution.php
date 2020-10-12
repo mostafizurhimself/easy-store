@@ -4,6 +4,7 @@ namespace App\Nova\Actions\MaterialDistributions;
 
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
+use App\Enums\DistributionStatus;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;

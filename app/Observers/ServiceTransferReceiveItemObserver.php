@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\ServiceTransferItem;
 use App\Models\ServiceTransferReceiveItem;
 
 class ServiceTransferReceiveItemObserver
@@ -14,20 +15,20 @@ class ServiceTransferReceiveItemObserver
      */
     public function created(ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
-        //Get the related dispatch
-        $dispatch = ServiceDispatch::find($serviceTransferReceiveItem->dispatchId);
+        //Get the related transfer item
+        $transfer = ServiceTransferItem::find($serviceTransferReceiveItem->transferId);
 
         //Set invoice id
-        $serviceTransferReceiveItem->invoiceId = $dispatch->invoiceId;
+        $serviceTransferReceiveItem->invoiceId = $transfer->invoiceId;
         //Set service id
-        $serviceTransferReceiveItem->serviceId = $dispatch->serviceId;
+        $serviceTransferReceiveItem->serviceId = $transfer->serviceId;
         //Set rate
         if (empty($serviceTransferReceiveItem->rate)) {
-            $serviceTransferReceiveItem->rate = $dispatch->rate;
+            $serviceTransferReceiveItem->rate = $transfer->rate;
         }
 
         if(empty($serviceTransferReceiveItem->unitId)){
-            $serviceTransferReceiveItem->unitId = $dispatch->service->unitId;
+            $serviceTransferReceiveItem->unitId = $transfer->service->unitId;
         }
         //Set Amount
         $serviceTransferReceiveItem->amount = $serviceTransferReceiveItem->rate * $serviceTransferReceiveItem->quantity;
@@ -41,7 +42,20 @@ class ServiceTransferReceiveItemObserver
      */
     public function updated(ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
-        //
+        // Update the invoice  Receive Amount
+        $serviceTransferReceiveItem->invoice->updateReceiveAmount();
+
+        //Update the transfer receive quantity
+        $serviceTransferReceiveItem->transfer->updateReceiveQuantity();
+
+        //Update the transfer receive amount
+        $serviceTransferReceiveItem->transfer->updateReceiveAmount();
+
+        //Change the transfer status
+        $serviceTransferReceiveItem->transfer->updateStatus();
+
+        //Change the purchase status
+        $serviceTransferReceiveItem->invoice->updateStatus();
     }
 
     /**
@@ -52,7 +66,20 @@ class ServiceTransferReceiveItemObserver
      */
     public function deleted(ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
-        //
+         // Update the invoice  Receive Amount
+         $serviceTransferReceiveItem->invoice->updateReceiveAmount();
+
+         //Update the transfer receive quantity
+         $serviceTransferReceiveItem->transfer->updateReceiveQuantity();
+
+         //Update the transfer receive amount
+         $serviceTransferReceiveItem->transfer->updateReceiveAmount();
+
+         //Change the transfer status
+         $serviceTransferReceiveItem->transfer->updateStatus();
+
+         //Change the purchase status
+         $serviceTransferReceiveItem->invoice->updateStatus();
     }
 
     /**
@@ -63,7 +90,20 @@ class ServiceTransferReceiveItemObserver
      */
     public function restored(ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
-        //
+         // Update the invoice  Receive Amount
+         $serviceTransferReceiveItem->invoice->updateReceiveAmount();
+
+         //Update the transfer receive quantity
+         $serviceTransferReceiveItem->transfer->updateReceiveQuantity();
+
+         //Update the transfer receive amount
+         $serviceTransferReceiveItem->transfer->updateReceiveAmount();
+
+         //Change the transfer status
+         $serviceTransferReceiveItem->transfer->updateStatus();
+
+         //Change the purchase status
+         $serviceTransferReceiveItem->invoice->updateStatus();
     }
 
     /**
@@ -74,6 +114,19 @@ class ServiceTransferReceiveItemObserver
      */
     public function forceDeleted(ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
-        //
+         // Update the invoice  Receive Amount
+         $serviceTransferReceiveItem->invoice->updateReceiveAmount();
+
+         //Update the transfer receive quantity
+         $serviceTransferReceiveItem->transfer->updateReceiveQuantity();
+
+         //Update the transfer receive amount
+         $serviceTransferReceiveItem->transfer->updateReceiveAmount();
+
+         //Change the transfer status
+         $serviceTransferReceiveItem->transfer->updateStatus();
+
+         //Change the purchase status
+         $serviceTransferReceiveItem->invoice->updateStatus();
     }
 }

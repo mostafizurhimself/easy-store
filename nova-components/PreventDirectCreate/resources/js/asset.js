@@ -186,6 +186,32 @@ Nova.booting((Vue, router, store) => {
         next();
     });
 
+    router.beforeEach((to, from, next) => {
+        if (
+            to.path === "/resources/service-transfer-items/new" &&
+            (to.query.viaResource == null || to.query.viaResourceId == null)
+        ) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
+    router.beforeEach((to, from, next) => {
+        if (
+            to.path === "/resources/service-transfer-receive-items/new" &&
+            (to.query.viaResource == null || to.query.viaResourceId == null)
+        ) {
+            router.push({ name: "403" });
+
+            return;
+        }
+
+        next();
+    });
+
     //Finishing Section
     router.beforeEach((to, from, next) => {
         if (

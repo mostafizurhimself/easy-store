@@ -3,31 +3,27 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Rules\ReceiverRule;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use App\Enums\DispatchStatus;
+use App\Enums\TransferStatus;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\HasMany;
-use App\Nova\Lenses\ReceiveItems;
 use Laravel\Nova\Fields\Currency;
-use App\Nova\Lenses\DispatchItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use App\Nova\Actions\ServiceInvoices\Recalculate;
 use Titasgailius\SearchRelations\SearchesRelations;
-use App\Nova\Actions\ServiceInvoices\ConfirmInvoice;
-use App\Nova\Actions\ServiceInvoices\GenerateInvoice;
 
-class ServiceInvoice extends Resource
+class ServiceTransferInvoice extends Resource
 {
-
     use SearchesRelations;
 
     /**
@@ -35,14 +31,14 @@ class ServiceInvoice extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\ServiceInvoice::class;
+    public static $model = \App\Models\ServiceTransferInvoice::class;
 
     /**
      * The side nav menu order.
      *
      * @var int
      */
-    public static $priority = 3;
+    public static $priority = 4;
 
     /**
      * Get the custom permissions name of the resource
@@ -91,9 +87,8 @@ class ServiceInvoice extends Resource
      */
     public static $searchRelations = [
         'location' => ['name'],
-        'provider' => ['name'],
+        'receiver' => ['name'],
     ];
-
 
     /**
      * Get the displayable label of the resource.
@@ -102,7 +97,17 @@ class ServiceInvoice extends Resource
      */
     public static function label()
     {
-        return "Invoices";
+        return "Transfer Invoices";
+    }
+
+    /**
+     * Get the navigation label of the resource
+    *
+    * @return string
+    */
+    public static function navigationLabel()
+    {
+        return "Transfers";
     }
 
     /**
@@ -112,8 +117,9 @@ class ServiceInvoice extends Resource
      */
     public static function icon()
     {
-        return 'fas fa-file-invoice';
+        return 'fas fa-exchange-alt';
     }
+
 
     /**
      * Get the fields displayed by the resource.
@@ -138,7 +144,6 @@ class ServiceInvoice extends Resource
                 ->default(Carbon::now())
                 ->hideWhenUpdating(),
 
-
             BelongsTo::make('Location')->searchable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
@@ -150,7 +155,7 @@ class ServiceInvoice extends Resource
             Trix::make('Description')
                 ->rules('nullable', 'max:500'),
 
-            Currency::make('Total Dispatch Amount')
+            Currency::make('Total Transfer Amount')
                 ->currency('BDT')
                 ->exceptOnForms(),
 
@@ -158,22 +163,31 @@ class ServiceInvoice extends Resource
                 ->currency('BDT')
                 ->exceptOnForms(),
 
-            BelongsTo::make('Provider', 'provider', 'App\Nova\Provider')->searchable(),
+            Select::make('Receiver', 'receiver_id')
+                ->options(function(){
+                    return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                })
+                ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
+                ->onlyOnForms(),
+
+            Text::make('Receiver', function(){
+                return $this->receiver->name;
+            }),
 
             Badge::make('Status')->map([
-                DispatchStatus::DRAFT()->getValue()     => 'warning',
-                DispatchStatus::CONFIRMED()->getValue() => 'info',
-                DispatchStatus::PARTIAL()->getValue()   => 'danger',
-                DispatchStatus::RECEIVED()->getValue()  => 'success',
+                TransferStatus::DRAFT()->getValue()     => 'warning',
+                TransferStatus::CONFIRMED()->getValue() => 'info',
+                TransferStatus::PARTIAL()->getValue()   => 'danger',
+                TransferStatus::RECEIVED()->getValue()  => 'success',
             ])
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
-            HasMany::make('Dispatches', 'dispatches', 'App\Nova\ServiceDispatch'),
-            HasMany::make('Receives', 'receives', 'App\Nova\ServiceReceive')
+            HasMany::make('Transfer Items', 'transferItems',  \App\Nova\ServiceTransferItem::class),
+            HasMany::make('Receive Items', 'receiveItems', \App\Nova\ServiceTransferReceiveItem::class)
 
-        ];
+        ];;
     }
 
     /**
@@ -210,10 +224,7 @@ class ServiceInvoice extends Resource
      */
     public function lenses(Request $request)
     {
-        return [
-            new DispatchItems,
-            new ReceiveItems
-        ];
+        return [];
     }
 
     /**
@@ -224,27 +235,6 @@ class ServiceInvoice extends Resource
      */
     public function actions(Request $request)
     {
-        return [
-
-            (new Recalculate)->canSee(function($request){
-                return $request->user()->isSuperAdmin();
-            })->canRun(function($request){
-                return $request->user()->isSuperAdmin();
-            }),
-
-            (new ConfirmInvoice)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can confirm service invoices');
-            })->confirmButtonText('Confirm'),
-
-            (new GenerateInvoice)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can generate service invoices');
-            })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate service invoices') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate invoice now?')
-            ->onlyOnDetail(),
-        ];
+        return [];
     }
 }
