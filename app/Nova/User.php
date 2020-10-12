@@ -124,7 +124,7 @@ class User extends Resource
 
                     Text::make('Name')
                         ->sortable()
-                        ->rules('required', 'max:50', 'alpha_space', 'multi_space')
+                        ->rules('required', 'max:50', 'multi_space')
                         ->fillUsing(function($request, $model){
                             $model['name'] = Str::title($request->name);
                         })
