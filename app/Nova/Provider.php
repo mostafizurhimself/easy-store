@@ -100,8 +100,8 @@ class Provider extends Resource
 
             Text::make('Name')
                 ->rules('required', 'max:45', 'multi_space')
-                ->creationRules('unique:suppliers,name')
-                ->updateRules('unique:suppliers,name,{{resourceId}}')
+                ->creationRules('unique:providers,name')
+                ->updateRules('unique:providers,name,{{resourceId}}')
                 ->fillUsing(function($request, $model){
                     $model['name'] = Str::title($request->name);
                 })
