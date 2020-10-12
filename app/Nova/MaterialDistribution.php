@@ -206,7 +206,7 @@ class MaterialDistribution extends Resource
                 ->exceptOnForms(),
 
             Text::make('Receiver Name', function(){
-                return $this->receiver->fullName;
+                return $this->receiver->name;
             })
             ->hideFromIndex(),
 

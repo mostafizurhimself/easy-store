@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\Transfe
-TransferStatususe App\Enums\TransferStatus;
+use App\Enums\TransferStatus;
 use App\Traits\HasReadableIdWithDate;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -88,9 +87,9 @@ class ServiceTransferInvoice extends Model
      *
      * @return void
      */
-    public function updateDispatchAmount()
+    public function updateTransferAmount()
     {
-        $this->totalDispatchAmount = $this->transferItems->sum('dispatch_amount');
+        $this->totalTransferAmount = $this->transferItems->sum('transfer_amount');
         $this->save();
     }
 
