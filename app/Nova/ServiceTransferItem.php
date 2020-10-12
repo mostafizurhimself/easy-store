@@ -28,6 +28,13 @@ class ServiceTransferItem extends Resource
     public static $model = \App\Models\ServiceTransferItem::class;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
@@ -81,7 +88,7 @@ class ServiceTransferItem extends Resource
 
             BelongsTo::make('Service', 'service', \App\Nova\Service::class),
 
-            Number::make('Quantity', 'dispatch_quantity')
+            Number::make('Quantity', 'transfer_quantity')
                 ->rules('required', 'numeric', 'min:1')
                 ->onlyOnForms(),
 
@@ -175,5 +182,57 @@ class ServiceTransferItem extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Build a "relatable" query for the given resource.
+     *
+     * This query determines which instances of the model may be attached to other resources.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableServices(NovaRequest $request, $query)
+    {
+        $invoice = \App\Models\ServiceTransferInvoice::find($request->viaResourceId);
+        if(empty($invoice)){
+            $invoice = $request->findResourceOrFail()->invoice;
+        }
+        try {
+            $serviceId = $request->findResourceOrFail()->serviceId;
+        } catch (\Throwable $th) {
+            $serviceId = null;
+        }
+        return $query->where('location_id', $invoice->locationId)
+                    ->whereNotIn('id', $invoice->serviceIds($serviceId));
+    }
+
+    /**
+     * Return the location to redirect the user after creation.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Laravel\Nova\Resource  $resource
+     * @return string
+     */
+    public static function redirectAfterCreate(NovaRequest $request, $resource)
+    {
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
+    }
+
+    /**
+     * Return the location to redirect the user after update.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Laravel\Nova\Resource  resource
+     * @return string
+     */
+    public static function redirectAfterUpdate(NovaRequest $request, $resource)
+    {
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
+        }
+
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }

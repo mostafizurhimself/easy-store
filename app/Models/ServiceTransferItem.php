@@ -71,7 +71,7 @@ class ServiceTransferItem extends Model
      */
     public function receiveItems()
     {
-       return $this->hasMany(ServiceReceive::class, 'transfer_id');
+       return $this->hasMany(ServiceTransferReceiveItem::class, 'transfer_id');
     }
 
     /**

@@ -10,7 +10,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ServiceTransferReceiveItem extends Model
+class ServiceTransferReceiveItem extends Model implements HasMedia
 {
     use LogsActivity, CamelCasing, SoftDeletes, InteractsWithMedia, HasReadableIdWithDate;
 

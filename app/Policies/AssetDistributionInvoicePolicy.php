@@ -74,7 +74,7 @@ class AssetDistributionInvoicePolicy
     {
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId ) ||
-                $user->hasPermissionTo('delete all locations data'))&&
+                $user->hasPermissionTo('delete all locations data')) &&
                 $assetDistributionInvoice->status == DistributionStatus::DRAFT();
     }
 

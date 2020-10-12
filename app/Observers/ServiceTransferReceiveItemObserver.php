@@ -2,26 +2,46 @@
 
 namespace App\Observers;
 
+use App\Models\Service;
 use App\Models\ServiceTransferItem;
 use App\Models\ServiceTransferReceiveItem;
 
 class ServiceTransferReceiveItemObserver
 {
     /**
-     * Handle the service transfer receive item "created" event.
+     * Handle the service transfer receive item "saving" event.
      *
      * @param  \App\Models\ServiceTransferReceiveItem  $serviceTransferReceiveItem
      * @return void
      */
-    public function created(ServiceTransferReceiveItem $serviceTransferReceiveItem)
+    public function saving(ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
         //Get the related transfer item
         $transfer = ServiceTransferItem::find($serviceTransferReceiveItem->transferId);
 
         //Set invoice id
         $serviceTransferReceiveItem->invoiceId = $transfer->invoiceId;
-        //Set service id
-        $serviceTransferReceiveItem->serviceId = $transfer->serviceId;
+
+        //Create or find the service
+        $service  = Service::firstOrCreate(
+            [
+                'code'        => $transfer->service->code,
+                'location_id' => $transfer->invoice->receiverId,
+            ],
+
+            [
+                'name'             => $transfer->service->name,
+                'description'      => $transfer->service->description,
+                'rate'             => $transfer->service->rate,
+                'total_dispatch_quantity' => 0,
+                'total_receive_quantity'  => 0,
+                'unit_id'          => $transfer->service->unitId,
+            ]
+        );
+
+        //Set asset id
+        $serviceTransferReceiveItem->serviceId = $service->id;
+
         //Set rate
         if (empty($serviceTransferReceiveItem->rate)) {
             $serviceTransferReceiveItem->rate = $transfer->rate;
@@ -35,12 +55,12 @@ class ServiceTransferReceiveItemObserver
     }
 
     /**
-     * Handle the service transfer receive item "updated" event.
+     * Handle the service transfer receive item "saved" event.
      *
      * @param  \App\Models\ServiceTransferReceiveItem  $serviceTransferReceiveItem
      * @return void
      */
-    public function updated(ServiceTransferReceiveItem $serviceTransferReceiveItem)
+    public function saved(ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
         // Update the invoice  Receive Amount
         $serviceTransferReceiveItem->invoice->updateReceiveAmount();

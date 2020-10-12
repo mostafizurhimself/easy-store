@@ -21,6 +21,9 @@ use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\ServiceTransferInvoice\GenerateInvoice;
+use App\Nova\Actions\ServiceTransferInvoices\ConfirmInvoice;
+use App\Nova\Lenses\ServiceTransferInvoice\TransferInvoices;
 
 class ServiceTransferInvoice extends Resource
 {
@@ -224,7 +227,9 @@ class ServiceTransferInvoice extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new TransferInvoices,
+        ];
     }
 
     /**
@@ -235,6 +240,22 @@ class ServiceTransferInvoice extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new ConfirmInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can confirm service transfer invoices');
+            })
+            ->confirmButtonText('Confirm')
+            ->confirmText('Are you sure want to confirm?'),
+
+            (new GenerateInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate service invoices');
+            })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate service invoices') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Generate')
+            ->confirmText('Are you sure want to generate invoice now?')
+            ->onlyOnDetail(),
+        ];
     }
 }

@@ -3,14 +3,15 @@
 namespace App\Rules;
 
 use App\Models\ServiceDispatch;
+use App\Models\ServiceTransferItem;
 use Illuminate\Contracts\Validation\Rule;
 
 class ServiceReceiveQuantityRule implements Rule
 {
     /**
-     * @var \App\Models\ServiceDispatch
+     * @var mixed
      */
-    protected $dispatch;
+    protected $item;
 
 
     /**
@@ -18,10 +19,14 @@ class ServiceReceiveQuantityRule implements Rule
      *
      * @return void
      */
-    public function __construct($viaResource, $dispatchId)
+    public function __construct($viaResource, $itemId)
     {
         if($viaResource == \App\Nova\ServiceDispatch::uriKey()){
-            $this->dispatch = ServiceDispatch::find($dispatchId);
+            $this->item = ServiceDispatch::find($itemId);
+        }
+
+        if($viaResource == \App\Nova\ServiceTransferItem::uriKey()){
+            $this->item = ServiceTransferItem::find($itemId);
         }
     }
 
@@ -34,7 +39,7 @@ class ServiceReceiveQuantityRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $this->dispatch->remainingQuantity >= $value;
+        return $this->item->remainingQuantity >= $value;
     }
 
     /**
@@ -44,6 +49,6 @@ class ServiceReceiveQuantityRule implements Rule
      */
     public function message()
     {
-        return "You can not receive more than {$this->dispatch->remainingQuantity} {$this->dispatch->unit->name}";
+        return "You can not receive more than {$this->item->remainingQuantity} {$this->item->unit->name}";
     }
 }

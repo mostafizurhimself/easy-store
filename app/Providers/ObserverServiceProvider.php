@@ -141,8 +141,8 @@ class ObserverServiceProvider extends ServiceProvider
         ServiceDispatch::observe(ServiceDispatchObserver::class);
         ServiceReceive::observe(ServiceReceiveObserver::class);
         ServiceTransferInvoice::observe(ServiceTransferInvoiceObserver::class);
-        ServiceTransferReceiveItem::observe(ServiceTransferReceiveItemObserver::class);
         ServiceTransferItem::observe(ServiceTransferItemObserver::class);
+        ServiceTransferReceiveItem::observe(ServiceTransferReceiveItemObserver::class);
         Product::observe(ProductObserver::class);
         ProductOutput::observe(ProductOutputObserver::class);
         FinishingInvoice::observe(FinishingInvoiceObserver::class);

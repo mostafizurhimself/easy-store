@@ -48,6 +48,7 @@ Route::group(['middleware' => 'nova'], function () {
     Route::group(['prefix' => 'invoices'], function () {
         Route::get('asset-distributions/{invoice}', 'InvoiceController@assetDistributionInvoice')->name('invoices.asset-distributions');
         Route::get('services/{invoice}', 'InvoiceController@serviceInvoice')->name('invoices.services');
+        Route::get('service-transfers/{invoice}', 'InvoiceController@serviceTransferInvoice')->name('invoices.service-transfers');
         Route::get('fabric-returns/{invoice}', 'InvoiceController@fabricReturnInvoice')->name('invoices.fabric-returns');
         Route::get('material-returns/{invoice}', 'InvoiceController@materialReturnInvoice')->name('invoices.material-returns');
         Route::get('asset-returns/{invoice}', 'InvoiceController@assetReturnInvoice')->name('invoices.asset-returns');
@@ -59,7 +60,7 @@ Route::group(['middleware' => 'nova'], function () {
         Route::get('products/{requisition}', 'RequisitionController@productRequisition')->name('requisitions.products');
     });
 
-    // Invoice Routes
+    // Purchase Order Routes
     Route::group(['prefix' => 'purchase-orders'], function () {
         Route::get('fabrics/{purchaseOrder}', 'PurchaseOrderController@fabricPurchaseOrder')->name('purchase-orders.fabrics');
         Route::get('materials/{purchaseOrder}', 'PurchaseOrderController@materialPurchaseOrder')->name('purchase-orders.materials');

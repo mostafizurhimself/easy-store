@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Service;
 use App\Models\ServiceTransferItem;
 
 class ServiceTransferItemObserver

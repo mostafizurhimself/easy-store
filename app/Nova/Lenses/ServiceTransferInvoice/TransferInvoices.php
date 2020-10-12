@@ -1,24 +1,20 @@
 <?php
 
-namespace App\Nova\Lenses\AssetDistributionInvoice;
+namespace App\Nova\Lenses\ServiceTransferInvoice;
 
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use App\Enums\TransferStatus;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Fields\Badge;
-use Laravel\Nova\Fields\HasMany;
-use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\LensRequest;
-use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 
-class DistributionInvoices extends Lens
+class TransferInvoices extends Lens
 {
     /**
      * Get the query builder / paginator for the lens.
@@ -31,7 +27,7 @@ class DistributionInvoices extends Lens
     {
         return $request->withOrdering($request->withFilters(
             $query->where('receiver_id', $request->user()->locationId)
-                    ->where('status','!=', DistributionStatus::DRAFT())
+                    ->where('status','!=', TransferStatus::DRAFT())
                     ->orderBy('id', 'DESC')
         ));
     }
@@ -54,26 +50,27 @@ class DistributionInvoices extends Lens
             Date::make('Date'),
 
             Text::make('Location', function(){
-                    return $this->location->name;
-                }),
+                return $this->location->name;
+            }),
 
-            Currency::make('Distribution Amount', 'total_distribution_amount')
+            Currency::make('Total Transfer Amount')
                 ->currency('BDT'),
+
+            Currency::make('Total Receive Amount')
+                ->currency('BDT'),
+
 
             Text::make('Receiver', function(){
                 return $this->receiver->name;
             }),
 
-            BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
-                ->exceptOnForms(),
-
             Badge::make('Status')->map([
-                    DistributionStatus::DRAFT()->getValue()     => 'warning',
-                    DistributionStatus::CONFIRMED()->getValue() => 'info',
-                    DistributionStatus::PARTIAL()->getValue()   => 'danger',
-                    DistributionStatus::RECEIVED()->getValue()  => 'success',
-                ])
-                ->label(function(){
+                TransferStatus::DRAFT()->getValue()     => 'warning',
+                TransferStatus::CONFIRMED()->getValue() => 'info',
+                TransferStatus::PARTIAL()->getValue()   => 'danger',
+                TransferStatus::RECEIVED()->getValue()  => 'success',
+            ])
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
         ];
@@ -119,6 +116,6 @@ class DistributionInvoices extends Lens
      */
     public function uriKey()
     {
-        return 'asset-distribution-invoice-distribution-invoices';
+        return 'service-transfer-invoice-transfer-invoices';
     }
 }

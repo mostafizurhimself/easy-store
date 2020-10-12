@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ReturnStatus;
 use Illuminate\Http\Request;
 use App\Enums\DispatchStatus;
+use App\Enums\TransferStatus;
 use App\Models\ServiceInvoice;
 use App\Enums\RequisitionStatus;
 use App\Enums\DistributionStatus;
@@ -12,6 +13,7 @@ use App\Models\AssetReturnInvoice;
 use App\Models\FabricReturnInvoice;
 use App\Http\Controllers\Controller;
 use App\Models\MaterialReturnInvoice;
+use App\Models\ServiceTransferInvoice;
 use App\Models\AssetDistributionInvoice;
 
 class InvoiceController extends Controller
@@ -45,6 +47,23 @@ class InvoiceController extends Controller
         if($request->user()->hasPermissionTo('can generate service invoices') && $invoice->status != DispatchStatus::DRAFT()){
 
             return view('invoices.pages.service-invoice', compact('invoice'));
+        }else{
+            abort(403);
+        }
+    }
+
+     /**
+     * Generate service transfer invoice
+     *
+     * @param  \Illuminate\Http\Request   $request
+     * @param  \App\Models\ServiceTransferInvoice $invoice
+     * @return \Illuminate\Http\Response
+     */
+    public function serviceTransferInvoice(Request $request, ServiceTransferInvoice $invoice )
+    {
+        if($request->user()->hasPermissionTo('can generate service transfer invoices') && $invoice->status != TransferStatus::DRAFT()){
+
+            return view('invoices.pages.service-transfer-invoice', compact('invoice'));
         }else{
             abort(403);
         }

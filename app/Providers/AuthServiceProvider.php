@@ -76,6 +76,7 @@ use App\Policies\SubSectionPolicy;
 use App\Models\FabricPurchaseOrder;
 use App\Models\FabricReturnInvoice;
 use App\Models\MaterialReceiveItem;
+use App\Models\ServiceTransferItem;
 use App\Policies\ActivityLogPolicy;
 use App\Policies\DesignationPolicy;
 use App\Models\AssetRequisitionItem;
@@ -90,6 +91,7 @@ use App\Models\MaterialReturnInvoice;
 use App\Policies\AssetCategoryPolicy;
 use App\Policies\ProductOutputPolicy;
 use App\Models\ProductRequisitionItem;
+use App\Models\ServiceTransferInvoice;
 use App\Policies\FabricCategoryPolicy;
 use App\Policies\ServiceInvoicePolicy;
 use App\Policies\ServiceReceivePolicy;
@@ -107,6 +109,7 @@ use App\Policies\FinishingInvoicePolicy;
 use App\Policies\MaterialCategoryPolicy;
 use App\Policies\AssetPurchaseItemPolicy;
 use App\Policies\FabricReceiveItemPolicy;
+use App\Models\ServiceTransferReceiveItem;
 use App\Policies\AssetPurchaseOrderPolicy;
 use App\Policies\AssetReturnInvoicePolicy;
 use App\Policies\FabricDistributionPolicy;
@@ -116,6 +119,7 @@ use App\Policies\ProductRequisitionPolicy;
 use App\Policies\FabricPurchaseOrderPolicy;
 use App\Policies\FabricReturnInvoicePolicy;
 use App\Policies\MaterialReceiveItemPolicy;
+use App\Policies\ServiceTransferItemPolicy;
 use App\Models\AssetDistributionReceiveItem;
 use App\Policies\AssetRequisitionItemPolicy;
 use App\Policies\MaterialDistributionPolicy;
@@ -124,7 +128,9 @@ use App\Policies\AssetDistributionItemPolicy;
 use App\Policies\MaterialPurchaseOrderPolicy;
 use App\Policies\MaterialReturnInvoicePolicy;
 use App\Policies\ProductRequisitionItemPolicy;
+use App\Policies\ServiceTransferInvoicePolicy;
 use App\Policies\AssetDistributionInvoicePolicy;
+use App\Policies\ServiceTransferReceiveItemPolicy;
 use App\Policies\AssetDistributionReceiveItemPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -177,6 +183,9 @@ class AuthServiceProvider extends ServiceProvider
         ServiceInvoice::class               => ServiceInvoicePolicy::class,
         ServiceDispatch::class              => ServiceDispatchPolicy::class,
         ServiceReceive::class               => ServiceReceivePolicy::class,
+        ServiceTransferInvoice::class       => ServiceTransferInvoicePolicy::class,
+        ServiceTransferItem::class          => ServiceTransferItemPolicy::class,
+        ServiceTransferReceiveItem::class   => ServiceTransferReceiveItemPolicy::class,
         ProductCategory::class              => ProductCategoryPolicy::class,
         Product::class                      => ProductPolicy::class,
         ProductOutput::class                => ProductOutputPolicy::class,

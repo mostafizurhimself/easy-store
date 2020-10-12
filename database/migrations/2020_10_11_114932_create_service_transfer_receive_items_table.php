@@ -20,7 +20,6 @@ class CreateServiceTransferReceiveItemsTable extends Migration
             $table->bigInteger('invoice_id')->unsigned();
             $table->bigInteger('transfer_id')->unsigned();
             $table->bigInteger('service_id')->unsigned();
-            $table->string('reference')->nullable()->index('service_transfer_receive_reference_index');
             $table->double('quantity')->default(0);
             $table->double('rate')->default(0);
             $table->double('amount')->default(0);

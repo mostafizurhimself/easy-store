@@ -1,25 +1,18 @@
 <?php
 
-namespace App\Nova\Actions\ServiceReceives;
+namespace App\Nova\Actions\ServiceTransferReceiveItem;
 
-use App\Enums\DispatchStatus;
+use App\Enums\TransferStatus;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ConfirmReceive extends Action
 {
     use InteractsWithQueue, Queueable;
-
-    /**
-     * The text to be used for the action's confirm button.
-     *
-     * @var string
-     */
-    public $confirmButtonText = 'Confirm';
 
     /**
      * Perform the action on the given models.
@@ -34,7 +27,7 @@ class ConfirmReceive extends Action
             if($model->unitId == $model->service->unitId)
             {
                 $model->service->increment('total_receive_quantity', $model->quantity);
-                $model->status = DispatchStatus::CONFIRMED();
+                $model->status = TransferStatus::CONFIRMED();
                 $model->save();
             }else{
                 return Action::danger("Unit mismatch! You can't confirm it now.");
