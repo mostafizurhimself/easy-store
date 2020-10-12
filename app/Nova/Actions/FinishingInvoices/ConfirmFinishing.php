@@ -25,6 +25,13 @@ class ConfirmFinishing extends Action
     {
         foreach($models as $model){
 
+            //Check model has relation items
+            if($model->finishings()->count() == 0)
+            {
+                return Action::danger("No finishing item added.");
+            }
+
+
             //update the finishing status
             foreach($model->finishings as $finishing){
                 $finishing->status = FinishingStatus::CONFIRMED();

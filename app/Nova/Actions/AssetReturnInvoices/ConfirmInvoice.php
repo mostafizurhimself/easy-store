@@ -25,6 +25,13 @@ class ConfirmInvoice extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach($models as $model){
+
+            //Check model has relation items
+            if($model->returnItems()->count() == 0)
+            {
+                return Action::danger("No retun item added.");
+            }
+
             if($model->status == ReturnStatus::DRAFT()){
 
                 //Update the relate return items status

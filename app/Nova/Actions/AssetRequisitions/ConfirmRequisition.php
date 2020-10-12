@@ -35,6 +35,13 @@ class ConfirmRequisition extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach($models as $model){
+
+            //Check model has relation items
+            if($model->requisitionItems()->count() == 0)
+            {
+                return Action::danger("No requisition item added.");
+            }
+
             if($model->status == RequisitionStatus::DRAFT()){
 
                 //Update the relate requisition items status

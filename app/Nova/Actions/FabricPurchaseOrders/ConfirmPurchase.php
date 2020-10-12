@@ -37,6 +37,13 @@ class ConfirmPurchase extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach($models as $model){
+
+            //Check model has relation items
+            if($model->purchaseItems()->count() == 0)
+            {
+                return Action::danger("No purchase item added.");
+            }
+
             if($model->status == PurchaseStatus::DRAFT()){
 
                 //Update the relate purchase items statusr

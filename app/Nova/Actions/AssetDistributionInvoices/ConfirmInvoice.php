@@ -36,6 +36,11 @@ class ConfirmInvoice extends Action
     {
         foreach ($models as $model) {
 
+            if($model->distributionItems()->count() == 0)
+            {
+                return Action::danger("No distribution item added.");
+            }
+
             //Get all the distribution items of the distribution invoice
             foreach ($model->distributionItems as $distributionItem) {
 

@@ -94,7 +94,7 @@
             <tr>
                 <td></td>
                 <td>GRAND TOTAL</td>
-                <td>{{$invoice->dispatches()->sum('dispatch_quantity')}} {{$invoice->dispatches()->first()->unit->name}}</td>
+                <td>{{$invoice->dispatches()->sum('dispatch_quantity')}} {{$invoice->dispatches()->exists() ? $invoice->dispatches()->first()->unit->name : null}}</td>
             </tr>
         </tfoot>
     </table>

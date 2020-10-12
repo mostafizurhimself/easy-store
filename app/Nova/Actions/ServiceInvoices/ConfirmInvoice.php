@@ -26,6 +26,12 @@ class ConfirmInvoice extends Action
     {
         foreach($models as $model)
         {
+            //Check model has relation items
+            if($model->dispatches()->count() == 0)
+            {
+                return Action::danger("No dispatch item added.");
+            }
+
             //increment total dispatch quantity
             foreach($model->dispatches as $dispatch){
                 $dispatch->service->increment('total_dispatch_quantity', $dispatch->dispatchQuantity);
