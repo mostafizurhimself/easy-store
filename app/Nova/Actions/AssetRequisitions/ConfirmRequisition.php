@@ -3,7 +3,7 @@
 namespace App\Nova\Actions\AssetRequisitions;
 
 use App\Models\Role;
-use App\Helpers\Settings;
+use App\Facades\Settings;
 use Illuminate\Bus\Queueable;
 use App\Enums\RequisitionStatus;
 use Laravel\Nova\Actions\Action;

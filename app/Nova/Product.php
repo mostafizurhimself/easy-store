@@ -22,6 +22,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\Products\UpdateOpeningQuantity;
+use App\Nova\Filters\ActiveStatusFilter;
 
 class Product extends Resource
 {
@@ -274,7 +275,9 @@ class Product extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new ActiveStatusFilter,
         ];
     }
 

@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Number;
+use App\Nova\Filters\DateFilter;
 use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\DateTime;
@@ -21,6 +22,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricDistributions\ConfirmDistribution;
+use App\Nova\Filters\DistributionStatusFilter;
 
 class FabricDistribution extends Resource
 {
@@ -284,7 +286,11 @@ class FabricDistribution extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new DateFilter,
+
+            new DistributionStatusFilter,
         ];
     }
 

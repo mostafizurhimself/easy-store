@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Enums\ReturnStatus;
+use App\Nova\Filters\ReturnStatusFilter;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -145,7 +146,9 @@ class MaterialReturnItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new ReturnStatusFilter,
+        ];
     }
 
     /**

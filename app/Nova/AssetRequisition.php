@@ -25,6 +25,7 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Lenses\AssetRequisition\Requisitions;
 use App\Nova\Actions\AssetRequisitions\ConfirmRequisition;
 use App\Nova\Actions\AssetRequisitions\GenerateRequisition;
+use App\Nova\Filters\RequisitionStatusFilter;
 
 class AssetRequisition extends Resource
 {
@@ -199,7 +200,9 @@ class AssetRequisition extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new RequisitionStatusFilter,
         ];
     }
 

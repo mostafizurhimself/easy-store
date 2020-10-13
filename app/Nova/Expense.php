@@ -25,6 +25,7 @@ use Easystore\RouterLink\RouterLink;
 use App\Rules\ExpenseAmountRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Expenses\ConfirmExpense;
+use App\Nova\Filters\ExpenseStatusFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 
@@ -285,7 +286,9 @@ class Expense extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new ExpenseStatusFilter,
         ];
     }
 

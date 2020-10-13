@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
 use App\Enums\RequisitionStatus;
+use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
@@ -25,6 +26,7 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Lenses\ProductRequisition\Requisitions;
 use App\Nova\Actions\ProductRequisitions\ConfirmRequisition;
 use App\Nova\Actions\ProductRequisitions\GenerateRequisition;
+use App\Nova\Filters\RequisitionStatusFilter;
 
 class ProductRequisition extends Resource
 {
@@ -195,7 +197,11 @@ class ProductRequisition extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new DateFilter('date'),
+
+            new RequisitionStatusFilter,
         ];
     }
 

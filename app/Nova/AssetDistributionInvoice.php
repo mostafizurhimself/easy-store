@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
+use App\Nova\Filters\DateFilter;
 use Illuminate\Support\Optional;
 use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
@@ -27,6 +28,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\AssetDistributionInvoices\ConfirmInvoice;
 use App\Nova\Actions\AssetDistributionInvoices\GenerateInvoice;
+use App\Nova\Filters\DistributionStatusFilter;
 use App\Nova\Lenses\AssetDistributionInvoice\DistributionInvoices;
 
 class AssetDistributionInvoice extends Resource
@@ -201,7 +203,11 @@ class AssetDistributionInvoice extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new DateFilter('date'),
+
+            new DistributionStatusFilter,
         ];
     }
 

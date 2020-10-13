@@ -14,12 +14,14 @@ use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
+use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Markdown;
 use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\PurchaseStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
@@ -188,7 +190,11 @@ class MaterialReceiveItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new DateFilter('date'),
+
+            new PurchaseStatusFilter,
+        ];
     }
 
     /**

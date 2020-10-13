@@ -14,6 +14,7 @@ use App\Enums\RequisitionStatus;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\RequisitionStatusFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 
 class AssetRequisitionItem extends Resource
@@ -188,7 +189,9 @@ class AssetRequisitionItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new RequisitionStatusFilter,
+        ];
     }
 
     /**

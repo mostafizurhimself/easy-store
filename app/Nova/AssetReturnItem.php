@@ -14,6 +14,7 @@ use App\Rules\ReturnQuantityRule;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Filters\ReturnStatusFilter;
 use App\Rules\ReturnQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
@@ -158,7 +159,9 @@ class AssetReturnItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new ReturnStatusFilter,
+        ];
     }
 
     /**

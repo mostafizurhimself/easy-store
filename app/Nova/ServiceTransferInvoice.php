@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
+use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
@@ -23,6 +24,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceTransferInvoice\GenerateInvoice;
 use App\Nova\Actions\ServiceTransferInvoices\ConfirmInvoice;
+use App\Nova\Filters\TransferStatusFilter;
 use App\Nova\Lenses\ServiceTransferInvoice\TransferInvoices;
 
 class ServiceTransferInvoice extends Resource
@@ -215,7 +217,11 @@ class ServiceTransferInvoice extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new DateFilter('date'),
+
+            new TransferStatusFilter,
         ];
     }
 

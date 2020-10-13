@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
+use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\HasMany;
 use App\Nova\Lenses\ReceiveItems;
 use Laravel\Nova\Fields\Currency;
@@ -26,6 +27,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialPurchaseOrders\Recalculate;
 use App\Nova\Actions\MaterialPurchaseOrders\ConfirmPurchase;
 use App\Nova\Actions\MaterialPurchaseOrders\GeneratePurchaseOrder;
+use App\Nova\Filters\PurchaseStatusFilter;
 
 class MaterialPurchaseOrder extends Resource
 {
@@ -206,7 +208,11 @@ class MaterialPurchaseOrder extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new DateFilter('date'),
+
+            new PurchaseStatusFilter,
         ];
     }
 

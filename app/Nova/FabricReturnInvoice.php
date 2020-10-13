@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
+use App\Nova\Filters\DateFilter;
 use App\Nova\Lenses\ReturnItems;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
@@ -22,6 +23,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
 use App\Nova\Actions\FabricReturnInvoices\GenerateInvoice;
+use App\Nova\Filters\ReturnStatusFilter;
 
 class FabricReturnInvoice extends Resource
 {
@@ -207,7 +209,11 @@ class FabricReturnInvoice extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new DateFilter('date'),
+
+            new ReturnStatusFilter,
         ];
     }
 

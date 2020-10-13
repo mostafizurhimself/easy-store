@@ -14,9 +14,10 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
+use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Currency;
 use App\Nova\Lenses\ReceiveItems;
+use Laravel\Nova\Fields\Currency;
 use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
@@ -26,6 +27,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricPurchaseOrders\Recalculate;
 use App\Nova\Actions\FabricPurchaseOrders\ConfirmPurchase;
 use App\Nova\Actions\FabricPurchaseOrders\GeneratePurchaseOrder;
+use App\Nova\Filters\PurchaseStatusFilter;
 
 class FabricPurchaseOrder extends Resource
 {
@@ -210,7 +212,11 @@ class FabricPurchaseOrder extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new DateFilter('date'),
+
+            new PurchaseStatusFilter,
         ];
     }
 

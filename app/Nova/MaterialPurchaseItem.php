@@ -18,6 +18,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialPurchaseItems\DownloadPdf;
 use App\Nova\Actions\MaterialPurchaseItems\DownloadExcel;
+use App\Nova\Filters\PurchaseStatusFilter;
 
 class MaterialPurchaseItem extends Resource
 {
@@ -167,7 +168,9 @@ class MaterialPurchaseItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new PurchaseStatusFilter,
+        ];
     }
 
     /**

@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
+use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Markdown;
@@ -27,6 +28,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReceiveItems\DownloadPdf;
 use App\Nova\Actions\FabricReceiveItems\DownloadExcel;
 use App\Nova\Actions\FabricReceiveItems\ConfirmReceiveItem;
+use App\Nova\Filters\PurchaseStatusFilter;
 
 class FabricReceiveItem extends Resource
 {
@@ -192,7 +194,11 @@ class FabricReceiveItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new DateFilter('date'),
+
+            new PurchaseStatusFilter,
+        ];
     }
 
     /**

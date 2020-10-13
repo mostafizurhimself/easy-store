@@ -178,7 +178,8 @@ class FabricPurchaseItem extends Resource
     {
         return [
             new PurchaseStatusFilter,
-            new FabricFilter
+            new FabricFilter,
+
         ];
     }
 

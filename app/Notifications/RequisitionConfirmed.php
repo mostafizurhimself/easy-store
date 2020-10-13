@@ -52,7 +52,7 @@ class RequisitionConfirmed extends Notification
     public function toArray($notifiable)
     {
         return \Mirovit\NovaNotifications\Notification::make()
-            ->info('A new new requisition has been sent.')
+            ->info('A new requisition has been sent.')
             ->subtitle("Requisition No: {$this->requisition->readableId}, Location: {$this->requisition->location->name}")
             ->routeDetail($this->resourceName, $this->requisition->id)
             ->toArray();

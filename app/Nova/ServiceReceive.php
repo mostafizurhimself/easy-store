@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
+use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Rules\ServiceReceiveQuantityRule;
@@ -21,6 +22,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Rules\ServiceReceiveQuantityRuleForUpdate;
 use App\Nova\Actions\ServiceReceives\ConfirmReceive;
+use App\Nova\Filters\DispatchStatusFilter;
 
 class ServiceReceive extends Resource
 {
@@ -182,7 +184,11 @@ class ServiceReceive extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new DateFilter('date'),
+
+            new DispatchStatusFilter,
+        ];
     }
 
     /**

@@ -13,12 +13,14 @@ use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
+use App\Nova\Filters\DateFilter;
 use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
 use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\DistributionStatusFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\AssetDistributionReceiveItem\ConfirmReceiveItem;
 
@@ -173,7 +175,10 @@ class AssetDistributionReceiveItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new DateFilter('date'),
+            new DistributionStatusFilter,
+        ];
     }
 
     /**
@@ -199,6 +204,7 @@ class AssetDistributionReceiveItem extends Resource
             (new ConfirmReceiveItem)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm asset distribution receive items');
             }),
+
         ];
     }
 

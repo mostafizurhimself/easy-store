@@ -27,6 +27,7 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\Materials\UpdateOpeningQuantity;
+use App\Nova\Filters\ActiveStatusFilter;
 
 class Material extends Resource
 {
@@ -276,7 +277,9 @@ class Material extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new ActiveStatusFilter,
         ];
     }
 

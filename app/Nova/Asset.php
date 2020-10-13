@@ -21,6 +21,7 @@ use App\Nova\Actions\Assets\Consume;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Actions\Assets\ConvertUnit;
 use App\Nova\Actions\Assets\DownloadPdf;
+use App\Nova\Filters\ActiveStatusFilter;
 use App\Nova\Actions\Assets\DownloadExcel;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -277,7 +278,9 @@ class Asset extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new ActiveStatusFilter,
         ];
     }
 

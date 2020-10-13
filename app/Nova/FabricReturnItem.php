@@ -19,6 +19,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
+use App\Nova\Filters\ReturnStatusFilter;
 
 class FabricReturnItem extends Resource
 {
@@ -160,7 +161,7 @@ class FabricReturnItem extends Resource
     public function filters(Request $request)
     {
         return [
-
+            new ReturnStatusFilter,
         ];
     }
 

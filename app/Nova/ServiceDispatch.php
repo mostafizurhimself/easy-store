@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\DispatchStatus;
+use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
@@ -161,7 +162,9 @@ class ServiceDispatch extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new DispatchStatusFilter,
+        ];
     }
 
     /**

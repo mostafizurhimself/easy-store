@@ -21,6 +21,7 @@ use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\FinishingInvoices\ConfirmFinishing;
+use App\Nova\Filters\FinishingStatusFilter;
 
 class FinishingInvoice extends Resource
 {
@@ -222,7 +223,9 @@ class FinishingInvoice extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new FinishingStatusFilter,
         ];
     }
 

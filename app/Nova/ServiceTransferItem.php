@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use App\Enums\TransferStatus;
+use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
@@ -159,7 +160,9 @@ class ServiceTransferItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new TransferStatusFilter,
+        ];
     }
 
     /**

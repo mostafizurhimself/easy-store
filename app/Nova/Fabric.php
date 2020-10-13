@@ -23,6 +23,7 @@ use App\Nova\Actions\Fabrics\DownloadExcel;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Fabrics\UpdateOpeningQuantity;
+use App\Nova\Filters\ActiveStatusFilter;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
 
@@ -282,7 +283,9 @@ class Fabric extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new ActiveStatusFilter,
         ];
     }
 

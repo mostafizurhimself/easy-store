@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
+use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\HasMany;
 use App\Nova\Lenses\ReceiveItems;
 use Laravel\Nova\Fields\Currency;
@@ -24,6 +25,7 @@ use App\Nova\Actions\ServiceInvoices\Recalculate;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceInvoices\ConfirmInvoice;
 use App\Nova\Actions\ServiceInvoices\GenerateInvoice;
+use App\Nova\Filters\DispatchStatusFilter;
 
 class ServiceInvoice extends Resource
 {
@@ -198,7 +200,11 @@ class ServiceInvoice extends Resource
         return [
             (new LocationFilter)->canSee(function($request){
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
-            })
+            }),
+
+            new DateFilter('date'),
+
+            new DispatchStatusFilter,
         ];
     }
 

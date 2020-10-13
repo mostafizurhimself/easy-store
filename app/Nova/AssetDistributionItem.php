@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
+use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use App\Enums\RequisitionStatus;
@@ -17,10 +18,10 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Rules\DistributionQuantityRule;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\DistributionStatusFilter;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use App\Rules\DistributionQuantityRuleOnRequisition;
 use App\Rules\DistributionQuantityRuleOnRequisitionForUpdate;
-use Laravel\Nova\Fields\Hidden;
 
 class AssetDistributionItem extends Resource
 {
@@ -182,7 +183,9 @@ class AssetDistributionItem extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new DistributionStatusFilter,
+        ];
     }
 
     /**
