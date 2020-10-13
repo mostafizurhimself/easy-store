@@ -17,7 +17,9 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Actions\Fabrics\DownloadPdf;
 use Easystore\TextUppercase\TextUppercase;
+use App\Nova\Actions\Fabrics\DownloadExcel;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Fabrics\UpdateOpeningQuantity;
@@ -46,7 +48,7 @@ class Fabric extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can update opening quantity of'];
+    public static $permissions = ['can download', 'can update opening quantity of'];
 
     /**
      * The group associated with the resource.
@@ -307,6 +309,20 @@ class Fabric extends Resource
             (new UpdateOpeningQuantity)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can update opening quantity of fabrics');
             })->onlyOnDetail(),
+
+            (new DownloadPdf)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
         ];
     }
 }

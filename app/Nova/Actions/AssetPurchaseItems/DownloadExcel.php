@@ -16,6 +16,13 @@ class DownloadExcel extends Action
     use InteractsWithQueue, Queueable;
 
     /**
+     * The number of models that should be included in each chunk.
+     *
+     * @var int
+     */
+    public static $chunkCount = 200000000;
+
+    /**
      * Perform the action on the given models.
      *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields

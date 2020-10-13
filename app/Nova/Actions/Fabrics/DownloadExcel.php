@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Nova\Actions\Finishings;
+namespace App\Nova\Actions\Fabrics;
 
+use App\Exports\FabricExport;
 use Illuminate\Bus\Queueable;
-use App\Exports\FinishingExport;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
@@ -15,7 +15,7 @@ class DownloadExcel extends Action
 {
     use InteractsWithQueue, Queueable;
 
-    /**
+      /**
      * The number of models that should be included in each chunk.
      *
      * @var int
@@ -32,8 +32,8 @@ class DownloadExcel extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         // Store on default disk
-        $filename = "finishings_".time().".xlsx";
-        Excel::store(new FinishingExport($models), $filename, 'local');
+        $filename = "fabrics_".time().".xlsx";
+        Excel::store(new FabricExport($models), $filename, 'local');
 
         return Action::redirect( route('dump-download', compact('filename')) );
     }

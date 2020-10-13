@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Nova\Actions\Finishings;
+namespace App\Nova\Actions\Assets;
 
 use Illuminate\Bus\Queueable;
-use App\Exports\FinishingExport;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Fields\ActionFields;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class DownloadExcel extends Action
+class DownloadPdf extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -31,9 +31,14 @@ class DownloadExcel extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        // Store on default disk
-        $filename = "finishings_".time().".xlsx";
-        Excel::store(new FinishingExport($models), $filename, 'local');
+        $filename = "assets_".time().".pdf";
+        $subtitle = $fields->subtitle;
+
+        ini_set("pcre.backtrack_limit", "10000000000");
+        $pdf = \PDF::loadView('pdf.pages.assets', compact('models', 'subtitle'), [], [
+            'mode' => 'utf-8',
+        ]);
+        $pdf->save(Storage::path($filename));
 
         return Action::redirect( route('dump-download', compact('filename')) );
     }
@@ -45,6 +50,9 @@ class DownloadExcel extends Action
      */
     public function fields()
     {
-        return [];
+        return [
+            Text::make('Subtitle', 'subtitle')
+                ->rules('nullable', 'string', 'max:100')
+        ];
     }
 }

@@ -20,7 +20,9 @@ use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Lenses\Material\ItSections;
 use Easystore\TextUppercase\TextUppercase;
+use App\Nova\Actions\Materials\DownloadPdf;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\Materials\DownloadExcel;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
@@ -41,7 +43,7 @@ class Material extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can update opening quantity of'];
+    public static $permissions = ['can download', 'can update opening quantity of'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -303,6 +305,20 @@ class Material extends Resource
             (new UpdateOpeningQuantity)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can update opening quantity of materials');
             })->onlyOnDetail(),
+
+            (new DownloadPdf)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
         ];
     }
 }

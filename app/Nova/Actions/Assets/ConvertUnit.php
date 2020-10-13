@@ -31,17 +31,17 @@ class ConvertUnit extends Action
                 return Action::danger('Same unit value, conversion failed!');
             }else{
                 if($model->openingQuantity != 0){
-                    $model->openingQuantity = ( $model->openingQuantity / $fields->conversion_rate);
+                    $model->openingQuantity = round($model->openingQuantity / $fields->conversion_rate, 2);
                 }
 
                 if($model->quantity != 0){
 
-                    $model->quantity = ( $model->quantity / $fields->conversion_rate);
+                    $model->quantity = round($model->quantity / $fields->conversion_rate, 2);
                 }
 
                 if($model->alertQuantity != 0){
 
-                    $model->alertQuantity = ( $model->alertQuantity / $fields->conversion_rate);
+                    $model->alertQuantity = round($model->alertQuantity / $fields->conversion_rate, 2);
                 }
 
                 $model->unitId = $fields->unit;

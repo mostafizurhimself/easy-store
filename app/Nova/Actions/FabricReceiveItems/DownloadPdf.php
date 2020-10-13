@@ -15,6 +15,13 @@ class DownloadPdf extends Action
 {
     use InteractsWithQueue, Queueable;
 
+        /**
+     * The number of models that should be included in each chunk.
+     *
+     * @var int
+     */
+    public static $chunkCount = 200000000;
+
     /**
      * Perform the action on the given models.
      *
@@ -27,6 +34,7 @@ class DownloadPdf extends Action
         $filename = "fabric_receive_items_".time().".pdf";
         $subtitle = $fields->subtitle;
 
+        ini_set("pcre.backtrack_limit", "10000000000");
         $pdf = \PDF::loadView('pdf.pages.fabric-receive-items', compact('models', 'subtitle'), [], [
             'mode' => 'utf-8',
             'orientation' => 'L'

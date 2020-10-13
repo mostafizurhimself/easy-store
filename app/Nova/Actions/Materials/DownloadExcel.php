@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Nova\Actions\Finishings;
+namespace App\Nova\Actions\Materials;
 
 use Illuminate\Bus\Queueable;
-use App\Exports\FinishingExport;
+use App\Exports\MaterialExport;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
@@ -32,8 +32,8 @@ class DownloadExcel extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         // Store on default disk
-        $filename = "finishings_".time().".xlsx";
-        Excel::store(new FinishingExport($models), $filename, 'local');
+        $filename = "fabrics_".time().".xlsx";
+        Excel::store(new MaterialExport($models), $filename, 'local');
 
         return Action::redirect( route('dump-download', compact('filename')) );
     }
