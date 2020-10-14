@@ -50,6 +50,7 @@ Route::group(['middleware' => 'nova'], function () {
         Route::get('services/{invoice}', 'InvoiceController@serviceInvoice')->name('invoices.services');
         Route::get('service-transfers/{invoice}', 'InvoiceController@serviceTransferInvoice')->name('invoices.service-transfers');
         Route::get('fabric-returns/{invoice}', 'InvoiceController@fabricReturnInvoice')->name('invoices.fabric-returns');
+        Route::get('fabric-distributions/{invoice}', 'InvoiceController@fabricDistributionInvoice')->name('invoices.fabric-distributions');
         Route::get('material-returns/{invoice}', 'InvoiceController@materialReturnInvoice')->name('invoices.material-returns');
         Route::get('asset-returns/{invoice}', 'InvoiceController@assetReturnInvoice')->name('invoices.asset-returns');
     });
@@ -70,9 +71,9 @@ Route::group(['middleware' => 'nova'], function () {
     // Helper Controller
     Route::get('dump-download/{filename}', "HelperController@dumpDownload")->name('dump-download');
     Route::get('test', function(){
-        $models = \App\Models\Asset::all();
+        $invoice = \App\Models\FabricDistribution::first();
 
-        return view('pdf.pages.assets', compact('models'));
+        return view('invoices.pages.fabric-distribution-invoice', compact('invoice'));
     });
 
 

@@ -152,6 +152,7 @@ class Asset extends Resource
 
             TextWrap::make('Name')
                 ->onlyOnIndex()
+                ->sortable()
                 ->wrapMethod('length',30),
 
             TextUppercase::make('Code')

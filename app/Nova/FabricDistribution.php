@@ -19,10 +19,11 @@ use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Rules\DistributionQuantityRule;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\DistributionStatusFilter;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\FinishingDistributions\GenerateInvoice;
 use App\Nova\Actions\FabricDistributions\ConfirmDistribution;
-use App\Nova\Filters\DistributionStatusFilter;
 
 class FabricDistribution extends Resource
 {
@@ -46,7 +47,7 @@ class FabricDistribution extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm'];
+    public static $permissions = ['can confirm', 'can generate'];
 
     /**
      * The side nav menu order.
@@ -315,8 +316,14 @@ class FabricDistribution extends Resource
     {
         return [
             (new ConfirmDistribution)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can confirm fabric distributions');
+                return $request->user()->hasPermissionTo('can confirm fabric distributions') || $request->user()->isSuperAdmin();
             }),
+
+            (new GenerateInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate fabric distributions') || $request->user()->isSuperAdmin();
+            })
+            ->onlyOnTableRow()
+            ->withoutConfirmation(),
         ];
     }
 }

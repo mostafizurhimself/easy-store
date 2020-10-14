@@ -10,6 +10,7 @@ use App\Models\ServiceInvoice;
 use App\Enums\RequisitionStatus;
 use App\Enums\DistributionStatus;
 use App\Models\AssetReturnInvoice;
+use App\Models\FabricDistribution;
 use App\Models\FabricReturnInvoice;
 use App\Http\Controllers\Controller;
 use App\Models\MaterialReturnInvoice;
@@ -27,7 +28,7 @@ class InvoiceController extends Controller
      */
     public function assetDistributionInvoice(Request $request, AssetDistributionInvoice $invoice )
     {
-        if($request->user()->hasPermissionTo('can generate asset distribution invoices') && $invoice->status != DistributionStatus::DRAFT()){
+        if(($request->user()->hasPermissionTo('can generate asset distribution invoices') || $request->user()->isSuperAdmin()) && $invoice->status != DistributionStatus::DRAFT()){
 
             return view('invoices.pages.asset-distribution-invoice', compact('invoice'));
         }else{
@@ -44,7 +45,7 @@ class InvoiceController extends Controller
      */
     public function serviceInvoice(Request $request, ServiceInvoice $invoice )
     {
-        if($request->user()->hasPermissionTo('can generate service invoices') && $invoice->status != DispatchStatus::DRAFT()){
+        if(($request->user()->hasPermissionTo('can generate service invoices') || $request->user()->isSuperAdmin()) && $invoice->status != DispatchStatus::DRAFT()){
 
             return view('invoices.pages.service-invoice', compact('invoice'));
         }else{
@@ -61,7 +62,7 @@ class InvoiceController extends Controller
      */
     public function serviceTransferInvoice(Request $request, ServiceTransferInvoice $invoice )
     {
-        if($request->user()->hasPermissionTo('can generate service transfer invoices') && $invoice->status != TransferStatus::DRAFT()){
+        if(($request->user()->hasPermissionTo('can generate service transfer invoices') || $request->user()->isSuperAdmin()) && $invoice->status != TransferStatus::DRAFT()){
 
             return view('invoices.pages.service-transfer-invoice', compact('invoice'));
         }else{
@@ -78,7 +79,7 @@ class InvoiceController extends Controller
      */
     public function fabricReturnInvoice(Request $request, FabricReturnInvoice $invoice )
     {
-        if($request->user()->hasPermissionTo('can generate fabric return invoices') && $invoice->status != ReturnStatus::DRAFT()){
+        if(($request->user()->hasPermissionTo('can generate fabric return invoices') || $request->user()->isSuperAdmin()) && $invoice->status != ReturnStatus::DRAFT()){
 
             return view('invoices.pages.fabric-return-invoice', compact('invoice'));
         }else{
@@ -95,7 +96,7 @@ class InvoiceController extends Controller
      */
     public function materialReturnInvoice(Request $request, MaterialReturnInvoice $invoice )
     {
-        if($request->user()->hasPermissionTo('can generate material return invoices') && $invoice->status != ReturnStatus::DRAFT()){
+        if(($request->user()->hasPermissionTo('can generate material return invoices') || $request->user()->isSuperAdmin()) && $invoice->status != ReturnStatus::DRAFT()){
 
             return view('invoices.pages.material-return-invoice', compact('invoice'));
         }else{
@@ -112,9 +113,26 @@ class InvoiceController extends Controller
      */
     public function assetReturnInvoice(Request $request, AssetReturnInvoice $invoice )
     {
-        if($request->user()->hasPermissionTo('can generate asset return invoices') && $invoice->status != ReturnStatus::DRAFT()){
+        if(($request->user()->hasPermissionTo('can generate asset return invoices') || $request->user()->isSuperAdmin()) && $invoice->status != ReturnStatus::DRAFT()){
 
             return view('invoices.pages.asset-return-invoice', compact('invoice'));
+        }else{
+            abort(403);
+        }
+    }
+
+    /**
+     * Generate service finishing distribution invoice
+     *
+     * @param  \Illuminate\Http\Request   $request
+     * @param  \App\Models\FabricDistribution $invoice
+     * @return \Illuminate\Http\Response
+     */
+    public function fabricDistributionInvoice(Request $request, FabricDistribution $invoice )
+    {
+        if($request->user()->hasPermissionTo('can generate fabric distributions') || $request->user()->isSuperAdmin()){
+
+            return view('invoices.pages.fabric-distribution-invoice', compact('invoice'));
         }else{
             abort(403);
         }
