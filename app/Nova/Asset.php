@@ -308,6 +308,9 @@ class Asset extends Resource
                         ->confirmButtonText('Consume')
                         ->canSee(function($request){
                             return $request->user()->hasPermissionTo('can consume assets') || $request->user()->isSuperAdmin();
+                        })
+                        ->canRun(function($request){
+                            return $request->user()->hasPermissionTo('can consume assets') || $request->user()->isSuperAdmin();
                         }),
 
             (new ConvertUnit)->canSee(function($request){
