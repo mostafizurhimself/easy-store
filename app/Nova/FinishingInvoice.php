@@ -19,9 +19,10 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use App\Nova\Actions\FinishingInvoices\ConfirmFinishing;
 use App\Nova\Filters\FinishingStatusFilter;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\FinishingInvoices\GenerateInvoice;
+use App\Nova\Actions\FinishingInvoices\ConfirmFinishing;
 
 class FinishingInvoice extends Resource
 {
@@ -252,8 +253,20 @@ class FinishingInvoice extends Resource
     {
         return [
             (new ConfirmFinishing)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can confirm finishing invoices');
-            }),
+                return $request->user()->hasPermissionTo('can confirm finishing invoices') || $request->user()->isSuperAdmin();
+            })
+            ->confirmButtonText('Confirm')
+            ->confirmText("Are you sure want to confirm?"),
+
+            (new GenerateInvoice)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can generate finishing invoices') || $request->user()->isSuperAdmin();
+            })
+            ->withoutConfirmation()
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate finishing invoices') || $request->user()->isSuperAdmin();
+            })
+            ->onlyOnDetail(),
         ];
+
     }
 }

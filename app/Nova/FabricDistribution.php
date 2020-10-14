@@ -322,6 +322,9 @@ class FabricDistribution extends Resource
             (new GenerateInvoice)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can generate fabric distributions') || $request->user()->isSuperAdmin();
             })
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can generate fabric distributions') || $request->user()->isSuperAdmin();
+            })
             ->onlyOnTableRow()
             ->withoutConfirmation(),
         ];

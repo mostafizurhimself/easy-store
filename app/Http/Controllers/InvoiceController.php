@@ -8,6 +8,7 @@ use App\Enums\DispatchStatus;
 use App\Enums\TransferStatus;
 use App\Models\ServiceInvoice;
 use App\Enums\RequisitionStatus;
+use App\Models\FinishingInvoice;
 use App\Enums\DistributionStatus;
 use App\Models\AssetReturnInvoice;
 use App\Models\FabricDistribution;
@@ -133,6 +134,23 @@ class InvoiceController extends Controller
         if($request->user()->hasPermissionTo('can generate fabric distributions') || $request->user()->isSuperAdmin()){
 
             return view('invoices.pages.fabric-distribution-invoice', compact('invoice'));
+        }else{
+            abort(403);
+        }
+    }
+
+    /**
+     * Generate service finishing distribution invoice
+     *
+     * @param  \Illuminate\Http\Request   $request
+     * @param  \App\Models\FinishingInvoice $invoice
+     * @return \Illuminate\Http\Response
+     */
+    public function finishingInvoice(Request $request, FinishingInvoice $invoice )
+    {
+        if($request->user()->hasPermissionTo('can generate finishing invoices') || $request->user()->isSuperAdmin()){
+
+            return view('invoices.pages.finishing-invoice', compact('invoice'));
         }else{
             abort(403);
         }

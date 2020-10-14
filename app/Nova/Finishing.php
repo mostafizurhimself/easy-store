@@ -215,6 +215,7 @@ class Finishing extends Resource
         if ($request->isResourceIndexRequest() || $request->isResourceDetailRequest()) {
             return ;
         }
+
         $invoice = \App\Models\FinishingInvoice::find($request->viaResourceId);
         if(empty($invoice)){
             $invoice = $request->findResourceOrFail()->invoice;

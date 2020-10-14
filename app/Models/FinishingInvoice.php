@@ -79,13 +79,23 @@ class FinishingInvoice extends Model
     }
 
     /**
-     * Get the purchase products ids as an array
+     * Get the purchase product ids as an array
      *
      * @return array
      */
     public function productIds($id = null)
     {
         return $this->finishings->whereNotIn('product_id', [$id])->pluck('product_id')->toArray();
+    }
+
+    /**
+     * Get the purchase style ids as an array
+     *
+     * @return array
+     */
+    public function styleIds($id = null)
+    {
+        return $this->finishings->whereNotIn('style_id', [$id])->pluck('style_id')->toArray();
     }
 
     /**
