@@ -116,6 +116,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 $name = $permission." ".$resource::readableName();
                 $newOrder = $order + 20;
                 Permission::updateOrCreate(['name' => $name ],['group' => $resource::readableName(), 'name' => $name, 'group_order' => ($newOrder + 1)]);
+
+                $order++;
             }
         }
 
