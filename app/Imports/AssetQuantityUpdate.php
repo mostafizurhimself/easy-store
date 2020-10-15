@@ -18,7 +18,12 @@ class AssetQuantityUpdate implements ToCollection, WithHeadingRow
         {
             Location::where('name', $row['location'])->first()
                     ->assets()->where('code', $row['code'])->first()
-                    ->update(['quantity' => $row['quantity']]);
+                    ->update(
+                        [
+                            'opening_quantity' => $row['quantity'],
+                            'quantity' => $row['quantity'],
+                        ]
+                    );
         }
     }
 }
