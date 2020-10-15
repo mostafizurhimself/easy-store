@@ -25,6 +25,7 @@ use App\Nova\Filters\ActiveStatusFilter;
 use App\Nova\Actions\Assets\DownloadExcel;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\Assets\MassUpdateQuantity;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Assets\UpdateOpeningQuantity;
 use Benjacho\BelongsToManyField\BelongsToManyField;
@@ -52,7 +53,7 @@ class Asset extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can consume', 'can download', 'can convert unit of', 'can update opening quantity of'];
+    public static $permissions = ['can consume', 'can download', 'can convert unit of', 'can mass update quantity of', 'can update opening quantity of'];
 
     /**
      * The side nav menu order.
@@ -335,6 +336,14 @@ class Asset extends Resource
                 return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
+
+            (new MassUpdateQuantity)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can mass update quantity of assets') || $request->user()->isSuperAdmin();
+            })->confirmButtonText('Upload')
+            ->canRun(function($request){
+                return $request->user()->hasPermissionTo('can mass update quantity of assets') || $request->user()->isSuperAdmin();
+            })->confirmButtonText('Upload')
+            ->standalone(),
         ];
     }
 }
