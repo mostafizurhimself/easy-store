@@ -46,7 +46,8 @@ class MassUpdateQuantity extends Action
     {
         return [
             File::make('File')
-                ->rules('required'),
+                ->rules('required', 'mimes:xlsx')
+                ->acceptedTypes('.xlsx'),
         ];
     }
 }
