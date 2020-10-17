@@ -87,7 +87,7 @@ class ServiceTransferItem extends Resource
             BelongsTo::make('Invoice', 'invoice', \App\Nova\ServiceTransferInvoice::class)
                 ->exceptOnForms(),
 
-            BelongsTo::make('Service', 'service', \App\Nova\Service::class),
+            BelongsTo::make('Service', 'service', \App\Nova\Service::class)->searchable(),
 
             Number::make('Quantity', 'transfer_quantity')
                 ->rules('required', 'numeric', 'min:1')

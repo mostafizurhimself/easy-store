@@ -32,4 +32,20 @@ class FabricCategory extends Model
     {
        return $this->hasMany(Fabric::class, 'category_id');
     }
+
+    /**
+     * Get the filter options of the model
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        return Cache::remember('nova-fabric-category-filter-options', 3600, function () {
+            $models = self::setEagerLoads([])->get(['id', 'name']);
+
+            return $models->mapWithKeys(function ($model) {
+                return [$model->name => $model->id];
+            })->toArray();
+        });
+    }
 }
