@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "08daf0af017cd16c3ec039bd52c7f358",
+    "content-hash": "7d8260449994f7cedb0d5ed4836f45d8",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -246,6 +246,54 @@
                 "stack"
             ],
             "time": "2019-12-24T22:41:47+00:00"
+        },
+        {
+            "name": "awesome-nova/dependent-filter",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/awesome-nova/dependent-filter.git",
+                "reference": "8a49df04e1a4eaefee33155c29999b92e587ec04"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/awesome-nova/dependent-filter/zipball/8a49df04e1a4eaefee33155c29999b92e587ec04",
+                "reference": "8a49df04e1a4eaefee33155c29999b92e587ec04",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "AwesomeNova\\DependentFilterServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "AwesomeNova\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dmytro Kulyk",
+                    "email": "lnkvisitor.ts@gmail.com"
+                }
+            ],
+            "description": "Dependent filters for Laravel Nova",
+            "keywords": [
+                "filter",
+                "laravel",
+                "nova"
+            ],
+            "time": "2020-03-06T14:05:33+00:00"
         },
         {
             "name": "aws/aws-sdk-php",

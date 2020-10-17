@@ -13,6 +13,7 @@
         "akaunting/money": "^1.2",
         "ampeco/nova-date-range-filter": "^0.1.1",
         "armincms/json": "^0.5.1",
+        "awesome-nova/dependent-filter": "^1.1",
         "benjacho/belongs-to-many-field": "^1.8",
         "benjaminhirsch/nova-slug-field": "^1.2",
         "bissolli/nova-phone-field": "^0.0.4",

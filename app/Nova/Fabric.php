@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
+use App\Models\FabricCategory;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Illuminate\Validation\Rule;
@@ -16,14 +17,16 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
+use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Filters\ActiveStatusFilter;
+use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Actions\Fabrics\DownloadPdf;
 use Easystore\TextUppercase\TextUppercase;
 use App\Nova\Actions\Fabrics\DownloadExcel;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Fabrics\UpdateOpeningQuantity;
-use App\Nova\Filters\ActiveStatusFilter;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
 
@@ -281,11 +284,26 @@ class Fabric extends Resource
     public function filters(Request $request)
     {
         return [
-            (new LocationFilter)->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            LocationFilter::make('Location', 'location_id')->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            DependentFilter::make('Category', 'category_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return FabricCategory::where('location_id', $filters['location_id'])
+                        ->pluck('name', 'id');
+                })->canSee(function($request){
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+
+            (new CategoryFilter)->canSee(function($request){
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
 
             new ActiveStatusFilter,
+
         ];
     }
 

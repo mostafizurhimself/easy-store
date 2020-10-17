@@ -277,8 +277,8 @@ class MaterialDistribution extends Resource
     public function filters(Request $request)
     {
         return [
-            (new LocationFilter)->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
             new DateFilter,

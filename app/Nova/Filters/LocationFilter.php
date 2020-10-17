@@ -5,16 +5,10 @@ namespace App\Nova\Filters;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
+use AwesomeNova\Filters\DependentFilter;
 
-class LocationFilter extends Filter
+class LocationFilter extends DependentFilter
 {
-    /**
-     * The filter's component.
-     *
-     * @var string
-     */
-    public $component = 'select-filter';
-
     /**
      * The displayable name of the filter.
      *
@@ -23,17 +17,11 @@ class LocationFilter extends Filter
     public $name = "Location";
 
     /**
-     * Apply the filter to the given query.
+     * Attribute name of filter. Also it is key of filter.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @var string
      */
-    public function apply(Request $request, $query, $value)
-    {
-        return $query->where('location_id', $value)->withoutGlobalScopes();
-    }
+    public $attribute = 'location_id';
 
     /**
      * Get the filter's available options.
@@ -41,8 +29,8 @@ class LocationFilter extends Filter
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function options(Request $request)
+    public function options(Request $request, array $filters = [])
     {
-        return Location::filterOptions();
+        return Location::pluck('name', 'id');
     }
 }

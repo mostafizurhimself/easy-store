@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Enums\ActiveStatus;
+use App\Models\ProductCategory;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -16,13 +17,15 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
+use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Filters\ActiveStatusFilter;
+use AwesomeNova\Filters\DependentFilter;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\Products\UpdateOpeningQuantity;
-use App\Nova\Filters\ActiveStatusFilter;
 
 class Product extends Resource
 {
@@ -273,8 +276,21 @@ class Product extends Resource
     public function filters(Request $request)
     {
         return [
-            (new LocationFilter)->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            LocationFilter::make('Location', 'location_id')->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            DependentFilter::make('Category', 'category_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return ProductCategory::where('location_id', $filters['location_id'])
+                        ->pluck('name', 'id');
+                })->canSee(function($request){
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new CategoryFilter)->canSee(function($request){
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
 
             new ActiveStatusFilter,

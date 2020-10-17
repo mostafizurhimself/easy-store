@@ -13,12 +13,16 @@ use NovaAjaxSelect\AjaxSelect;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use App\Models\MaterialCategory;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
+use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Filters\ActiveStatusFilter;
 use App\Nova\Lenses\Material\ItSections;
+use AwesomeNova\Filters\DependentFilter;
 use Easystore\TextUppercase\TextUppercase;
 use App\Nova\Actions\Materials\DownloadPdf;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -27,7 +31,6 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\Materials\UpdateOpeningQuantity;
-use App\Nova\Filters\ActiveStatusFilter;
 
 class Material extends Resource
 {
@@ -275,8 +278,21 @@ class Material extends Resource
     public function filters(Request $request)
     {
         return [
-            (new LocationFilter)->canSee(function($request){
-                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view all locations data');
+            LocationFilter::make('Location', 'location_id')->canSee(function($request){
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            DependentFilter::make('Category', 'category_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return MaterialCategory::where('location_id', $filters['location_id'])
+                        ->pluck('name', 'id');
+                })->canSee(function($request){
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new CategoryFilter)->canSee(function($request){
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
 
             new ActiveStatusFilter,
