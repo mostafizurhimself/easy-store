@@ -134,7 +134,7 @@ class Service extends Resource
 
             TextWrap::make('Name')
                 ->onlyOnIndex()
-                ->wrapMethod('length',30),
+                ->wrapMethod('length',25),
 
             TextUppercase::make('Code')
                 ->sortable()

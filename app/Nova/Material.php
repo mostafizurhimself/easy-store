@@ -99,7 +99,7 @@ class Material extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'code',
+        'name', 'code', 'readable_id'
     ];
 
     /**
