@@ -98,10 +98,17 @@
             </tr>
         </tfoot>
     </table>
-    <div class="thanks">Thank you!</div>
-    <div class="notices">
-        <div>Note:</div>
-        <div class="notice">{!! $invoice->description !!}</div>
+    <div class="row">
+        <div class="col-6">
+            <div class="thanks">Thank you!</div>
+            <div class="notices">
+                <div>Note:</div>
+                <div class="notice">{!! $invoice->description !!}</div>
+            </div>
+        </div>
+        <div class="col-6 text-right mt-5">
+            <div class="font-weight-bold">Signature</div>
+        </div>
     </div>
 </main>
 

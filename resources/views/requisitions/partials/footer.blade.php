@@ -1,3 +1,3 @@
 <footer>
-    Invoice was generated on a computer and is valid without the signature and seal.
+    <strong>N:B:</strong> Above invoice was generated on a computer and is not valid without authorized signature and seal.
 </footer>

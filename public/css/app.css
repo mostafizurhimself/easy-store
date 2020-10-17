@@ -10993,13 +10993,13 @@ a.text-dark:focus {
 
 .invoice table th {
   white-space: nowrap;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 16px;
-  border: 1px solid #fff;
+  border: 1px solid black;
 }
 
 .invoice table td {
-  border: 1px solid #fff;
+  border: 1px solid black;
 }
 
 .invoice table td h3 {
@@ -11022,7 +11022,7 @@ a.text-dark:focus {
 
 .invoice table tfoot td {
   background: 0 0;
-  border-bottom: none;
+  border-bottom: 1px solid black;
   white-space: nowrap;
   text-align: right;
   padding: 10px 20px;
