@@ -13,7 +13,7 @@ class GenerateAssets extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:assets';
+    protected $signature = 'generate:assets {--id= : The id of the location }';
 
     /**
      * The console command description.
@@ -39,11 +39,17 @@ class GenerateAssets extends Command
      */
     public function handle()
     {
-        $locations = Location::where('id', '!=', 1)->get();
+        $locationId = $this->option('id');
+
+        if(empty($locationId)){
+            $locations = Location::where('id', '!=', 1)->get();
+        }else{
+            $locations = Location::where('id', $locationId)->get();
+        }
 
         foreach($locations as $location)
         {
-            $assets = Asset::all();
+            $assets = Asset::where('location_id', 1)->get();
             $count = 1;
 
             foreach($assets as $asset){
@@ -54,14 +60,14 @@ class GenerateAssets extends Command
                     ],
 
                     [
-                    'name' => $asset->name,
-                    'code' => $asset->code,
-                    'description' => $asset->description,
-                    'rate' => $asset->rate,
-                    'opening_quantity' => 0,
-                    'quantity' => 0,
-                    'alert_quantity' => 0,
-                    'unit_id' => $asset->unit_id,
+                        'name' => $asset->name,
+                        'code' => $asset->code,
+                        'description' => $asset->description,
+                        'rate' => $asset->rate,
+                        'opening_quantity' => 0,
+                        'quantity' => 0,
+                        'alert_quantity' => 0,
+                        'unit_id' => $asset->unit_id,
                     ]
                 );
 
