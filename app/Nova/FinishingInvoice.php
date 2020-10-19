@@ -116,12 +116,7 @@ class FinishingInvoice extends Resource
 
             Date::make('Date')
                 ->rules('required')
-                ->default(Carbon::now())
-                ->readonly(),
-
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
+                ->default(Carbon::now()),
 
             BelongsTo::make('Location')
                 ->searchable()
