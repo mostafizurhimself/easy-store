@@ -36,7 +36,7 @@ class CategoryFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->where('field', $value)->withoutGlobalScopes();
+        return $query->where('category_id', $value)->withoutGlobalScopes();
     }
 
     /**
