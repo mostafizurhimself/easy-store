@@ -15,7 +15,7 @@ class CreateAssetDistributionItemsTable extends Migration
     {
         Schema::create('asset_distribution_items', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable()->index('asset_requisition_item_no_index');
+            $table->string('readable_id')->nullable()->index('asset_distribution_item_no_index');
             $table->bigInteger('invoice_id')->unsigned();
             $table->bigInteger('requisition_id')->unsigned()->nullable();
             $table->bigInteger('requisition_item_id')->unsigned()->nullable();

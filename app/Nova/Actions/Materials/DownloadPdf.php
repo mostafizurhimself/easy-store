@@ -3,6 +3,7 @@
 namespace App\Nova\Actions\Materials;
 
 use Illuminate\Bus\Queueable;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
@@ -49,6 +50,9 @@ class DownloadPdf extends Action
      */
     public function fields()
     {
-        return [];
+        return [
+            Text::make('Subtitle', 'subtitle')
+                ->rules('nullable', 'string', 'max:100')
+        ];
     }
 }

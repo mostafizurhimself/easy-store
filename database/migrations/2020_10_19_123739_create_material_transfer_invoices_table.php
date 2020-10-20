@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAssetDistributionInvoicesTable extends Migration
+class CreateMaterialTransferInvoicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateAssetDistributionInvoicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('asset_distribution_invoices', function (Blueprint $table) {
+        Schema::create('material_transfer_invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable()->index('asset_distribution_invoice_no_index');
+            $table->string('readable_id')->nullable()->index('material_transfer_invoice_no_index');
             $table->bigInteger('location_id')->unsigned()->nullable();
-            $table->date('date')->index('asset_distribution_date_index');
+            $table->date('date')->index('material_transfer_invoice_date_index');
             $table->double('total_distribution_amount')->default(0);
             $table->double('total_receive_amount')->default(0);
             $table->text('note')->nullable();
@@ -39,6 +39,6 @@ class CreateAssetDistributionInvoicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asset_distribution_invoices');
+        Schema::dropIfExists('material_transfer_invoices');
     }
 }
