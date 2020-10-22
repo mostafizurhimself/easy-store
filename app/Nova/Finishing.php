@@ -100,14 +100,16 @@ class Finishing extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', "App\Nova\FinishingInvoice")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Product')
                 ->searchable()
-                ,
+                ->sortable(),
 
             BelongsTo::make('Style')
                 ->searchable()
+                ->sortable()
                 ->showCreateRelationButton(),
 
             Number::make('Quantity')
@@ -117,16 +119,19 @@ class Finishing extends Resource
             Text::make('Quantity', function(){
                     return $this->quantity." ".$this->unitName;
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
 
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
@@ -134,6 +139,7 @@ class Finishing extends Resource
                     FinishingStatus::CONFIRMED()->getValue() => 'info',
                     FinishingStatus::ADDED()->getValue()   => 'success',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

@@ -19,11 +19,11 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\ReturnStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetReturnInvoices\ConfirmInvoice;
 use App\Nova\Actions\AssetReturnInvoices\GenerateInvoice;
-use App\Nova\Filters\ReturnStatusFilter;
 
 class AssetReturnInvoice extends Resource
 {
@@ -135,11 +135,13 @@ class AssetReturnInvoice extends Resource
             RouterLink::make('Invoice', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -148,6 +150,7 @@ class AssetReturnInvoice extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -161,6 +164,7 @@ class AssetReturnInvoice extends Resource
 
             Currency::make('Total Amount', 'total_return_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
@@ -168,6 +172,7 @@ class AssetReturnInvoice extends Resource
                     ReturnStatus::CONFIRMED()->getValue() => 'info',
                     ReturnStatus::BILLED()->getValue()    => 'danger',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

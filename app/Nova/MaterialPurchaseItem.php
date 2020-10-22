@@ -14,11 +14,11 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialPurchaseItems\DownloadPdf;
 use App\Nova\Actions\MaterialPurchaseItems\DownloadExcel;
-use App\Nova\Filters\PurchaseStatusFilter;
 
 class MaterialPurchaseItem extends Resource
 {
@@ -97,22 +97,28 @@ class MaterialPurchaseItem extends Resource
     {
         return [
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\MaterialPurchaseOrder")
-            ->exceptOnForms(),
+            ->exceptOnForms()
+            ->sortable(),
 
-            BelongsTo::make('Material')->searchable(),
+            BelongsTo::make('Material')
+                ->searchable()
+                ->sortable(),
 
             Date::make('Date', function(){
                 return $this->date;
             })
+            ->sortable()
                 ->exceptOnForms(),
 
             Number::make('Quantity', 'purchase_quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->sortable(),
 
             Text::make('Purchase Quantity', function(){
                 return $this->purchaseQuantity." ".$this->unitName;
             })
+            ->sortable()
             ->exceptOnForms(),
 
 
@@ -120,18 +126,22 @@ class MaterialPurchaseItem extends Resource
             Text::make('Receive Quantity', function(){
                 return $this->receiveQuantity." ".$this->unitName;
             })
+            ->sortable()
             ->exceptOnForms(),
 
             Currency::make('Purchase Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Purchase Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Receive Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
@@ -141,6 +151,7 @@ class MaterialPurchaseItem extends Resource
                     PurchaseStatus::RECEIVED()->getValue()  => 'success',
                     PurchaseStatus::BILLED()->getValue()    => 'danger',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

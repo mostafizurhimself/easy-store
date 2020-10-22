@@ -17,10 +17,10 @@ use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Filters\OutputStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\ProductOutputs\DownloadPdf;
 use App\Nova\Actions\ProductOutputs\DownloadExcel;
-use App\Nova\Filters\OutputStatusFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 
 class ProductOutput extends Resource
@@ -88,7 +88,7 @@ class ProductOutput extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-share-square';
+        return 'fas fa-share-square';
     }
 
     /**
@@ -98,7 +98,7 @@ class ProductOutput extends Resource
      */
     public static function label()
     {
-      return "Outputs";
+        return "Outputs";
     }
 
     /**
@@ -114,29 +114,14 @@ class ProductOutput extends Resource
 
             Date::make('Date')
                 ->rules('required')
+                ->sortable()
                 ->default(Carbon::now()),
 
             BelongsTo::make('Location')
                 ->searchable()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnDetail(function($request){
-                    if($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnIndex(function($request){
-                    if($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()){
+                ->sortable()
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -146,7 +131,7 @@ class ProductOutput extends Resource
                 ->rules('required')
                 ->get('/locations/{location}/product-categories')
                 ->parent('location')->onlyOnForms()
-                 ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
@@ -154,11 +139,12 @@ class ProductOutput extends Resource
                 }),
 
             BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
                 ->onlyOnForms()
-               ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return false;
                     }
@@ -169,7 +155,7 @@ class ProductOutput extends Resource
                 ->rules('required')
                 ->get('/locations/{location}/styles')
                 ->parent('location')->onlyOnForms()
-                 ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
@@ -178,11 +164,13 @@ class ProductOutput extends Resource
 
             BelongsTo::make('Style', 'style', 'App\Nova\Style')
                 ->showCreateRelationButton()
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Style', 'style', 'App\Nova\Style')->searchable()
                 ->onlyOnForms()
-               ->canSee(function ($request) {
+                ->sortable()
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return false;
                     }
@@ -191,22 +179,26 @@ class ProductOutput extends Resource
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
+                ->sortable()
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
+                ->sortable()
                 ->exceptOnForms(),
 
 
 
             Currency::make('rate')
                 ->currency("BDT")
+                ->sortable()
                 ->exceptOnForms()
                 ->hideFromIndex(),
 
             Currency::make('Amount')
                 ->currency("BDT")
+                ->sortable()
                 ->exceptOnForms()
                 ->hideFromIndex(),
 
@@ -218,7 +210,7 @@ class ProductOutput extends Resource
                 ->get('/locations/{location}/floors')
                 ->parent('location')
                 ->onlyOnForms()
-                 ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
@@ -227,7 +219,8 @@ class ProductOutput extends Resource
 
             BelongsTo::make('Floor')
                 ->onlyOnForms()
-               ->canSee(function ($request) {
+                ->sortable()
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return false;
                     }
@@ -236,14 +229,16 @@ class ProductOutput extends Resource
 
 
             BelongsTo::make('Floor')
+                ->sortable()
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
-                    OutputStatus::DRAFT()->getValue()        => 'warning',
-                    OutputStatus::CONFIRMED()->getValue()    => 'info',
-                    OutputStatus::ADD_TO_STOCK()->getValue() => 'success',
-                ])
-                ->label(function(){
+                OutputStatus::DRAFT()->getValue()        => 'warning',
+                OutputStatus::CONFIRMED()->getValue()    => 'info',
+                OutputStatus::ADD_TO_STOCK()->getValue() => 'success',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
         ];
@@ -269,7 +264,7 @@ class ProductOutput extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -299,16 +294,16 @@ class ProductOutput extends Resource
     public function actions(Request $request)
     {
         return [
-            (new DownloadPdf)->canSee(function($request){
+            (new DownloadPdf)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
 
-            (new DownloadExcel)->canSee(function($request){
+            (new DownloadExcel)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
@@ -324,7 +319,7 @@ class ProductOutput extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 
     /**
@@ -336,6 +331,6 @@ class ProductOutput extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 }

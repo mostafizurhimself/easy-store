@@ -105,13 +105,14 @@ class SubSection extends Resource
                 ->updateRules([
                     Rule::unique('sub_sections', 'name')->where('section_id', request()->get('section_id'))->ignore($this->resource->id)
                 ])
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -125,7 +126,7 @@ class SubSection extends Resource
                 ->rules('required')
                 ->parent('location')
                 ->onlyOnForms()
-                 ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
@@ -133,12 +134,13 @@ class SubSection extends Resource
                 }),
 
             BelongsTo::make('Department')
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Department')
                 ->onlyOnForms()
-               ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return false;
                     }
                     return true;
@@ -146,6 +148,7 @@ class SubSection extends Resource
 
 
             BelongsTo::make('Section')
+                ->sortable()
                 ->exceptOnForms(),
 
             AjaxSelect::make('Section', 'section_id')
@@ -159,31 +162,22 @@ class SubSection extends Resource
                 ->get('/locations/{location}/employees')
                 ->parent('location')
                 ->onlyOnForms()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
                 }),
 
             BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Supervisor', 'employee', 'App\Nova\Employee')->searchable()
                 ->onlyOnForms()
                 ->nullable()
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -211,10 +205,10 @@ class SubSection extends Resource
     public function filters(Request $request)
     {
         return [
-            (new LocationFilter)->canSee(function($request){
+            (new LocationFilter)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
-            (new DepartmentFilter)->canSee(function($request){
+            (new DepartmentFilter)->canSee(function ($request) {
                 return $request->user()->locationId;
             })
         ];
@@ -251,7 +245,7 @@ class SubSection extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 
     /**
@@ -263,6 +257,6 @@ class SubSection extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 }

@@ -43,7 +43,7 @@ class MaterialReturnInvoice extends Resource
      */
     public static $permissions = ['can confirm', 'can generate'];
 
-     /**
+    /**
      * The group associated with the resource.
      *
      * @return string
@@ -64,14 +64,14 @@ class MaterialReturnInvoice extends Resource
      */
     public static $title = 'readable_id';
 
-     /**
+    /**
      * Get the search result subtitle for the resource.
      *
      * @return string
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
@@ -81,7 +81,7 @@ class MaterialReturnInvoice extends Resource
      */
     public static function label()
     {
-      return "Return Invoices";
+        return "Return Invoices";
     }
 
     /**
@@ -101,7 +101,7 @@ class MaterialReturnInvoice extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-exchange-alt';
+        return 'fas fa-exchange-alt';
     }
 
 
@@ -135,11 +135,13 @@ class MaterialReturnInvoice extends Resource
             RouterLink::make('Invoice', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -148,6 +150,7 @@ class MaterialReturnInvoice extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -156,31 +159,34 @@ class MaterialReturnInvoice extends Resource
                 }),
 
             BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")
-                    ->searchable()
-                    ->sortable(),
+                ->searchable()
+                ->sortable(),
 
             Currency::make('Total Amount', 'total_return_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
-                    ReturnStatus::DRAFT()->getValue()     => 'warning',
-                    ReturnStatus::CONFIRMED()->getValue() => 'info',
-                    ReturnStatus::BILLED()->getValue()    => 'danger',
-                ])
-                ->label(function(){
+                ReturnStatus::DRAFT()->getValue()     => 'warning',
+                ReturnStatus::CONFIRMED()->getValue() => 'info',
+                ReturnStatus::BILLED()->getValue()    => 'danger',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
 
-            Text::make('Approved By', function(){
-                    return $this->approve ? $this->approve->employee->name : null;
-                })
-                ->canSee(function(){
+            Text::make('Approved By', function () {
+                return $this->approve ? $this->approve->employee->name : null;
+            })
+                ->canSee(function () {
                     return $this->approve()->exists();
                 })
+                ->sortable()
                 ->onlyOnDetail(),
 
             HasMany::make('Return Items', 'returnItems', \App\Nova\MaterialReturnItem::class),
@@ -207,7 +213,7 @@ class MaterialReturnInvoice extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -239,19 +245,19 @@ class MaterialReturnInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmInvoice)->canSee(function($request){
+            (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm material return invoices');
             }),
 
-            (new GenerateInvoice)->canSee(function($request){
+            (new GenerateInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate material return invoices');
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate material return invoices') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate invoice now?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate material return invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate invoice now?')
+                ->onlyOnDetail(),
         ];
     }
 }

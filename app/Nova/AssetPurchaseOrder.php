@@ -22,12 +22,12 @@ use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetPurchaseOrders\Recalculate;
 use App\Nova\Actions\AssetPurchaseOrders\ConfirmPurchase;
 use App\Nova\Actions\AssetPurchaseOrders\GeneratePurchaseOrder;
-use App\Nova\Filters\PurchaseStatusFilter;
 
 class AssetPurchaseOrder extends Resource
 {
@@ -128,10 +128,12 @@ class AssetPurchaseOrder extends Resource
             RouterLink::make('PO Number', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -142,20 +144,25 @@ class AssetPurchaseOrder extends Resource
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
                 ->default(Carbon::now())
                 ->hideWhenUpdating(),
 
-            BelongsTo::make('Supplier')->searchable(),
+            BelongsTo::make('Supplier')
+                ->sortable()
+                ->searchable(),
 
             Currency::make('Purchase Amount', 'total_purchase_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Receive Amount', 'total_receive_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
@@ -165,6 +172,7 @@ class AssetPurchaseOrder extends Resource
                     PurchaseStatus::RECEIVED()->getValue()  => 'success',
                     PurchaseStatus::BILLED()->getValue()    => 'danger',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

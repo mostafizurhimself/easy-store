@@ -56,6 +56,7 @@ class ContactPerson extends Resource
                 ->fillUsing(function($request, $model){
                     $model['name'] = Str::title($request->name);
                 })
+                ->sortable()
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             PhoneNumber::make('Mobile', 'mobile')
@@ -69,10 +70,12 @@ class ContactPerson extends Resource
 
             Email::make('Email', 'email')
                 ->alwaysClickable()
+                ->sortable()
                 ->rules('nullable', 'email'),
 
             Text::make('Designation')
-                ->rules('required', 'max:200'),
+                ->rules('required', 'max:200')
+                ->sortable(),
         ];
     }
 

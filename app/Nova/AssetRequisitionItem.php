@@ -100,12 +100,14 @@ class AssetRequisitionItem extends Resource
     {
         return [
             BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
-                ->onlyOnDetail(),
+                ->onlyOnDetail()
+                ->sortable(),
 
             Text::make('Asset', function(){
                 return $this->asset->name."({$this->asset->code})";
             })
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Select::make('Asset', 'asset_id')
                 ->options(function(){
@@ -139,23 +141,28 @@ class AssetRequisitionItem extends Resource
             Text::make('Requisition Quantity', function(){
                 return $this->requisitionQuantity." ".$this->unitName;
             })
+            ->sortable()
             ->exceptOnForms(),
 
             Text::make('Distribution Quantity', function(){
                 return $this->distributionQuantity." ".$this->unitName;
             })
+            ->sortable()
             ->exceptOnForms(),
 
             Currency::make('Requisition Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Requisition Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Distribution Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
@@ -164,6 +171,7 @@ class AssetRequisitionItem extends Resource
                     RequisitionStatus::PARTIAL()->getValue()   => 'danger',
                     RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

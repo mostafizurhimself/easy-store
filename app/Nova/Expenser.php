@@ -55,7 +55,7 @@ class Expenser extends Resource
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
@@ -65,7 +65,7 @@ class Expenser extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-user-tie';
+        return 'fas fa-user-tie';
     }
 
     /**
@@ -90,30 +90,14 @@ class Expenser extends Resource
                 ->onlyOnIndex(),
 
             BelongsTo::make('Location')
-            ->searchable()
-            ->showOnCreating(function ($request) {
-                if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                    return true;
-                }
-                return false;
-            })->showOnUpdating(function ($request) {
-                if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                    return true;
-                }
-                return false;
-            })
-            ->showOnDetail(function ($request) {
-                if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                    return true;
-                }
-                return false;
-            })
-            ->showOnIndex(function ($request) {
-                if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
-                    return true;
-                }
-                return false;
-            }),
+                ->searchable()
+                ->sortable()
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             Text::make('Name')
                 ->sortable()
@@ -124,7 +108,7 @@ class Expenser extends Resource
                 ->updateRules([
                     Rule::unique('expensers', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ])
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
@@ -151,31 +135,22 @@ class Expenser extends Resource
                 ->get('/locations/{location}/employees')
                 ->parent('location')
                 ->onlyOnForms()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
                 }),
 
             BelongsTo::make('Employee ID', 'employee', 'App\Nova\Employee')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Employee ID', 'employee', 'App\Nova\Employee')->searchable()
                 ->onlyOnForms()
                 ->nullable()
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -185,10 +160,12 @@ class Expenser extends Resource
                 ->currency('BDT')
                 ->rules('required', 'numeric', 'min:0')
                 ->hideWhenUpdating()
+                ->sortable()
                 ->hideFromIndex(),
 
             Currency::make('Balance')
                 ->currency('BDT')
+                ->sortable()
                 ->rules('required', 'numeric', 'min:0')
                 ->exceptOnForms(),
 
@@ -199,10 +176,11 @@ class Expenser extends Resource
                 ->onlyOnForms(),
 
             Badge::make('Status')->map([
-                    ActiveStatus::ACTIVE()->getValue()   => 'success',
-                    ActiveStatus::INACTIVE()->getValue() => 'danger',
-                ])
-                ->label(function(){
+                ActiveStatus::ACTIVE()->getValue()   => 'success',
+                ActiveStatus::INACTIVE()->getValue() => 'danger',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -230,7 +208,7 @@ class Expenser extends Resource
     public function filters(Request $request)
     {
         return [
-           LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
         ];

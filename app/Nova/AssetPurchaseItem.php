@@ -99,14 +99,18 @@ class AssetPurchaseItem extends Resource
             // ID::make()->sortable(),
 
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\AssetPurchaseOrder")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
-            BelongsTo::make('Asset')->searchable(),
+            BelongsTo::make('Asset')
+                ->searchable()
+                ->sortable(),
 
             Date::make('Date', function(){
                 return $this->date;
             })
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Number::make('Quantity', 'purchase_quantity')
                 ->rules('required', 'numeric', 'min:0')
@@ -115,25 +119,30 @@ class AssetPurchaseItem extends Resource
             Text::make('Purchase Quantity', function(){
                 return $this->purchaseQuantity." ".$this->unitName;
             })
-            ->exceptOnForms(),
+            ->exceptOnForms()
+            ->sortable(),
 
             Text::make('Receive Quantity', function(){
                 return $this->receiveQuantity." ".$this->unitName;
             })
-            ->exceptOnForms(),
+            ->exceptOnForms()
+            ->sortable(),
 
 
 
             Currency::make('Purchase Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Purchase Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Receive Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
@@ -143,6 +152,7 @@ class AssetPurchaseItem extends Resource
                     PurchaseStatus::RECEIVED()->getValue()  => 'success',
                     PurchaseStatus::BILLED()->getValue()    => 'danger',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

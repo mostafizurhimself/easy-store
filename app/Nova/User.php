@@ -125,13 +125,15 @@ class User extends Resource
                     Text::make('Name')
                         ->sortable()
                         ->rules('required', 'max:50', 'multi_space')
-                        ->fillUsing(function($request, $model){
+                        ->fillUsing(function ($request, $model) {
                             $model['name'] = Str::title($request->name);
                         })
+                        ->sortable()
                         ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
                     BelongsTo::make('Location')
                         ->searchable()
+                        ->sortable()
                         ->canSee(function ($request) {
                             if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                                 return true;
@@ -166,10 +168,11 @@ class User extends Resource
 
 
                     Badge::make('Status')->map([
-                            ActiveStatus::ACTIVE()->getValue()   => 'success',
-                            ActiveStatus::INACTIVE()->getValue() => 'danger',
-                        ])
-                        ->label(function(){
+                        ActiveStatus::ACTIVE()->getValue()   => 'success',
+                        ActiveStatus::INACTIVE()->getValue() => 'danger',
+                    ])
+                        ->sortable()
+                        ->label(function () {
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
                 ],
@@ -178,19 +181,19 @@ class User extends Resource
                     PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
                         ->withGroups()
                         ->options(Permission::whereIn('id', request()->user()->getAllPermissions()->pluck('id'))
-                        ->get()->sortBy('group_order')->map(function ($permission, $key) {
-                            return [
-                                'group'  => __(Str::title($permission->group)),
-                                'option' => $permission->name,
-                                'label'  => __(Str::title($permission->name)),
-                            ];
-                        })
+                            ->get()->sortBy('group_order')->map(function ($permission, $key) {
+                                return [
+                                    'group'  => __(Str::title($permission->group)),
+                                    'option' => $permission->name,
+                                    'label'  => __(Str::title($permission->name)),
+                                ];
+                            })
                             ->groupBy('group')
                             ->toArray())
-                            ->hideFromIndex()
-                            ->canSee(function ($request) {
-                                return $request->user()->hasPermissionTo('assign permissions') || $request->user()->isSuperAdmin();
-                            }),
+                        ->hideFromIndex()
+                        ->canSee(function ($request) {
+                            return $request->user()->hasPermissionTo('assign permissions') || $request->user()->isSuperAdmin();
+                        }),
                 ],
             ]))->withToolbar(),
 
@@ -222,7 +225,7 @@ class User extends Resource
     public function filters(Request $request)
     {
         return [
-           LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
         ];
@@ -248,10 +251,10 @@ class User extends Resource
     public function actions(Request $request)
     {
         return [
-            (new MakeAsActive)->canSee(function($request){
+            (new MakeAsActive)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can mark as active users');
             }),
-            (new MakeAsInactive)->canSee(function($request){
+            (new MakeAsInactive)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can mark as inactive users');
             }),
         ];
@@ -268,6 +271,6 @@ class User extends Resource
      */
     public static function relatableRoles(NovaRequest $request, $query)
     {
-      return $query->where('name', '!=', \App\Models\Role::SUPER_ADMIN);
+        return $query->where('name', '!=', \App\Models\Role::SUPER_ADMIN);
     }
 }

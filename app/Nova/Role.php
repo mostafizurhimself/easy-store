@@ -152,26 +152,31 @@ class Role extends Resource
 
             ID::make('Id', 'id')
                 ->rules('required')
+                ->sortable()
                 ->hideFromIndex()
                 ->hideFromDetail(),
 
             TextWithSlug::make('Display Name')
                 ->slug('name')
+                ->sortable()
                 ->rules(['required', 'string', 'max:255', 'alpha_space', 'multi_space'])
                 ->creationRules('unique:' . config('permission.table_names.roles'))
                 ->updateRules('unique:' . config('permission.table_names.roles') . ',display_name,{{resourceId}}'),
 
             Text::make('Name')
+                ->sortable()
                 ->onlyOnDetail(),
 
             Slug::make('Name')
                 ->rules(['required', 'string', 'max:255'])
+                ->sortable()
                 ->onlyOnForms(),
 
 
             Select::make(__('Guard Name'), 'guard_name')
                 ->options($guardOptions->toArray())
                 ->rules(['required', Rule::in($guardOptions)])
+                ->sortable()
                 ->readonly(function ($request) {
                     return !$request->user()->isSuperAdmin();
                 }),
@@ -180,21 +185,22 @@ class Role extends Resource
             PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
                 ->withGroups()
                 ->options(Permission::whereIn('id', request()->user()->getAllPermissions()->pluck('id'))
-                ->get()->sortBy('group_order')->map(function ($permission, $key) {
-                    return [
-                        'group'  => __(Str::title($permission->group)),
-                        'option' => $permission->name,
-                        'label'  => __(Str::title($permission->name)),
-                    ];
-                })
+                    ->get()->sortBy('group_order')->map(function ($permission, $key) {
+                        return [
+                            'group'  => __(Str::title($permission->group)),
+                            'option' => $permission->name,
+                            'label'  => __(Str::title($permission->name)),
+                        ];
+                    })
                     ->groupBy('group')->toArray())
-                    ->canSee(function ($request) {
-                        return $request->user()->hasPermissionTo('assign permissions') || $request->user()->isSuperAdmin();
-                    }),
+                ->canSee(function ($request) {
+                    return $request->user()->hasPermissionTo('assign permissions') || $request->user()->isSuperAdmin();
+                }),
 
             Text::make(__('Users'), function () {
                 return count($this->users);
             })
+                ->sortable()
                 ->exceptOnForms(),
 
             MorphToMany::make($userResource::label(), 'users', $userResource),
@@ -257,6 +263,6 @@ class Role extends Resource
      */
     public static function relatableRoles(NovaRequest $request, $query)
     {
-      return $query->where('name' != RoleModel::SUPER_ADMIN);
+        return $query->where('name' != RoleModel::SUPER_ADMIN);
     }
 }

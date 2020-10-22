@@ -16,7 +16,6 @@ use App\Nova\Metrics\TotalAssetPurchase;
 use App\Nova\Metrics\TotalPurchaseOrder;
 use App\Nova\Metrics\TotalFabricPurchase;
 use App\Nova\Metrics\TotalServiceDispatch;
-use GeneaLabs\NovaTelescope\NovaTelescope;
 use App\Nova\Metrics\DailyProductFinishing;
 use App\Nova\Metrics\TotalMaterialPurchase;
 use Coroowicaksono\ChartJsIntegration\LineChart;
@@ -156,10 +155,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             \ChrisWare\NovaBreadcrumbs\NovaBreadcrumbs::make()->withoutStyles(),
 
             \Mirovit\NovaNotifications\NovaNotifications::make(),
-
-            (new NovaTelescope)->canSee(function($request){
-                return $request->user()->isSuperAdmin();
-            }),
         ];
     }
 

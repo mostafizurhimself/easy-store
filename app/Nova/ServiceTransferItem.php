@@ -49,7 +49,7 @@ class ServiceTransferItem extends Resource
      */
     public static function label()
     {
-      return "Transfer Items";
+        return "Transfer Items";
     }
 
     /**
@@ -85,21 +85,27 @@ class ServiceTransferItem extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', \App\Nova\ServiceTransferInvoice::class)
+                ->sortable()
                 ->exceptOnForms(),
 
-            BelongsTo::make('Service', 'service', \App\Nova\Service::class)->searchable(),
+            BelongsTo::make('Service', 'service', \App\Nova\Service::class)
+                ->searchable()
+                ->sortable(),
 
             Number::make('Quantity', 'transfer_quantity')
                 ->rules('required', 'numeric', 'min:1')
+                ->sortable()
                 ->onlyOnForms(),
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Text::make('Transfer Quantity', function () {
                 return $this->transferQuantity . " " . $this->unit->name;
             })
+                ->sortable()
                 ->exceptOnForms(),
 
 
@@ -107,20 +113,24 @@ class ServiceTransferItem extends Resource
             Text::make('Receive Quantity', function () {
                 return $this->receiveQuantity . " " . $this->unit->name;
             })
+                ->sortable()
                 ->exceptOnForms(),
 
             Text::make('Remaining Quantity', function () {
                 return $this->remainingQuantity . " " . $this->unit->name;
             })
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Transfer Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms()
                 ->hideFromIndex(),
 
             Currency::make('Receive Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms()
                 ->hideFromIndex(),
 
@@ -133,6 +143,7 @@ class ServiceTransferItem extends Resource
                 TransferStatus::PARTIAL()->getValue()   => 'danger',
                 TransferStatus::RECEIVED()->getValue()  => 'success',
             ])
+                ->sortable()
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
@@ -199,7 +210,7 @@ class ServiceTransferItem extends Resource
     public static function relatableServices(NovaRequest $request, $query)
     {
         $invoice = \App\Models\ServiceTransferInvoice::find($request->viaResourceId);
-        if(empty($invoice)){
+        if (empty($invoice)) {
             $invoice = $request->findResourceOrFail()->invoice;
         }
         try {
@@ -208,7 +219,7 @@ class ServiceTransferItem extends Resource
             $serviceId = null;
         }
         return $query->where('location_id', $invoice->locationId)
-                    ->whereNotIn('id', $invoice->serviceIds($serviceId));
+            ->whereNotIn('id', $invoice->serviceIds($serviceId));
     }
 
     /**

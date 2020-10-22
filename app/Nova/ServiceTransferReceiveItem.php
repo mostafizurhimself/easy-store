@@ -18,11 +18,11 @@ use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Rules\ServiceReceiveQuantityRule;
+use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Rules\ServiceReceiveQuantityRuleForUpdate;
 use App\Nova\Actions\ServiceTransferReceiveItem\ConfirmReceive;
-use App\Nova\Filters\TransferStatusFilter;
 
 class ServiceTransferReceiveItem extends Resource
 {
@@ -63,7 +63,7 @@ class ServiceTransferReceiveItem extends Resource
      */
     public static function label()
     {
-      return "Receive Items";
+        return "Receive Items";
     }
 
     /**
@@ -92,17 +92,21 @@ class ServiceTransferReceiveItem extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', \App\Nova\ServiceTransferInvoice::class)
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Transfer No', 'transfer', \App\Nova\ServiceTransferItem::class)
-                ->onlyOnDetail(),
+                ->onlyOnDetail()
+                ->sortable(),
 
             BelongsTo::make('Service')
+                ->sortable()
                 ->exceptOnForms(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -114,30 +118,33 @@ class ServiceTransferReceiveItem extends Resource
                 ->creationRules(new ServiceReceiveQuantityRule($request->viaResource, $request->viaResourceId))
                 ->updateRules(new ServiceReceiveQuantityRuleForUpdate(\App\Nova\ServiceTransferItem::uriKey(), $this->resource->dispatchId, $this->resource->quantity))
                 ->onlyOnForms()
-                ->default(function($request){
-                    if($request->viaResource == \App\Nova\ServiceTransferItem::uriKey() && !empty($request->viaResourceId)){
+                ->default(function ($request) {
+                    if ($request->viaResource == \App\Nova\ServiceTransferItem::uriKey() && !empty($request->viaResourceId)) {
                         return \App\Models\ServiceTransferItem::find($request->viaResourceId)->remainingQuantity;
                     }
                 }),
 
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
+                ->sortable()
                 ->exceptOnForms(),
 
 
 
             Currency::make('Rate')
                 ->currency('BDT')
-                ->default(function($request){
-                    if($request->viaResource == \App\Nova\ServiceTransferItem::uriKey() && !empty($request->viaResourceId)){
+                ->sortable()
+                ->default(function ($request) {
+                    if ($request->viaResource == \App\Nova\ServiceTransferItem::uriKey() && !empty($request->viaResourceId)) {
                         return \App\Models\ServiceTransferItem::find($request->viaResourceId)->rate;
                     }
                 }),
 
             Currency::make('Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Files::make('Attachments', 'receive-service-attachments')
@@ -147,12 +154,13 @@ class ServiceTransferReceiveItem extends Resource
                 ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
-                    TransferStatus::DRAFT()->getValue()     => 'warning',
-                    TransferStatus::CONFIRMED()->getValue() => 'info',
-                    TransferStatus::PARTIAL()->getValue()   => 'danger',
-                    TransferStatus::RECEIVED()->getValue()  => 'success',
-                ])
-                ->label(function(){
+                TransferStatus::DRAFT()->getValue()     => 'warning',
+                TransferStatus::CONFIRMED()->getValue() => 'info',
+                TransferStatus::PARTIAL()->getValue()   => 'danger',
+                TransferStatus::RECEIVED()->getValue()  => 'success',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -207,7 +215,7 @@ class ServiceTransferReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmReceive)->canSee(function($request){
+            (new ConfirmReceive)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm service transfer receive items');
             }),
         ];
@@ -222,7 +230,7 @@ class ServiceTransferReceiveItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -234,10 +242,10 @@ class ServiceTransferReceiveItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }

@@ -63,7 +63,7 @@ class Employee extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-user-tag';
+        return 'fas fa-user-tag';
     }
 
     /**
@@ -71,7 +71,8 @@ class Employee extends Resource
      *
      * @var string
      */
-    public function title(){
+    public function title()
+    {
         return "{$this->name} ({$this->readableId})";
     }
 
@@ -82,8 +83,8 @@ class Employee extends Resource
      */
     public function subtitle()
     {
-        $subtitle = "Designation: ".$this->designation->name;
-        $subtitle .= "; Location: ".$this->location->name;
+        $subtitle = "Designation: " . $this->designation->name;
+        $subtitle .= "; Location: " . $this->location->name;
         return $subtitle;
     }
 
@@ -120,13 +121,16 @@ class Employee extends Resource
                     RouterLink::make('Employee Id', 'id')
                         ->withMeta([
                             'label' => $this->readableId,
-                        ]),
+                        ])
+                        ->sortable(),
 
                     Text::make('First Name')
-                        ->rules('required', 'string', 'max:50'),
+                        ->rules('required', 'string', 'max:50')
+                        ->sortable(),
 
                     Text::make('Last Name')
-                        ->rules('required', 'string', 'max:50'),
+                        ->rules('required', 'string', 'max:50')
+                        ->sortable(),
 
                     Email::make('Personal Email')
                         ->alwaysClickable()
@@ -172,7 +176,7 @@ class Employee extends Resource
                         ->onlyOnForms(),
 
                     Text::make('Gender')
-                        ->displayUsing(function(){
+                        ->displayUsing(function () {
                             return Str::title($this->gender);
                         })
                         ->onlyOnDetail(),
@@ -183,7 +187,7 @@ class Employee extends Resource
                         ->onlyOnForms(),
 
                     Text::make('Marital Status')
-                        ->displayUsing(function(){
+                        ->displayUsing(function () {
                             return Str::title($this->marital_status);
                         })
                         ->onlyOnDetail(),
@@ -208,11 +212,11 @@ class Employee extends Resource
                     BelongsTo::make('Location')
                         ->searchable()
                         ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
                     BelongsTo::make('Department')
                         ->onlyOnDetail(),
@@ -221,13 +225,8 @@ class Employee extends Resource
                         ->get('/locations/{location}/departments')
                         ->parent('location')
                         ->onlyOnForms()
-                        ->showOnCreating(function ($request) {
-                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                                return true;
-                            }
-                            return false;
-                        })->showOnUpdating(function ($request) {
-                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                                 return true;
                             }
                             return false;
@@ -236,13 +235,8 @@ class Employee extends Resource
                     BelongsTo::make('Department')
                         ->nullable()
                         ->onlyOnForms()
-                        ->hideWhenCreating(function ($request) {
-                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                                return true;
-                            }
-                            return false;
-                        })->hideWhenUpdating(function ($request) {
-                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        ->canSee(function ($request) {
+                            if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                                 return true;
                             }
                             return false;
@@ -261,32 +255,23 @@ class Employee extends Resource
                         ->get('/locations/{location}/designations')
                         ->parent('location')
                         ->onlyOnForms()
-                        ->showOnCreating(function ($request) {
-                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                                return true;
-                            }
-                            return false;
-                        })->showOnUpdating(function ($request) {
-                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                                 return true;
                             }
                             return false;
                         }),
 
                     BelongsTo::make('Designation')
-                        ->exceptOnForms(),
+                        ->exceptOnForms()
+                        ->sortable(),
 
                     BelongsTo::make('Designation')
                         ->searchable()
                         ->onlyOnForms()
                         ->nullable()
-                        ->hideWhenCreating(function ($request) {
-                            if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                                return true;
-                            }
-                            return false;
-                        })->hideWhenUpdating(function ($request) {
-                            if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
+                        ->canSee(function ($request) {
+                            if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                                 return true;
                             }
                             return false;
@@ -294,6 +279,7 @@ class Employee extends Resource
 
                     Date::make('Joining Date')
                         ->rules('required')
+                        ->sortable()
                         ->hideFromIndex(),
 
                     Date::make('Resign Date')
@@ -305,12 +291,13 @@ class Employee extends Resource
                         ->hideFromIndex(),
 
                     Badge::make('Status')->map([
-                            EmployeeStatus::ACTIVE()->getValue()   => 'success',
-                            EmployeeStatus::VACATION()->getValue() => 'warning',
-                            EmployeeStatus::INACTIVE()->getValue() => 'danger',
-                            EmployeeStatus::RESIGNED()->getValue() => 'danger',
-                        ])
-                        ->label(function(){
+                        EmployeeStatus::ACTIVE()->getValue()   => 'success',
+                        EmployeeStatus::VACATION()->getValue() => 'warning',
+                        EmployeeStatus::INACTIVE()->getValue() => 'danger',
+                        EmployeeStatus::RESIGNED()->getValue() => 'danger',
+                    ])
+                    ->sortable()
+                        ->label(function () {
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
                 ]
@@ -339,7 +326,7 @@ class Employee extends Resource
     public function filters(Request $request)
     {
         return [
-            (new LocationFilter)->canSee(function($request){
+            (new LocationFilter)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
         ];

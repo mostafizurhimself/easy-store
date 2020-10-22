@@ -102,14 +102,18 @@ class FabricPurchaseItem extends Resource
             // ID::make()->sortable(),
 
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\FabricPurchaseOrder")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
-            BelongsTo::make('Fabric')->searchable(),
+            BelongsTo::make('Fabric')
+                ->searchable()
+                ->sortable(),
 
             Date::make('Date', function(){
                 return $this->date;
             })
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
 
             Number::make('Quantity', 'purchase_quantity')
@@ -119,6 +123,7 @@ class FabricPurchaseItem extends Resource
             Text::make('Purchase Quantity', function(){
                 return $this->purchaseQuantity." ".$this->unitName;
             })
+            ->sortable()
             ->exceptOnForms(),
 
 
@@ -126,18 +131,22 @@ class FabricPurchaseItem extends Resource
             Text::make('Receive Quantity', function(){
                 return $this->receiveQuantity." ".$this->unitName;
             })
+            ->sortable()
             ->exceptOnForms(),
 
             Currency::make('Purchase Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Purchase Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Receive Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
@@ -147,6 +156,7 @@ class FabricPurchaseItem extends Resource
                     PurchaseStatus::RECEIVED()->getValue()  => 'success',
                     PurchaseStatus::BILLED()->getValue()    => 'danger',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

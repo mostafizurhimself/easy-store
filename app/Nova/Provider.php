@@ -62,7 +62,7 @@ class Provider extends Resource
      */
     public function subtitle()
     {
-      return "Mobile: $this->mobile";
+        return "Mobile: $this->mobile";
     }
 
     /**
@@ -72,7 +72,7 @@ class Provider extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-user-secret';
+        return 'fas fa-user-secret';
     }
 
     /**
@@ -96,15 +96,17 @@ class Provider extends Resource
             RouterLink::make('Provider Id', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Text::make('Name')
                 ->rules('required', 'max:45', 'multi_space')
                 ->creationRules('unique:providers,name')
                 ->updateRules('unique:providers,name,{{resourceId}}')
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
+                ->sortable()
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             PhoneNumber::make('Mobile')
@@ -119,15 +121,18 @@ class Provider extends Resource
 
             Email::make('Email')
                 ->alwaysClickable()
+                ->sortable()
                 ->rules('nullable', 'email'),
 
             Text::make('Fax')
                 ->nullable()
+                ->sortable()
                 ->rules('max:200')
                 ->hideFromIndex(),
 
             Text::make('Vat Number')
                 ->nullable()
+                ->sortable()
                 ->rules('max:200')
                 ->hideFromIndex(),
 
@@ -135,10 +140,12 @@ class Provider extends Resource
                 ->currency('BDT')
                 ->rules('required', 'numeric', 'min:0')
                 ->hideWhenUpdating()
+                ->sortable()
                 ->hideFromIndex(),
 
             Currency::make('Balance')
                 ->currency('BDT')
+                ->sortable()
                 ->rules('required', 'numeric', 'min:0')
                 ->exceptOnForms(),
 
@@ -150,10 +157,11 @@ class Provider extends Resource
 
 
             Badge::make('Status')->map([
-                    ActiveStatus::ACTIVE()->getValue()   => 'success',
-                    ActiveStatus::INACTIVE()->getValue() => 'danger',
-                ])
-                ->label(function(){
+                ActiveStatus::ACTIVE()->getValue()   => 'success',
+                ActiveStatus::INACTIVE()->getValue() => 'danger',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -203,7 +211,7 @@ class Provider extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UpdateOpeningBalance)->canSee(function($request){
+            (new UpdateOpeningBalance)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can update opening balance of providers');
             })->onlyOnDetail(),
         ];

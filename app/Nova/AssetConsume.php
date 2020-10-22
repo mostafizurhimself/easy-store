@@ -65,23 +65,24 @@ class AssetConsume extends Resource
             Text::make('Consume Id', 'readable_id'),
 
             BelongsTo::make('Asset')
+            ->sortable()
             ->searchable(),
 
             Text::make('Quantity', function(){
                 return $this->quantity ." ".$this->unitName;
-            }),
+            })->sortable(),
 
-            Currency::make('Rate')
+            Currency::make('Rate')->sortable()
                     ->currency("BDT"),
 
-            Currency::make('Amount')
+            Currency::make('Amount')->sortable()
                     ->currency("BDT"),
 
             Text::make('Consumer', function(){
                 return $this->user->name;
-            }),
+            })->sortable(),
 
-            DateTime::make('Consumed At', 'created_at')
+            DateTime::make('Consumed At', 'created_at')->sortable(),
 
 
         ];

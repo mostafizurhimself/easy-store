@@ -106,6 +106,7 @@ class ExpenseCategory extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;

@@ -115,11 +115,13 @@ class AssetRequisition extends Resource
             RouterLink::make('Requisition', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -127,7 +129,8 @@ class AssetRequisition extends Resource
                 ->hideWhenUpdating(),
 
             BelongsTo::make('Location')
-            ->searchable()
+                ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -137,10 +140,12 @@ class AssetRequisition extends Resource
 
             Currency::make('Requisition Amount', 'total_requisition_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Distribution Amount', 'total_distribution_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->onlyOnDetail(),
 
             Trix::make('Note')
@@ -151,7 +156,8 @@ class AssetRequisition extends Resource
                 ->hideFromIndex(),
 
             Date::make('Deadline')
-                ->rules('required'),
+                ->rules('required')
+                ->sortable(),
 
             Select::make('Receiver', 'receiver_id')
                 ->options(function(){
@@ -162,7 +168,7 @@ class AssetRequisition extends Resource
 
             Text::make('Receiver', function(){
                 return $this->receiver->name;
-            }),
+            })->sortable(),
 
             Badge::make('Status')->map([
                     RequisitionStatus::DRAFT()->getValue()     => 'warning',
@@ -170,6 +176,7 @@ class AssetRequisition extends Resource
                     RequisitionStatus::PARTIAL()->getValue()   => 'danger',
                     RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

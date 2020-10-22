@@ -71,7 +71,7 @@ class ProductRequisitionItem extends Resource
      */
     public static function label()
     {
-      return "Requisition Items";
+        return "Requisition Items";
     }
 
     /**
@@ -102,20 +102,22 @@ class ProductRequisitionItem extends Resource
     {
         return [
             BelongsTo::make('Requisition', 'requisition', \App\Nova\ProductRequisition::class)
-                ->onlyOnDetail(),
+                ->onlyOnDetail()
+                ->sortable(),
 
-            Text::make('Product', function(){
-                return $this->product->name."({$this->product->code})";
+            Text::make('Product', function () {
+                return $this->product->name . "({$this->product->code})";
             })
+                ->sortable()
                 ->exceptOnForms(),
 
             Select::make('product', 'product_id')
-                ->options(function(){
+                ->options(function () {
                     //Get the requisition from request on create
                     $requisition = \App\Models\ProductRequisition::find(request()->viaResourceId);
 
                     //Get the requisition without request/after create
-                    if(empty($requisition)){
+                    if (empty($requisition)) {
                         $requisition = \App\Models\ProductRequisition::find($this->resource->requisitionId);
                     }
 
@@ -125,39 +127,44 @@ class ProductRequisitionItem extends Resource
                         $productId = null;
                     }
                     return \App\Models\Product::where('location_id', $requisition->receiverId)
-                        ->whereNotIn('id', $requisition->productIds($productId))->get()->map(function($product){
-                            return [ 'value' => $product->id, 'label' => $product->name."({$product->code})" ];
+                        ->whereNotIn('id', $requisition->productIds($productId))->get()->map(function ($product) {
+                            return ['value' => $product->id, 'label' => $product->name . "({$product->code})"];
                         });
                 })
                 ->rules('required')
+                ->sortable()
                 ->onlyOnForms(),
 
             Number::make('Quantity', 'requisition_quantity')
                 ->rules('required', 'numeric', 'min:0')
                 ->onlyOnForms(),
 
-            Text::make('Requisition Quantity', function(){
-                return $this->requisitionQuantity." ".$this->unitName;
+            Text::make('Requisition Quantity', function () {
+                return $this->requisitionQuantity . " " . $this->unitName;
             })
-            ->exceptOnForms(),
+                ->sortable()
+                ->exceptOnForms(),
 
 
 
             Currency::make('Requisition Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Requisition Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
-                    RequisitionStatus::DRAFT()->getValue()     => 'warning',
-                    RequisitionStatus::CONFIRMED()->getValue() => 'info',
-                    RequisitionStatus::PARTIAL()->getValue()   => 'danger',
-                    RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
-                ])
-                ->label(function(){
+                RequisitionStatus::DRAFT()->getValue()     => 'warning',
+                RequisitionStatus::CONFIRMED()->getValue() => 'info',
+                RequisitionStatus::PARTIAL()->getValue()   => 'danger',
+                RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
         ];
@@ -218,7 +225,7 @@ class ProductRequisitionItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -230,10 +237,10 @@ class ProductRequisitionItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }

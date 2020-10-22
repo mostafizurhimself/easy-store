@@ -135,11 +135,13 @@ class FabricReturnInvoice extends Resource
             RouterLink::make('Invoice', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -148,6 +150,7 @@ class FabricReturnInvoice extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -161,6 +164,7 @@ class FabricReturnInvoice extends Resource
 
             Currency::make('Total Amount', 'total_return_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
@@ -168,6 +172,7 @@ class FabricReturnInvoice extends Resource
                     ReturnStatus::CONFIRMED()->getValue() => 'info',
                     ReturnStatus::BILLED()->getValue()    => 'danger',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
@@ -178,6 +183,7 @@ class FabricReturnInvoice extends Resource
             Text::make('Approved By', function(){
                     return $this->approve ? $this->approve->employee->name : null;
                 })
+                ->sortable()
                 ->canSee(function(){
                     return $this->approve()->exists();
                 })

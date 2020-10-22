@@ -68,7 +68,7 @@ class FinishingInvoice extends Resource
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
@@ -78,7 +78,7 @@ class FinishingInvoice extends Resource
      */
     public static function label()
     {
-      return "Invoices";
+        return "Invoices";
     }
 
     /**
@@ -112,14 +112,17 @@ class FinishingInvoice extends Resource
             RouterLink::make('Invoice', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
+                ->sortable()
                 ->default(Carbon::now()),
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -128,10 +131,12 @@ class FinishingInvoice extends Resource
                 }),
 
             Number::make('Total Quantity')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Currency::make('Total Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Trix::make('Note')
@@ -142,7 +147,7 @@ class FinishingInvoice extends Resource
                 ->rules('required')
                 ->get('/locations/{location}/floors')
                 ->parent('location')->onlyOnForms()
-                 ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
@@ -150,11 +155,13 @@ class FinishingInvoice extends Resource
                 }),
 
             BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Floor', 'floor', 'App\Nova\Floor')
                 ->onlyOnForms()
-               ->canSee(function ($request) {
+                ->sortable()
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return false;
                     }
@@ -165,7 +172,7 @@ class FinishingInvoice extends Resource
                 ->get('/floors/{floor_id}/sections')
                 ->parent('floor_id')
                 ->onlyOnForms()
-                 ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
@@ -176,7 +183,7 @@ class FinishingInvoice extends Resource
                 ->get('/floors/{floor}/sections')
                 ->parent('floor')
                 ->onlyOnForms()
-               ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return false;
                     }
@@ -184,11 +191,12 @@ class FinishingInvoice extends Resource
                 }),
 
             Badge::make('Status')->map([
-                    FinishingStatus::DRAFT()->getValue()     => 'warning',
-                    FinishingStatus::CONFIRMED()->getValue() => 'info',
-                    FinishingStatus::ADDED()->getValue()     => 'success',
-                ])
-                ->label(function(){
+                FinishingStatus::DRAFT()->getValue()     => 'warning',
+                FinishingStatus::CONFIRMED()->getValue() => 'info',
+                FinishingStatus::ADDED()->getValue()     => 'success',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -217,7 +225,7 @@ class FinishingInvoice extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -247,21 +255,20 @@ class FinishingInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmFinishing)->canSee(function($request){
+            (new ConfirmFinishing)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm finishing invoices') || $request->user()->isSuperAdmin();
             })
-            ->confirmButtonText('Confirm')
-            ->confirmText("Are you sure want to confirm?"),
+                ->confirmButtonText('Confirm')
+                ->confirmText("Are you sure want to confirm?"),
 
-            (new GenerateInvoice)->canSee(function($request){
+            (new GenerateInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate finishing invoices') || $request->user()->isSuperAdmin();
             })
-            ->withoutConfirmation()
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate finishing invoices') || $request->user()->isSuperAdmin();
-            })
-            ->onlyOnDetail(),
+                ->withoutConfirmation()
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate finishing invoices') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail(),
         ];
-
     }
 }

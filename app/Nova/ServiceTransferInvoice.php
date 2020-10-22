@@ -20,11 +20,11 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceTransferInvoice\GenerateInvoice;
 use App\Nova\Actions\ServiceTransferInvoices\ConfirmInvoice;
-use App\Nova\Filters\TransferStatusFilter;
 use App\Nova\Lenses\ServiceTransferInvoice\TransferInvoices;
 
 class ServiceTransferInvoice extends Resource
@@ -107,9 +107,9 @@ class ServiceTransferInvoice extends Resource
 
     /**
      * Get the navigation label of the resource
-    *
-    * @return string
-    */
+     *
+     * @return string
+     */
     public static function navigationLabel()
     {
         return "Transfers";
@@ -138,11 +138,13 @@ class ServiceTransferInvoice extends Resource
             RouterLink::make('Invoice', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -155,29 +157,33 @@ class ServiceTransferInvoice extends Resource
                         return true;
                     }
                     return false;
-                }),
+                })
+                ->sortable(),
 
             Trix::make('Description')
                 ->rules('nullable', 'max:500'),
 
             Currency::make('Total Transfer Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Total Receive Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Select::make('Receiver', 'receiver_id')
-                ->options(function(){
+                ->options(function () {
                     return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
                 })
                 ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
                 ->onlyOnForms(),
 
-            Text::make('Receiver', function(){
+            Text::make('Receiver', function () {
                 return $this->receiver->name;
-            }),
+            })
+                ->sortable(),
 
             Badge::make('Status')->map([
                 TransferStatus::DRAFT()->getValue()     => 'warning',
@@ -185,6 +191,7 @@ class ServiceTransferInvoice extends Resource
                 TransferStatus::PARTIAL()->getValue()   => 'danger',
                 TransferStatus::RECEIVED()->getValue()  => 'success',
             ])
+                ->sortable()
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
@@ -215,7 +222,7 @@ class ServiceTransferInvoice extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -247,21 +254,21 @@ class ServiceTransferInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmInvoice)->canSee(function($request){
+            (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm service transfer invoices');
             })
-            ->confirmButtonText('Confirm')
-            ->confirmText('Are you sure want to confirm?'),
+                ->confirmButtonText('Confirm')
+                ->confirmText('Are you sure want to confirm?'),
 
-            (new GenerateInvoice)->canSee(function($request){
+            (new GenerateInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate service invoices');
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate service invoices') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate invoice now?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate service invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate invoice now?')
+                ->onlyOnDetail(),
         ];
     }
 }

@@ -102,33 +102,19 @@ class Balance extends Resource
             RouterLink::make('Payment Id', 'id')
             ->withMeta([
                 'label' => $this->readableId,
-            ]),
+            ])
+            ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
+                ->sortable()
                 ->default(Carbon::now()),
 
             BelongsTo::make('Location')
             ->searchable()
-            ->showOnCreating(function ($request) {
-                if ($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()) {
-                    return true;
-                }
-                return false;
-            })->showOnUpdating(function ($request) {
-                if ($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()) {
-                    return true;
-                }
-                return false;
-            })
-            ->showOnDetail(function ($request) {
+            ->sortable()
+            ->canSee(function ($request) {
                 if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                    return true;
-                }
-                return false;
-            })
-            ->showOnIndex(function ($request) {
-                if ($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()) {
                     return true;
                 }
                 return false;
@@ -139,31 +125,22 @@ class Balance extends Resource
             ->get('/locations/{location}/expensers')
             ->parent('location')
             ->onlyOnForms()
-            ->showOnCreating(function($request){
-                if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                    return true;
-                }
-                return false;
-            })->showOnUpdating(function($request){
-                if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+            ->canSee(function ($request) {
+                if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                     return true;
                 }
                 return false;
             }),
 
         BelongsTo::make('Expenser', 'expenser', 'App\Nova\Expenser')
-            ->exceptOnForms(),
+            ->exceptOnForms()
+            ->sortable(),
 
         BelongsTo::make('Expenser', 'expenser', 'App\Nova\Expenser')
         ->searchable()
             ->onlyOnForms()
-            ->hideWhenCreating(function($request){
-                if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                    return true;
-                }
-                return false;
-            })->hideWhenUpdating(function($request){
-                if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+            ->canSee(function ($request) {
+                if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                     return true;
                 }
                 return false;
@@ -174,10 +151,12 @@ class Balance extends Resource
 
         Text::make('Reference')
             ->rules('nullable', 'string', 'max:200')
-            ->hideFromIndex(),
+            ->hideFromIndex()
+            ->sortable(),
 
         Currency::make('Amount')
             ->currency('BDT')
+            ->sortable()
             ->rules('required', 'numeric', 'min:0'),
 
         Select::make('Payment Method', 'method')
@@ -188,7 +167,8 @@ class Balance extends Resource
         Text::make('Payment Method', function(){
             return Str::title(Str::of($this->method)->replace('_', " "));
         })
-            ->exceptOnForms(),
+            ->exceptOnForms()
+            ->sortable(),
 
         Files::make('Attachments', 'balance-attachments')
             ->singleMediaRules('max:5000') // max 5000kb
@@ -207,6 +187,7 @@ class Balance extends Resource
                 BalanceStatus::DRAFT()->getValue()   => 'warning',
                 BalanceStatus::CONFIRMED()->getValue() => 'info',
             ])
+            ->sortable()
             ->label(function(){
                 return Str::title(Str::of($this->status)->replace('_', " "));
             }),

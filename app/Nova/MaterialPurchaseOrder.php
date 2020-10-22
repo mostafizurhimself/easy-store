@@ -22,12 +22,12 @@ use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialPurchaseOrders\Recalculate;
 use App\Nova\Actions\MaterialPurchaseOrders\ConfirmPurchase;
 use App\Nova\Actions\MaterialPurchaseOrders\GeneratePurchaseOrder;
-use App\Nova\Filters\PurchaseStatusFilter;
 
 class MaterialPurchaseOrder extends Resource
 {
@@ -59,7 +59,7 @@ class MaterialPurchaseOrder extends Resource
      */
     public static $group = '<span class="hidden">05</span>Material Section';
 
-        /**
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
@@ -73,7 +73,7 @@ class MaterialPurchaseOrder extends Resource
      */
     public function subtitle()
     {
-      return "Supplier: {$this->supplier->name}";
+        return "Supplier: {$this->supplier->name}";
     }
 
     /**
@@ -83,7 +83,7 @@ class MaterialPurchaseOrder extends Resource
      */
     public static function label()
     {
-      return "Purchases";
+        return "Purchases";
     }
 
     /**
@@ -93,7 +93,7 @@ class MaterialPurchaseOrder extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-file-invoice';
+        return 'fas fa-file-invoice';
     }
 
     /**
@@ -128,10 +128,12 @@ class MaterialPurchaseOrder extends Resource
             RouterLink::make('PO Number', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -142,42 +144,49 @@ class MaterialPurchaseOrder extends Resource
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
                 ->default(Carbon::now())
                 ->hideWhenUpdating(),
 
-            BelongsTo::make('Supplier', 'supplier', 'App\Nova\Supplier')->searchable(),
+            BelongsTo::make('Supplier', 'supplier', 'App\Nova\Supplier')
+                ->sortable()
+                ->searchable(),
 
             Currency::make('Purchase Amount', 'total_purchase_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Receive Amount', 'total_receive_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
-                    PurchaseStatus::DRAFT()->getValue()     => 'warning',
-                    PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'danger',
-                    PurchaseStatus::RECEIVED()->getValue()  => 'success',
-                    PurchaseStatus::BILLED()->getValue()    => 'danger',
-                ])
-                ->label(function(){
+                PurchaseStatus::DRAFT()->getValue()     => 'warning',
+                PurchaseStatus::CONFIRMED()->getValue() => 'info',
+                PurchaseStatus::PARTIAL()->getValue()   => 'danger',
+                PurchaseStatus::RECEIVED()->getValue()  => 'success',
+                PurchaseStatus::BILLED()->getValue()    => 'danger',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
 
-            Text::make('Approved By', function(){
-                    return $this->approve ? $this->approve->employee->name : null;
-                })
-                ->canSee(function(){
+            Text::make('Approved By', function () {
+                return $this->approve ? $this->approve->employee->name : null;
+            })
+                ->canSee(function () {
                     return $this->approve()->exists();
                 })
+                ->sortable()
                 ->onlyOnDetail(),
 
             HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\MaterialPurchaseItem'),
@@ -206,7 +215,7 @@ class MaterialPurchaseOrder extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -239,25 +248,25 @@ class MaterialPurchaseOrder extends Resource
     public function actions(Request $request)
     {
         return [
-            (new Recalculate)->canSee(function($request){
+            (new Recalculate)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin();
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return $request->user()->isSuperAdmin();
             }),
 
-            (new ConfirmPurchase)->canSee(function($request){
+            (new ConfirmPurchase)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm material purchase orders');
             }),
 
-            (new GeneratePurchaseOrder)->canSee(function($request){
+            (new GeneratePurchaseOrder)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate material purchase orders');
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate material purchase orders') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate purchase order?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate material purchase orders') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate purchase order?')
+                ->onlyOnDetail(),
         ];
     }
 }

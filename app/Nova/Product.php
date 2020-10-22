@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use App\Enums\ActiveStatus;
-use App\Models\ProductCategory;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -11,6 +10,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use App\Models\ProductCategory;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
@@ -108,7 +108,7 @@ class Product extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-box';
+        return 'fas fa-box';
     }
 
     /**
@@ -124,6 +124,7 @@ class Product extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -135,20 +136,15 @@ class Product extends Resource
                 ->hideFromIndex()
                 ->sortable()
                 ->rules('required', 'string', 'max:100', 'multi_space')
-                // ->creationRules([
-                //     Rule::unique('products', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
-                // ])
-                // ->updateRules([
-                //     Rule::unique('products', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
-                // ])
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             TextWrap::make('Name')
                 ->onlyOnIndex()
-                ->wrapMethod('length',30),
+                ->sortable()
+                ->wrapMethod('length', 30),
 
             TextUppercase::make('Code')
                 ->sortable()
@@ -171,15 +167,18 @@ class Product extends Resource
 
             Currency::make('Cost Price')
                 ->currency('BDT')
+                ->sortable()
                 ->rules('required', 'numeric', 'min:0'),
 
             Currency::make('Sale Price')
                 ->currency('BDT')
+                ->sortable()
                 ->rules('required', 'numeric', 'min:0'),
 
             Number::make('Vat')
                 ->rules('numeric', 'min:0')
                 ->hideFromIndex()
+                ->sortable()
                 ->default(0.00),
 
             Number::make('Opening Quantity')
@@ -192,35 +191,39 @@ class Product extends Resource
                 ->displayUsing(function () {
                     return $this->openingQuantity . " " . $this->unit->name;
                 })
+                ->sortable()
                 ->onlyOnDetail(),
 
             Number::make('Alert Quantity')
                 ->onlyOnForms()
                 ->rules('required', 'numeric', 'min:0')
+                ->sortable()
                 ->hideFromIndex(),
 
             Text::make('Alert Quantity')
                 ->displayUsing(function () {
                     return $this->alertQuantity . " " . $this->unit->name;
                 })
+                ->sortable()
                 ->onlyOnDetail(),
 
             Text::make('Quantity')
                 ->displayUsing(function () {
                     return $this->quantity . " " . $this->unit->name;
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Unit')
                 ->hideFromIndex()
-                // ->hideWhenUpdating()
+                ->hideWhenUpdating()
                 ->showCreateRelationButton(),
 
             AjaxSelect::make('Category', 'category_id')
                 ->rules('required')
                 ->get('/locations/{location}/product-categories')
                 ->parent('location')->onlyOnForms()
-                 ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
@@ -229,11 +232,13 @@ class Product extends Resource
 
             BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
                 ->showCreateRelationButton()
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
                 ->onlyOnForms()
-               ->canSee(function ($request) {
+                ->sortable()
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return false;
                     }
@@ -250,6 +255,7 @@ class Product extends Resource
                 ActiveStatus::ACTIVE()->getValue()   => 'success',
                 ActiveStatus::INACTIVE()->getValue() => 'danger',
             ])
+                ->sortable()
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
@@ -276,7 +282,7 @@ class Product extends Resource
     public function filters(Request $request)
     {
         return [
-            LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -285,11 +291,11 @@ class Product extends Resource
                 ->withOptions(function (Request $request, $filters) {
                     return ProductCategory::where('location_id', $filters['location_id'])
                         ->pluck('name', 'id');
-                })->canSee(function($request){
+                })->canSee(function ($request) {
                     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
                 }),
 
-            (new CategoryFilter)->canSee(function($request){
+            (new CategoryFilter)->canSee(function ($request) {
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -317,7 +323,7 @@ class Product extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UpdateOpeningQuantity)->canSee(function($request){
+            (new UpdateOpeningQuantity)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can update opening quantity of products');
             })->onlyOnDetail(),
         ];

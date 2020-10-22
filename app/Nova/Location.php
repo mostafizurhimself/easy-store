@@ -45,7 +45,7 @@ class Location extends Resource
      */
     public function subtitle()
     {
-      return "ID: {$this->readableId}";
+        return "ID: {$this->readableId}";
     }
 
     /**
@@ -78,7 +78,7 @@ class Location extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-map-marked-alt';
+        return 'fas fa-map-marked-alt';
     }
 
     /**
@@ -94,15 +94,17 @@ class Location extends Resource
             RouterLink::make('Location Id', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Text::make('Name')
                 ->rules('required', 'max:45', 'multi_space')
                 ->creationRules('unique:locations,name')
                 ->updateRules('unique:locations,name,{{resourceId}}')
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
+                ->sortable()
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             Select::make('Type')
@@ -111,9 +113,10 @@ class Location extends Resource
                 ->onlyOnForms(),
 
             Text::make('Type')
-                ->displayUsing(function(){
+                ->displayUsing(function () {
                     return Str::title(Str::of($this->type)->replace('_', " "));
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
             PhoneNumber::make('Mobile')
@@ -130,6 +133,7 @@ class Location extends Resource
                 ->alwaysClickable()
                 ->hideFromIndex()
                 ->rules('nullable', 'email')
+                ->sortable()
                 ->creationRules('unique:locations,email')
                 ->updateRules('unique:locations,email,{{resourceId}}'),
 
@@ -140,11 +144,12 @@ class Location extends Resource
                 ->onlyOnForms(),
 
             Badge::make('Status')->map([
-                    LocationStatus::ACTIVE()->getValue()             => 'success',
-                    LocationStatus::UNDER_CONSTRUCTION()->getValue() => 'warning',
-                    LocationStatus::ABANDONED()->getValue()          => 'danger',
-                ])
-                ->label(function(){
+                LocationStatus::ACTIVE()->getValue()             => 'success',
+                LocationStatus::UNDER_CONSTRUCTION()->getValue() => 'warning',
+                LocationStatus::ABANDONED()->getValue()          => 'danger',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 

@@ -127,6 +127,7 @@ class Fabric extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -151,6 +152,7 @@ class Fabric extends Resource
 
             TextWrap::make('Name')
                 ->onlyOnIndex()
+                ->sortable()
                 ->wrapMethod('length',30),
 
             TextUppercase::make('Code')
@@ -174,6 +176,7 @@ class Fabric extends Resource
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->rules('required', 'numeric', 'min:0'),
 
             Number::make('Opening Quantity')
@@ -186,6 +189,7 @@ class Fabric extends Resource
                 ->displayUsing(function(){
                     return $this->openingQuantity ." ".$this->unit->name;
                 })
+                ->sortable()
                 ->onlyOnDetail(),
 
             Number::make('Alert Quantity')
@@ -203,11 +207,12 @@ class Fabric extends Resource
                 ->displayUsing(function(){
                     return $this->quantity ." ".$this->unit->name;
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Unit')
                 ->hideFromIndex()
-                // ->hideWhenUpdating()
+                ->hideWhenUpdating()
                 ->showCreateRelationButton(),
 
             AjaxSelect::make('Category', 'category_id')
@@ -215,34 +220,25 @@ class Fabric extends Resource
                 ->get('/locations/{location}/fabric-categories')
                 ->parent('location')
                 ->onlyOnForms()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                }),
+            }),
 
             BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')
                 ->onlyOnForms()
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                }),
+                ->canSee(function ($request) {
+                if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    return true;
+                }
+                return false;
+            }),
 
             BelongsToManyField::make('Suppliers', 'suppliers', 'App\Nova\Supplier')
                 ->hideFromIndex(),
@@ -257,6 +253,7 @@ class Fabric extends Resource
                     ActiveStatus::ACTIVE()->getValue()   => 'success',
                     ActiveStatus::INACTIVE()->getValue() => 'danger',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

@@ -49,7 +49,7 @@ class ProductCategory extends Resource
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
@@ -59,7 +59,7 @@ class ProductCategory extends Resource
      */
     public static function label()
     {
-      return "Categories";
+        return "Categories";
     }
 
     /**
@@ -94,6 +94,7 @@ class ProductCategory extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -110,7 +111,7 @@ class ProductCategory extends Resource
                 ->updateRules([
                     Rule::unique('product_categories', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ])
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
@@ -142,7 +143,7 @@ class ProductCategory extends Resource
     public function filters(Request $request)
     {
         return [
-           LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
         ];
@@ -179,7 +180,7 @@ class ProductCategory extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 
     /**
@@ -191,6 +192,6 @@ class ProductCategory extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 }

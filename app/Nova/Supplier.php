@@ -63,7 +63,7 @@ class Supplier extends Resource
      */
     public function subtitle()
     {
-      return "Mobile: $this->mobile";
+        return "Mobile: $this->mobile";
     }
 
     /**
@@ -73,7 +73,7 @@ class Supplier extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-user-tie';
+        return 'fas fa-user-tie';
     }
 
     /**
@@ -97,15 +97,17 @@ class Supplier extends Resource
             RouterLink::make('Supplier Id', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Text::make('Name')
                 ->rules('required', 'max:45', 'multi_space')
                 ->creationRules('unique:suppliers,name')
                 ->updateRules('unique:suppliers,name,{{resourceId}}')
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
+                ->sortable()
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             PhoneNumber::make('Mobile')
@@ -120,24 +122,29 @@ class Supplier extends Resource
 
             Email::make('Email')
                 ->alwaysClickable()
+                ->sortable()
                 ->rules('nullable', 'email'),
 
             Text::make('Fax')
                 ->rules("nullable", 'max:200')
+                ->sortable()
                 ->hideFromIndex(),
 
             Text::make('Vat Number')
                 ->rules('nullable', 'max:200')
+                ->sortable()
                 ->hideFromIndex(),
 
             Currency::make('Opening Balance')
                 ->currency('BDT')
                 ->rules('required', 'numeric', 'min:0')
+                ->sortable()
                 ->hideWhenUpdating()
                 ->hideFromIndex(),
 
             Currency::make('Balance')
                 ->currency('BDT')
+                ->sortable()
                 ->rules('required', 'numeric', 'min:0')
                 ->exceptOnForms(),
 
@@ -149,10 +156,11 @@ class Supplier extends Resource
 
 
             Badge::make('Status')->map([
-                    ActiveStatus::ACTIVE()->getValue()   => 'success',
-                    ActiveStatus::INACTIVE()->getValue() => 'danger',
-                ])
-                ->label(function(){
+                ActiveStatus::ACTIVE()->getValue()   => 'success',
+                ActiveStatus::INACTIVE()->getValue() => 'danger',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -207,7 +215,7 @@ class Supplier extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UpdateOpeningBalance)->canSee(function($request){
+            (new UpdateOpeningBalance)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can update opening balance of suppliers');
             })->onlyOnDetail(),
         ];

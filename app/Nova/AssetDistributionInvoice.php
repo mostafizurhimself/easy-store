@@ -108,6 +108,7 @@ class AssetDistributionInvoice extends Resource
     {
         return [
             RouterLink::make('Invoice No', 'id')
+                ->sortable()
                 ->withMeta([
                     'label' => $this->readableId,
                 ]),
@@ -115,13 +116,14 @@ class AssetDistributionInvoice extends Resource
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
                 ->default(Carbon::now())
                 ->hideWhenUpdating(),
 
-            BelongsTo::make('Location')
+            BelongsTo::make('Location')->sortable()
             ->searchable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
@@ -132,10 +134,12 @@ class AssetDistributionInvoice extends Resource
 
             Currency::make('Distribution Amount', 'total_distribution_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Receive Amount', 'total_receive_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Trix::make('Note')
@@ -154,7 +158,7 @@ class AssetDistributionInvoice extends Resource
 
             Text::make('Receiver', function(){
                 return $this->receiver->name;
-            }),
+            })->sortable(),
 
 
             AjaxSelect::make('Requisition', 'requisition_id')
@@ -164,6 +168,7 @@ class AssetDistributionInvoice extends Resource
 
             BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
                 ->searchable()
+                ->sortable()
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
@@ -172,6 +177,7 @@ class AssetDistributionInvoice extends Resource
                     DistributionStatus::PARTIAL()->getValue()   => 'danger',
                     DistributionStatus::RECEIVED()->getValue()  => 'success',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

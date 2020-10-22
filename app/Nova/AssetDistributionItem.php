@@ -104,13 +104,16 @@ class AssetDistributionItem extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', "App\Nova\AssetDistributionInvoice")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Asset')
-                ->searchable(),
+                ->searchable()
+                ->sortable(),
 
             Number::make('Quantity', 'distribution_quantity')
                 ->rules('required', 'numeric', 'min:0')
+                ->sortable()
                 ->creationRules(new DistributionQuantityRule(\App\Nova\AssetDistributionItem::uriKey(), $request->get('asset_id') ?? $request->get('asset')),
                                 new DistributionQuantityRuleOnRequisition($request->viaResource, $request->viaResourceId, $request->get('asset_id') ?? $request->get('asset')),
                 )
@@ -129,14 +132,17 @@ class AssetDistributionItem extends Resource
             Text::make('Distribution Quantity', function(){
                 return $this->distributionQuantity." ".$this->unitName;
             })
-            ->exceptOnForms(),
+            ->exceptOnForms()
+            ->sortable(),
 
             Currency::make('Distribution Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Distribution Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
 
@@ -144,10 +150,12 @@ class AssetDistributionItem extends Resource
             Text::make('Receive Quantity', function(){
                     return $this->receiveQuantity." ".$this->unitName;
                 })
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Currency::make('Receive Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
@@ -156,6 +164,7 @@ class AssetDistributionItem extends Resource
                     DistributionStatus::PARTIAL()->getValue()   => 'danger',
                     DistributionStatus::RECEIVED()->getValue()  => 'success',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

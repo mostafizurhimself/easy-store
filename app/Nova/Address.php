@@ -58,11 +58,13 @@ class Address extends Resource
             Select::make('Address Type', 'type')
                 ->options(AddressType::titleCaseOptions())
                 ->rules('required')
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->sortable(),
 
             Text::make('Type', function(){
                 return Str::title(Str::of($this->type)->replace('_', " "));
-            }),
+            })
+            ->sortable(),
 
             Place::make('Street')
                 ->hideFromIndex()

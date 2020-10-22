@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use App\Enums\ActiveStatus;
-use App\Models\ServiceCategory;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -11,6 +10,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use App\Models\ServiceCategory;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
@@ -117,6 +117,7 @@ class Service extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -134,14 +135,15 @@ class Service extends Resource
                 ->updateRules([
                     Rule::unique('services', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ])
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             TextWrap::make('Name')
                 ->onlyOnIndex()
-                ->wrapMethod('length',25),
+                ->sortable()
+                ->wrapMethod('length', 25),
 
             TextUppercase::make('Code')
                 ->sortable()
@@ -164,36 +166,40 @@ class Service extends Resource
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->rules('required', 'numeric', 'min:0'),
 
             Text::make('Dispatch')
                 ->displayUsing(function () {
                     return $this->totalDispatchQuantity . " " . $this->unit->name;
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
             Text::make('Receive')
                 ->displayUsing(function () {
                     return $this->totalReceiveQuantity . " " . $this->unit->name;
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
             Text::make('Remaining')
                 ->displayUsing(function () {
                     return $this->totalRemainingQuantity . " " . $this->unit->name;
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Unit')
                 ->hideFromIndex()
-                // ->hideWhenUpdating()
+                ->hideWhenUpdating()
                 ->showCreateRelationButton(),
 
             AjaxSelect::make('Category', 'category_id')
                 ->rules('required')
                 ->get('/locations/{location}/service-categories')
                 ->parent('location')->onlyOnForms()
-                 ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
@@ -201,11 +207,12 @@ class Service extends Resource
                 }),
 
             BelongsTo::make('Category', 'category', 'App\Nova\ServiceCategory')
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Category', 'category', 'App\Nova\ServiceCategory')
                 ->onlyOnForms()
-               ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return false;
                     }
@@ -225,6 +232,7 @@ class Service extends Resource
                 ActiveStatus::ACTIVE()->getValue()   => 'success',
                 ActiveStatus::INACTIVE()->getValue() => 'danger',
             ])
+                ->sortable()
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
@@ -252,7 +260,7 @@ class Service extends Resource
     public function filters(Request $request)
     {
         return [
-           LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -261,11 +269,11 @@ class Service extends Resource
                 ->withOptions(function (Request $request, $filters) {
                     return ServiceCategory::where('location_id', $filters['location_id'])
                         ->pluck('name', 'id');
-                })->canSee(function($request){
+                })->canSee(function ($request) {
                     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
                 }),
 
-            (new CategoryFilter)->canSee(function($request){
+            (new CategoryFilter)->canSee(function ($request) {
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
 

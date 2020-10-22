@@ -22,11 +22,11 @@ use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Lenses\RequisitionItems;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\RequisitionStatusFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Lenses\ProductRequisition\Requisitions;
 use App\Nova\Actions\ProductRequisitions\ConfirmRequisition;
 use App\Nova\Actions\ProductRequisitions\GenerateRequisition;
-use App\Nova\Filters\RequisitionStatusFilter;
 
 class ProductRequisition extends Resource
 {
@@ -74,14 +74,14 @@ class ProductRequisition extends Resource
         'readable_id',
     ];
 
-     /**
+    /**
      * Get the search result subtitle for the resource.
      *
      * @return string
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
@@ -91,7 +91,7 @@ class ProductRequisition extends Resource
      */
     public static function label()
     {
-      return "Requisitions";
+        return "Requisitions";
     }
 
     /**
@@ -101,7 +101,7 @@ class ProductRequisition extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-comment-alt';
+        return 'fas fa-comment-alt';
     }
 
     /**
@@ -116,11 +116,13 @@ class ProductRequisition extends Resource
             RouterLink::make('Requisition', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -128,7 +130,8 @@ class ProductRequisition extends Resource
                 ->hideWhenUpdating(),
 
             BelongsTo::make('Location')
-            ->searchable()
+                ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -138,6 +141,7 @@ class ProductRequisition extends Resource
 
             Currency::make('Requisition Amount', 'total_requisition_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Trix::make('Note')
@@ -148,26 +152,28 @@ class ProductRequisition extends Resource
                 ->hideFromIndex(),
 
             Date::make('Deadline')
+                ->sortable()
                 ->rules('required'),
 
             Select::make('Receiver', 'receiver_id')
-                ->options(function(){
+                ->options(function () {
                     return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
                 })
                 ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
                 ->onlyOnForms(),
 
-            Text::make('Receiver', function(){
+            Text::make('Receiver', function () {
                 return $this->receiver->name;
-            }),
+            })->sortable(),
 
             Badge::make('Status')->map([
-                    RequisitionStatus::DRAFT()->getValue()     => 'warning',
-                    RequisitionStatus::CONFIRMED()->getValue() => 'info',
-                    RequisitionStatus::PARTIAL()->getValue()   => 'danger',
-                    RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
-                ])
-                ->label(function(){
+                RequisitionStatus::DRAFT()->getValue()     => 'warning',
+                RequisitionStatus::CONFIRMED()->getValue() => 'info',
+                RequisitionStatus::PARTIAL()->getValue()   => 'danger',
+                RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -195,7 +201,7 @@ class ProductRequisition extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -228,21 +234,21 @@ class ProductRequisition extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmRequisition)->canSee(function($request){
+            (new ConfirmRequisition)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm product requisitions');
             })
-            ->confirmText('Are you sure to confirm this requisition?')
-            ->confirmButtonText('Confirm'),
+                ->confirmText('Are you sure to confirm this requisition?')
+                ->confirmButtonText('Confirm'),
 
-            (new GenerateRequisition)->canSee(function($request){
+            (new GenerateRequisition)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate product requisitions');
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate product requisitions') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate requisition now?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate product requisitions') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate requisition now?')
+                ->onlyOnDetail(),
         ];
     }
 }

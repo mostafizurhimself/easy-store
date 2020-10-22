@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use App\Enums\ReturnStatus;
-use App\Nova\Filters\ReturnStatusFilter;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -14,6 +13,7 @@ use Laravel\Nova\Fields\Number;
 use App\Rules\ReturnQuantityRule;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\ReturnStatusFilter;
 use App\Rules\ReturnQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
@@ -62,7 +62,7 @@ class MaterialReturnItem extends Resource
      */
     public static function label()
     {
-      return "Return Items";
+        return "Return Items";
     }
 
     /**
@@ -84,9 +84,12 @@ class MaterialReturnItem extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', \App\Nova\MaterialReturnInvoice::class)
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
-            BelongsTo::make('Material')->searchable(),
+            BelongsTo::make('Material')
+                ->sortable()
+                ->searchable(),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
@@ -94,19 +97,22 @@ class MaterialReturnItem extends Resource
                 ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\MaterialReturnItem::uriKey(), $request->get('material'), $this->resource->quantity, $this->resource->materialId))
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
+                ->sortable()
                 ->exceptOnForms(),
 
 
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->help("Leave blank if you don't want to change the default rate."),
 
             Currency::make('Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Files::make('Attachments', 'return-item-attachments')
@@ -116,11 +122,12 @@ class MaterialReturnItem extends Resource
                 ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
-                    ReturnStatus::DRAFT()->getValue()     => 'warning',
-                    ReturnStatus::CONFIRMED()->getValue() => 'info',
-                    ReturnStatus::BILLED()->getValue()    => 'danger',
-                ])
-                ->label(function(){
+                ReturnStatus::DRAFT()->getValue()     => 'warning',
+                ReturnStatus::CONFIRMED()->getValue() => 'info',
+                ReturnStatus::BILLED()->getValue()    => 'danger',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -186,21 +193,21 @@ class MaterialReturnItem extends Resource
     {
         $invoice = \App\Models\MaterialReturnInvoice::find($request->viaResourceId);
 
-        if(empty($invoice)){
+        if (empty($invoice)) {
             $invoice = \App\Models\MaterialReturnItem::find($request->resourceId)->invoice;
         }
         try {
             $materialId = $request->findResourceOrFail()->materialId;
         } catch (\Throwable $th) {
-           $materialId = null;
+            $materialId = null;
         }
-        return $query->whereHas('suppliers', function($supplier) use($invoice){
-                $supplier->where('supplier_id', $invoice->supplierId)
-                        ->where('location_id', $invoice->locationId);
+        return $query->whereHas('suppliers', function ($supplier) use ($invoice) {
+            $supplier->where('supplier_id', $invoice->supplierId)
+                ->where('location_id', $invoice->locationId);
         })->whereNotIn('id', $invoice->materialIds($materialId));
     }
 
-      /**
+    /**
      * Return the location to redirect the user after creation.
      *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
@@ -209,7 +216,7 @@ class MaterialReturnItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -221,10 +228,10 @@ class MaterialReturnItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }

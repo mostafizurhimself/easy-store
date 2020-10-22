@@ -43,7 +43,7 @@ class Floor extends Resource
      */
     public function subtitle()
     {
-        return "Floor Number: ". $this->number;
+        return "Floor Number: " . $this->number;
     }
 
     /**
@@ -69,25 +69,9 @@ class Floor extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnDetail(function($request){
-                    if($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnIndex(function($request){
-                    if($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()){
+                ->sortable()
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -95,6 +79,7 @@ class Floor extends Resource
 
             Text::make('Floor Name', 'name')
                 ->rules('required', 'max:45', 'string', 'alpha_num_space', 'multi_space')
+                ->sortable()
                 ->creationRules([
                     Rule::unique('floors', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
                 ])
@@ -107,6 +92,7 @@ class Floor extends Resource
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             Text::make('Floor Number', 'number')
+                ->sortable()
                 ->rules('required', 'min:3', 'max:5', 'alpha_num'),
         ];
     }
@@ -131,7 +117,7 @@ class Floor extends Resource
     public function filters(Request $request)
     {
         return [
-           LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
         ];
@@ -168,7 +154,7 @@ class Floor extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 
 
@@ -181,6 +167,6 @@ class Floor extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 }

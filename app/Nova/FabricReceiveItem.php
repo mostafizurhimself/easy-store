@@ -21,6 +21,7 @@ use Laravel\Nova\Fields\Markdown;
 use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\PurchaseStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
@@ -28,7 +29,6 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReceiveItems\DownloadPdf;
 use App\Nova\Actions\FabricReceiveItems\DownloadExcel;
 use App\Nova\Actions\FabricReceiveItems\ConfirmReceiveItem;
-use App\Nova\Filters\PurchaseStatusFilter;
 
 class FabricReceiveItem extends Resource
 {
@@ -109,15 +109,18 @@ class FabricReceiveItem extends Resource
             // ID::make()->sortable(),
 
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\FabricPurchaseOrder")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Fabric')
                 ->hideWhenCreating()
-                ->readonly(),
+                ->readonly()
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -133,6 +136,7 @@ class FabricReceiveItem extends Resource
             Text::make('Quantity', function(){
                     return $this->quantity." ".$this->unitName;
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
 
@@ -147,11 +151,13 @@ class FabricReceiveItem extends Resource
 
             Currency::make('Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Text::make("Reference")
                 ->help('Here you can enter the supplier invoice number.')
                 ->hideFromIndex()
+                ->sortable()
                 ->rules('nullable', 'string', 'max:200'),
 
             Files::make('Attachments', 'receive-item-attachments')
@@ -167,6 +173,7 @@ class FabricReceiveItem extends Resource
                     PurchaseStatus::RECEIVED()->getValue()  => 'success',
                     PurchaseStatus::BILLED()->getValue()    => 'danger',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

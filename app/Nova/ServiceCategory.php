@@ -83,7 +83,8 @@ class ServiceCategory extends Resource
             ID::make()->sortable()->onlyOnIndex(),
 
             BelongsTo::make('Location')
-                // ->searchable()
+                ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;

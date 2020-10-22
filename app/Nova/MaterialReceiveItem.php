@@ -75,10 +75,10 @@ class MaterialReceiveItem extends Resource
      */
     public static function label()
     {
-      return "Receive Items";
+        return "Receive Items";
     }
 
-     /**
+    /**
      * The columns that should be searched.
      *
      * @var array
@@ -107,15 +107,18 @@ class MaterialReceiveItem extends Resource
     {
         return [
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\MaterialPurchaseOrder")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Material')
                 ->hideWhenCreating()
+                ->sortable()
                 ->readonly(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -124,32 +127,37 @@ class MaterialReceiveItem extends Resource
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
+                ->sortable()
                 ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
                 ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\MaterialPurchaseItem::uriKey(), $this->resource->purchaseItemId, $this->resource->quantity))
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
+                ->sortable()
                 ->exceptOnForms(),
 
 
 
             Currency::make('Rate')
                 ->currency('BDT')
-                ->default(function($request){
-                    if($request->viaResource == \App\Nova\MaterialPurchaseItem::uriKey() && !empty($request->viaResourceId)){
+                ->sortable()
+                ->default(function ($request) {
+                    if ($request->viaResource == \App\Nova\MaterialPurchaseItem::uriKey() && !empty($request->viaResourceId)) {
                         return \App\Models\MaterialPurchaseItem::find($request->viaResourceId)->purchaseRate;
                     }
                 }),
 
             Currency::make('Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Text::make("Reference")
                 ->help('Here you can enter the supplier invoice number.')
                 ->hideFromIndex()
+                ->sortable()
                 ->rules('nullable', 'string', 'max:200'),
 
             Files::make('Attachments', 'receive-item-attachments')
@@ -159,13 +167,14 @@ class MaterialReceiveItem extends Resource
                 ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
-                    PurchaseStatus::DRAFT()->getValue()     => 'warning',
-                    PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'danger',
-                    PurchaseStatus::RECEIVED()->getValue()  => 'success',
-                    PurchaseStatus::BILLED()->getValue()    => 'danger',
-                ])
-                ->label(function(){
+                PurchaseStatus::DRAFT()->getValue()     => 'warning',
+                PurchaseStatus::CONFIRMED()->getValue() => 'info',
+                PurchaseStatus::PARTIAL()->getValue()   => 'danger',
+                PurchaseStatus::RECEIVED()->getValue()  => 'success',
+                PurchaseStatus::BILLED()->getValue()    => 'danger',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
         ];
@@ -217,20 +226,20 @@ class MaterialReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
-            (new DownloadPdf)->canSee(function($request){
+            (new DownloadPdf)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material receive items') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material receive items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download'),
 
-            (new DownloadExcel)->canSee(function($request){
+            (new DownloadExcel)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material receive items') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material receive items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
-            ->confirmText('Are you sure want to download excel?'),
+                ->confirmText('Are you sure want to download excel?'),
 
-            (new ConfirmReceiveItem)->canSee(function($request){
+            (new ConfirmReceiveItem)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm material receive items');
             }),
         ];
@@ -245,7 +254,7 @@ class MaterialReceiveItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -257,10 +266,10 @@ class MaterialReceiveItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }

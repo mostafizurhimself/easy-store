@@ -109,15 +109,18 @@ class AssetReceiveItem extends Resource
             // ID::make()->sortable(),
 
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\AssetPurchaseOrder")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Asset')
                 ->hideWhenCreating()
+                ->sortable()
                 ->readonly(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -126,6 +129,7 @@ class AssetReceiveItem extends Resource
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
+                ->sortable()
                 ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
                 ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\AssetPurchaseItem::uriKey(), $this->resource->purchaseItemId, $this->resource->quantity))
                 ->onlyOnForms(),
@@ -133,12 +137,14 @@ class AssetReceiveItem extends Resource
             Text::make('Quantity', function(){
                     return $this->quantity." ".$this->unitName;
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
 
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->default(function($request){
                     if($request->viaResource == \App\Nova\AssetPurchaseItem::uriKey() && !empty($request->viaResourceId)){
                         return \App\Models\AssetPurchaseItem::find($request->viaResourceId)->purchaseRate;
@@ -147,11 +153,13 @@ class AssetReceiveItem extends Resource
 
             Currency::make('Amount')
                 ->currency('BDT')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Text::make("Reference")
                 ->help('Here you can enter the supplier invoice number.')
                 ->hideFromIndex()
+                ->sortable()
                 ->rules('nullable', 'string', 'max:200'),
 
             Files::make('Attachments', 'receive-item-attachments')
@@ -167,6 +175,7 @@ class AssetReceiveItem extends Resource
                     PurchaseStatus::RECEIVED()->getValue()  => 'success',
                     PurchaseStatus::BILLED()->getValue()    => 'danger',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

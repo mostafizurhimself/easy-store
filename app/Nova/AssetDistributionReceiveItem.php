@@ -93,15 +93,18 @@ class AssetDistributionReceiveItem extends Resource
             // ID::make(__('ID'), 'id')->sortable(),
 
             BelongsTo::make('Invoice', 'invoice', \App\Nova\AssetDistributionInvoice::class)
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Asset')
                 ->hideWhenCreating()
+                ->sortable()
                 ->readonly(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -116,6 +119,7 @@ class AssetDistributionReceiveItem extends Resource
                         return $this->resource->distributionItem->remainingQuantity;
                     }
                 })
+                ->sortable()
                 ->rules('required', 'numeric', 'min:0')
                 ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
                 ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\AssetDistributionItem::uriKey(), $this->resource->distributionItemId, $this->resource->quantity))
@@ -124,15 +128,18 @@ class AssetDistributionReceiveItem extends Resource
             Text::make('Quantity', function(){
                     return $this->quantity." ".$this->unitName;
                 })
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Currency::make('Rate')
                 ->currency('BDT')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Currency::make('Amount')
                 ->currency('BDT')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Text::make("Reference")
                 ->hideFromIndex()
@@ -150,6 +157,7 @@ class AssetDistributionReceiveItem extends Resource
                     DistributionStatus::PARTIAL()->getValue()   => 'danger',
                     DistributionStatus::RECEIVED()->getValue()  => 'success'
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

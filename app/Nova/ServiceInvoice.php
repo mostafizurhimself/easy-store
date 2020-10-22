@@ -20,12 +20,12 @@ use App\Nova\Lenses\DispatchItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\ServiceInvoices\Recalculate;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceInvoices\ConfirmInvoice;
 use App\Nova\Actions\ServiceInvoices\GenerateInvoice;
-use App\Nova\Filters\DispatchStatusFilter;
 
 class ServiceInvoice extends Resource
 {
@@ -129,11 +129,13 @@ class ServiceInvoice extends Resource
             RouterLink::make('Invoice', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
@@ -141,7 +143,9 @@ class ServiceInvoice extends Resource
                 ->hideWhenUpdating(),
 
 
-            BelongsTo::make('Location')->searchable()
+            BelongsTo::make('Location')
+                ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -154,10 +158,12 @@ class ServiceInvoice extends Resource
 
             Currency::make('Total Dispatch Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Total Receive Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Provider', 'provider', 'App\Nova\Provider')->searchable(),
@@ -168,6 +174,7 @@ class ServiceInvoice extends Resource
                 DispatchStatus::PARTIAL()->getValue()   => 'danger',
                 DispatchStatus::RECEIVED()->getValue()  => 'success',
             ])
+                ->sortable()
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
@@ -198,7 +205,7 @@ class ServiceInvoice extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -232,25 +239,25 @@ class ServiceInvoice extends Resource
     {
         return [
 
-            (new Recalculate)->canSee(function($request){
+            (new Recalculate)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin();
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return $request->user()->isSuperAdmin();
             }),
 
-            (new ConfirmInvoice)->canSee(function($request){
+            (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm service invoices');
             })->confirmButtonText('Confirm'),
 
-            (new GenerateInvoice)->canSee(function($request){
+            (new GenerateInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate service invoices');
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate service invoices') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate invoice now?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate service invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate invoice now?')
+                ->onlyOnDetail(),
         ];
     }
 }

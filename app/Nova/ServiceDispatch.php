@@ -6,7 +6,6 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\DispatchStatus;
-use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
@@ -15,6 +14,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ServiceDispatch extends Resource
@@ -85,21 +85,26 @@ class ServiceDispatch extends Resource
         return [
             // ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Invoice', 'invoice', "App\Nova\ServiceInvoice")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
-            BelongsTo::make('Service', 'service', 'App\Nova\Service'),
+            BelongsTo::make('Service', 'service', 'App\Nova\Service')
+                ->sortable(),
 
             Number::make('Quantity', 'dispatch_quantity')
                 ->rules('required', 'numeric', 'min:1')
+                ->sortable()
                 ->onlyOnForms(),
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Text::make('Dispatch Quantity', function () {
                 return $this->dispatchQuantity . " " . $this->unit->name;
             })
+                ->sortable()
                 ->exceptOnForms(),
 
 
@@ -107,20 +112,24 @@ class ServiceDispatch extends Resource
             Text::make('Receive Quantity', function () {
                 return $this->receiveQuantity . " " . $this->unit->name;
             })
+                ->sortable()
                 ->exceptOnForms(),
 
             Text::make('Remaining Quantity', function () {
                 return $this->remainingQuantity . " " . $this->unit->name;
             })
+                ->sortable()
                 ->exceptOnForms(),
 
             Currency::make('Dispatch Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms()
                 ->hideFromIndex(),
 
             Currency::make('Receive Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms()
                 ->hideFromIndex(),
 
@@ -133,6 +142,7 @@ class ServiceDispatch extends Resource
                 DispatchStatus::PARTIAL()->getValue()   => 'danger',
                 DispatchStatus::RECEIVED()->getValue()  => 'success',
             ])
+                ->sortable()
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
@@ -201,7 +211,7 @@ class ServiceDispatch extends Resource
     public static function relatableServices(NovaRequest $request, $query)
     {
         $invoice = \App\Models\ServiceInvoice::find($request->viaResourceId);
-        if(empty($invoice)){
+        if (empty($invoice)) {
             $invoice = $request->findResourceOrFail()->invoice;
         }
         try {

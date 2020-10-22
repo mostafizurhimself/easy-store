@@ -132,6 +132,7 @@ class Asset extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -180,6 +181,7 @@ class Asset extends Resource
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->rules('required', 'numeric', 'min:0'),
 
             Number::make('Opening Quantity')
@@ -206,6 +208,7 @@ class Asset extends Resource
                 ->onlyOnDetail(),
 
             Text::make('Quantity')
+            ->sortable()
                 ->displayUsing(function () {
                     return $this->quantity . " " . $this->unit->name;
                 })
@@ -213,7 +216,7 @@ class Asset extends Resource
 
             BelongsTo::make('Unit')
                 ->hideFromIndex()
-                // ->hideWhenUpdating()
+                ->hideWhenUpdating()
                 ->showCreateRelationButton(),
 
             AjaxSelect::make('Category', 'category_id')

@@ -22,10 +22,10 @@ use Laravel\Nova\Fields\MorphMany;
 use App\Nova\MaterialPurchaseOrder;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\ExpenseStatusFilter;
 use App\Rules\ExpenseAmountRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Expenses\ConfirmExpense;
-use App\Nova\Filters\ExpenseStatusFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 
@@ -106,7 +106,7 @@ class Expense extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-money-bill';
+        return 'fas fa-money-bill';
     }
 
     /**
@@ -121,14 +121,17 @@ class Expense extends Resource
             RouterLink::make('Expense Id', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
-                ->default(Carbon::now()),
+                ->default(Carbon::now())
+                ->sortable(),
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -141,31 +144,22 @@ class Expense extends Resource
                 ->get('/locations/{location}/expensers')
                 ->parent('location')
                 ->onlyOnForms()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
                 }),
 
             BelongsTo::make('Expenser', 'expenser', 'App\Nova\Expenser')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Expenser', 'expenser', 'App\Nova\Expenser')
-            ->searchable()
+                ->searchable()
                 ->onlyOnForms()
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -177,30 +171,21 @@ class Expense extends Resource
                 ->get('/locations/{location}/expense-categories')
                 ->parent('location')
                 ->onlyOnForms()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
                 }),
 
             BelongsTo::make('Category', 'category', 'App\Nova\ExpenseCategory')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Category', 'category', 'App\Nova\ExpenseCategory')
                 ->onlyOnForms()
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -211,11 +196,13 @@ class Expense extends Resource
 
             Text::make('Reference')
                 ->rules('nullable', 'string', 'max:200')
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->sortable(),
 
             Text::make('PO Number')
                 ->rules('nullable', 'string', 'max:15')
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->sortable(),
 
             Currency::make('Amount')
                 ->currency('BDT')
@@ -223,13 +210,8 @@ class Expense extends Resource
                 ->onlyOnForms()
                 ->creationRules(new ExpenseAmountRule($request->get('expenser_id') ?? $request->get('expenser')))
                 ->updateRules(new ExpenseAmountRuleForUpdate($request->get('expenser_id'), $this->resource->amount, $this->resource->expenserId))
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -237,25 +219,27 @@ class Expense extends Resource
 
             Currency::make('Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Files::make('Attachments', 'expense-attachments')
                 ->singleMediaRules('max:5000') // max 5000kb
                 ->hideFromIndex(),
 
-            Text::make('Approved By', function(){
-                    return $this->approve ? $this->approve->employee->name : null;
-                })
-                ->canSee(function(){
+            Text::make('Approved By', function () {
+                return $this->approve ? $this->approve->employee->name : null;
+            })
+                ->canSee(function () {
                     return $this->approve()->exists();
                 })
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
-                    ExpenseStatus::DRAFT()->getValue()   => 'warning',
-                    ExpenseStatus::CONFIRMED()->getValue() => 'info',
-                ])
-                ->label(function(){
+                ExpenseStatus::DRAFT()->getValue()   => 'warning',
+                ExpenseStatus::CONFIRMED()->getValue() => 'info',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -284,7 +268,7 @@ class Expense extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -312,7 +296,7 @@ class Expense extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmExpense)->canSee(function($request){
+            (new ConfirmExpense)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm expenses');
             }),
         ];

@@ -128,6 +128,7 @@ class Material extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
+                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -145,14 +146,15 @@ class Material extends Resource
                 ->updateRules([
                     Rule::unique('materials', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ])
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
             TextWrap::make('Name')
                 ->onlyOnIndex()
-                ->wrapMethod('length',30),
+                ->sortable()
+                ->wrapMethod('length', 30),
 
             TextUppercase::make('Code')
                 ->sortable()
@@ -175,6 +177,7 @@ class Material extends Resource
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->rules('required', 'numeric', 'min:0'),
 
             Number::make('Opening Quantity')
@@ -198,17 +201,19 @@ class Material extends Resource
                 ->displayUsing(function () {
                     return $this->alertQuantity . " " . $this->unit->name;
                 })
+                ->sortable()
                 ->onlyOnDetail(),
 
             Text::make('Quantity')
                 ->displayUsing(function () {
                     return $this->quantity . " " . $this->unit->name;
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Unit')
                 ->hideFromIndex()
-                // ->hideWhenUpdating()
+                ->hideWhenUpdating()
                 ->showCreateRelationButton(),
 
             AjaxSelect::make('Category', 'category_id')
@@ -216,7 +221,7 @@ class Material extends Resource
                 ->get('/locations/{location}/material-categories')
                 ->parent('location')
                 ->onlyOnForms()
-                 ->canSee(function ($request) {
+                ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
@@ -224,7 +229,8 @@ class Material extends Resource
                 }),
 
             BelongsTo::make('Category', 'category', 'App\Nova\MaterialCategory')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Category', 'category', 'App\Nova\MaterialCategory')
                 ->onlyOnForms()
@@ -236,7 +242,8 @@ class Material extends Resource
                 }),
 
             BelongsToManyField::make('Suppliers', 'suppliers', 'App\Nova\Supplier')
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->sortable(),
 
             Select::make('Status')
                 ->options(ActiveStatus::titleCaseOptions())
@@ -248,6 +255,7 @@ class Material extends Resource
                 ActiveStatus::ACTIVE()->getValue()   => 'success',
                 ActiveStatus::INACTIVE()->getValue() => 'danger',
             ])
+                ->sortable()
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
@@ -278,7 +286,7 @@ class Material extends Resource
     public function filters(Request $request)
     {
         return [
-            LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -287,11 +295,11 @@ class Material extends Resource
                 ->withOptions(function (Request $request, $filters) {
                     return MaterialCategory::where('location_id', $filters['location_id'])
                         ->pluck('name', 'id');
-                })->canSee(function($request){
+                })->canSee(function ($request) {
                     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
                 }),
 
-            (new CategoryFilter)->canSee(function($request){
+            (new CategoryFilter)->canSee(function ($request) {
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -321,20 +329,20 @@ class Material extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UpdateOpeningQuantity)->canSee(function($request){
+            (new UpdateOpeningQuantity)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can update opening quantity of materials');
             })->onlyOnDetail(),
 
-            (new DownloadPdf)->canSee(function($request){
+            (new DownloadPdf)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
 
-            (new DownloadExcel)->canSee(function($request){
+            (new DownloadExcel)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),

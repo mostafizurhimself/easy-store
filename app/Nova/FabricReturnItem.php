@@ -14,12 +14,12 @@ use App\Rules\ReturnQuantityRule;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Filters\ReturnStatusFilter;
 use App\Rules\ReturnQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
-use App\Nova\Filters\ReturnStatusFilter;
 
 class FabricReturnItem extends Resource
 {
@@ -66,7 +66,7 @@ class FabricReturnItem extends Resource
      */
     public static function label()
     {
-      return "Return Items";
+        return "Return Items";
     }
 
     /**
@@ -97,9 +97,11 @@ class FabricReturnItem extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', \App\Nova\FabricReturnINvoice::class)
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
-            BelongsTo::make('Fabric'),
+            BelongsTo::make('Fabric')
+                ->sortable(),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
@@ -107,19 +109,22 @@ class FabricReturnItem extends Resource
                 ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId))
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
+                ->sortable()
                 ->exceptOnForms(),
 
 
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->help("Leave blank if you don't want to change the default rate."),
 
             Currency::make('Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Files::make('Attachments', 'return-item-attachments')
@@ -129,11 +134,12 @@ class FabricReturnItem extends Resource
                 ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
-                    ReturnStatus::DRAFT()->getValue()     => 'warning',
-                    ReturnStatus::CONFIRMED()->getValue() => 'info',
-                    ReturnStatus::BILLED()->getValue()    => 'danger',
-                ])
-                ->label(function(){
+                ReturnStatus::DRAFT()->getValue()     => 'warning',
+                ReturnStatus::CONFIRMED()->getValue() => 'info',
+                ReturnStatus::BILLED()->getValue()    => 'danger',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -199,21 +205,21 @@ class FabricReturnItem extends Resource
     public static function relatableFabrics(NovaRequest $request, $query)
     {
         $invoice = \App\Models\FabricReturnInvoice::find($request->viaResourceId);
-        if(empty($invoice)){
+        if (empty($invoice)) {
             $invoice = \App\Models\FabricReturnItem::find($request->resourceId)->invoice;
         }
         try {
             $fabricId = $request->findResourceOrFail()->fabricId;
         } catch (\Throwable $th) {
-           $fabricId = null;
+            $fabricId = null;
         }
-        return $query->whereHas('suppliers', function($supplier) use($invoice){
-                $supplier->where('supplier_id', $invoice->supplierId)
-                        ->where('location_id', $invoice->locationId);
+        return $query->whereHas('suppliers', function ($supplier) use ($invoice) {
+            $supplier->where('supplier_id', $invoice->supplierId)
+                ->where('location_id', $invoice->locationId);
         })->whereNotIn('id', $invoice->fabricIds($fabricId));
     }
 
-      /**
+    /**
      * Return the location to redirect the user after creation.
      *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
@@ -222,7 +228,7 @@ class FabricReturnItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -234,10 +240,10 @@ class FabricReturnItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }

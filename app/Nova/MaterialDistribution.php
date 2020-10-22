@@ -20,10 +20,10 @@ use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Rules\DistributionQuantityRule;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\DistributionStatusFilter;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialDistributions\ConfirmDistribution;
-use App\Nova\Filters\DistributionStatusFilter;
 
 class MaterialDistribution extends Resource
 {
@@ -56,7 +56,7 @@ class MaterialDistribution extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-truck';
+        return 'fas fa-truck';
     }
 
     /**
@@ -66,7 +66,7 @@ class MaterialDistribution extends Resource
      */
     public static function label()
     {
-      return "Distributions";
+        return "Distributions";
     }
 
     /**
@@ -109,25 +109,9 @@ class MaterialDistribution extends Resource
 
             BelongsTo::make('Location')
                 ->searchable()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnDetail(function($request){
-                    if($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnIndex(function($request){
-                    if($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()){
+                ->sortable()
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -136,20 +120,17 @@ class MaterialDistribution extends Resource
             RouterLink::make('Number', 'id')
                 ->withMeta([
                     'label' => $this->readableId,
-                ]),
+                ])
+                ->sortable(),
 
             BelongsTo::make('Material')
-                    ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Material')->searchable()
                 ->onlyOnForms()
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -160,23 +141,19 @@ class MaterialDistribution extends Resource
                 ->get('/locations/{location}/materials')
                 ->parent('location')
                 ->onlyOnForms()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
                 }),
 
-            Text::make('Material Name', function(){
+            Text::make('Material Name', function () {
                 return $this->material->name;
             })
-            ->exceptOnForms()
-            ->hideFromIndex(),
+                ->exceptOnForms()
+                ->sortable()
+                ->hideFromIndex(),
 
             Number::make('Quantity')
                 ->creationRules(new DistributionQuantityRule(\App\Nova\MaterialDistribution::uriKey(), $request->get('material_id') ?? $request->get('material')))
@@ -184,9 +161,10 @@ class MaterialDistribution extends Resource
                 ->rules('required', 'numeric', 'min:1')
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
+                ->sortable()
                 ->exceptOnForms(),
 
 
@@ -194,10 +172,12 @@ class MaterialDistribution extends Resource
             Currency::make('Rate')
                 ->currency('BDT')
                 ->exceptOnForms()
+                ->sortable()
                 ->hideFromIndex(),
 
             Currency::make('Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms()
                 ->hideFromIndex(),
 
@@ -205,22 +185,20 @@ class MaterialDistribution extends Resource
                 ->rules('nullable', 'max:500'),
 
             BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")
+                ->sortable()
                 ->exceptOnForms(),
 
-            Text::make('Receiver Name', function(){
+            Text::make('Receiver Name', function () {
                 return $this->receiver->name;
             })
-            ->hideFromIndex(),
+                ->sortable()
+                ->hideFromIndex(),
 
             BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")->searchable()
                 ->onlyOnForms()
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->sortable()
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -231,26 +209,23 @@ class MaterialDistribution extends Resource
                 ->get('/locations/{location}/employees')
                 ->parent('location')
                 ->onlyOnForms()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
                 }),
 
             DateTime::make('Distributed At', 'Created At')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Badge::make('Status')->map([
-                    DistributionStatus::DRAFT()->getValue()     => 'warning',
-                    DistributionStatus::CONFIRMED()->getValue() => 'info',
-                ])
-                ->label(function(){
+                DistributionStatus::DRAFT()->getValue()     => 'warning',
+                DistributionStatus::CONFIRMED()->getValue() => 'info',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -277,7 +252,7 @@ class MaterialDistribution extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -307,7 +282,7 @@ class MaterialDistribution extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmDistribution)->canSee(function($request){
+            (new ConfirmDistribution)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm material distributions') || $request->user()->isSuperAdmin();
             }),
         ];

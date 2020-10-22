@@ -97,9 +97,12 @@ class AssetReturnItem extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', \App\Nova\AssetReturnINvoice::class)
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
-            BelongsTo::make('Asset')->searchable(),
+            BelongsTo::make('Asset')
+                ->searchable()
+                ->sortable(),
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
@@ -110,16 +113,19 @@ class AssetReturnItem extends Resource
             Text::make('Quantity', function(){
                     return $this->quantity." ".$this->unitName;
                 })
+                ->sortable()
                 ->exceptOnForms(),
 
 
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->help("Leave blank if you don't want to change the default rate."),
 
             Currency::make('Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Files::make('Attachments', 'return-item-attachments')
@@ -133,6 +139,7 @@ class AssetReturnItem extends Resource
                     ReturnStatus::CONFIRMED()->getValue() => 'info',
                     ReturnStatus::BILLED()->getValue()    => 'danger',
                 ])
+                ->sortable()
                 ->label(function(){
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),

@@ -63,7 +63,7 @@ class FabricDistribution extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-truck';
+        return 'fas fa-truck';
     }
 
     /**
@@ -73,7 +73,7 @@ class FabricDistribution extends Resource
      */
     public static function label()
     {
-      return "Distributions";
+        return "Distributions";
     }
 
     /**
@@ -114,49 +114,30 @@ class FabricDistribution extends Resource
         return [
             // ID::make()->sortable(),
 
+            RouterLink::make('Number', 'id')
+                ->withMeta([
+                    'label' => $this->readableId,
+                ])
+                ->sortable(),
+
             BelongsTo::make('Location')
                 ->searchable()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnDetail(function($request){
-                    if($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })
-                ->showOnIndex(function($request){
-                    if($request->user()->hasPermissionTo('view all locations data') || $request->user()->isSuperAdmin()){
+                ->sortable()
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
                 }),
 
-            RouterLink::make('Number', 'id')
-                ->withMeta([
-                    'label' => $this->readableId,
-                ]),
-
             BelongsTo::make('Fabric')
-                    ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Fabric')->searchable()
                 ->onlyOnForms()
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -167,23 +148,19 @@ class FabricDistribution extends Resource
                 ->get('/locations/{location}/fabrics')
                 ->parent('location')
                 ->onlyOnForms()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
                 }),
 
-            Text::make('Fabrics Name', function(){
+            Text::make('Fabrics Name', function () {
                 return $this->fabric->name;
             })
-            ->exceptOnForms()
-            ->hideFromIndex(),
+                ->exceptOnForms()
+                ->sortable()
+                ->hideFromIndex(),
 
             Number::make('Quantity')
                 ->creationRules(new DistributionQuantityRule(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric')))
@@ -191,21 +168,24 @@ class FabricDistribution extends Resource
                 ->rules('required', 'numeric', 'min:1')
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
+                ->sortable()
                 ->exceptOnForms(),
 
 
 
             Currency::make('Rate')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms()
                 ->hideFromIndex(),
 
             Currency::make('Amount')
                 ->currency('BDT')
                 ->exceptOnForms()
+                ->sortable()
                 ->hideFromIndex(),
 
             Trix::make('Description')
@@ -214,20 +194,15 @@ class FabricDistribution extends Resource
             BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")
                 ->exceptOnForms(),
 
-            Text::make('Receiver Name', function(){
+            Text::make('Receiver Name', function () {
                 return $this->receiver->fullName;
             })
-            ->hideFromIndex(),
+                ->hideFromIndex(),
 
             BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")->searchable()
                 ->onlyOnForms()
-                ->hideWhenCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->hideWhenUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
@@ -238,26 +213,23 @@ class FabricDistribution extends Resource
                 ->get('/locations/{location}/employees')
                 ->parent('location')
                 ->onlyOnForms()
-                ->showOnCreating(function($request){
-                    if($request->user()->hasPermissionTo('create all locations data') || $request->user()->isSuperAdmin()){
-                        return true;
-                    }
-                    return false;
-                })->showOnUpdating(function($request){
-                    if($request->user()->hasPermissionTo('update all locations data') || $request->user()->isSuperAdmin()){
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
                     }
                     return false;
                 }),
 
             DateTime::make('Distributed At', 'Created At')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Badge::make('Status')->map([
-                    DistributionStatus::DRAFT()->getValue()     => 'warning',
-                    DistributionStatus::CONFIRMED()->getValue() => 'info',
-                ])
-                ->label(function(){
+                DistributionStatus::DRAFT()->getValue()     => 'warning',
+                DistributionStatus::CONFIRMED()->getValue() => 'info',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -285,7 +257,7 @@ class FabricDistribution extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -315,18 +287,18 @@ class FabricDistribution extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmDistribution)->canSee(function($request){
+            (new ConfirmDistribution)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm fabric distributions') || $request->user()->isSuperAdmin();
             }),
 
-            (new GenerateInvoice)->canSee(function($request){
+            (new GenerateInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate fabric distributions') || $request->user()->isSuperAdmin();
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate fabric distributions') || $request->user()->isSuperAdmin();
-            })
-            ->onlyOnTableRow()
-            ->withoutConfirmation(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate fabric distributions') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnTableRow()
+                ->withoutConfirmation(),
         ];
     }
 }

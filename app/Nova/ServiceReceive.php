@@ -18,11 +18,11 @@ use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Rules\ServiceReceiveQuantityRule;
+use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Rules\ServiceReceiveQuantityRuleForUpdate;
 use App\Nova\Actions\ServiceReceives\ConfirmReceive;
-use App\Nova\Filters\DispatchStatusFilter;
 
 class ServiceReceive extends Resource
 {
@@ -91,21 +91,26 @@ class ServiceReceive extends Resource
     {
         return [
             BelongsTo::make('Invoice', 'invoice', "App\Nova\ServiceInvoice")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Dispatch', 'dispatch', "App\Nova\ServiceDispatch")
-                ->onlyOnDetail(),
+                ->onlyOnDetail()
+                ->sortable(),
 
             BelongsTo::make('Service')
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
+                ->sortable()
                 ->readonly(),
 
             Hidden::make('Date')
                 ->default(Carbon::now())
+                ->sortable()
                 ->hideWhenUpdating(),
 
             Number::make('Quantity')
@@ -113,35 +118,39 @@ class ServiceReceive extends Resource
                 ->creationRules(new ServiceReceiveQuantityRule($request->viaResource, $request->viaResourceId))
                 ->updateRules(new ServiceReceiveQuantityRuleForUpdate(\App\Nova\ServiceDispatch::uriKey(), $this->resource->dispatchId, $this->resource->quantity))
                 ->onlyOnForms()
-                ->default(function($request){
-                    if($request->viaResource == \App\Nova\ServiceDispatch::uriKey() && !empty($request->viaResourceId)){
+                ->default(function ($request) {
+                    if ($request->viaResource == \App\Nova\ServiceDispatch::uriKey() && !empty($request->viaResourceId)) {
                         return \App\Models\ServiceDispatch::find($request->viaResourceId)->remainingQuantity;
                     }
                 }),
 
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
+                ->sortable()
                 ->exceptOnForms(),
 
 
 
             Currency::make('Rate')
                 ->currency('BDT')
-                ->default(function($request){
-                    if($request->viaResource == \App\Nova\ServiceDispatch::uriKey() && !empty($request->viaResourceId)){
+                ->sortable()
+                ->default(function ($request) {
+                    if ($request->viaResource == \App\Nova\ServiceDispatch::uriKey() && !empty($request->viaResourceId)) {
                         return \App\Models\ServiceDispatch::find($request->viaResourceId)->rate;
                     }
                 }),
 
             Currency::make('Amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
             Text::make("Reference")
                 ->hideFromIndex()
                 ->rules('required', 'string', 'max:200')
+                ->sortable()
                 ->help("You can input the provider invoice no here."),
 
             Files::make('Attachments', 'receive-service-attachments')
@@ -151,12 +160,13 @@ class ServiceReceive extends Resource
                 ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
-                    DispatchStatus::DRAFT()->getValue()     => 'warning',
-                    DispatchStatus::CONFIRMED()->getValue() => 'info',
-                    DispatchStatus::PARTIAL()->getValue()   => 'danger',
-                    DispatchStatus::RECEIVED()->getValue()  => 'success',
-                ])
-                ->label(function(){
+                DispatchStatus::DRAFT()->getValue()     => 'warning',
+                DispatchStatus::CONFIRMED()->getValue() => 'info',
+                DispatchStatus::PARTIAL()->getValue()   => 'danger',
+                DispatchStatus::RECEIVED()->getValue()  => 'success',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -211,7 +221,7 @@ class ServiceReceive extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmReceive)->canSee(function($request){
+            (new ConfirmReceive)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm service receives');
             }),
         ];
@@ -226,7 +236,7 @@ class ServiceReceive extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -238,10 +248,10 @@ class ServiceReceive extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }

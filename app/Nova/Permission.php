@@ -133,6 +133,7 @@ class Permission extends Resource
         return [
             ID::make('Id', 'id')
                 ->rules('required')
+                ->sortable()
                 ->hideFromIndex()
                 ->hideFromDetail(),
 
@@ -140,6 +141,7 @@ class Permission extends Resource
                 ->displayUsing(function(){
                     return Str::title($this->name);
                 })
+                ->sortable()
                 ->rules(['required', 'string', 'max:255'])
                 ->creationRules('unique:' . config('permission.table_names.permissions'))
                 ->updateRules('unique:' . config('permission.table_names.permissions') . ',name,{{resourceId}}'),
@@ -147,7 +149,8 @@ class Permission extends Resource
             Text::make(__('Group'))
                     ->displayUsing(function(){
                         return Str::title($this->group);
-                    }),
+                    })
+                    ->sortable(),
 
             Select::make(__('Guard Name'), 'guard_name')
                 ->options($guardOptions->toArray())
