@@ -28,7 +28,7 @@ class AssetDistributionReceiveItem extends Model implements HasMedia
      */
     protected static $logUnguarded = true;
 
-       /**
+    /**
      * Set the model readable id prefix
      *
      * @var string

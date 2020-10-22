@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d8260449994f7cedb0d5ed4836f45d8",
+    "content-hash": "611cec27f5057413c038ad6aa8725c0a",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -2122,6 +2122,54 @@
             "time": "2020-04-28T08:47:37+00:00"
         },
         {
+            "name": "genealabs/nova-telescope",
+            "version": "0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GeneaLabs/nova-telescope.git",
+                "reference": "3040493d9c71fde5d09577a47acc0538ff38ef19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GeneaLabs/nova-telescope/zipball/3040493d9c71fde5d09577a47acc0538ff38ef19",
+                "reference": "3040493d9c71fde5d09577a47acc0538ff38ef19",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^8.0",
+                "laravel/telescope": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "GeneaLabs\\NovaTelescope\\ToolServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GeneaLabs\\NovaTelescope\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova tool.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/mikebronner",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-09-09T13:45:15+00:00"
+        },
+        {
             "name": "graham-campbell/result-type",
             "version": "v1.0.1",
             "source": {
@@ -2893,6 +2941,65 @@
             "transport-options": {
                 "relative": true
             }
+        },
+        {
+            "name": "laravel/telescope",
+            "version": "v4.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/telescope.git",
+                "reference": "86665787a7183f85d9e4551ec059f239e48af89c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/86665787a7183f85d9e4551ec059f239e48af89c",
+                "reference": "86665787a7183f85d9e4551ec059f239e48af89c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "laravel/framework": "^8.0",
+                "php": "^7.3",
+                "symfony/var-dumper": "^5.0"
+            },
+            "require-dev": {
+                "ext-gd": "*",
+                "orchestra/testbench": "^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Telescope\\TelescopeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Telescope\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Mohamed Said",
+                    "email": "mohamed@laravel.com"
+                }
+            ],
+            "description": "An elegant debug assistant for the Laravel framework.",
+            "keywords": [
+                "debugging",
+                "laravel",
+                "monitoring"
+            ],
+            "time": "2020-10-20T19:07:01+00:00"
         },
         {
             "name": "laravel/tinker",

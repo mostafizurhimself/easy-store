@@ -27,7 +27,7 @@ class AssetDistributionItemObserver
         //Get the asset
         $asset = Asset::find($assetDistributionItem->assetId);
 
-        //Set the purchase amount
+        //Set the distribution amount
         $assetDistributionItem->distributionRate = $asset->rate;
         if(empty($assetDistributionItem->unitId)){
             $assetDistributionItem->unitId = $asset->unitId;
@@ -43,7 +43,7 @@ class AssetDistributionItemObserver
      */
     public function saved(AssetDistributionItem $assetDistributionItem)
     {
-        //Update the total requisition amount
+        //Update the total distribution amount
         $assetDistributionItem->invoice->updateDistributionAmount();
     }
 
@@ -55,7 +55,7 @@ class AssetDistributionItemObserver
      */
     public function deleted(AssetDistributionItem $assetDistributionItem)
     {
-        //Update the total requisition amount
+        //Update the total distribution amount
         $assetDistributionItem->invoice->updateDistributionAmount();
     }
 
@@ -67,7 +67,7 @@ class AssetDistributionItemObserver
      */
     public function restored(AssetDistributionItem $assetDistributionItem)
     {
-        //Update the total requisition amount
+        //Update the total distribution amount
         $assetDistributionItem->invoice->updateDistributionAmount();
     }
 
@@ -79,7 +79,7 @@ class AssetDistributionItemObserver
      */
     public function forceDeleted(AssetDistributionItem $assetDistributionItem)
     {
-        //Update the total requisition amount
+        //Update the total distribution amount
         $assetDistributionItem->invoice->updateDistributionAmount();
     }
 }

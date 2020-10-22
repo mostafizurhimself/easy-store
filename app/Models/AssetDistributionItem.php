@@ -27,7 +27,7 @@ class AssetDistributionItem extends Model
      */
     protected static $logUnguarded = true;
 
-        /**
+    /**
      * Set the model readable id prefix
      *
      * @var string

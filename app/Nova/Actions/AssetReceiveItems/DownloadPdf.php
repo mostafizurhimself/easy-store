@@ -31,6 +31,10 @@ class DownloadPdf extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
+        if($models->count() > 1000)
+        {
+            return Action::danger('Maximum rows exceeded.');
+        }
         $filename = "asset_receive_items_".time().".pdf";
         $subtitle = $fields->subtitle;
 
