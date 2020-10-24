@@ -25,14 +25,17 @@ class EmployeeObserver
     }
 
     /**
-     * Handle the employee "saved" event.
+     * Handle the employee "updating" event.
      *
      * @param  \App\Models\Employee  $employee
      * @return void
      */
-    public function saved(Employee $employee)
+    public function updating(Employee $employee)
     {
-        //
+        if(empty($employee->designation->code)){
+            throw new Exception("Designation code in not defined.");
+        }
+        $employee->readableId = Helper::generateEmployeeId($employee->id, $employee->designation->code);
     }
 
     /**
