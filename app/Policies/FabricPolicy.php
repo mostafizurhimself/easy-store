@@ -101,4 +101,16 @@ class FabricPolicy
                 ($user->hasPermissionTo('force delete fabrics') && $user->locationId == $fabric->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data');
     }
+
+    /**
+     * Determine whether the user can add a model item to the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Fabric  $fabric
+     * @return mixed
+     */
+    public function addFabricDistribution(User $user, Fabric  $fabric)
+    {
+        return false;
+    }
 }

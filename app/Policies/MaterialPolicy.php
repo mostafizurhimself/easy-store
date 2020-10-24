@@ -101,4 +101,16 @@ class MaterialPolicy
                 ($user->hasPermissionTo('force delete materials') && $user->locationId == $material->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data');
     }
+
+    /**
+     * Determine whether the user can add a model item to the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Material  $material
+     * @return mixed
+     */
+    public function addMaterialDistribution(User $user, Material  $material)
+    {
+        return false;
+    }
 }

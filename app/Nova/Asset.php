@@ -259,7 +259,7 @@ class Asset extends Resource
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
-            HasMany::make('Consume History', 'consumes', \App\Nova\AssetConsume::class)
+            HasMany::make('Consume History', 'consumes', \App\Nova\AssetConsume::class),
 
         ];
     }

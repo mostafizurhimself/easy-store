@@ -260,7 +260,7 @@ class Material extends Resource
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
-            HasMany::make('Distributions', 'distributions', "App\Nova\MaterialDistribution"),
+            HasMany::make('Distribution History', 'distributions', \App\Nova\MaterialDistribution::class),
 
 
         ];
