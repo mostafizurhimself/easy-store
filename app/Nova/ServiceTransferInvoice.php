@@ -17,6 +17,7 @@ use Laravel\Nova\Fields\Select;
 use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
+use App\Nova\Lenses\TransferItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
@@ -26,6 +27,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceTransferInvoice\GenerateInvoice;
 use App\Nova\Actions\ServiceTransferInvoices\ConfirmInvoice;
 use App\Nova\Lenses\ServiceTransferInvoice\TransferInvoices;
+use App\Nova\Lenses\TransferReceiveItems;
 
 class ServiceTransferInvoice extends Resource
 {
@@ -178,6 +180,7 @@ class ServiceTransferInvoice extends Resource
                     return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
                 })
                 ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
+                ->searchable()
                 ->onlyOnForms(),
 
             Text::make('Receiver', function () {
@@ -242,6 +245,10 @@ class ServiceTransferInvoice extends Resource
     {
         return [
             new TransferInvoices,
+
+            new TransferItems,
+
+            // new TransferReceiveItems,
         ];
     }
 

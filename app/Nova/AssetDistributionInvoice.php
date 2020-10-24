@@ -25,14 +25,17 @@ use Easystore\RouterLink\RouterLink;
 use App\Nova\Lenses\DistributionItems;
 use App\Nova\Lenses\DistributionHistory;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\DistributionStatusFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetDistributionInvoices\ConfirmInvoice;
 use App\Nova\Actions\AssetDistributionInvoices\GenerateInvoice;
-use App\Nova\Filters\DistributionStatusFilter;
 use App\Nova\Lenses\AssetDistributionInvoice\DistributionInvoices;
 
 class AssetDistributionInvoice extends Resource
 {
+    use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
@@ -70,13 +73,23 @@ class AssetDistributionInvoice extends Resource
     public static $title = 'readable_id';
 
     /**
+     * Get the search result subtitle for the resource.
+     *
+     * @return string
+     */
+    public function subtitle()
+    {
+        return "Location: " . $this->location->name;
+    }
+
+    /**
      * Get the displayable label of the resource.
      *
      * @return string
      */
     public static function label()
     {
-      return "Distributions";
+        return "Distributions";
     }
 
     /**
@@ -86,7 +99,7 @@ class AssetDistributionInvoice extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-truck';
+        return 'fas fa-truck';
     }
 
     /**
@@ -96,6 +109,15 @@ class AssetDistributionInvoice extends Resource
      */
     public static $search = [
         'readable_id',
+    ];
+
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'receiver' => ['name'],
     ];
 
     /**
@@ -124,7 +146,7 @@ class AssetDistributionInvoice extends Resource
                 ->hideWhenUpdating(),
 
             BelongsTo::make('Location')->sortable()
-            ->searchable()
+                ->searchable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -150,13 +172,14 @@ class AssetDistributionInvoice extends Resource
                 ->hideFromIndex(),
 
             Select::make('Receiver', 'receiver_id')
-                ->options(function(){
+                ->options(function () {
                     return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
                 })
                 ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
+                ->searchable()
                 ->onlyOnForms(),
 
-            Text::make('Receiver', function(){
+            Text::make('Receiver', function () {
                 return $this->receiver->name;
             })->sortable(),
 
@@ -172,13 +195,13 @@ class AssetDistributionInvoice extends Resource
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
-                    DistributionStatus::DRAFT()->getValue()     => 'warning',
-                    DistributionStatus::CONFIRMED()->getValue() => 'info',
-                    DistributionStatus::PARTIAL()->getValue()   => 'danger',
-                    DistributionStatus::RECEIVED()->getValue()  => 'success',
-                ])
+                DistributionStatus::DRAFT()->getValue()     => 'warning',
+                DistributionStatus::CONFIRMED()->getValue() => 'info',
+                DistributionStatus::PARTIAL()->getValue()   => 'danger',
+                DistributionStatus::RECEIVED()->getValue()  => 'success',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -207,7 +230,7 @@ class AssetDistributionInvoice extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -240,19 +263,19 @@ class AssetDistributionInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmInvoice)->canSee(function($request){
+            (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm asset distribution invoices');
             }),
 
-            (new GenerateInvoice)->canSee(function($request){
+            (new GenerateInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate asset distribution invoices');
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate asset distribution invoices') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate invoice now?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate asset distribution invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate invoice now?')
+                ->onlyOnDetail(),
         ];
     }
 }

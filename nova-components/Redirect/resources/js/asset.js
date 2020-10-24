@@ -21,6 +21,18 @@ Nova.booting((Vue, router, store) => {
             return;
         }
 
+        if (to.params.resourceName === 'fabric-transfer-invoices' && to.params.lens === 'transfer-items') {
+            router.push({'name' : 'index', params: {resourceName : 'fabric-transfer-items'}});
+
+            return;
+        }
+
+        if (to.params.resourceName === 'fabric-transfer-invoices' && to.params.lens === 'transfer-receive-items') {
+            router.push({'name' : 'index', params: {resourceName : 'fabric-transfer-receive-items'}});
+
+            return;
+        }
+
         // Material Section
         if (to.params.resourceName === 'material-purchase-orders' && to.params.lens === 'purchase-items') {
             router.push({'name' : 'index', params: {resourceName : 'material-purchase-items'}});
@@ -36,6 +48,18 @@ Nova.booting((Vue, router, store) => {
 
         if (to.params.resourceName === 'material-return-invoices' && to.params.lens === 'return-items') {
             router.push({'name' : 'index', params: {resourceName : 'material-return-items'}});
+
+            return;
+        }
+
+        if (to.params.resourceName === 'material-transfer-invoices' && to.params.lens === 'transfer-items') {
+            router.push({'name' : 'index', params: {resourceName : 'material-transfer-items'}});
+
+            return;
+        }
+
+        if (to.params.resourceName === 'material-transfer-invoices' && to.params.lens === 'transfer-receive-items') {
+            router.push({'name' : 'index', params: {resourceName : 'material-transfer-receive-items'}});
 
             return;
         }
@@ -86,6 +110,19 @@ Nova.booting((Vue, router, store) => {
 
             return;
         }
+
+        if (to.params.resourceName === 'service-transfer-invoices' && to.params.lens === 'transfer-items') {
+            router.push({'name' : 'index', params: {resourceName : 'service-transfer-items'}});
+
+            return;
+        }
+
+        if (to.params.resourceName === 'service-transfer-invoices' && to.params.lens === 'transfer-receive-items') {
+            router.push({'name' : 'index', params: {resourceName : 'service-transfer-receive-items'}});
+
+            return;
+        }
+
 
         // Product Section
 

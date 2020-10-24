@@ -102,7 +102,7 @@ class AssetReturnInvoice extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-exchange-alt';
+      return 'fas fa-undo-alt';
     }
 
     /**

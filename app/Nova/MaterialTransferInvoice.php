@@ -3,37 +3,47 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
-use App\Enums\ReturnStatus;
+use App\Rules\ReceiverRule;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use App\Enums\TransferStatus;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
+use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Hidden;
+use Laravel\Nova\Fields\Select;
 use App\Nova\Filters\DateFilter;
-use App\Nova\Lenses\ReturnItems;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
+use App\Nova\Lenses\TransferItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Titasgailius\SearchRelations\SearchesRelations;
-use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
-use App\Nova\Actions\FabricReturnInvoices\GenerateInvoice;
-use App\Nova\Filters\ReturnStatusFilter;
+use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use App\Nova\Actions\MaterialTransferInvoices\ConfirmInvoice;
+use App\Nova\Lenses\MaterialTransferInvoice\TransferInvoices;
+use App\Nova\Actions\MaterialTransferInvoices\GenerateInvoice;
 
-class FabricReturnInvoice extends Resource
+class MaterialTransferInvoice extends Resource
 {
-    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\FabricReturnInvoice::class;
+    public static $model = \App\Models\MaterialTransferInvoice::class;
+
+    /**
+     * The side nav menu order.
+     *
+     * @var int
+     */
+    public static $priority = 6;
 
     /**
      * Get the custom permissions name of the resource
@@ -47,16 +57,7 @@ class FabricReturnInvoice extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">04</span>Fabrics Section';
-
-
-    /**
-     * The side nav menu order.
-     *
-     * @var int
-     */
-    public static $priority = 4;
-
+    public static $group = '<span class="hidden">05</span>Material Section';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -72,7 +73,7 @@ class FabricReturnInvoice extends Resource
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: " . $this->location->name;
     }
 
     /**
@@ -82,7 +83,7 @@ class FabricReturnInvoice extends Resource
      */
     public static function label()
     {
-      return "Return Invoices";
+        return "Transfer Invoices";
     }
 
     /**
@@ -92,7 +93,7 @@ class FabricReturnInvoice extends Resource
      */
     public static function navigationLabel()
     {
-        return "Returns";
+        return "Transfers";
     }
 
     /**
@@ -102,7 +103,7 @@ class FabricReturnInvoice extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-undo-alt';
+        return 'fas fa-exchange-alt';
     }
 
     /**
@@ -115,15 +116,6 @@ class FabricReturnInvoice extends Resource
     ];
 
     /**
-     * The relationship columns that should be searched.
-     *
-     * @var array
-     */
-    public static $searchRelations = [
-        'location' => ['name'],
-    ];
-
-    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -132,11 +124,11 @@ class FabricReturnInvoice extends Resource
     public function fields(Request $request)
     {
         return [
-            RouterLink::make('Invoice', 'id')
+            RouterLink::make('Invoice No', 'id')
+                ->sortable()
                 ->withMeta([
                     'label' => $this->readableId,
-                ])
-                ->sortable(),
+                ]),
 
             Date::make('Date')
                 ->rules('required')
@@ -148,9 +140,8 @@ class FabricReturnInvoice extends Resource
                 ->default(Carbon::now())
                 ->hideWhenUpdating(),
 
-            BelongsTo::make('Location')
+            BelongsTo::make('Location')->sortable()
                 ->searchable()
-                ->sortable()
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -158,38 +149,48 @@ class FabricReturnInvoice extends Resource
                     return false;
                 }),
 
-            BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")
-                    ->searchable()
-                    ->sortable(),
-
-            Currency::make('Total Amount', 'total_return_amount')
+            Currency::make('Transfer Amount', 'total_transfer_amount')
                 ->currency('BDT')
                 ->sortable()
                 ->exceptOnForms(),
 
-            Badge::make('Status')->map([
-                    ReturnStatus::DRAFT()->getValue()     => 'warning',
-                    ReturnStatus::CONFIRMED()->getValue() => 'info',
-                    ReturnStatus::BILLED()->getValue()    => 'danger',
-                ])
+            Currency::make('Receive Amount', 'total_receive_amount')
+                ->currency('BDT')
                 ->sortable()
-                ->label(function(){
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                ->exceptOnForms(),
 
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
 
-            Text::make('Approved By', function(){
-                    return $this->approve ? $this->approve->employee->name : null;
-                })
-                ->sortable()
-                ->canSee(function(){
-                    return $this->approve()->exists();
-                })
-                ->onlyOnDetail(),
+            Files::make('Attachments', 'transfer-attachments')
+                ->singleMediaRules('max:5000') // max 5000kb
+                ->hideFromIndex(),
 
-            HasMany::make('Return Items', 'returnItems', \App\Nova\FabricReturnItem::class),
+            Select::make('Receiver', 'receiver_id')
+                ->options(function () {
+                    return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                })
+                ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
+                ->searchable()
+                ->onlyOnForms(),
+
+            Text::make('Receiver', function () {
+                return $this->receiver->name;
+            })->sortable(),
+
+            Badge::make('Status')->map([
+                TransferStatus::DRAFT()->getValue()     => 'warning',
+                TransferStatus::CONFIRMED()->getValue() => 'info',
+                TransferStatus::PARTIAL()->getValue()   => 'danger',
+                TransferStatus::RECEIVED()->getValue()  => 'success',
+            ])
+                ->sortable()
+                ->label(function () {
+                    return Str::title(Str::of($this->status)->replace('_', " "));
+                }),
+
+            HasMany::make('Transfer Items', 'transferItems', \App\Nova\MaterialTransferItem::class),
+            HasMany::make('Receive Items', 'receiveItems', \App\Nova\MaterialTransferReceiveItem::class),
         ];
     }
 
@@ -213,13 +214,13 @@ class FabricReturnInvoice extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
             new DateFilter('date'),
 
-            new ReturnStatusFilter,
+            new TransferStatusFilter,
         ];
     }
 
@@ -232,7 +233,9 @@ class FabricReturnInvoice extends Resource
     public function lenses(Request $request)
     {
         return [
-            new ReturnItems
+            new TransferInvoices,
+            new TransferItems,
+            // new TransferReceiveItems,
         ];
     }
 
@@ -245,19 +248,20 @@ class FabricReturnInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmInvoice)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can confirm fabric return invoices');
-            }),
+            (new ConfirmInvoice)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can confirm material transfer invoices');
+            })
+            ->confirmButtonText('Confirm'),
 
-            (new GenerateInvoice)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can generate fabric return invoices');
+            (new GenerateInvoice)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can generate material transfer invoices');
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate fabric return invoices') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate invoice now?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate material transfer invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate invoice now?')
+                ->onlyOnDetail(),
         ];
     }
 }

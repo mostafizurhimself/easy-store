@@ -27,8 +27,8 @@ class Requisitions extends Lens
     {
         return $request->withOrdering($request->withFilters(
             $query->where('receiver_id', $request->user()->locationId)
-                    ->where('status','!=', RequisitionStatus::DRAFT())
-                    ->orderBy('id', 'DESC')
+                ->where('status', '!=', RequisitionStatus::DRAFT())
+                ->orderBy('id', 'DESC')
         ));
     }
 
@@ -41,35 +41,43 @@ class Requisitions extends Lens
     public function fields(Request $request)
     {
         return [
-            ID::make('ID', 'id'),
+            ID::make('ID', 'id')
+                ->sortable(),
 
-            Text::make('Requisition', function(){
+            Text::make('Requisition', function () {
                 return $this->readableId;
-            }),
+            })
+                ->sortable(),
 
-            Date::make('Date', 'date'),
+            Date::make('Date', 'date')
+                ->sortable(),
 
-            Text::make('Location', function(){
-                    return $this->location->name;
-                }),
+            Text::make('Location', function () {
+                return $this->location->name;
+            })
+                ->sortable(),
 
             Currency::make('Requisition Amount', 'total_requisition_amount')
                 ->currency('BDT')
+                ->sortable()
                 ->exceptOnForms(),
 
-            Date::make('Deadline','deadline'),
+            Date::make('Deadline', 'deadline')
+                ->sortable(),
 
-            Text::make('Receiver', function(){
+            Text::make('Receiver', function () {
                 return $this->receiver->name;
-            }),
+            })
+                ->sortable(),
 
             Badge::make('Status')->map([
-                    RequisitionStatus::DRAFT()->getValue()     => 'warning',
-                    RequisitionStatus::CONFIRMED()->getValue() => 'info',
-                    RequisitionStatus::PARTIAL()->getValue()   => 'danger',
-                    RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
-                ])
-                ->label(function(){
+                RequisitionStatus::DRAFT()->getValue()     => 'warning',
+                RequisitionStatus::CONFIRMED()->getValue() => 'info',
+                RequisitionStatus::PARTIAL()->getValue()   => 'danger',
+                RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
         ];

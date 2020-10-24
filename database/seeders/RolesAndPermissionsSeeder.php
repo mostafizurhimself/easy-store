@@ -44,6 +44,9 @@ class RolesAndPermissionsSeeder extends Seeder
             \App\Nova\MaterialReceiveItem::class,
             \App\Nova\MaterialReturnInvoice::class,
             \App\Nova\MaterialReturnItem::class,
+            \App\Nova\MaterialTransferInvoice::class,
+            \App\Nova\MaterialTransferItem::class,
+            \App\Nova\MaterialTransferReceiveItem::class,
             \App\Nova\MaterialDistribution::class,
 
             // Asset Section

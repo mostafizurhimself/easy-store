@@ -146,18 +146,15 @@ class MaterialTransferItem extends Model
     public function updateStatus()
     {
         if($this->receiveItems()->exists() && ($this->transferQuantity == $this->receiveQuantity)){
-            $this->statu
-            ::RECEIVED();
+            $this->status= TransferStatus::RECEIVED();
         }
 
         if($this->receiveItems()->exists() && ($this->transferQuantity != $this->receiveQuantity)){
-            $this->statu
-            ::PARTIAL();
+            $this->status= TransferStatus::PARTIAL();
         }
 
         if(!$this->receiveItems()->exists()){
-            $this->statu
-            ::CONFIRMED();
+            $this->status= TransferStatus::CONFIRMED();
         }
 
         $this->save();

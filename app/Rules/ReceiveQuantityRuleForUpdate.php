@@ -5,6 +5,7 @@ namespace App\Rules;
 use App\Models\AssetPurchaseItem;
 use App\Models\FabricPurchaseItem;
 use App\Models\MaterialPurchaseItem;
+use App\Models\MaterialTransferItem;
 use App\Models\AssetDistributionItem;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -39,6 +40,10 @@ class ReceiveQuantityRuleForUpdate implements Rule
 
         if($viaResource == \App\Nova\MaterialPurchaseItem::uriKey() || $viaResource == \App\Nova\MaterialPurchaseOrder::uriKey()){
             $this->item = MaterialPurchaseItem::find($itemId);
+        }
+
+        if($viaResource == \App\Nova\MaterialTransferItem::uriKey() || $viaResource == \App\Nova\MaterialTransferInvoice::uriKey()){
+            $this->item = MaterialTransferItem::find($itemId);
         }
 
         if($viaResource == \App\Nova\AssetPurchaseItem::uriKey() || $viaResource == \App\Nova\AssetPurchaseOrder::uriKey()){

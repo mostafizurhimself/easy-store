@@ -160,6 +160,7 @@ class ProductRequisition extends Resource
                     return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
                 })
                 ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
+                ->searchable()
                 ->onlyOnForms(),
 
             Text::make('Receiver', function () {

@@ -95,6 +95,7 @@ use App\Models\ServiceTransferInvoice;
 use App\Policies\FabricCategoryPolicy;
 use App\Policies\ServiceInvoicePolicy;
 use App\Policies\ServiceReceivePolicy;
+use App\Models\MaterialTransferInvoice;
 use App\Policies\AssetReturnItemPolicy;
 use App\Policies\ExpenseCategoryPolicy;
 use App\Policies\ProductCategoryPolicy;
@@ -116,6 +117,7 @@ use App\Policies\FabricDistributionPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
 use App\Policies\MaterialReturnItemPolicy;
 use App\Policies\ProductRequisitionPolicy;
+use App\Models\MaterialTransferReceiveItem;
 use App\Policies\FabricPurchaseOrderPolicy;
 use App\Policies\FabricReturnInvoicePolicy;
 use App\Policies\MaterialReceiveItemPolicy;
@@ -124,13 +126,16 @@ use App\Models\AssetDistributionReceiveItem;
 use App\Policies\AssetRequisitionItemPolicy;
 use App\Policies\MaterialDistributionPolicy;
 use App\Policies\MaterialPurchaseItemPolicy;
+use App\Policies\MaterialTransferItemPolicy;
 use App\Policies\AssetDistributionItemPolicy;
 use App\Policies\MaterialPurchaseOrderPolicy;
 use App\Policies\MaterialReturnInvoicePolicy;
 use App\Policies\ProductRequisitionItemPolicy;
 use App\Policies\ServiceTransferInvoicePolicy;
+use App\Policies\MaterialTransferInvoicePolicy;
 use App\Policies\AssetDistributionInvoicePolicy;
 use App\Policies\ServiceTransferReceiveItemPolicy;
+use App\Policies\MaterialTransferReceiveItemPolicy;
 use App\Policies\AssetDistributionReceiveItemPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -164,6 +169,9 @@ class AuthServiceProvider extends ServiceProvider
         MaterialReceiveItem::class          => MaterialReceiveItemPolicy::class,
         MaterialReturnInvoice::class        => MaterialReturnInvoicePolicy::class,
         MaterialReturnItem::class           => MaterialReturnItemPolicy::class,
+        MaterialTransferInvoice::class      => MaterialTransferInvoicePolicy::class,
+        MaterialTransferItem::class         => MaterialTransferItemPolicy::class,
+        MaterialTransferReceiveItem::class  => MaterialTransferReceiveItemPolicy::class,
         MaterialDistribution::class         => MaterialDistributionPolicy::class,
         AssetCategory::class                => AssetCategoryPolicy::class,
         Asset::class                        => AssetPolicy::class,

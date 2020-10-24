@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Lenses\ServiceTransferInvoice;
+namespace App\Nova\Lenses\MaterialTransferInvoice;
 
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -11,7 +11,6 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Currency;
-use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\LensRequest;
 
 class TransferInvoices extends Lens
@@ -27,7 +26,7 @@ class TransferInvoices extends Lens
     {
         return $request->withOrdering($request->withFilters(
             $query->where('receiver_id', $request->user()->locationId)
-                ->where('status', '!=', TransferStatus::DRAFT())
+                ->where('status','!=', TransferStatus::DRAFT())
                 ->orderBy('id', 'DESC')
         ));
     }
@@ -122,6 +121,6 @@ class TransferInvoices extends Lens
      */
     public function uriKey()
     {
-        return 'service-transfer-invoice-transfer-invoices';
+        return 'material-transfer-invoice-transfer-invoices';
     }
 }

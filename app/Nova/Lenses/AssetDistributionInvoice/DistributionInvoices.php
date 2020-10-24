@@ -31,8 +31,8 @@ class DistributionInvoices extends Lens
     {
         return $request->withOrdering($request->withFilters(
             $query->where('receiver_id', $request->user()->locationId)
-                    ->where('status','!=', DistributionStatus::DRAFT())
-                    ->orderBy('id', 'DESC')
+                ->where('status', '!=', DistributionStatus::DRAFT())
+                ->orderBy('id', 'DESC')
         ));
     }
 
@@ -47,33 +47,37 @@ class DistributionInvoices extends Lens
         return [
             ID::make(__('ID'), 'id')->sortable(),
 
-            Text::make('Invoice No', function(){
+            Text::make('Invoice No', function () {
                 return $this->readableId;
-            }),
+            })->sortable(),
 
-            Date::make('Date'),
+            Date::make('Date')->sortable(),
 
-            Text::make('Location', function(){
-                    return $this->location->name;
-                }),
+            Text::make('Location', function () {
+                return $this->location->name;
+            })->sortable(),
 
             Currency::make('Distribution Amount', 'total_distribution_amount')
+                ->sortable()
                 ->currency('BDT'),
 
-            Text::make('Receiver', function(){
+            Text::make('Receiver', function () {
                 return $this->receiver->name;
-            }),
+            })
+                ->sortable(),
 
             BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Badge::make('Status')->map([
-                    DistributionStatus::DRAFT()->getValue()     => 'warning',
-                    DistributionStatus::CONFIRMED()->getValue() => 'info',
-                    DistributionStatus::PARTIAL()->getValue()   => 'danger',
-                    DistributionStatus::RECEIVED()->getValue()  => 'success',
-                ])
-                ->label(function(){
+                DistributionStatus::DRAFT()->getValue()     => 'warning',
+                DistributionStatus::CONFIRMED()->getValue() => 'info',
+                DistributionStatus::PARTIAL()->getValue()   => 'danger',
+                DistributionStatus::RECEIVED()->getValue()  => 'success',
+            ])
+                ->sortable()
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
         ];

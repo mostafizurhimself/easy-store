@@ -29,6 +29,10 @@ class DistributionQuantityRule implements Rule
             $this->item = Material::find($itemId);
         }
 
+        if($uriKey == \App\Nova\MaterialTransferItem::uriKey()){
+            $this->item = Material::find($itemId);
+        }
+
         if($uriKey == \App\Nova\AssetDistributionItem::uriKey()){
             $this->item = Asset::find($itemId);
         }
