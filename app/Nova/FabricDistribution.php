@@ -134,7 +134,19 @@ class FabricDistribution extends Resource
                 ->exceptOnForms()
                 ->sortable(),
 
-            BelongsTo::make('Fabric')->searchable()
+            // BelongsTo::make('Fabric')
+            //     ->searchable()
+            //     ->onlyOnForms()
+            //     ->canSee(function ($request) {
+            //         if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+            //             return true;
+            //         }
+            //         return false;
+            //     }),
+
+            Select::make('Fabric', 'fabric_id')
+                ->options(\App\Models\Fabric::where('location_id', $request->user()->locationId)->pluck('name', 'id'))
+                ->searchable()
                 ->onlyOnForms()
                 ->canSee(function ($request) {
                     if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {

@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
@@ -33,7 +34,7 @@ class MaterialDistribution extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\MaterialDistribution';
+    public static $model = \App\Models\MaterialDistribution::class;
 
     /**
      * Get the custom permissions name of the resource
@@ -127,10 +128,21 @@ class MaterialDistribution extends Resource
                 ->exceptOnForms()
                 ->sortable(),
 
-            BelongsTo::make('Material', 'material', \App\Nova\Material::class)
-                // ->searchable()
+            // BelongsTo::make('Material', 'material', \App\Nova\Material::class)
+            //     ->searchable()
+            //     ->onlyOnForms()
+            //     ->sortable()
+            //     ->canSee(function ($request) {
+            //         if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+            //             return true;
+            //         }
+            //         return false;
+            //     }),
+
+            Select::make('Material', 'material_id')
+                ->options(\App\Models\Material::where('location_id', $request->user()->locationId)->pluck('name', 'id'))
+                ->searchable()
                 ->onlyOnForms()
-                ->sortable()
                 ->canSee(function ($request) {
                     if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return true;
