@@ -118,12 +118,12 @@ class AssetDistributionItem extends Resource
                                 new DistributionQuantityRuleOnRequisition($request->viaResource, $request->viaResourceId, $request->get('asset_id') ?? $request->get('asset')),
                 )
                 ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\AssetDistributionItem::uriKey(),
-                                                                    $request->get('asset_id'),
+                                                                    $request->get('asset_id') ?? $request->get('asset'),
                                                                     $this->resource->distributionQuantity,
                                                                     $this->resource->assetId),
                             new DistributionQuantityRuleOnRequisitionForUpdate($request->viaResource,
                                                                     $request->viaResourceId,
-                                                                    $request->get('asset_id'),
+                                                                    $request->get('asset_id') ?? $request->get('asset'),
                                                                     $this->resource->assetId,
                                                                     $this->resource->distributionQuantity),
                             )
