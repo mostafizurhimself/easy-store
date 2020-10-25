@@ -18,14 +18,16 @@ class FabricTransferInvoiceObserver
     }
 
     /**
-     * Handle the fabric transfer invoice "updated" event.
+     * Handle the fabric transfer invoice "updating" event.
      *
      * @param  \App\Models\FabricTransferInvoice  $fabricTransferInvoice
      * @return void
      */
-    public function updated(FabricTransferInvoice $fabricTransferInvoice)
+    public function updating(FabricTransferInvoice $fabricTransferInvoice)
     {
-        //
+        if($fabricTransferInvoice->isDirty('location_id')){
+            $fabricTransferInvoice->transferItems()->forceDelete();
+        }
     }
 
     /**

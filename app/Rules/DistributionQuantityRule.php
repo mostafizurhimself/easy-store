@@ -25,6 +25,10 @@ class DistributionQuantityRule implements Rule
             $this->item = Fabric::find($itemId);
         }
 
+        if($uriKey == \App\Nova\FabricTransferItem::uriKey()){
+            $this->item = Fabric::find($itemId);
+        }
+
         if($uriKey == \App\Nova\MaterialDistribution::uriKey()){
             $this->item = Material::find($itemId);
         }

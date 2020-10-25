@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use App\Models\AssetPurchaseItem;
 use App\Models\FabricPurchaseItem;
+use App\Models\FabricTransferItem;
 use App\Models\MaterialPurchaseItem;
 use App\Models\MaterialTransferItem;
 use App\Models\AssetDistributionItem;
@@ -36,6 +37,10 @@ class ReceiveQuantityRuleForUpdate implements Rule
     {
         if($viaResource == \App\Nova\FabricPurchaseItem::uriKey() || $viaResource == \App\Nova\FabricPurchaseOrder::uriKey()){
             $this->item = FabricPurchaseItem::find($itemId);
+        }
+
+        if($viaResource == \App\Nova\FabricTransferItem::uriKey() || $viaResource == \App\Nova\FabricTransferInvoice::uriKey()){
+            $this->item = FabricTransferItem::find($itemId);
         }
 
         if($viaResource == \App\Nova\MaterialPurchaseItem::uriKey() || $viaResource == \App\Nova\MaterialPurchaseOrder::uriKey()){

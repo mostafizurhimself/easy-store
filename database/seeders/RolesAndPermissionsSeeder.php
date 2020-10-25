@@ -34,6 +34,9 @@ class RolesAndPermissionsSeeder extends Seeder
             \App\Nova\FabricReceiveItem::class,
             \App\Nova\FabricReturnInvoice::class,
             \App\Nova\FabricReturnItem::class,
+            \App\Nova\FabricTransferInvoice::class,
+            \App\Nova\FabricTransferItem::class,
+            \App\Nova\FabricTransferReceiveItem::class,
             \App\Nova\FabricDistribution::class,
 
             // Material Section

@@ -68,6 +68,7 @@ use App\Models\AssetPurchaseOrder;
 use App\Models\AssetReturnInvoice;
 use App\Models\FabricDistribution;
 use App\Models\FabricPurchaseItem;
+use App\Models\FabricTransferItem;
 use App\Models\MaterialReturnItem;
 use App\Models\ProductRequisition;
 use App\Policies\DepartmentPolicy;
@@ -86,6 +87,7 @@ use App\Policies\AssetConsumePolicy;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\AssetDistributionItem;
+use App\Models\FabricTransferInvoice;
 use App\Models\MaterialPurchaseOrder;
 use App\Models\MaterialReturnInvoice;
 use App\Policies\AssetCategoryPolicy;
@@ -108,6 +110,7 @@ use App\Policies\AssetRequisitionPolicy;
 use App\Policies\FabricReturnItemPolicy;
 use App\Policies\FinishingInvoicePolicy;
 use App\Policies\MaterialCategoryPolicy;
+use App\Models\FabricTransferReceiveItem;
 use App\Policies\AssetPurchaseItemPolicy;
 use App\Policies\FabricReceiveItemPolicy;
 use App\Models\ServiceTransferReceiveItem;
@@ -115,6 +118,7 @@ use App\Policies\AssetPurchaseOrderPolicy;
 use App\Policies\AssetReturnInvoicePolicy;
 use App\Policies\FabricDistributionPolicy;
 use App\Policies\FabricPurchaseItemPolicy;
+use App\Policies\FabricTransferItemPolicy;
 use App\Policies\MaterialReturnItemPolicy;
 use App\Policies\ProductRequisitionPolicy;
 use App\Models\MaterialTransferReceiveItem;
@@ -128,12 +132,14 @@ use App\Policies\MaterialDistributionPolicy;
 use App\Policies\MaterialPurchaseItemPolicy;
 use App\Policies\MaterialTransferItemPolicy;
 use App\Policies\AssetDistributionItemPolicy;
+use App\Policies\FabricTransferInvoicePolicy;
 use App\Policies\MaterialPurchaseOrderPolicy;
 use App\Policies\MaterialReturnInvoicePolicy;
 use App\Policies\ProductRequisitionItemPolicy;
 use App\Policies\ServiceTransferInvoicePolicy;
 use App\Policies\MaterialTransferInvoicePolicy;
 use App\Policies\AssetDistributionInvoicePolicy;
+use App\Policies\FabricTransferReceiveItemPolicy;
 use App\Policies\ServiceTransferReceiveItemPolicy;
 use App\Policies\MaterialTransferReceiveItemPolicy;
 use App\Policies\AssetDistributionReceiveItemPolicy;
@@ -161,6 +167,9 @@ class AuthServiceProvider extends ServiceProvider
         FabricReceiveItem::class            => FabricReceiveItemPolicy::class,
         FabricReturnInvoice::class          => FabricReturnInvoicePolicy::class,
         FabricReturnItem::class             => FabricReturnItemPolicy::class,
+        FabricTransferInvoice::class        => FabricTransferInvoicePolicy::class,
+        FabricTransferItem::class           => FabricTransferItemPolicy::class,
+        FabricTransferReceiveItem::class    => FabricTransferReceiveItemPolicy::class,
         FabricDistribution::class           => FabricDistributionPolicy::class,
         MaterialCategory::class             => MaterialCategoryPolicy::class,
         Material::class                     => MaterialPolicy::class,

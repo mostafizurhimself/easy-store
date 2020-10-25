@@ -41,6 +41,11 @@ class DistributionQuantityRuleForUpdate implements Rule
             $this->previousItem = Fabric::find($previousItemId);
         }
 
+        if($uriKey == \App\Nova\FabricTransferItem::uriKey()){
+            $this->item = Fabric::find($itemId);
+            $this->previousItem = Fabric::find($previousItemId);
+        }
+
         if($uriKey == \App\Nova\MaterialDistribution::uriKey()){
             $this->item = Material::find($itemId);
             $this->previousItem = Material::find($previousItemId);

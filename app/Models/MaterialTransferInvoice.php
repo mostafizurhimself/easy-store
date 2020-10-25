@@ -35,6 +35,13 @@ class MaterialTransferInvoice extends Model implements HasMedia
      */
     protected $dates = ['date'];
 
+        /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['unit'];
+
     /**
      * Set the model readable id prefix
      *
@@ -93,7 +100,7 @@ class MaterialTransferInvoice extends Model implements HasMedia
     }
 
     /**
-     * Get the distribuion assets ids as an array
+     * Get the transfer materials ids as an array
      *
      * @return array
      */
@@ -114,7 +121,7 @@ class MaterialTransferInvoice extends Model implements HasMedia
     }
 
     /**
-     * Update the total distribuion amount
+     * Update the total transfer amount
      *
      * @return void
      */
@@ -136,7 +143,7 @@ class MaterialTransferInvoice extends Model implements HasMedia
     }
 
     /**
-     * Check all the distribuion items status is confirmed or not
+     * Check all the transfer items status is confirmed or not
      *
      * @return bool
      */
@@ -150,7 +157,7 @@ class MaterialTransferInvoice extends Model implements HasMedia
     }
 
     /**
-     * Check all the distribuion items status is received or not
+     * Check all the transfer items status is received or not
      *
      * @return bool
      */
@@ -164,7 +171,7 @@ class MaterialTransferInvoice extends Model implements HasMedia
     }
 
     /**
-     * Check any of the distribuion items status is partial or not
+     * Check any of the transfer items status is partial or not
      *
      * @return bool
      */
@@ -177,7 +184,7 @@ class MaterialTransferInvoice extends Model implements HasMedia
     }
 
     /**
-     * Update the distribuion invoice status
+     * Update the transfer invoice status
      *
      * @return void
      */

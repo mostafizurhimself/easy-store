@@ -2,29 +2,23 @@
 
 namespace App\Nova;
 
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\TransferStatus;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
-use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
-use App\Nova\Filters\DateFilter;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
-use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Rules\DistributionQuantityRule;
 use App\Nova\Filters\TransferStatusFilter;
-use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
-use App\Nova\Actions\MaterialTransferReceiveItems\ConfirmReceiveItem;
+use App\Rules\DistributionQuantityRuleForUpdate;
 
-class MaterialTransferReceiveItem extends Resource
+class FabricTransferItem extends Resource
 {
     use WithOutLocation;
 
@@ -33,24 +27,14 @@ class MaterialTransferReceiveItem extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\MaterialTransferReceiveItem::class;
+    public static $model = \App\Models\FabricTransferItem::class;
 
     /**
      * Get the custom permissions name of the resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can download'];
-
-    /**
-     * Get the displayable label of the resource.
-     *
-     * @return string
-     */
-    public static function label()
-    {
-        return "Receive Items";
-    }
+    public static $permissions = ['can download'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -83,6 +67,16 @@ class MaterialTransferReceiveItem extends Resource
     public static $globallySearchable = false;
 
     /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+        return "Tranfer Items";
+    }
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -91,77 +85,65 @@ class MaterialTransferReceiveItem extends Resource
     public function fields(Request $request)
     {
         return [
-            // ID::make(__('ID'), 'id')->sortable(),
-
-            BelongsTo::make('Invoice', 'invoice', \App\Nova\MaterialTransferInvoice::class)
+            BelongsTo::make('Invoice', 'invoice', \App\Nova\FabricTransferInvoice::class)
                 ->exceptOnForms()
                 ->sortable(),
 
-            BelongsTo::make('Material')
-                ->hideWhenCreating()
-                ->sortable()
-                ->readonly(),
+            BelongsTo::make('Fabric')
+                ->searchable()
+                ->sortable(),
 
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->sortable()
-                ->readonly(),
-
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
-
-            Number::make('Quantity')
-                ->default(function ($request) {
-                    if ($request->viaResource ==  \App\Nova\MaterialTransferItem::uriKey() && !empty($request->viaResourceId)) {
-                        return \App\Models\MaterialTransferItem::find($request->viaResourceId)->remainingQuantity;
-                    } else {
-                        return $this->resource->transferItem->remainingQuantity;
-                    }
-                })
-                ->sortable()
+            Number::make('Quantity', 'transfer_quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
-                ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\MaterialTransferItem::uriKey(), $this->resource->transferItemId, $this->resource->quantity))
+                ->sortable()
+                ->creationRules(new DistributionQuantityRule(\App\Nova\FabricTransferItem::uriKey(), $request->get('fabric_id') ?? $request->get('fabric')))
+                ->updateRules(new DistributionQuantityRuleForUpdate(
+                    \App\Nova\FabricTransferItem::uriKey(),
+                    $request->get('fabric_id'),
+                    $this->resource->transferQuantity,
+                    $this->resource->fabricId
+                ))
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function () {
-                return $this->quantity . " " . $this->unitName;
+            Text::make('Transfer Quantity', function () {
+                return $this->transferQuantity . " " . $this->unitName;
             })
                 ->exceptOnForms()
                 ->sortable(),
 
-            Currency::make('Rate')
+            Currency::make('Transfer Rate')
                 ->currency('BDT')
+                ->sortable()
+                ->exceptOnForms(),
+
+            Currency::make('Transfer Amount')
+                ->currency('BDT')
+                ->sortable()
+                ->exceptOnForms(),
+
+            Text::make('Receive Quantity', function () {
+                return $this->receiveQuantity . " " . $this->unitName;
+            })
                 ->exceptOnForms()
                 ->sortable(),
 
-            Currency::make('Amount')
+            Currency::make('Receive Amount')
                 ->currency('BDT')
-                ->exceptOnForms()
-                ->sortable(),
-
-            Text::make("Reference")
-                ->hideFromIndex()
-                ->rules('nullable', 'string', 'max:200'),
-
-            Files::make('Attachments', 'transfer-receive-item-attachments')
-                ->hideFromIndex(),
-
-            Trix::make('Note')
-                ->rules('nullable', 'max:500'),
+                ->sortable()
+                ->onlyOnDetail(),
 
             Badge::make('Status')->map([
                 TransferStatus::DRAFT()->getValue()     => 'warning',
                 TransferStatus::CONFIRMED()->getValue() => 'info',
                 TransferStatus::PARTIAL()->getValue()   => 'danger',
-                TransferStatus::RECEIVED()->getValue()  => 'success'
+                TransferStatus::RECEIVED()->getValue()  => 'success',
             ])
                 ->sortable()
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
+
+            HasMany::make('Receive Items', 'receiveItems', \App\Nova\FabricTransferReceiveItem::class)
         ];
     }
 
@@ -185,7 +167,6 @@ class MaterialTransferReceiveItem extends Resource
     public function filters(Request $request)
     {
         return [
-            new DateFilter('date'),
             new TransferStatusFilter,
         ];
     }
@@ -209,12 +190,36 @@ class MaterialTransferReceiveItem extends Resource
      */
     public function actions(Request $request)
     {
-        return [
-            (new ConfirmReceiveItem)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can confirm material transfer receive items');
-            })
-            ->confirmButtonText('Confirm'),
-        ];
+        return [];
+    }
+
+    /**
+     * Build a "relatable" query for the given resource.
+     *
+     * This query determines which instances of the model may be attached to other resources.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableFabrics(NovaRequest $request, $query)
+    {
+        $invoice = \App\Models\FabricTransferInvoice::find($request->viaResourceId);
+
+        if(empty($invoice)){
+            $invoice = $request->findResourceOrFail()->invoice;
+        }
+
+        try {
+            $fabricId = $request->findResourceOrFail()->fabricId;
+        } catch (\Throwable $th) {
+           $fabricId = null;
+        }
+
+        return $query->where('location_id', $invoice->locationId)
+                ->whereNotIn('id', $invoice->fabricIds($fabricId))->get()->map(function($fabric){
+                    return [ 'value' => $fabric->id, 'label' => $fabric->name."({$fabric->code})" ];
+                });
     }
 
     /**

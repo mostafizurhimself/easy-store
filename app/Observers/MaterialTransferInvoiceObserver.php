@@ -26,7 +26,7 @@ class MaterialTransferInvoiceObserver
     public function updating(MaterialTransferInvoice $materialTransferInvoice)
     {
         if($materialTransferInvoice->isDirty('location_id')){
-            $materialTransferInvoice->distributionItems()->forceDelete();
+            $materialTransferInvoice->transferItems()->forceDelete();
         }
     }
 

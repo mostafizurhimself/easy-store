@@ -129,7 +129,7 @@ class MaterialTransferInvoicePolicy
      */
     public function addMaterialTransferReceiveItem(User $user, MaterialTransferInvoice $materialTransferInvoice)
     {
-        return true;
+        return false;
     }
 
 }

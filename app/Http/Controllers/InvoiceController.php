@@ -39,6 +39,23 @@ class InvoiceController extends Controller
         }
     }
 
+      /**
+     * Generate service fabric return invoice
+     *
+     * @param  \Illuminate\Http\Request   $request
+     * @param  \App\Models\FabricTransferInvoice $invoice
+     * @return \Illuminate\Http\Response
+     */
+    public function fabricTransferInvoice(Request $request, FabricTransferInvoice $invoice )
+    {
+        if(($request->user()->hasPermissionTo('can generate fabric transfer invoices') || $request->user()->isSuperAdmin()) && $invoice->status != TransferStatus::DRAFT()){
+
+            return view('invoices.pages.fabric-transfer-invoice', compact('invoice'));
+        }else{
+            abort(403);
+        }
+    }
+
        /**
      * Generate service finishing distribution invoice
      *

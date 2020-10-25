@@ -38,6 +38,13 @@ class MaterialTransferItem extends Model
     }
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['unit'];
+
+    /**
      * Set the model readable id length
      *
      * @var int

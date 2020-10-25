@@ -2,7 +2,6 @@
 
 namespace App\Nova;
 
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -10,6 +9,7 @@ use App\Enums\TransferStatus;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
+use Illuminate\Support\Carbon;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
@@ -22,9 +22,9 @@ use App\Nova\Filters\TransferStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
-use App\Nova\Actions\MaterialTransferReceiveItems\ConfirmReceiveItem;
+use App\Nova\Actions\FabricTransferReceiveItem\ConfirmReceiveItem;
 
-class MaterialTransferReceiveItem extends Resource
+class FabricTransferReceiveItem extends Resource
 {
     use WithOutLocation;
 
@@ -33,9 +33,9 @@ class MaterialTransferReceiveItem extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\MaterialTransferReceiveItem::class;
+    public static $model = \App\Models\FabricTransferReceiveItem::class;
 
-    /**
+     /**
      * Get the custom permissions name of the resource
      *
      * @var array
@@ -68,7 +68,7 @@ class MaterialTransferReceiveItem extends Resource
         'readable_id',
     ];
 
-    /**
+       /**
      * Hide resource from Nova's standard menu.
      *
      * @var bool
@@ -93,11 +93,11 @@ class MaterialTransferReceiveItem extends Resource
         return [
             // ID::make(__('ID'), 'id')->sortable(),
 
-            BelongsTo::make('Invoice', 'invoice', \App\Nova\MaterialTransferInvoice::class)
+            BelongsTo::make('Invoice', 'invoice', \App\Nova\FabricTransferInvoice::class)
                 ->exceptOnForms()
                 ->sortable(),
 
-            BelongsTo::make('Material')
+            BelongsTo::make('Fabric')
                 ->hideWhenCreating()
                 ->sortable()
                 ->readonly(),
@@ -114,8 +114,8 @@ class MaterialTransferReceiveItem extends Resource
 
             Number::make('Quantity')
                 ->default(function ($request) {
-                    if ($request->viaResource ==  \App\Nova\MaterialTransferItem::uriKey() && !empty($request->viaResourceId)) {
-                        return \App\Models\MaterialTransferItem::find($request->viaResourceId)->remainingQuantity;
+                    if ($request->viaResource ==  \App\Nova\FabricTransferItem::uriKey() && !empty($request->viaResourceId)) {
+                        return \App\Models\FabricTransferItem::find($request->viaResourceId)->remainingQuantity;
                     } else {
                         return $this->resource->transferItem->remainingQuantity;
                     }
@@ -123,7 +123,7 @@ class MaterialTransferReceiveItem extends Resource
                 ->sortable()
                 ->rules('required', 'numeric', 'min:0')
                 ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
-                ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\MaterialTransferItem::uriKey(), $this->resource->transferItemId, $this->resource->quantity))
+                ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\FabricTransferItem::uriKey(), $this->resource->transferItemId, $this->resource->quantity))
                 ->onlyOnForms(),
 
             Text::make('Quantity', function () {
@@ -211,7 +211,7 @@ class MaterialTransferReceiveItem extends Resource
     {
         return [
             (new ConfirmReceiveItem)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can confirm material transfer receive items');
+                return $request->user()->hasPermissionTo('can confirm fabric transfer receive items');
             })
             ->confirmButtonText('Confirm'),
         ];

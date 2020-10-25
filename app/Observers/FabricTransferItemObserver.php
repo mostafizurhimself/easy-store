@@ -2,30 +2,40 @@
 
 namespace App\Observers;
 
+use App\Models\Fabric;
 use App\Models\FabricTransferItem;
 
 class FabricTransferItemObserver
 {
     /**
-     * Handle the fabric transfer item "created" event.
+     * Handle the fabric transfer item "saving" event.
      *
      * @param  \App\Models\FabricTransferItem  $fabricTransferItem
      * @return void
      */
-    public function created(FabricTransferItem $fabricTransferItem)
+    public function saving(FabricTransferItem $fabricTransferItem)
     {
-        //
+         //Get the fabric
+         $fabric = Fabric::find($fabricTransferItem->fabricId);
+
+         //Set the transfer amount
+         $fabricTransferItem->transferRate = $fabric->rate;
+         if(empty($fabricTransferItem->unitId)){
+             $fabricTransferItem->unitId = $fabric->unitId;
+         }
+         $fabricTransferItem->transferAmount = $fabric->rate * $fabricTransferItem->transferQuantity;
     }
 
     /**
-     * Handle the fabric transfer item "updated" event.
+     * Handle the fabric transfer item "saved" event.
      *
      * @param  \App\Models\FabricTransferItem  $fabricTransferItem
      * @return void
      */
-    public function updated(FabricTransferItem $fabricTransferItem)
+    public function saved(FabricTransferItem $fabricTransferItem)
     {
-        //
+        //Update the total transfer amount
+        $fabricTransferItem->invoice->updateTransferAmount();
     }
 
     /**
@@ -36,7 +46,8 @@ class FabricTransferItemObserver
      */
     public function deleted(FabricTransferItem $fabricTransferItem)
     {
-        //
+        //Update the total transfer amount
+        $fabricTransferItem->invoice->updateTransferAmount();
     }
 
     /**
@@ -47,7 +58,8 @@ class FabricTransferItemObserver
      */
     public function restored(FabricTransferItem $fabricTransferItem)
     {
-        //
+        //Update the total transfer amount
+        $fabricTransferItem->invoice->updateTransferAmount();
     }
 
     /**
@@ -58,6 +70,7 @@ class FabricTransferItemObserver
      */
     public function forceDeleted(FabricTransferItem $fabricTransferItem)
     {
-        //
+        //Update the total transfer amount
+        $fabricTransferItem->invoice->updateTransferAmount();
     }
 }
