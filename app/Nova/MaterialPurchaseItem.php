@@ -51,7 +51,7 @@ class MaterialPurchaseItem extends Resource
      */
     public static function label()
     {
-      return "Purchase Items";
+        return "Purchase Items";
     }
 
     /**
@@ -68,7 +68,7 @@ class MaterialPurchaseItem extends Resource
      */
     public static $displayInNavigation = false;
 
-     /**
+    /**
      * The columns that should be searched.
      *
      * @var array
@@ -97,17 +97,17 @@ class MaterialPurchaseItem extends Resource
     {
         return [
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\MaterialPurchaseOrder")
-            ->exceptOnForms()
-            ->sortable(),
+                ->exceptOnForms()
+                ->sortable(),
 
             BelongsTo::make('Material')
                 ->searchable()
                 ->sortable(),
 
-            Date::make('Date', function(){
+            Date::make('Date', function () {
                 return $this->date;
             })
-            ->sortable()
+                ->sortable()
                 ->exceptOnForms(),
 
             Number::make('Quantity', 'purchase_quantity')
@@ -115,19 +115,19 @@ class MaterialPurchaseItem extends Resource
                 ->onlyOnForms()
                 ->sortable(),
 
-            Text::make('Purchase Quantity', function(){
-                return $this->purchaseQuantity." ".$this->unitName;
+            Text::make('Purchase Quantity', function () {
+                return $this->purchaseQuantity . " " . $this->unitName;
             })
-            ->sortable()
-            ->exceptOnForms(),
+                ->sortable()
+                ->exceptOnForms(),
 
 
 
-            Text::make('Receive Quantity', function(){
-                return $this->receiveQuantity." ".$this->unitName;
+            Text::make('Receive Quantity', function () {
+                return $this->receiveQuantity . " " . $this->unitName;
             })
-            ->sortable()
-            ->exceptOnForms(),
+                ->sortable()
+                ->exceptOnForms(),
 
             Currency::make('Purchase Rate')
                 ->currency('BDT')
@@ -145,14 +145,14 @@ class MaterialPurchaseItem extends Resource
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
-                    PurchaseStatus::DRAFT()->getValue()     => 'warning',
-                    PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'danger',
-                    PurchaseStatus::RECEIVED()->getValue()  => 'success',
-                    PurchaseStatus::BILLED()->getValue()    => 'danger',
-                ])
+                PurchaseStatus::DRAFT()->getValue()     => 'warning',
+                PurchaseStatus::CONFIRMED()->getValue() => 'info',
+                PurchaseStatus::PARTIAL()->getValue()   => 'danger',
+                PurchaseStatus::RECEIVED()->getValue()  => 'success',
+                PurchaseStatus::BILLED()->getValue()    => 'danger',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -205,22 +205,22 @@ class MaterialPurchaseItem extends Resource
     {
         return [
 
-            (new DownloadPdf)->canSee(function($request){
+            (new DownloadPdf)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download'),
 
-            (new DownloadExcel)->canSee(function($request){
+            (new DownloadExcel)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
-            ->confirmText('Are you sure want to download excel?'),
+                ->confirmText('Are you sure want to download excel?'),
         ];
     }
 
-        /**
+    /**
      * Build a "relatable" query for the given resource.
      *
      * This query determines which instances of the model may be attached to other resources.
@@ -233,18 +233,18 @@ class MaterialPurchaseItem extends Resource
     {
         $purchase = \App\Models\MaterialPurchaseOrder::find($request->viaResourceId);
 
-        if(empty($purchase)){
+        if (empty($purchase)) {
             $purchase = $request->findResourceOrFail()->purchaseOrder;
         }
 
         try {
             $materialId = $request->findResourceOrFail()->materialId;
         } catch (\Throwable $th) {
-           $materialId = null;
+            $materialId = null;
         }
-        return $query->whereHas('suppliers', function($supplier) use($purchase){
-                $supplier->where('supplier_id', $purchase->supplierId)
-                        ->where('location_id', $purchase->locationId);
+        return $query->whereHas('suppliers', function ($supplier) use ($purchase) {
+            $supplier->where('supplier_id', $purchase->supplierId)
+                ->where('location_id', $purchase->locationId);
         })->whereNotIn('id', $purchase->materialIds($materialId));
     }
 
@@ -257,7 +257,7 @@ class MaterialPurchaseItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -269,10 +269,10 @@ class MaterialPurchaseItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }

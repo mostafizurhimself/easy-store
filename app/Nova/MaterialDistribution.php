@@ -92,7 +92,7 @@ class MaterialDistribution extends Resource
      */
     public static $searchRelations = [
         'location' => ['name'],
-        'material'   => ['code', 'name'],
+        'material' => ['code', 'name'],
         'receiver' => ['readable_id', 'first_name', 'last_name'],
     ];
 
@@ -127,8 +127,10 @@ class MaterialDistribution extends Resource
                 ->exceptOnForms()
                 ->sortable(),
 
-            BelongsTo::make('Material')->searchable()
+            BelongsTo::make('Material', 'material', \App\Nova\Material::class)
+                // ->searchable()
                 ->onlyOnForms()
+                ->sortable()
                 ->canSee(function ($request) {
                     if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
                         return true;
@@ -194,7 +196,8 @@ class MaterialDistribution extends Resource
                 ->sortable()
                 ->hideFromIndex(),
 
-            BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")->searchable()
+            BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")
+                ->searchable()
                 ->onlyOnForms()
                 ->sortable()
                 ->canSee(function ($request) {

@@ -83,7 +83,6 @@ class MaterialDistribution extends Model
         return $this->unit->name;
     }
 
-
     /**
      * Scope a query to only include draft distributions.
      *

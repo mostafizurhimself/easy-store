@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\DispatchStatus;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
@@ -16,6 +17,8 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\ServiceDispatches\DownloadPdf;
+use App\Nova\Actions\ServiceDispatches\DownloadExcel;
 
 class ServiceDispatch extends Resource
 {
@@ -83,7 +86,22 @@ class ServiceDispatch extends Resource
     public function fields(Request $request)
     {
         return [
-            // ID::make(__('ID'), 'id')->sortable(),
+            // Text::make("Location",function(){
+            //     return $this->location->name;
+            // })
+            //     ->sortable()
+            //     ->exceptOnForms()
+            //     ->canSee(function($request){
+            //         return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
+            //     }),
+
+            // Date::make('Date', function () {
+            //     return $this->date;
+            // })
+            //     ->sortable()
+            //     ->exceptOnForms(),
+
+
             BelongsTo::make('Invoice', 'invoice', "App\Nova\ServiceInvoice")
                 ->exceptOnForms()
                 ->sortable(),
@@ -196,7 +214,20 @@ class ServiceDispatch extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            // (new DownloadPdf)->canSee(function($request){
+            //     return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
+            // })->canRun(function($request){
+            //     return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
+            // })->confirmButtonText('Download'),
+
+            // (new DownloadExcel)->canSee(function($request){
+            //     return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
+            // })->canRun(function($request){
+            //     return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
+            // })->confirmButtonText('Download')
+            // ->confirmText('Are you sure want to download excel?'),
+        ];
     }
 
     /**

@@ -28,6 +28,20 @@ class ServiceDispatch extends Model
     protected static $logUnguarded = true;
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['unit'];
+
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $append = ['date', 'location'];
+    /**
      * Set the model readable id prefix
      *
      * @var string
@@ -94,6 +108,25 @@ class ServiceDispatch extends Model
         return $this->unit->name;
     }
 
+    /**
+     * Get the date of the model
+     *
+     * @return string
+     */
+    public function getDateAttribute()
+    {
+        return $this->invoice->date->format('Y-m-d');
+    }
+
+    /**
+     * Get the location of the model
+     *
+     * @return string
+     */
+    public function getLocationAttribute()
+    {
+        return $this->invoice->location;
+    }
 
     /**
      * Scope a query to only include draft distributions.

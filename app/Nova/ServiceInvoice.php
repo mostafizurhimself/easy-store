@@ -179,8 +179,13 @@ class ServiceInvoice extends Resource
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
-            HasMany::make('Dispatches', 'dispatches', 'App\Nova\ServiceDispatch'),
-            HasMany::make('Receives', 'receives', 'App\Nova\ServiceReceive')
+            HasMany::make('Dispatches', 'dispatches', \App\Nova\ServiceDispatch::class)
+                ->fields(
+                    [
+
+                    ]
+                ),
+            HasMany::make('Receives', 'receives', \App\Nova\ServiceReceive::class)
 
         ];
     }
