@@ -46,6 +46,14 @@ class FabricReceiveItem extends Model implements HasMedia
     protected $dates = ['date'];
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['unit'];
+
+
+    /**
      * Add all attributes that are not listed in $guarded for log
      *
      * @var boolean

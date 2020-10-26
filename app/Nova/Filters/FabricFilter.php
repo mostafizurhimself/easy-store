@@ -32,7 +32,7 @@ class FabricFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->where('fabric_id', $value)->withoutGlobalScopes();
+        return $query->where('fabric_id', $value);
     }
 
     /**

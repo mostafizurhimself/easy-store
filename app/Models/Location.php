@@ -280,14 +280,7 @@ class Location extends Model
     {
         Cache::forget('nova-location-filter-options');
         return Cache::remember('nova-location-filter-options', 3600, function () {
-            $locations = self::setEagerLoads([])->get(['id', 'name']);
-
-            return $locations->mapWithKeys(function ($location) {
-                return [
-                    "value" => $location->id,
-                    "label" => $location->name,
-                ];
-            })->toArray();
+            return self::pluck('name', 'id');
         });
     }
 

@@ -67,14 +67,14 @@ Nova.booting((Vue, router, store) => {
 
 
         // Asset Section
-        if (to.params.resourceName === 'assets-purchase-orders' && to.params.lens === 'purchase-items') {
-            router.push({'name' : 'index', params: {resourceName : 'assets-purchase-items'}});
+        if (to.params.resourceName === 'asset-purchase-orders' && to.params.lens === 'purchase-items') {
+            router.push({'name' : 'index', params: {resourceName : 'asset-purchase-items'}});
 
             return;
         }
 
-        if (to.params.resourceName === 'assets-purchase-orders' && to.params.lens === 'receive-items') {
-            router.push({'name' : 'index', params: {resourceName : 'assets-receive-items'}});
+        if (to.params.resourceName === 'asset-purchase-orders' && to.params.lens === 'receive-items') {
+            router.push({'name' : 'index', params: {resourceName : 'asset-receive-items'}});
 
             return;
         }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ActiveScope;
 use App\Enums\DistributionStatus;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Cache;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Fabric extends Model implements HasMedia
 {
-    use LogsActivity, SoftDeletes, InteractsWithMedia;
+    use LogsActivity, SoftDeletes, InteractsWithMedia, ActiveScope;
 
     /**
      * The attributes that are not mass assignable.

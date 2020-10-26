@@ -14,6 +14,7 @@ use App\Models\AssetReturnInvoice;
 use App\Models\FabricDistribution;
 use App\Models\FabricReturnInvoice;
 use App\Http\Controllers\Controller;
+use App\Models\FabricTransferInvoice;
 use App\Models\MaterialReturnInvoice;
 use App\Models\ServiceTransferInvoice;
 use App\Models\MaterialTransferInvoice;

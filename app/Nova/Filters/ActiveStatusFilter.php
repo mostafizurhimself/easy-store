@@ -32,7 +32,7 @@ class ActiveStatusFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->whereStatus($value)->withoutGlobalScopes();
+        return $query->whereStatus($value)->withoutGlobalScopes([\App\Traits\ActiveScope::class]);
     }
 
     /**

@@ -15,8 +15,10 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use App\Nova\Filters\FabricFilter;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\BelongsToDateFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\BelongsToLocationFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricPurchaseItems\DownloadPdf;
 use App\Nova\Actions\FabricPurchaseItems\DownloadExcel;
@@ -30,7 +32,7 @@ class FabricPurchaseItem extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\FabricPurchaseItem';
+    public static $model = \App\Models\FabricPurchaseItem::class;
 
     /**
      * Get the custom permissions name of the resource
@@ -100,6 +102,24 @@ class FabricPurchaseItem extends Resource
     {
         return [
             // ID::make()->sortable(),
+            Text::make("Location",function(){
+                return $this->location->name;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->canSee(function($request){
+                    return ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin())
+                    && (empty($request->viaResource));
+                }),
+
+            Date::make('Date', function () {
+                return $this->date;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->canSee(function($request){
+                    return empty($request->viaResource);
+                }),
 
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\FabricPurchaseOrder")
                 ->exceptOnForms()
@@ -107,12 +127,6 @@ class FabricPurchaseItem extends Resource
 
             BelongsTo::make('Fabric')
                 ->searchable()
-                ->sortable(),
-
-            Date::make('Date', function(){
-                return $this->date;
-            })
-                ->exceptOnForms()
                 ->sortable(),
 
 
@@ -142,7 +156,7 @@ class FabricPurchaseItem extends Resource
             Currency::make('Purchase Amount')
                 ->currency('BDT')
                 ->sortable()
-                ->exceptOnForms(),
+                ->onlyOnDetail(),
 
             Currency::make('Receive Amount')
                 ->currency('BDT')
@@ -187,8 +201,9 @@ class FabricPurchaseItem extends Resource
     public function filters(Request $request)
     {
         return [
+            new BelongsToLocationFilter('purchaseOrder'),
+            new BelongsToDateFilter('purchaseOrder'),
             new PurchaseStatusFilter,
-            new FabricFilter,
 
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ActiveScope;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Material extends Model implements HasMedia
 {
-    use LogsActivity, SoftDeletes, InteractsWithMedia;
+    use LogsActivity, SoftDeletes, InteractsWithMedia, ActiveScope;
 
     /**
      * The attributes that are not mass assignable.

@@ -15,8 +15,10 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\BelongsToDateFilter;
 use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\BelongsToLocationFilter;
 use App\Nova\Actions\ServiceDispatches\DownloadPdf;
 use App\Nova\Actions\ServiceDispatches\DownloadExcel;
 
@@ -86,20 +88,24 @@ class ServiceDispatch extends Resource
     public function fields(Request $request)
     {
         return [
-            // Text::make("Location",function(){
-            //     return $this->location->name;
-            // })
-            //     ->sortable()
-            //     ->exceptOnForms()
-            //     ->canSee(function($request){
-            //         return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
-            //     }),
+            Text::make("Location",function(){
+                return $this->location->name;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->canSee(function($request){
+                    return ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin())
+                    && (empty($request->viaResource));
+                }),
 
-            // Date::make('Date', function () {
-            //     return $this->date;
-            // })
-            //     ->sortable()
-            //     ->exceptOnForms(),
+            Date::make('Date', function () {
+                return $this->date;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->canSee(function($request){
+                    return empty($request->viaResource);
+                }),
 
 
             BelongsTo::make('Invoice', 'invoice', "App\Nova\ServiceInvoice")
@@ -191,6 +197,8 @@ class ServiceDispatch extends Resource
     public function filters(Request $request)
     {
         return [
+            new BelongsToLocationFilter('invoice'),
+            new BelongsToDateFilter('invoice'),
             new DispatchStatusFilter,
         ];
     }
@@ -215,18 +223,18 @@ class ServiceDispatch extends Resource
     public function actions(Request $request)
     {
         return [
-            // (new DownloadPdf)->canSee(function($request){
-            //     return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
-            // })->canRun(function($request){
-            //     return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
-            // })->confirmButtonText('Download'),
+            (new DownloadPdf)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download'),
 
-            // (new DownloadExcel)->canSee(function($request){
-            //     return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
-            // })->canRun(function($request){
-            //     return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
-            // })->confirmButtonText('Download')
-            // ->confirmText('Are you sure want to download excel?'),
+            (new DownloadExcel)->canSee(function($request){
+                return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
+            })->canRun(function($request){
+                return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+            ->confirmText('Are you sure want to download excel?'),
         ];
     }
 

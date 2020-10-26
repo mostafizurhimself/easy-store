@@ -31,6 +31,6 @@ class LocationFilter extends DependentFilter
      */
     public function options(Request $request, array $filters = [])
     {
-        return Location::pluck('name', 'id');
+        return Location::filterOptions();
     }
 }

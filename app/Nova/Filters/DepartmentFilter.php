@@ -32,7 +32,7 @@ class DepartmentFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->where('department_id', $value)->withoutGlobalScopes();
+        return $query->where('department_id', $value);
     }
 
     /**

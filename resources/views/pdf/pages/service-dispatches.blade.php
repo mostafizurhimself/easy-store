@@ -32,7 +32,7 @@
                     <td>{{$model->invoice->readableId}}</td>
                     <td>{{$model->service->name}} ({{$model->service->code}})</td>
                     <td>{{$model->dispatchQuantity}} {{$model->unitName}}</td>
-                    <td>{{Helper::currencyShortPdf($model->dispatchRate)}}</td>
+                    <td>{{Helper::currencyShortPdf($model->rate)}}</td>
                     <td>{{Helper::currencyPdf($model->dispatchAmount)}}</td>
                     <td>{{Str::title($model->status)}}</td>
                 </tr>

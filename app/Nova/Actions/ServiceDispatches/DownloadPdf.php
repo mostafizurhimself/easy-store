@@ -31,7 +31,6 @@ class DownloadPdf extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        dd($models->count());
         if($models->count() > 1000)
         {
             return Action::danger('Maximum rows exceeded.');
