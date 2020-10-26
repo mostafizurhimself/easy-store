@@ -35,13 +35,6 @@ class MaterialTransferInvoice extends Model implements HasMedia
      */
     protected $dates = ['date'];
 
-        /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['unit'];
-
     /**
      * Set the model readable id prefix
      *
