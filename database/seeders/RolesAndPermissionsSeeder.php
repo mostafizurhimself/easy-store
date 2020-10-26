@@ -128,16 +128,16 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
         //Exceptional Permissions
-        Permission::updateOrCreate(['name' => 'view permissions'],['group' => 'permissions', 'name' => 'view permissions', 'group_order' => 4651]);
-        Permission::updateOrCreate(['name' => 'view any permissions'],['group' => 'permissions', 'name' => 'view any permissions', 'group_order' => 4652]);
-        Permission::updateOrCreate(['name' => 'assign permissions'],['group' => 'permissions', 'name' => 'assign permissions', 'group_order' => 4653]);
+        Permission::updateOrCreate(['name' => 'view permissions'],['group' => 'permissions', 'name' => 'view permissions', 'group_order' => 10001]);
+        Permission::updateOrCreate(['name' => 'view any permissions'],['group' => 'permissions', 'name' => 'view any permissions', 'group_order' => 10002]);
+        Permission::updateOrCreate(['name' => 'assign permissions'],['group' => 'permissions', 'name' => 'assign permissions', 'group_order' => 10003]);
 
         //Only For Super Admin Permissions
-        Permission::updateOrCreate(['name' => 'view any settings'],['group' => 'super admin', 'name' => 'view any settings', 'group_order' => 10001]);
-        Permission::updateOrCreate(['name' => 'view settings'],['group' => 'super admin', 'name' => 'view settings', 'group_order' => 10002]);
-        Permission::updateOrCreate(['name' => 'update settings'],['group' => 'super admin', 'name' => 'update settings', 'group_order' => 10003]);
-        Permission::updateOrCreate(['name' => 'view any activity logs'],['group' => 'super admin', 'name' => 'view any activity logs', 'group_order' => 10004]);
-        Permission::updateOrCreate(['name' => 'view activity logs'],['group' => 'super admin', 'name' => 'view activity logs', 'group_order' => 10005]);
+        Permission::updateOrCreate(['name' => 'view any settings'],['group' => 'super admin', 'name' => 'view any settings', 'group_order' => 10004]);
+        Permission::updateOrCreate(['name' => 'view settings'],['group' => 'super admin', 'name' => 'view settings', 'group_order' => 10005]);
+        Permission::updateOrCreate(['name' => 'update settings'],['group' => 'super admin', 'name' => 'update settings', 'group_order' => 10006]);
+        Permission::updateOrCreate(['name' => 'view any activity logs'],['group' => 'super admin', 'name' => 'view any activity logs', 'group_order' => 10007]);
+        Permission::updateOrCreate(['name' => 'view activity logs'],['group' => 'super admin', 'name' => 'view activity logs', 'group_order' => 10008]);
         Permission::updateOrCreate(['name' => 'view all locations data'],['group' => 'super admin', 'name' => 'view all locations data', 'group_order' => 20001]);
         Permission::updateOrCreate(['name' => 'view any locations data'],['group' => 'super admin', 'name' => 'view any locations data', 'group_order' => 20002]);
         Permission::updateOrCreate(['name' => 'create all locations data'],['group' => 'super admin', 'name' => 'create all locations data', 'group_order' => 20003]);
