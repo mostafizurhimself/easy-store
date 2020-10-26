@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use App\Nova\Filters\DateFilter;
 use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
@@ -132,6 +133,7 @@ class FabricDistribution extends Resource
 
             BelongsTo::make('Fabric')
                 ->exceptOnForms()
+                ->searchable()
                 ->sortable(),
 
             // BelongsTo::make('Fabric')
@@ -204,6 +206,7 @@ class FabricDistribution extends Resource
                 ->rules('nullable', 'max:500'),
 
             BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")
+                ->searchable()
                 ->exceptOnForms(),
 
             Text::make('Receiver Name', function () {
