@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Actions\Assets;
+namespace App\Nova\Actions;
 
 use App\Models\Unit;
 use Illuminate\Bus\Queueable;

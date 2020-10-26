@@ -14,6 +14,7 @@ use App\Models\ProductCategory;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use App\Nova\Actions\ConvertUnit;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
@@ -43,7 +44,7 @@ class Product extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can update opening quantity of'];
+    public static $permissions = ['can download', 'can convert unit of', 'can update opening quantity of'];
 
     /**
      * The group associated with the resource.
@@ -323,6 +324,10 @@ class Product extends Resource
     public function actions(Request $request)
     {
         return [
+            (new ConvertUnit)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can convert unit of products') || $request->user()->isSuperAdmin();
+            })->confirmButtonText('Confirm'),
+
             (new UpdateOpeningQuantity)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can update opening quantity of products');
             })->onlyOnDetail(),

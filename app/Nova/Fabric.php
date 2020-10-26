@@ -14,6 +14,7 @@ use NovaAjaxSelect\AjaxSelect;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use App\Nova\Actions\ConvertUnit;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
@@ -52,7 +53,7 @@ class Fabric extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can update opening quantity of'];
+    public static $permissions = ['can download', 'can convert unit of', 'can update opening quantity of'];
 
     /**
      * The group associated with the resource.
@@ -324,23 +325,27 @@ class Fabric extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UpdateOpeningQuantity)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can update opening quantity of fabrics');
-            })->onlyOnDetail(),
+            (new ConvertUnit)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can convert unit of fabrics') || $request->user()->isSuperAdmin();
+            })->confirmButtonText('Confirm'),
 
-            (new DownloadPdf)->canSee(function($request){
+            (new DownloadPdf)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
 
-            (new DownloadExcel)->canSee(function($request){
+            (new DownloadExcel)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
+
+            (new UpdateOpeningQuantity)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can update opening quantity of fabrics');
+            })->onlyOnDetail(),
         ];
     }
 }

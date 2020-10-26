@@ -15,6 +15,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use App\Models\MaterialCategory;
 use Laravel\Nova\Fields\HasMany;
+use App\Nova\Actions\ConvertUnit;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
@@ -47,7 +48,7 @@ class Material extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can update opening quantity of'];
+    public static $permissions = ['can download', 'can convert unit of', 'can update opening quantity of'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -329,9 +330,9 @@ class Material extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UpdateOpeningQuantity)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can update opening quantity of materials');
-            })->onlyOnDetail(),
+            (new ConvertUnit)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can convert unit of materials') || $request->user()->isSuperAdmin();
+            })->confirmButtonText('Confirm'),
 
             (new DownloadPdf)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
@@ -346,6 +347,12 @@ class Material extends Resource
                 return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
+
+            (new UpdateOpeningQuantity)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can update opening quantity of materials');
+            })->onlyOnDetail(),
+
+
         ];
     }
 }

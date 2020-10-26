@@ -14,6 +14,7 @@ use App\Models\ServiceCategory;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use App\Nova\Actions\ConvertUnit;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
@@ -37,6 +38,13 @@ class Service extends Resource
      * @var string
      */
     public static $model = 'App\Models\Service';
+
+     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download', 'can convert unit of'];
 
     /**
      * The group associated with the resource.
@@ -300,6 +308,10 @@ class Service extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new ConvertUnit)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can convert unit of services') || $request->user()->isSuperAdmin();
+            })->confirmButtonText('Confirm'),
+        ];
     }
 }
