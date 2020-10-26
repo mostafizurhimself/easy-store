@@ -309,9 +309,9 @@ class Service extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConvertUnit)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can convert unit of services') || $request->user()->isSuperAdmin();
-            })->confirmButtonText('Confirm'),
+            // (new ConvertUnit)->canSee(function($request){
+            //     return $request->user()->hasPermissionTo('can convert unit of services') || $request->user()->isSuperAdmin();
+            // })->confirmButtonText('Confirm'),
         ];
     }
 }
