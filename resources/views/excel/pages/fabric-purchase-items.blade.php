@@ -11,6 +11,7 @@
         <tbody>
             <tr>
                 <td>#</td>
+                <td>Location</td>
                 <td>Date</td>
                 <td>Order No</td>
                 <td>Fabric</td>
@@ -22,6 +23,7 @@
             @foreach ($models as $model)
                 <tr>
                     <td>{{$loop->iteration}}</td>
+                    <td>{{$model->location->name}}</td>
                     <td>{{$model->date}}</td>
                     <td>{{$model->purchaseOrder->readableId}}</td>
                     <td>{{$model->fabric->name}} ({{$model->fabric->code}})</td>
@@ -32,7 +34,7 @@
                 </tr>
             @endforeach
             <tr class="tfoot">
-                <td colspan="6">Grand Total</td>
+                <td colspan="7">Grand Total</td>
                 <td>{{Helper::currencyPdf($models->sum('purchaseAmount'))}}</td>
                 <td></td>
             </tr>

@@ -28,6 +28,20 @@ class AssetPurchaseItem extends Model
     protected static $logUnguarded = true;
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['unit'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $append = ['date', 'location', 'unitName'];
+
+    /**
      * Set the model readable id prefix
      *
      * @var string
@@ -84,8 +98,7 @@ class AssetPurchaseItem extends Model
         return $this->unit->name;
     }
 
-
-       /**
+    /**
      * Get the date of the purchase order
      *
      * @return string
@@ -95,6 +108,15 @@ class AssetPurchaseItem extends Model
         return $this->purchaseOrder->date->format('Y-m-d');
     }
 
+    /**
+     * Get the location of the model
+     *
+     * @return string
+     */
+    public function getLocationAttribute()
+    {
+        return $this->purchaseOrder->location;
+    }
 
     /**
      * Determines one-to-many relation

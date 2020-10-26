@@ -197,7 +197,9 @@ class ServiceDispatch extends Resource
     public function filters(Request $request)
     {
         return [
-            new BelongsToLocationFilter('invoice'),
+            (new BelongsToLocationFilter('invoice'))->canSee(function($request){
+                return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
+            }),
             new BelongsToDateFilter('invoice'),
             new DispatchStatusFilter,
         ];

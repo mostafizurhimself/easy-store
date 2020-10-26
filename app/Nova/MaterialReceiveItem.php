@@ -24,6 +24,7 @@ use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\PurchaseStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\BelongsToLocationFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialReceiveItems\DownloadPdf;
@@ -38,7 +39,7 @@ class MaterialReceiveItem extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\MaterialReceiveItem';
+    public static $model = \App\Models\MaterialReceiveItem::class;
 
     /**
      * Get the custom permissions name of the resource
@@ -106,18 +107,28 @@ class MaterialReceiveItem extends Resource
     public function fields(Request $request)
     {
         return [
+            Text::make("Location", function () {
+                return $this->location->name;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin())
+                        && (empty($request->viaResource));
+                }),
+
+             Date::make('Date')
+                ->rules('required')
+                ->default(Carbon::now())
+                ->sortable()
+                ->readonly(),
+
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\MaterialPurchaseOrder")
                 ->exceptOnForms()
                 ->sortable(),
 
             BelongsTo::make('Material')
                 ->hideWhenCreating()
-                ->sortable()
-                ->readonly(),
-
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
                 ->sortable()
                 ->readonly(),
 
@@ -200,8 +211,10 @@ class MaterialReceiveItem extends Resource
     public function filters(Request $request)
     {
         return [
+            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function($request){
+                return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
+            }),
             new DateFilter('date'),
-
             new PurchaseStatusFilter,
         ];
     }

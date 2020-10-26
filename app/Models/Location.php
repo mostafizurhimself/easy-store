@@ -278,9 +278,22 @@ class Location extends Model
      */
     public static function filterOptions()
     {
-        Cache::forget('nova-location-filter-options');
+        // Cache::forget('nova-location-filter-options');
         return Cache::remember('nova-location-filter-options', 3600, function () {
-            return self::pluck('name', 'id');
+            return self::pluck('name', 'id')->toArray();
+        });
+    }
+
+    /**
+     * Get the filter options of locations
+     *
+     * @return array
+     */
+    public static function belongsToFilterOptions()
+    {
+        // Cache::forget('nova-location-belongs-to-filter-options');
+        return Cache::remember('nova-location-belongs-to-filter-options', 3600, function () {
+            return self::pluck('id', 'name')->toArray();
         });
     }
 

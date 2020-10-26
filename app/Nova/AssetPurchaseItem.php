@@ -14,11 +14,13 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\BelongsToDateFilter;
+use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\BelongsToLocationFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetPurchaseItems\DownloadPdf;
 use App\Nova\Actions\AssetPurchaseItems\DownloadExcel;
-use App\Nova\Filters\PurchaseStatusFilter;
 
 class AssetPurchaseItem extends Resource
 {
@@ -28,7 +30,7 @@ class AssetPurchaseItem extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\AssetPurchaseItem';
+    public static $model = \App\Models\AssetPurchaseItem::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -96,7 +98,24 @@ class AssetPurchaseItem extends Resource
     public function fields(Request $request)
     {
         return [
-            // ID::make()->sortable(),
+            Text::make("Location",function(){
+                return $this->location->name;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->canSee(function($request){
+                    return ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin())
+                    && (empty($request->viaResource));
+                }),
+
+            Date::make('Date', function () {
+                return $this->date;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->canSee(function($request){
+                    return empty($request->viaResource);
+                }),
 
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\AssetPurchaseOrder")
                 ->exceptOnForms()
@@ -104,12 +123,6 @@ class AssetPurchaseItem extends Resource
 
             BelongsTo::make('Asset')
                 ->searchable()
-                ->sortable(),
-
-            Date::make('Date', function(){
-                return $this->date;
-            })
-                ->exceptOnForms()
                 ->sortable(),
 
             Number::make('Quantity', 'purchase_quantity')
@@ -128,8 +141,6 @@ class AssetPurchaseItem extends Resource
             ->exceptOnForms()
             ->sortable(),
 
-
-
             Currency::make('Purchase Rate')
                 ->currency('BDT')
                 ->sortable()
@@ -138,7 +149,7 @@ class AssetPurchaseItem extends Resource
             Currency::make('Purchase Amount')
                 ->currency('BDT')
                 ->sortable()
-                ->exceptOnForms(),
+                ->onlyOnDetail(),
 
             Currency::make('Receive Amount')
                 ->currency('BDT')
@@ -183,6 +194,10 @@ class AssetPurchaseItem extends Resource
     public function filters(Request $request)
     {
         return [
+            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function($request){
+                return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
+            }),
+            new BelongsToDateFilter('purchaseOrder'),
             new PurchaseStatusFilter,
         ];
     }

@@ -201,7 +201,9 @@ class FabricPurchaseItem extends Resource
     public function filters(Request $request)
     {
         return [
-            new BelongsToLocationFilter('purchaseOrder'),
+            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function($request){
+                return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
+            }),
             new BelongsToDateFilter('purchaseOrder'),
             new PurchaseStatusFilter,
 

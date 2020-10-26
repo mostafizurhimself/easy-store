@@ -62,6 +62,6 @@ class BelongsToLocationFilter extends Filter
      */
     public function options(Request $request)
     {
-        return Location::pluck('id', 'name');
+        return Location::belongsToFilterOptions();
     }
 }

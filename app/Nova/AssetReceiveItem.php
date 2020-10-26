@@ -24,6 +24,7 @@ use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\PurchaseStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\BelongsToLocationFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\AssetReceiveItems\DownloadPdf;
 use Titasgailius\SearchRelations\SearchesRelations;
@@ -75,7 +76,7 @@ class AssetReceiveItem extends Resource
      */
     public static function label()
     {
-      return "Receive Items";
+        return "Receive Items";
     }
 
     /**
@@ -106,7 +107,21 @@ class AssetReceiveItem extends Resource
     public function fields(Request $request)
     {
         return [
-            // ID::make()->sortable(),
+            Text::make("Location", function () {
+                return $this->location->name;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin())
+                        && (empty($request->viaResource));
+                }),
+
+            Date::make('Date')
+                ->rules('required')
+                ->default(Carbon::now())
+                ->sortable()
+                ->readonly(),
 
             BelongsTo::make('PO Number', 'purchaseOrder', "App\Nova\AssetPurchaseOrder")
                 ->exceptOnForms()
@@ -114,12 +129,6 @@ class AssetReceiveItem extends Resource
 
             BelongsTo::make('Asset')
                 ->hideWhenCreating()
-                ->sortable()
-                ->readonly(),
-
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
                 ->sortable()
                 ->readonly(),
 
@@ -134,9 +143,9 @@ class AssetReceiveItem extends Resource
                 ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\AssetPurchaseItem::uriKey(), $this->resource->purchaseItemId, $this->resource->quantity))
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
                 ->sortable()
                 ->exceptOnForms(),
 
@@ -145,8 +154,8 @@ class AssetReceiveItem extends Resource
             Currency::make('Rate')
                 ->currency('BDT')
                 ->sortable()
-                ->default(function($request){
-                    if($request->viaResource == \App\Nova\AssetPurchaseItem::uriKey() && !empty($request->viaResourceId)){
+                ->default(function ($request) {
+                    if ($request->viaResource == \App\Nova\AssetPurchaseItem::uriKey() && !empty($request->viaResourceId)) {
                         return \App\Models\AssetPurchaseItem::find($request->viaResourceId)->purchaseRate;
                     }
                 }),
@@ -169,14 +178,14 @@ class AssetReceiveItem extends Resource
                 ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
-                    PurchaseStatus::DRAFT()->getValue()     => 'warning',
-                    PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'danger',
-                    PurchaseStatus::RECEIVED()->getValue()  => 'success',
-                    PurchaseStatus::BILLED()->getValue()    => 'danger',
-                ])
+                PurchaseStatus::DRAFT()->getValue()     => 'warning',
+                PurchaseStatus::CONFIRMED()->getValue() => 'info',
+                PurchaseStatus::PARTIAL()->getValue()   => 'danger',
+                PurchaseStatus::RECEIVED()->getValue()  => 'success',
+                PurchaseStatus::BILLED()->getValue()    => 'danger',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -204,6 +213,9 @@ class AssetReceiveItem extends Resource
     public function filters(Request $request)
     {
         return [
+            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function($request){
+                return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
+            }),
             new DateFilter('date'),
             new PurchaseStatusFilter,
         ];
@@ -229,21 +241,21 @@ class AssetReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
-            (new DownloadPdf)->canSee(function($request){
+            (new DownloadPdf)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download asset receive items') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download asset receive items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
 
-            (new DownloadExcel)->canSee(function($request){
+            (new DownloadExcel)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download asset receive items') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download asset receive items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
 
-            (new ConfirmReceiveItem)->canSee(function($request){
+            (new ConfirmReceiveItem)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm asset receive items');
             }),
         ];
@@ -258,7 +270,7 @@ class AssetReceiveItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -270,10 +282,10 @@ class AssetReceiveItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }
