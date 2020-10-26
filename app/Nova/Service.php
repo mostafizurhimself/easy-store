@@ -14,7 +14,6 @@ use App\Models\ServiceCategory;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
-use App\Nova\Actions\ConvertUnit;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
@@ -22,6 +21,7 @@ use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\ActiveStatusFilter;
 use AwesomeNova\Filters\DependentFilter;
+use App\Nova\Actions\Services\ConvertUnit;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -309,9 +309,9 @@ class Service extends Resource
     public function actions(Request $request)
     {
         return [
-            // (new ConvertUnit)->canSee(function($request){
-            //     return $request->user()->hasPermissionTo('can convert unit of services') || $request->user()->isSuperAdmin();
-            // })->confirmButtonText('Confirm'),
+            (new ConvertUnit)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can convert unit of services') || $request->user()->isSuperAdmin();
+            })->confirmButtonText('Confirm'),
         ];
     }
 }
