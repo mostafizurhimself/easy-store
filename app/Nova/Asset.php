@@ -22,6 +22,7 @@ use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Actions\Assets\Consume;
 use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Lenses\AlertQuantities;
 use App\Nova\Actions\Assets\DownloadPdf;
 use App\Nova\Filters\ActiveStatusFilter;
 use AwesomeNova\Filters\DependentFilter;
@@ -313,7 +314,9 @@ class Asset extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new AlertQuantities,
+        ];
     }
 
     /**

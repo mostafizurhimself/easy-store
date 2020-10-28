@@ -20,6 +20,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Lenses\AlertQuantities;
 use App\Nova\Filters\ActiveStatusFilter;
 use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Actions\Fabrics\DownloadPdf;
@@ -313,7 +314,9 @@ class Fabric extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new AlertQuantities,
+        ];
     }
 
     /**

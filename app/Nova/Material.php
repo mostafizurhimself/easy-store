@@ -32,6 +32,7 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\Materials\UpdateOpeningQuantity;
+use App\Nova\Lenses\AlertQuantities;
 
 class Material extends Resource
 {
@@ -317,7 +318,8 @@ class Material extends Resource
     public function lenses(Request $request)
     {
         return [
-            new ItSections(),
+            // new ItSections(),
+            new AlertQuantities(),
         ];
     }
 
