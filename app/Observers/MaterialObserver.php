@@ -2,8 +2,12 @@
 
 namespace App\Observers;
 
+use App\Models\Role;
 use App\Facades\Helper;
 use App\Models\Material;
+use App\Facades\Settings;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\AlertQuantityNotification;
 
 class MaterialObserver
 {
@@ -26,7 +30,7 @@ class MaterialObserver
      */
     public function saved(Material $material)
     {
-        if(empty($material->code)){
+        if (empty($material->code)) {
             $material->code = Helper::generateReadableId($material->id, "MR", 5);
             $material->save();
         }
@@ -40,7 +44,15 @@ class MaterialObserver
      */
     public function updated(Material $material)
     {
-        //
+        //Notify the users
+        $users = \App\Models\User::permission(['view materials', 'view any materials'])->where('location_id', $material->locationId)->get();
+        Notification::send($users, new AlertQuantityNotification(\App\Nova\Material::uriKey(), $material, 'Material'));
+
+        //Notify super admins
+        if (Settings::superAdminNotification()) {
+            $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+            Notification::send($users, new AlertQuantityNotification(\App\Nova\Material::uriKey(), $material, 'Material'));
+        }
     }
 
     /**

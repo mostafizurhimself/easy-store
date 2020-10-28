@@ -2,8 +2,12 @@
 
 namespace App\Observers;
 
+use App\Models\Role;
 use App\Models\Fabric;
 use App\Facades\Helper;
+use App\Facades\Settings;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\AlertQuantityNotification;
 
 class FabricObserver
 {
@@ -40,7 +44,15 @@ class FabricObserver
      */
     public function updated(Fabric $fabric)
     {
-        //
+        //Notify the users
+        $users = \App\Models\User::permission(['view fabrics', 'view any fabrics'])->where('location_id', $fabric->locationId)->get();
+        Notification::send($users, new AlertQuantityNotification(\App\Nova\Fabric::uriKey(), $fabric, 'Fabric'));
+
+        //Notify super admins
+        if (Settings::superAdminNotification()) {
+            $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+            Notification::send($users, new AlertQuantityNotification(\App\Nova\Fabric::uriKey(), $fabric, 'Fabric'));
+        }
     }
 
     /**
