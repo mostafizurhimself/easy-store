@@ -87,8 +87,8 @@ class AssetDistributionInvoicePolicy
      */
     public function restore(User $user, AssetDistributionInvoice $assetDistributionInvoice)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId ) ||
+        return $user->isSuperAdmin() ||
+                (($user->hasPermissionTo('restore asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId ) ||
                 $user->hasPermissionTo('restore all locations data'))&&
                 $assetDistributionInvoice->status == DistributionStatus::DRAFT();
     }
