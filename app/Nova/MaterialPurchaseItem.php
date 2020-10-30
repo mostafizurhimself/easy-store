@@ -224,13 +224,13 @@ class MaterialPurchaseItem extends Resource
     {
         return [
 
-            (new DownloadPdf)->canSee(function ($request) {
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download'),
 
-            (new DownloadExcel)->canSee(function ($request) {
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download material purchase items') || $request->user()->isSuperAdmin());

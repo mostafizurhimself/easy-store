@@ -104,6 +104,16 @@ class Asset extends Model implements HasMedia
     }
 
     /**
+     * Get the model adjust quantities
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function adjustQuantities()
+    {
+        return $this->morphMany(AdjustQuantity::class, 'adjustable');
+    }
+
+    /**
      * Get the remaining stock attribute of the item
      *
      * @return double

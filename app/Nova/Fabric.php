@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Eminiarts\Tabs\Tabs;
 use App\Enums\ActiveStatus;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -14,10 +15,13 @@ use NovaAjaxSelect\AjaxSelect;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\HasMany;
 use App\Nova\Actions\ConvertUnit;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\MorphMany;
 use Treestoneit\TextWrap\TextWrap;
+use App\Nova\Actions\AdjustQuantity;
 use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Lenses\AlertQuantities;
@@ -40,7 +44,7 @@ class Fabric extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\Fabric';
+    public static $model = \App\Models\Fabric::class;
 
     /**
      * The side nav menu order.
@@ -54,7 +58,7 @@ class Fabric extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can convert unit of', 'can update opening quantity of'];
+    public static $permissions = ['can download', 'can convert unit of', 'can adjust quantity of', 'can update opening quantity of'];
 
     /**
      * The group associated with the resource.
@@ -80,8 +84,8 @@ class Fabric extends Resource
      */
     public function subtitle()
     {
-        $subtitle = "Code: ".$this->code;
-        $subtitle.= " Location: ".$this->location->name;
+        $subtitle = "Code: " . $this->code;
+        $subtitle .= " Location: " . $this->location->name;
 
         return $subtitle;
     }
@@ -93,7 +97,7 @@ class Fabric extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-scroll';
+        return 'fas fa-scroll';
     }
 
     /**
@@ -125,140 +129,151 @@ class Fabric extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable()->onlyOnIndex(),
+            (new Tabs("Fabric Details", [
+                "Fabric Info" => [
+                    ID::make()->sortable()->onlyOnIndex(),
 
-            BelongsTo::make('Location')
-                ->searchable()
-                ->sortable()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                    BelongsTo::make('Location')
+                        ->searchable()
+                        ->sortable()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            Text::make('Name')
-                ->hideFromIndex()
-                ->sortable()
-                ->rules('required', 'string', 'max:100', 'multi_space')
-                ->creationRules([
-                    Rule::unique('fabrics', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
-                ])
-                ->updateRules([
-                    Rule::unique('fabrics', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
-                ])
-                ->fillUsing(function($request, $model){
-                    $model['name'] = Str::title($request->name);
-                })
-                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
+                    Text::make('Name')
+                        ->hideFromIndex()
+                        ->sortable()
+                        ->rules('required', 'string', 'max:100', 'multi_space')
+                        ->creationRules([
+                            Rule::unique('fabrics', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
+                        ])
+                        ->updateRules([
+                            Rule::unique('fabrics', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
+                        ])
+                        ->fillUsing(function ($request, $model) {
+                            $model['name'] = Str::title($request->name);
+                        })
+                        ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
-            TextWrap::make('Name')
-                ->onlyOnIndex()
-                ->sortable()
-                ->wrapMethod('length',30),
+                    TextWrap::make('Name')
+                        ->onlyOnIndex()
+                        ->sortable()
+                        ->wrapMethod('length', 30),
 
-            TextUppercase::make('Code')
-                ->sortable()
-                ->help('If you want to generate code automatically, leave the field blank.')
-                ->rules('nullable', 'string', 'max:20', 'space', 'alpha_num')
-                ->creationRules([
-                    Rule::unique('fabrics', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
-                ])
-                ->updateRules([
-                    Rule::unique('fabrics', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
-                ]),
+                    TextUppercase::make('Code')
+                        ->sortable()
+                        ->help('If you want to generate code automatically, leave the field blank.')
+                        ->rules('nullable', 'string', 'max:20', 'space', 'alpha_num')
+                        ->creationRules([
+                            Rule::unique('fabrics', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
+                        ])
+                        ->updateRules([
+                            Rule::unique('fabrics', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
+                        ]),
 
-            Images::make('Image', 'fabric-images')
-                ->croppable(true)
-                ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
-                ->hideFromIndex(),
+                    Images::make('Image', 'fabric-images')
+                        ->croppable(true)
+                        ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
+                        ->hideFromIndex(),
 
-            Trix::make('Description')
-                ->rules('nullable', 'max:500'),
+                    Trix::make('Description')
+                        ->rules('nullable', 'max:500'),
 
-            Currency::make('Rate')
-                ->currency('BDT')
-                ->sortable()
-                ->rules('required', 'numeric', 'min:0'),
+                    Currency::make('Rate')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->rules('required', 'numeric', 'min:0'),
 
-            Number::make('Opening Quantity')
-                ->rules('required', 'numeric', 'min:0')
-                ->hideWhenUpdating()
-                ->hideFromDetail()
-                ->hideFromIndex(),
+                    Number::make('Opening Quantity')
+                        ->rules('required', 'numeric', 'min:0')
+                        ->hideWhenUpdating()
+                        ->hideFromDetail()
+                        ->hideFromIndex(),
 
-            Text::make('Opening Quantity')
-                ->displayUsing(function(){
-                    return $this->openingQuantity ." ".$this->unit->name;
-                })
-                ->sortable()
-                ->onlyOnDetail(),
+                    Text::make('Opening Quantity')
+                        ->displayUsing(function () {
+                            return $this->openingQuantity . " " . $this->unit->name;
+                        })
+                        ->sortable()
+                        ->onlyOnDetail(),
 
-            Number::make('Alert Quantity')
-                ->onlyOnForms()
-                ->rules('required', 'numeric', 'min:0')
-                ->hideFromIndex(),
+                    Number::make('Alert Quantity')
+                        ->onlyOnForms()
+                        ->rules('required', 'numeric', 'min:0')
+                        ->hideFromIndex(),
 
-            Text::make('Alert Quantity')
-                ->displayUsing(function(){
-                    return $this->alertQuantity ." ".$this->unit->name;
-                })
-                ->onlyOnDetail(),
+                    Text::make('Alert Quantity')
+                        ->displayUsing(function () {
+                            return $this->alertQuantity . " " . $this->unit->name;
+                        })
+                        ->onlyOnDetail(),
 
-            Text::make('Quantity')
-                ->displayUsing(function(){
-                    return $this->quantity ." ".$this->unit->name;
-                })
-                ->sortable()
-                ->exceptOnForms(),
+                    Text::make('Quantity')
+                        ->displayUsing(function () {
+                            return $this->quantity . " " . $this->unit->name;
+                        })
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            BelongsTo::make('Unit')
-                ->hideFromIndex()
-                ->hideWhenUpdating()
-                ->showCreateRelationButton(),
+                    BelongsTo::make('Unit')
+                        ->hideFromIndex()
+                        ->hideWhenUpdating()
+                        ->showCreateRelationButton(),
 
-            AjaxSelect::make('Category', 'category_id')
-                ->rules('required')
-                ->get('/locations/{location}/fabric-categories')
-                ->parent('location')
-                ->onlyOnForms()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-            }),
+                    AjaxSelect::make('Category', 'category_id')
+                        ->rules('required')
+                        ->get('/locations/{location}/fabric-categories')
+                        ->parent('location')
+                        ->onlyOnForms()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')
-                ->exceptOnForms()
-                ->sortable(),
+                    BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')
+                        ->exceptOnForms()
+                        ->sortable(),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')
-                ->onlyOnForms()
-                ->canSee(function ($request) {
-                if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
-                    return true;
-                }
-                return false;
-            }),
+                    BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')
+                        ->onlyOnForms()
+                        ->canSee(function ($request) {
+                            if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            BelongsToManyField::make('Suppliers', 'suppliers', 'App\Nova\Supplier')
-                ->hideFromIndex(),
+                    BelongsToManyField::make('Suppliers', 'suppliers', 'App\Nova\Supplier')
+                        ->hideFromIndex(),
 
-            Select::make('Status')
-                ->options(ActiveStatus::titleCaseOptions())
-                ->rules('required')
-                ->default(ActiveStatus::ACTIVE())
-                ->onlyOnForms(),
+                    Select::make('Status')
+                        ->options(ActiveStatus::titleCaseOptions())
+                        ->rules('required')
+                        ->default(ActiveStatus::ACTIVE())
+                        ->onlyOnForms(),
 
-            Badge::make('Status')->map([
-                    ActiveStatus::ACTIVE()->getValue()   => 'success',
-                    ActiveStatus::INACTIVE()->getValue() => 'danger',
-                ])
-                ->sortable()
-                ->label(function(){
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                    Badge::make('Status')->map([
+                        ActiveStatus::ACTIVE()->getValue()   => 'success',
+                        ActiveStatus::INACTIVE()->getValue() => 'danger',
+                    ])
+                        ->sortable()
+                        ->label(function () {
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
+                ],
+                "Distribution History" => [
+                    HasMany::make('Distribution History', 'distributions', \App\Nova\FabricDistribution::class),
+                ],
+                "Adjust History" => [
+                    MorphMany::make('Adjust Quantities', 'adjustQuantities', \App\Nova\AdjustQuantity::class)
+                ],
+
+            ]))->withToolbar(),
 
         ];
     }
@@ -283,7 +298,7 @@ class Fabric extends Resource
     public function filters(Request $request)
     {
         return [
-            LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -292,12 +307,12 @@ class Fabric extends Resource
                 ->withOptions(function (Request $request, $filters) {
                     return FabricCategory::where('location_id', $filters['location_id'])
                         ->pluck('name', 'id');
-                })->canSee(function($request){
+                })->canSee(function ($request) {
                     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
                 }),
 
 
-            (new CategoryFilter)->canSee(function($request){
+            (new CategoryFilter)->canSee(function ($request) {
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -328,23 +343,32 @@ class Fabric extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConvertUnit)->canSee(function($request){
+            (new ConvertUnit)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can convert unit of fabrics') || $request->user()->isSuperAdmin();
             })->confirmButtonText('Confirm'),
 
-            (new DownloadPdf)->canSee(function ($request) {
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
 
-            (new DownloadExcel)->canSee(function ($request) {
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
+
+            (new AdjustQuantity)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can adjust quantity of fabrics') || $request->user()->isSuperAdmin();
+            })
+            ->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can adjust quantity of fabrics') || $request->user()->isSuperAdmin();
+            })
+                ->onlyOnDetail()
+                ->confirmButtonText('Adjust'),
 
             (new UpdateOpeningQuantity)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can update opening quantity of fabrics');

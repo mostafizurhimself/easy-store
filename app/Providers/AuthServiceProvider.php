@@ -35,6 +35,7 @@ use App\Models\ProductOutput;
 use App\Policies\AssetPolicy;
 use App\Policies\FloorPolicy;
 use App\Policies\StylePolicy;
+use App\Models\AdjustQuantity;
 use App\Models\FabricCategory;
 use App\Models\ServiceInvoice;
 use App\Models\ServiceReceive;
@@ -94,6 +95,7 @@ use App\Policies\AssetCategoryPolicy;
 use App\Policies\ProductOutputPolicy;
 use App\Models\ProductRequisitionItem;
 use App\Models\ServiceTransferInvoice;
+use App\Policies\AdjustQuantityPolicy;
 use App\Policies\FabricCategoryPolicy;
 use App\Policies\ServiceInvoicePolicy;
 use App\Policies\ServiceReceivePolicy;
@@ -224,6 +226,7 @@ class AuthServiceProvider extends ServiceProvider
         Unit::class                         => UnitPolicy::class,
         Activity::class                     => ActivityLogPolicy::class,
         Setting::class                      => SettingPolicy::class,
+        AdjustQuantity::class               => AdjustQuantityPolicy::class,
     ];
 
     /**

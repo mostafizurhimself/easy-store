@@ -19,6 +19,7 @@ use App\Nova\Actions\ConvertUnit;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
+use App\Nova\Actions\AdjustQuantity;
 use App\Nova\Actions\Assets\Consume;
 use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
@@ -43,7 +44,7 @@ class Asset extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\Asset';
+    public static $model = \App\Models\Asset::class;
 
     /**
      * The group associated with the resource.
@@ -57,7 +58,7 @@ class Asset extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can consume', 'can download', 'can convert unit of', 'can mass update quantity of', 'can update opening quantity of'];
+    public static $permissions = ['can consume', 'can download', 'can convert unit of', 'can adjust quantity of',  'can mass update quantity of', 'can update opening quantity of'];
 
     /**
      * The side nav menu order.
@@ -345,19 +346,28 @@ class Asset extends Resource
                 return $request->user()->hasPermissionTo('can update opening quantity of assets') || $request->user()->isSuperAdmin();
             })->onlyOnDetail(),
 
-            (new DownloadPdf)->canSee(function($request){
+            (new DownloadPdf)->onlyOnIndex()->canSee(function($request){
                 return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
             })->canRun(function($request){
                 return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
 
-            (new DownloadExcel)->canSee(function($request){
+            (new DownloadExcel)->onlyOnIndex()->canSee(function($request){
                 return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
             })->canRun(function($request){
                 return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
+
+            (new AdjustQuantity)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can adjust quantity of assets') || $request->user()->isSuperAdmin();
+            })
+            ->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can adjust quantity of assets') || $request->user()->isSuperAdmin();
+            })
+            ->onlyOnDetail()
+            ->confirmButtonText('Adjust'),
 
             (new MassUpdateQuantity)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can mass update quantity of assets') || $request->user()->isSuperAdmin();

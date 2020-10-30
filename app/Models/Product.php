@@ -63,6 +63,16 @@ class Product extends Model implements HasMedia
        return $this->belongsTo(ProductCategory::class, 'category_id')->withTrashed();
     }
 
+    /**
+     * Get the model adjust quantities
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function adjustQuantities()
+    {
+        return $this->morphMany(AdjustQuantity::class, 'adjustable');
+    }
+
 
 
 }

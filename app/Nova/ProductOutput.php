@@ -294,14 +294,14 @@ class ProductOutput extends Resource
     public function actions(Request $request)
     {
         return [
-            (new DownloadPdf)->canSee(function ($request) {
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
 
-            (new DownloadExcel)->canSee(function ($request) {
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());

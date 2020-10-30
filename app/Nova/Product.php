@@ -18,6 +18,7 @@ use App\Nova\Actions\ConvertUnit;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
+use App\Nova\Actions\AdjustQuantity;
 use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Lenses\AlertQuantities;
@@ -45,7 +46,7 @@ class Product extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can convert unit of', 'can update opening quantity of'];
+    public static $permissions = ['can adjust', 'can download', 'can convert unit of', 'can adjust quantity of', 'can update opening quantity of'];
 
     /**
      * The group associated with the resource.
@@ -330,6 +331,15 @@ class Product extends Resource
             (new ConvertUnit)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can convert unit of products') || $request->user()->isSuperAdmin();
             })->confirmButtonText('Confirm'),
+
+            (new AdjustQuantity)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can adjust quantity of products') || $request->user()->isSuperAdmin();
+            })
+            ->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can adjust quantity of products') || $request->user()->isSuperAdmin();
+            })
+            ->onlyOnDetail()
+            ->confirmButtonText('Adjust'),
 
             (new UpdateOpeningQuantity)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can update opening quantity of products');

@@ -192,13 +192,13 @@ class Finishing extends Resource
     public function actions(Request $request)
     {
         return [
-            (new DownloadPdf)->canSee(function($request){
+            (new DownloadPdf)->onlyOnIndex()->canSee(function($request){
                 return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
             })->canRun(function($request){
                 return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download'),
 
-            (new DownloadExcel)->canSee(function($request){
+            (new DownloadExcel)->onlyOnIndex()->canSee(function($request){
                 return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
             })->canRun(function($request){
                 return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());

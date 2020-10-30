@@ -19,8 +19,10 @@ use App\Nova\Actions\ConvertUnit;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
+use App\Nova\Actions\AdjustQuantity;
 use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Lenses\AlertQuantities;
 use App\Nova\Filters\ActiveStatusFilter;
 use App\Nova\Lenses\Material\ItSections;
 use AwesomeNova\Filters\DependentFilter;
@@ -32,7 +34,6 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\Materials\UpdateOpeningQuantity;
-use App\Nova\Lenses\AlertQuantities;
 
 class Material extends Resource
 {
@@ -42,14 +43,14 @@ class Material extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\Material';
+    public static $model = \App\Models\Material::class;
 
     /**
      * Get the custom permissions name of the resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can convert unit of', 'can update opening quantity of'];
+    public static $permissions = ['can download', 'can convert unit of', 'can adjust quantity of', 'can update opening quantity of'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -336,19 +337,28 @@ class Material extends Resource
                 return $request->user()->hasPermissionTo('can convert unit of materials') || $request->user()->isSuperAdmin();
             })->confirmButtonText('Confirm'),
 
-            (new DownloadPdf)->canSee(function ($request) {
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
 
-            (new DownloadExcel)->canSee(function ($request) {
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
+
+            (new AdjustQuantity)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can adjust quantity of materials') || $request->user()->isSuperAdmin();
+            })
+            ->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can adjust quantity of materials') || $request->user()->isSuperAdmin();
+            })
+            ->onlyOnDetail()
+            ->confirmButtonText('Adjust'),
 
             (new UpdateOpeningQuantity)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can update opening quantity of materials');
