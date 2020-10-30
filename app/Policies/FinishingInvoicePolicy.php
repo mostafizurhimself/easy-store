@@ -116,7 +116,7 @@ class FinishingInvoicePolicy
      */
     public function addFinishing(User $user, FinishingInvoice $finishingInvoice)
     {
-        return  $finishingInvoice->status == FinishingStatus::DRAFT();;
+        return  $finishingInvoice->status == FinishingStatus::DRAFT() && $finishingInvoice->finishings()->count() <= \App\Facades\Settings::maxInvoiceItem() ;
     }
 
 }

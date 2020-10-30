@@ -24,7 +24,8 @@ class SettingsSeeder extends Seeder
                 'settings' => \json_encode([
                     'name'   => null,
                     'email'  => null,
-                    'mobile' => null
+                    'mobile' => null,
+                    'max_invoice_item' => 10
                 ])
             ]
         );

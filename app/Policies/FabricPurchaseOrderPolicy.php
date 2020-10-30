@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Facades\Settings;
 use App\Enums\PurchaseStatus;
 use App\Models\FabricPurchaseOrder;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -115,7 +116,7 @@ class FabricPurchaseOrderPolicy
      */
     public function addFabricPurchaseItem(User $user, FabricPurchaseOrder $fabricPurchaseOrder)
     {
-        return $fabricPurchaseOrder->status == PurchaseStatus::DRAFT();
+        return $fabricPurchaseOrder->status == PurchaseStatus::DRAFT() && $fabricPurchaseOrder->purchaseItems()->count() <= Settings::maxInvoiceItem();
     }
 
     /**

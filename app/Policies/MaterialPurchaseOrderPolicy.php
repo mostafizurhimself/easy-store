@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Facades\Settings;
 use App\Enums\PurchaseStatus;
 use App\Models\MaterialPurchaseOrder;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -115,7 +116,7 @@ class MaterialPurchaseOrderPolicy
      */
     public function addMaterialPurchaseItem(User $user, MaterialPurchaseOrder $materialPurchaseOrder)
     {
-        return $materialPurchaseOrder->status == PurchaseStatus::DRAFT();
+        return $materialPurchaseOrder->status == PurchaseStatus::DRAFT() && $materialPurchaseOrder->purchaseItems()->count() <= \App\Facades\Settings::maxInvoiceItem();
     }
 
     /**

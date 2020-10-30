@@ -117,7 +117,7 @@ class ServiceTransferInvoicePolicy
      */
     public function addServiceTransferItem(User $user, ServiceTransferInvoice $serviceTransferInvoice)
     {
-        return $serviceTransferInvoice->status == TransferStatus::DRAFT();
+        return $serviceTransferInvoice->status == TransferStatus::DRAFT() && $serviceTransferInvoice->transferItems()->count() <= \App\Facades\Settings::maxInvoiceItem();
     }
 
     /**

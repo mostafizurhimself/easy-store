@@ -116,6 +116,6 @@ class AssetReturnInvoicePolicy
      */
     public function addAssetReturnItem(User $user, AssetReturnInvoice $assetReturnInvoice)
     {
-        return $assetReturnInvoice->status == ReturnStatus::DRAFT();
+        return $assetReturnInvoice->status == ReturnStatus::DRAFT() && $assetReturnInvoice->returnItems()->count() <= \App\Facades\Settings::maxInvoiceItem();
     }
 }

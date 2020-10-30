@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Facades\Settings;
 use App\Enums\TransferStatus;
 use App\Models\FabricTransferInvoice;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -117,7 +118,7 @@ class FabricTransferInvoicePolicy
      */
     public function addFabricTransferItem(User $user, FabricTransferInvoice $fabricTransferInvoice)
     {
-        return $fabricTransferInvoice->status == TransferStatus::DRAFT();
+        return $fabricTransferInvoice->status == TransferStatus::DRAFT() && $fabricTransferInvoice->transferItems()->count() <= Settings::maxInvoiceItem();
     }
 
     /**

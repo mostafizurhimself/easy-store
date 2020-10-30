@@ -117,7 +117,7 @@ class AssetDistributionInvoicePolicy
      */
     public function addAssetDistributionItem(User $user, AssetDistributionInvoice $assetDistributionInvoice)
     {
-        return $assetDistributionInvoice->status == DistributionStatus::DRAFT();
+        return $assetDistributionInvoice->status == DistributionStatus::DRAFT() && $assetDistributionInvoice->distributionItems()->count() <= \App\Facades\Settings::maxInvoiceItem();
     }
 
     /**

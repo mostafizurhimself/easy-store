@@ -115,7 +115,7 @@ class AssetPurchaseOrderPolicy
      */
     public function addAssetPurchaseItem(User $user, AssetPurchaseOrder $assetPurchaseOrder)
     {
-        return $assetPurchaseOrder->status == PurchaseStatus::DRAFT();
+        return $assetPurchaseOrder->status == PurchaseStatus::DRAFT() && $assetPurchaseOrder->purchaseItems()->count() <= \App\Facades\Settings::maxInvoiceItem();
     }
 
     /**

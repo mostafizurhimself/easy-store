@@ -116,6 +116,6 @@ class MaterialReturnInvoicePolicy
      */
     public function addMaterialReturnItem(User $user, MaterialReturnInvoice $materialReturnInvoice)
     {
-        return $materialReturnInvoice->status == ReturnStatus::DRAFT();
+        return $materialReturnInvoice->status == ReturnStatus::DRAFT() && $materialReturnInvoice->returnItems()->count() <= \App\Facades\Settings::maxInvoiceItem();
     }
 }

@@ -117,6 +117,6 @@ class AssetRequisitionPolicy
      */
     public function addAssetRequisitionItem(User $user, AssetRequisition $assetRequisition)
     {
-        return $assetRequisition->status == RequisitionStatus::DRAFT();
+        return $assetRequisition->status == RequisitionStatus::DRAFT() && $assetRequisition->requisitionItems()->count() <= \App\Facades\Settings::maxInvoiceItem();
     }
 }

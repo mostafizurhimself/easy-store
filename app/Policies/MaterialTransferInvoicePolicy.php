@@ -117,7 +117,7 @@ class MaterialTransferInvoicePolicy
      */
     public function addMaterialTransferItem(User $user, MaterialTransferInvoice $materialTransferInvoice)
     {
-        return $materialTransferInvoice->status == TransferStatus::DRAFT();
+        return $materialTransferInvoice->status == TransferStatus::DRAFT() && $materialTransferInvoice->transferItems()->count() <= \App\Facades\Settings::maxInvoiceItem();
     }
 
     /**

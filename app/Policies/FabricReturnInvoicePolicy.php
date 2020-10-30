@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Facades\Settings;
 use App\Enums\ReturnStatus;
 use App\Models\FabricReturnInvoice;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -116,7 +117,7 @@ class FabricReturnInvoicePolicy
      */
     public function addFabricReturnItem(User $user, FabricReturnInvoice $fabricReturnInvoice)
     {
-        return $fabricReturnInvoice->status == ReturnStatus::DRAFT();
+        return $fabricReturnInvoice->status == ReturnStatus::DRAFT() && $fabricReturnInvoice->returnItems()->count() <= Settings::maxInvoiceItem();
     }
 
 

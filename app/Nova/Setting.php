@@ -8,6 +8,7 @@ use Inspheric\Fields\Email;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use App\Traits\WithOutLocation;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Textarea;
@@ -179,6 +180,16 @@ class Setting extends Resource
                     return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
                 }),
 
+            Text::make('Maximum Invoice Item')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->max_invoice_item ?? null;
+                })
+                ->asHtml()
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
+                }),
+
 
 
 
@@ -221,6 +232,9 @@ class Setting extends Resource
                     Select::make("Output Unit", 'output_unit')
                         ->rules('required')
                         ->options(Unit::all()->pluck('name', 'id')),
+
+                    Number::make('Maximum Invoice Item', 'max_invoice_item')
+                        ->rules('required', 'numeric', 'min:3', 'max:50'),
 
 
                 ])

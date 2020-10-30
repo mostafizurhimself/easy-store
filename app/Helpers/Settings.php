@@ -75,4 +75,14 @@ class Settings
     {
         return !empty(self::application()->super_admin_notification) ? self::application()->super_admin_notification : false;
     }
+
+    /**
+     * Get the max invoice item
+     *
+     * @return float
+     */
+    public function maxInvoiceItem()
+    {
+        return !empty(self::application()->max_invoice_item) ? self::application()->max_invoice_item : -1;
+    }
 }

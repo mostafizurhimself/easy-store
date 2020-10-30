@@ -115,8 +115,8 @@ class ProductRequisitionPolicy
      * @param  \App\Models\ProductRequisition  $productRequisition
      * @return mixed
      */
-    public function addModel(User $user, ProductRequisition $productRequisition)
+    public function addProductRequisitionItem(User $user, ProductRequisition $productRequisition)
     {
-        return true;
+        return $productRequisition->status == RequisitionStatus::DRAFT() && $productRequisition->requisitionItems()->count() <= \App\Facades\Settings::maxInvoiceItem();
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Fabric;
+use App\Facades\Settings;
 use App\Models\FabricPurchaseItem;
 
 class FabricPurchaseItemObserver
@@ -16,6 +18,9 @@ class FabricPurchaseItemObserver
      */
     public function saving(FabricPurchaseItem $fabricPurchaseItem)
     {
+        if($fabricPurchaseItem->purchaseOrder->purchaseItems()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum invoice item exceeded.');
+        }
         //Get the Fabric
         $fabric = Fabric::find($fabricPurchaseItem->fabricId);
 
