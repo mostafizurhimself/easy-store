@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Material;
+use App\Facades\Settings;
 use App\Models\MaterialPurchaseItem;
 
 class MaterialPurchaseItemObserver
@@ -16,6 +18,9 @@ class MaterialPurchaseItemObserver
      */
     public function saving(MaterialPurchaseItem $materialPurchaseItem)
     {
+        if($materialPurchaseItem->purchaseOrder->purchaseItems()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
         //Get the material
         $material = Material::find($materialPurchaseItem->materialId);
 

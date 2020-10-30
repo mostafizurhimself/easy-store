@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Fabric;
+use App\Facades\Settings;
 use App\Models\FabricReturnItem;
 
 class FabricReturnItemObserver
@@ -15,6 +17,9 @@ class FabricReturnItemObserver
      */
     public function saving(FabricReturnItem $fabricReturnItem)
     {
+        if($fabricReturnItem->invoice->returnItems()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
         //Get the Fabric
         $fabric = Fabric::find($fabricReturnItem->fabricId);
 

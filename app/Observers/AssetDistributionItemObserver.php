@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Asset;
+use App\Facades\Settings;
 use App\Models\AssetDistributionItem;
 
 class AssetDistributionItemObserver
@@ -15,6 +17,10 @@ class AssetDistributionItemObserver
      */
     public function saving(AssetDistributionItem $assetDistributionItem)
     {
+        if($assetDistributionItem->invoice->distributionItems()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
+
         //Set the requisiton item
         if ($assetDistributionItem->invoice->requisitionId) {
             $assetDistributionItem->requisitionId = $assetDistributionItem->invoice->requisitionId;

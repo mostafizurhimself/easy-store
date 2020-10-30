@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Material;
+use App\Facades\Settings;
 use App\Models\MaterialTransferItem;
 
 class MaterialTransferItemObserver
@@ -15,6 +17,10 @@ class MaterialTransferItemObserver
      */
     public function saving(MaterialTransferItem $materialTransferItem)
     {
+        if($materialTransferItem->invoice->transferItems()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
+
         //Get the material
         $material = Material::find($materialTransferItem->materialId);
 

@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Service;
+use App\Facades\Settings;
 use App\Models\ServiceTransferItem;
 
 class ServiceTransferItemObserver
@@ -15,6 +17,9 @@ class ServiceTransferItemObserver
      */
     public function saving(ServiceTransferItem $serviceTransferItem)
     {
+        if($serviceTransferItem->invoice->transferItems()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
         //Get the service
         $service = Service::find($serviceTransferItem->serviceId);
 

@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Product;
+use App\Facades\Settings;
 use App\Models\Finishing;
 
 class FinishingObserver
@@ -15,6 +17,10 @@ class FinishingObserver
      */
     public function saving(Finishing $finishing)
     {
+        if($finishing->invoice->finishings()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
+
         //Get the product
         $product = Product::find($finishing->productId);
 

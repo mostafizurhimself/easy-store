@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Asset;
+use App\Facades\Settings;
 use App\Models\AssetRequisitionItem;
 
 class AssetRequisitionItemObserver
@@ -15,6 +17,10 @@ class AssetRequisitionItemObserver
      */
     public function saving(AssetRequisitionItem $assetRequisitionItem)
     {
+        if($assetRequisitionItem->requisition->requisitionItems()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
+
         //Get the asset
         $asset = Asset::find($assetRequisitionItem->assetId);
 

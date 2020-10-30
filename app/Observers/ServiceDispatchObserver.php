@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Service;
+use App\Facades\Settings;
 use App\Models\ServiceDispatch;
 
 class ServiceDispatchObserver
@@ -15,6 +17,10 @@ class ServiceDispatchObserver
      */
     public function saving(ServiceDispatch $serviceDispatch)
     {
+        if($serviceDispatch->invoice->dispatches()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
+
         //Get the service
         $service = Service::find($serviceDispatch->serviceId);
 

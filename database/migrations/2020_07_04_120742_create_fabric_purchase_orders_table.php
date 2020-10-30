@@ -15,7 +15,7 @@ class CreateFabricPurchaseOrdersTable extends Migration
     {
         Schema::create('fabric_purchase_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable()->index('fabric_po_number_index');;
+            $table->string('readable_id')->nullable()->index('fabric_po_number_index');
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->date('date')->index('purchase_fabric_date_index');
             $table->bigInteger('supplier_id')->unsigned();

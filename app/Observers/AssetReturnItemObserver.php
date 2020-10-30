@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Asset;
+use App\Facades\Settings;
 use App\Models\AssetReturnItem;
 
 class AssetReturnItemObserver
@@ -15,6 +17,9 @@ class AssetReturnItemObserver
      */
     public function saving(AssetReturnItem $assetReturnItem)
     {
+        if($assetReturnItem->invoice->returnItems()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
         //Get the asset
         $asset = Asset::find($assetReturnItem->assetId);
 

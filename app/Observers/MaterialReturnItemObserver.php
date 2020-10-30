@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Material;
+use App\Facades\Settings;
 use App\Models\MaterialReturnItem;
 
 class MaterialReturnItemObserver
@@ -15,6 +17,10 @@ class MaterialReturnItemObserver
      */
     public function saving(MaterialReturnItem $materialReturnItem)
     {
+        if($materialReturnItem->invoice->returnItems()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
+
         //Get the material
         $material = Material::find($materialReturnItem->materialId);
 

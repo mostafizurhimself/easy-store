@@ -15,7 +15,7 @@ class CreateAssetReturnInvoicesTable extends Migration
     {
         Schema::create('asset_return_invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable()->index('asset_return_invoice_no_index');;
+            $table->string('readable_id')->nullable()->index('asset_return_invoice_no_index');
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->date('date')->index('asset_return_invoice_date_index');
             $table->bigInteger('supplier_id')->unsigned();

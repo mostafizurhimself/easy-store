@@ -30,7 +30,7 @@ class PermissionPolicy
      */
     public function view(User $user, Permission $permission)
     {
-       return $user->isSuperAdmin() || $user->hasPermissionTo('view permissions');;
+       return $user->isSuperAdmin() || $user->hasPermissionTo('view permissions');
     }
 
 }

@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->string('name')->index('user_name_index');
-            $table->string('email')->unique()->index('user_email_index');;
+            $table->string('email')->unique()->index('user_email_index');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('status')->default(ActiveStatus::ACTIVE());

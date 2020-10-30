@@ -19,7 +19,7 @@ class FabricPurchaseItemObserver
     public function saving(FabricPurchaseItem $fabricPurchaseItem)
     {
         if($fabricPurchaseItem->purchaseOrder->purchaseItems()->count() > Settings::maxInvoiceItem()){
-            throw new Exception('Maximum invoice item exceeded.');
+            throw new Exception('Maximum item exceeded.');
         }
         //Get the Fabric
         $fabric = Fabric::find($fabricPurchaseItem->fabricId);

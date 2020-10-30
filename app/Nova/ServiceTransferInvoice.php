@@ -202,7 +202,7 @@ class ServiceTransferInvoice extends Resource
             HasMany::make('Transfer Items', 'transferItems',  \App\Nova\ServiceTransferItem::class),
             HasMany::make('Receive Items', 'receiveItems', \App\Nova\ServiceTransferReceiveItem::class)
 
-        ];;
+        ];
     }
 
     /**

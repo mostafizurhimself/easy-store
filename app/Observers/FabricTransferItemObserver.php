@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Fabric;
+use App\Facades\Settings;
 use App\Models\FabricTransferItem;
 
 class FabricTransferItemObserver
@@ -15,6 +17,9 @@ class FabricTransferItemObserver
      */
     public function saving(FabricTransferItem $fabricTransferItem)
     {
+        if($fabricTransferItem->invoice->transferItems()->count() > Settings::maxInvoiceItem()){
+            throw new Exception('Maximum item exceeded.');
+        }
          //Get the fabric
          $fabric = Fabric::find($fabricTransferItem->fabricId);
 

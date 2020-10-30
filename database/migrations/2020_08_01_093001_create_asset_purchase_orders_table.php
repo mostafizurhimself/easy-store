@@ -15,7 +15,7 @@ class CreateAssetPurchaseOrdersTable extends Migration
     {
         Schema::create('asset_purchase_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('readable_id')->nullable()->index('asset_po_number_index');;
+            $table->string('readable_id')->nullable()->index('asset_po_number_index');
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->date('date')->index('asset_purchase_date_index');
             $table->bigInteger('supplier_id')->unsigned();
