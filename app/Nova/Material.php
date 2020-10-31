@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Eminiarts\Tabs\Tabs;
 use App\Enums\ActiveStatus;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -18,6 +19,7 @@ use Laravel\Nova\Fields\HasMany;
 use App\Nova\Actions\ConvertUnit;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\MorphMany;
 use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Actions\AdjustQuantity;
 use App\Nova\Filters\CategoryFilter;
@@ -127,143 +129,154 @@ class Material extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable()->onlyOnIndex(),
+            (new Tabs("Material Details", [
+                "Material Info" => [
+                    ID::make()->sortable()->onlyOnIndex(),
 
-            BelongsTo::make('Location')
-                ->searchable()
-                ->sortable()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                    BelongsTo::make('Location')
+                        ->searchable()
+                        ->sortable()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            Text::make('Name')
-                ->hideFromIndex()
-                ->sortable()
-                ->rules('required', 'string', 'max:100', 'multi_space')
-                ->creationRules([
-                    Rule::unique('materials', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
-                ])
-                ->updateRules([
-                    Rule::unique('materials', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
-                ])
-                ->fillUsing(function ($request, $model) {
-                    $model['name'] = Str::title($request->name);
-                })
-                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
+                    Text::make('Name')
+                        ->hideFromIndex()
+                        ->sortable()
+                        ->rules('required', 'string', 'max:100', 'multi_space')
+                        ->creationRules([
+                            Rule::unique('materials', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)
+                        ])
+                        ->updateRules([
+                            Rule::unique('materials', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
+                        ])
+                        ->fillUsing(function ($request, $model) {
+                            $model['name'] = Str::title($request->name);
+                        })
+                        ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
-            TextWrap::make('Name')
-                ->onlyOnIndex()
-                ->sortable()
-                ->wrapMethod('length', 30),
+                    TextWrap::make('Name')
+                        ->onlyOnIndex()
+                        ->sortable()
+                        ->wrapMethod('length', 30),
 
-            TextUppercase::make('Code')
-                ->sortable()
-                ->help('If you want to generate code automatically, leave the field blank.')
-                ->rules('nullable', 'string', 'max:20', 'space', 'alpha_num')
-                ->creationRules([
-                    Rule::unique('materials', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
-                ])
-                ->updateRules([
-                    Rule::unique('materials', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
-                ]),
+                    TextUppercase::make('Code')
+                        ->sortable()
+                        ->help('If you want to generate code automatically, leave the field blank.')
+                        ->rules('nullable', 'string', 'max:20', 'space', 'alpha_num')
+                        ->creationRules([
+                            Rule::unique('materials', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)
+                        ])
+                        ->updateRules([
+                            Rule::unique('materials', 'code')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
+                        ]),
 
-            Images::make('Image', 'material-images')
-                ->croppable(true)
-                ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
-                ->hideFromIndex(),
+                    Images::make('Image', 'material-images')
+                        ->croppable(true)
+                        ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
+                        ->hideFromIndex(),
 
-            Trix::make('Description')
-                ->rules('nullable', 'max:500'),
+                    Trix::make('Description')
+                        ->rules('nullable', 'max:500'),
 
-            Currency::make('Rate')
-                ->currency('BDT')
-                ->sortable()
-                ->rules('required', 'numeric', 'min:0'),
+                    Currency::make('Rate')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->rules('required', 'numeric', 'min:0'),
 
-            Number::make('Opening Quantity')
-                ->rules('required', 'numeric', 'min:0')
-                ->hideWhenUpdating()
-                ->hideFromDetail()
-                ->hideFromIndex(),
+                    Number::make('Opening Quantity')
+                        ->rules('required', 'numeric', 'min:0')
+                        ->hideWhenUpdating()
+                        ->hideFromDetail()
+                        ->hideFromIndex(),
 
-            Text::make('Opening Quantity')
-                ->displayUsing(function () {
-                    return $this->openingQuantity . " " . $this->unit->name;
-                })
-                ->onlyOnDetail(),
+                    Text::make('Opening Quantity')
+                        ->displayUsing(function () {
+                            return $this->openingQuantity . " " . $this->unit->name;
+                        })
+                        ->onlyOnDetail(),
 
-            Number::make('Alert Quantity')
-                ->onlyOnForms()
-                ->rules('required', 'numeric', 'min:0')
-                ->hideFromIndex(),
+                    Number::make('Alert Quantity')
+                        ->onlyOnForms()
+                        ->rules('required', 'numeric', 'min:0')
+                        ->hideFromIndex(),
 
-            Text::make('Alert Quantity')
-                ->displayUsing(function () {
-                    return $this->alertQuantity . " " . $this->unit->name;
-                })
-                ->sortable()
-                ->onlyOnDetail(),
+                    Text::make('Alert Quantity')
+                        ->displayUsing(function () {
+                            return $this->alertQuantity . " " . $this->unit->name;
+                        })
+                        ->sortable()
+                        ->onlyOnDetail(),
 
-            Text::make('Quantity')
-                ->displayUsing(function () {
-                    return $this->quantity . " " . $this->unit->name;
-                })
-                ->sortable()
-                ->exceptOnForms(),
+                    Text::make('Quantity')
+                        ->displayUsing(function () {
+                            return $this->quantity . " " . $this->unit->name;
+                        })
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            BelongsTo::make('Unit')
-                ->hideFromIndex()
-                ->hideWhenUpdating()
-                ->showCreateRelationButton(),
+                    BelongsTo::make('Unit')
+                        ->hideFromIndex()
+                        ->hideWhenUpdating()
+                        ->showCreateRelationButton(),
 
-            AjaxSelect::make('Category', 'category_id')
-                ->rules('required')
-                ->get('/locations/{location}/material-categories')
-                ->parent('location')
-                ->onlyOnForms()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                    AjaxSelect::make('Category', 'category_id')
+                        ->rules('required')
+                        ->get('/locations/{location}/material-categories')
+                        ->parent('location')
+                        ->onlyOnForms()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\MaterialCategory')
-                ->exceptOnForms()
-                ->sortable(),
+                    BelongsTo::make('Category', 'category', 'App\Nova\MaterialCategory')
+                        ->exceptOnForms()
+                        ->sortable(),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\MaterialCategory')
-                ->onlyOnForms()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return false;
-                    }
-                    return true;
-                }),
+                    BelongsTo::make('Category', 'category', 'App\Nova\MaterialCategory')
+                        ->onlyOnForms()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return false;
+                            }
+                            return true;
+                        }),
 
-            BelongsToManyField::make('Suppliers', 'suppliers', 'App\Nova\Supplier')
-                ->hideFromIndex()
-                ->sortable(),
+                    BelongsToManyField::make('Suppliers', 'suppliers', 'App\Nova\Supplier')
+                        ->hideFromIndex()
+                        ->sortable(),
 
-            Select::make('Status')
-                ->options(ActiveStatus::titleCaseOptions())
-                ->rules('required')
-                ->default(ActiveStatus::ACTIVE())
-                ->onlyOnForms(),
+                    Select::make('Status')
+                        ->options(ActiveStatus::titleCaseOptions())
+                        ->rules('required')
+                        ->default(ActiveStatus::ACTIVE())
+                        ->onlyOnForms(),
 
-            Badge::make('Status')->map([
-                ActiveStatus::ACTIVE()->getValue()   => 'success',
-                ActiveStatus::INACTIVE()->getValue() => 'danger',
-            ])
-                ->sortable()
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                    Badge::make('Status')->map([
+                        ActiveStatus::ACTIVE()->getValue()   => 'success',
+                        ActiveStatus::INACTIVE()->getValue() => 'danger',
+                    ])
+                        ->sortable()
+                        ->label(function () {
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
+                ],
+                "Distribution history" => [
+                    HasMany::make('Distribution History', 'distributions', \App\Nova\MaterialDistribution::class),
+                ],
+                "Adjust History" => [
+                    MorphMany::make('Adjust Quantities', 'adjustQuantities', \App\Nova\AdjustQuantity::class)
+                ],
 
-            HasMany::make('Distribution History', 'distributions', \App\Nova\MaterialDistribution::class),
+            ]))->withToolbar(),
+
+
 
 
         ];
@@ -333,7 +346,7 @@ class Material extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConvertUnit)->canSee(function($request){
+            (new ConvertUnit)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can convert unit of materials') || $request->user()->isSuperAdmin();
             })->confirmButtonText('Confirm'),
 
@@ -351,14 +364,14 @@ class Material extends Resource
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
 
-            (new AdjustQuantity)->canSee(function($request){
+            (new AdjustQuantity)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can adjust quantity of materials') || $request->user()->isSuperAdmin();
             })
-            ->canRun(function ($request) {
-                return $request->user()->hasPermissionTo('can adjust quantity of materials') || $request->user()->isSuperAdmin();
-            })
-            ->onlyOnDetail()
-            ->confirmButtonText('Adjust'),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can adjust quantity of materials') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail()
+                ->confirmButtonText('Adjust'),
 
             (new UpdateOpeningQuantity)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can update opening quantity of materials');
