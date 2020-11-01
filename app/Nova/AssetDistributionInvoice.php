@@ -29,7 +29,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\DistributionStatusFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
-use App\Nova\Actions\AssetDistributionInvoice\AutoReceive;
+use App\Nova\Actions\AssetDistributionInvoices\AutoReceive;
 use App\Nova\Actions\AssetDistributionInvoices\ConfirmInvoice;
 use App\Nova\Actions\AssetDistributionInvoices\GenerateInvoice;
 use App\Nova\Lenses\AssetDistributionInvoice\DistributionInvoices;

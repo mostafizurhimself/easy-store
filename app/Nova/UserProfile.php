@@ -17,8 +17,7 @@ class UserProfile extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\User';
-
+    public static $model = \App\Models\User::class;
 
     /**
      * Indicates if the resource should be displayed in the sidebar.
@@ -26,6 +25,13 @@ class UserProfile extends Resource
      * @var bool
      */
     public static $displayInNavigation = false;
+
+    /**
+     * Indicates if the resource should be globally searchable.
+     *
+     * @var bool
+     */
+    public static $globallySearchable = false;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -53,8 +59,8 @@ class UserProfile extends Resource
             ID::make()->sortable()->onlyOnIndex(),
 
             Images::make('Profile Picture', 'avatar') // second parameter is the media collection name
-            ->croppable(false)
-            ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png'),
+                ->croppable(false)
+                ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png'),
 
             Text::make('Name')
                 ->sortable()

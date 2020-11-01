@@ -35,7 +35,9 @@
         "build-notification": "cd nova-components/Notification && npm run dev",
         "build-notification-prod": "cd nova-components/Notification && npm run prod",
         "build-redirect": "cd nova-components/Redirect && npm run dev",
-        "build-redirect-prod": "cd nova-components/Redirect && npm run prod"
+        "build-redirect-prod": "cd nova-components/Redirect && npm run prod",
+        "build-profile-tool": "cd nova-components/ProfileTool && npm run dev",
+        "build-profile-tool-prod": "cd nova-components/ProfileTool && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.19",

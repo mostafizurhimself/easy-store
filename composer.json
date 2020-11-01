@@ -53,7 +53,8 @@
         "orlyapps/nova-belongsto-depend": "^2.0",
         "pusher/pusher-php-server": "^4.1",
         "titasgailius/search-relations": "^1.0",
-        "treestoneit/text-wrap": "^1.1"
+        "treestoneit/text-wrap": "^1.1",
+        "easystore/profile-tool": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
@@ -127,6 +128,10 @@
         {
             "type": "path",
             "url": "./nova-components/Redirect"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/ProfileTool"
         }
     ]
 }

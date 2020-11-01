@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Events\ServingNova;
+use Easystore\ProfileTool\ProfileTool;
 use App\Nova\Metrics\DailyProductOutput;
 use App\Nova\Metrics\TotalAssetPurchase;
 use App\Nova\Metrics\TotalPurchaseOrder;
@@ -155,6 +156,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             \ChrisWare\NovaBreadcrumbs\NovaBreadcrumbs::make()->withoutStyles(),
 
             \Mirovit\NovaNotifications\NovaNotifications::make(),
+
+            ProfileTool::make(),
+
+            // (new \Runline\ProfileTool\ProfileTool)->canSee(function(){
+            //     return false;
+            // }),
         ];
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Actions\AssetDistributionInvoice;
+namespace App\Nova\Actions\AssetDistributionInvoices;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;

@@ -18,7 +18,7 @@
 <dropdown-menu slot="menu" width="200" direction="rtl">
     <ul class="list-reset">
         <li>
-            <router-link to="/resources/users/{{Auth::user()->id}}/edit" class=" block no-underline text-90 hover:bg-30 p-3">
+            <router-link to="/profile-tool" class=" block no-underline text-90 hover:bg-30 p-3">
                 <i class="fas fa-lock ml-2" style="min-width:2rem"></i>Profile
             </router-link>
         </li>
