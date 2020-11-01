@@ -35,12 +35,13 @@ class ConfirmReceiveItem extends Action
             if($model->unitId == $model->asset->unitId){
 
                  // Check status is draft or not.
-                if($model->status != DistributionStatus::DRAFT()){
+                if($model->status == DistributionStatus::DRAFT()){
+                    $model->asset->increment('quantity', $model->quantity);
+                    $model->status = DistributionStatus::CONFIRMED();
+                    $model->save();
+                }else{
                     return Action::danger('Already Confirmed');
                 }
-                $model->asset->increment('quantity', $model->quantity);
-                $model->status = DistributionStatus::CONFIRMED();
-                $model->save();
             }else{
                 return Action::danger("Unit mismatch! You can't confirm it now.");
             }
