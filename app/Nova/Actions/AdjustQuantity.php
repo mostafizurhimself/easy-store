@@ -62,7 +62,7 @@ class AdjustQuantity extends Action
                 ->rules('required', 'numeric', 'min:0'),
 
             Textarea::make('Description', 'description')
-                ->rules('nullable', 'max:500')
+                ->rules('required', 'max:500')
         ];
     }
 }
