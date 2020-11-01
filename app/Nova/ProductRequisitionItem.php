@@ -133,6 +133,7 @@ class ProductRequisitionItem extends Resource
                 })
                 ->rules('required')
                 ->sortable()
+                ->searchable()
                 ->onlyOnForms(),
 
             Number::make('Quantity', 'requisition_quantity')

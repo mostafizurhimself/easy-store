@@ -130,6 +130,8 @@ class AssetRequisitionItem extends Resource
                         });
                 })
                 ->rules('required')
+                ->searchable()
+                ->sortable()
                 ->onlyOnForms(),
 
             Number::make('Quantity', 'requisition_quantity')

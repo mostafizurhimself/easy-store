@@ -70,35 +70,42 @@
         <thead>
             <tr>
                 <th>SR NO.</th>
-                <th class="text-left">DESCRIPTION</th>
-                <th class="text-right">PRICE</th>
+                <th class="text-left">NAME</th>
+                <th class="text-left">CODE</th>
                 <th class="text-right">QUANTITY</th>
-                <th class="text-right">TOTAL</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($invoice->distributionItems as $item)
                 <tr>
                     <td class="no">{{$loop->iteration}}</td>
-                    <td class="text-left"><h3>{{$item->asset->name}}</h3>({{$item->asset->code}})</td>
-                    <td class="unit">{{Helper::currencyShort($item->distributionRate)}}</td>
+                    <td class="text-left"><h3>{{$item->asset->name}}</h3></td>
+                    <td class="text-left"><h3>{{$item->asset->code}}</h3></td>
                     <td class="tax">{{$item->distributionQuantity}} {{$item->unit->name}}</td>
-                    <td class="total">{{Helper::currencyShort($item->distributionAmount)}}</td>
                 </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="2"></td>
-                <td colspan="2">GRAND TOTAL</td>
-                <td>{{Helper::currency($invoice->totalDistributionAmount)}}</td>
+                <td class="font-weight-bold" >GRAND TOTAL</td>
+                <td class="font-weight-bold" >{{$invoice->distributionItems->sum('distribution_quantity')}} {{$invoice->distributionItems->first()->unit->name}}</td>
             </tr>
         </tfoot>
     </table>
     <div class="thanks">Thank you!</div>
-    <div class="notices">
-        <div>Note:</div>
-        <div class="notice">{!! $invoice->note !!}</div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="notices">
+                <div>Note:</div>
+                <div class="notice">{!! $invoice->note !!}</div>
+            </div>
+        </div>
+        <div class="col-lg-6 d-flex align-items-end justify-content-end">
+            <span class="font-weight-bold border-top p-2">
+                Authorize Signature
+            </span>
+        </div>
     </div>
 </main>
 @endsection

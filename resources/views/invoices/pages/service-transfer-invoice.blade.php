@@ -71,9 +71,8 @@
             <tr>
                 <th>SR NO.</th>
                 <th class="text-left">DESCRIPTION</th>
-                {{-- <th class="text-right">RATE</th> --}}
+                <th class="text-left">CODE</th>
                 <th class="text-right">QUANTITY</th>
-                {{-- <th class="text-right">TOTAL</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -81,27 +80,32 @@
                 <tr>
                     <td class="no">{{$loop->iteration}}</td>
                     <td class="text-left">
-                        <h3>{{$item->service->name}} ({{$item->service->code}})</h3>
+                        <h3>{{$item->service->name}}</h3>
                         <span>{!! $item->description !!}</span>
                     </td>
-                    {{-- <td class="unit">{{Helper::currencyShort($item->rate)}}</td> --}}
+                    <td>{{$item->service->code}}</td>
                     <td class="tax">{{$item->transferQuantity}} {{$item->unit->name}}</td>
-                    {{-- <td class="total">{{Helper::currencyShort($item->dispatchAmount)}}</td> --}}
                 </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
-                <td></td>
-                <td>GRAND TOTAL</td>
-                <td>{{$invoice->transferItems()->sum('transfer_quantity')}} {{$invoice->transferItems()->exists() ? $invoice->transferItems()->first()->unit->name : null}}</td>
+                <td colspan="3" class="font-weight-bold">GRAND TOTAL</td>
+                <td  class="font-weight-bold">{{$invoice->transferItems()->sum('transfer_quantity')}} {{$invoice->transferItems()->exists() ? $invoice->transferItems()->first()->unit->name : null}}</td>
             </tr>
         </tfoot>
     </table>
-    <div class="thanks">Thank you!</div>
-    <div class="notices">
-        <div>Note:</div>
-        <div class="notice">{!! $invoice->description !!}</div>
+    <div class="row">
+        <div class="col-6">
+            <div class="thanks">Thank you!</div>
+            <div class="notices">
+                <div class="font-weight-bold">Note:</div>
+                <div class="notice">{!! $invoice->description !!}</div>
+            </div>
+        </div>
+        <div class="col-6 d-flex align-items-end justify-content-end">
+            <span class="font-weight-bold border-top p-2">Authorize Signature</span>
+        </div>
     </div>
 </main>
 

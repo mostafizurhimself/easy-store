@@ -2,13 +2,13 @@
 
 namespace App\Nova\Actions\FinishingDistributions;
 
-use App\Enums\DistributionStatus;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
+use App\Enums\DistributionStatus;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class GenerateInvoice extends Action
 {
@@ -37,7 +37,13 @@ class GenerateInvoice extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        return Action::openInNewTab(route('invoices.fabric-distributions', $models->first()));
+        foreach($models as $model){
+            if($model->status != DistributionStatus::DRAFT()){
+                return Action::openInNewTab(route('invoices.fabric-distributions', $model));
+            }
+
+            return Action::danger("Can not generate invoice now.");
+        }
     }
 
     /**
