@@ -191,14 +191,12 @@ class FabricTransferInvoice extends Resource
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
                 ],
-                "Transfer Items" => [
-                    HasMany::make('Transfer Items', 'transferItems', \App\Nova\FabricTransferItem::class),
-                ],
                 "Receive Items" => [
                     HasMany::make('Receive Items', 'receiveItems', \App\Nova\FabricTransferReceiveItem::class),
                 ]
             ]))->withToolbar(),
 
+            HasMany::make('Transfer Items', 'transferItems', \App\Nova\FabricTransferItem::class),
 
         ];
     }

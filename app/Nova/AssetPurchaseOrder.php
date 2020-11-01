@@ -191,14 +191,12 @@ class AssetPurchaseOrder extends Resource
                         })
                         ->onlyOnDetail(),
                 ],
-                "Purchase Items" => [
-                    HasMany::make('Purchase Items', 'purchaseItems', \App\Nova\AssetPurchaseItem::class),
-                ],
                 "Receive Items" => [
                     HasMany::make('Receive Items', 'receiveItems', \App\Nova\AssetReceiveItem::class),
                 ]
             ]))->withToolbar(),
 
+            HasMany::make('Purchase Items', 'purchaseItems', \App\Nova\AssetPurchaseItem::class),
 
 
         ];

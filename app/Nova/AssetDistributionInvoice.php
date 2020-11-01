@@ -209,14 +209,13 @@ class AssetDistributionInvoice extends Resource
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
                 ],
-                "Distribution Items" => [
-                    HasMany::make('Distribution Items', 'distributionItems', \App\Nova\AssetDistributionItem::class),
-                ],
+
                 "Receive Items" => [
                     HasMany::make('Receive Items', 'receiveItems', \App\Nova\AssetDistributionReceiveItem::class),
                 ],
             ]))->withToolbar(),
 
+            HasMany::make('Distribution Items', 'distributionItems', \App\Nova\AssetDistributionItem::class),
         ];
     }
 

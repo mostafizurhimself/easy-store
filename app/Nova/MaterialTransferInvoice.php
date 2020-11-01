@@ -194,14 +194,12 @@ class MaterialTransferInvoice extends Resource
                         }),
 
                 ],
-                "Transfer Items" => [
-                    HasMany::make('Transfer Items', 'transferItems', \App\Nova\MaterialTransferItem::class),
-                ],
                 "Receive Items" => [
                     HasMany::make('Receive Items', 'receiveItems', \App\Nova\MaterialTransferReceiveItem::class),
                 ]
             ]))->withToolbar(),
 
+            HasMany::make('Transfer Items', 'transferItems', \App\Nova\MaterialTransferItem::class),
 
         ];
     }

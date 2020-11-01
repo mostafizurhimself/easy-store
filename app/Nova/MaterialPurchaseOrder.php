@@ -192,14 +192,12 @@ class MaterialPurchaseOrder extends Resource
                         ->sortable()
                         ->onlyOnDetail(),
                 ],
-                "Purchase Items" => [
-                    HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\MaterialPurchaseItem'),
-                ],
                 "Receive Items" => [
                     HasMany::make('Receive Items', 'receiveItems', 'App\Nova\MaterialReceiveItem'),
                 ]
             ]))->withToolbar(),
 
+            HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\MaterialPurchaseItem'),
 
         ];
     }

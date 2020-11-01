@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use Eminiarts\Tabs\Tabs;
 use App\Rules\ReceiverRule;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -21,13 +22,13 @@ use App\Nova\Lenses\TransferItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Lenses\TransferReceiveItems;
 use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceTransferInvoice\GenerateInvoice;
 use App\Nova\Actions\ServiceTransferInvoices\ConfirmInvoice;
 use App\Nova\Lenses\ServiceTransferInvoice\TransferInvoices;
-use App\Nova\Lenses\TransferReceiveItems;
 
 class ServiceTransferInvoice extends Resource
 {
@@ -137,70 +138,76 @@ class ServiceTransferInvoice extends Resource
     public function fields(Request $request)
     {
         return [
-            RouterLink::make('Invoice', 'id')
-                ->withMeta([
-                    'label' => $this->readableId,
-                ])
-                ->sortable(),
+            (new Tabs("Tranfer Invoice Details", [
+                "Invoice Info" => [
+                    RouterLink::make('Invoice', 'id')
+                        ->withMeta([
+                            'label' => $this->readableId,
+                        ])
+                        ->sortable(),
 
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->sortable()
-                ->readonly(),
+                    Date::make('Date')
+                        ->rules('required')
+                        ->default(Carbon::now())
+                        ->sortable()
+                        ->readonly(),
 
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
+                    Hidden::make('Date')
+                        ->default(Carbon::now())
+                        ->hideWhenUpdating(),
 
-            BelongsTo::make('Location')->searchable()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                })
-                ->sortable(),
+                    BelongsTo::make('Location')->searchable()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        })
+                        ->sortable(),
 
-            Trix::make('Description')
-                ->rules('nullable', 'max:500'),
+                    Trix::make('Description')
+                        ->rules('nullable', 'max:500'),
 
-            Currency::make('Total Transfer Amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Total Transfer Amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Currency::make('Total Receive Amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Total Receive Amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Select::make('Receiver', 'receiver_id')
-                ->options(function () {
-                    return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
-                })
-                ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
-                ->searchable()
-                ->onlyOnForms(),
+                    Select::make('Receiver', 'receiver_id')
+                        ->options(function () {
+                            return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                        })
+                        ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
+                        ->searchable()
+                        ->onlyOnForms(),
 
-            Text::make('Receiver', function () {
-                return $this->receiver->name;
-            })
-                ->sortable(),
+                    Text::make('Receiver', function () {
+                        return $this->receiver->name;
+                    })
+                        ->sortable(),
 
-            Badge::make('Status')->map([
-                TransferStatus::DRAFT()->getValue()     => 'warning',
-                TransferStatus::CONFIRMED()->getValue() => 'info',
-                TransferStatus::PARTIAL()->getValue()   => 'danger',
-                TransferStatus::RECEIVED()->getValue()  => 'success',
-            ])
-                ->sortable()
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                    Badge::make('Status')->map([
+                        TransferStatus::DRAFT()->getValue()     => 'warning',
+                        TransferStatus::CONFIRMED()->getValue() => 'info',
+                        TransferStatus::PARTIAL()->getValue()   => 'danger',
+                        TransferStatus::RECEIVED()->getValue()  => 'success',
+                    ])
+                        ->sortable()
+                        ->label(function () {
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
+                ],
+                "Receive Items" => [
+                    HasMany::make('Receive Items', 'receiveItems', \App\Nova\ServiceTransferReceiveItem::class)
+                ]
+            ]))->withToolbar(),
 
             HasMany::make('Transfer Items', 'transferItems',  \App\Nova\ServiceTransferItem::class),
-            HasMany::make('Receive Items', 'receiveItems', \App\Nova\ServiceTransferReceiveItem::class)
 
         ];
     }

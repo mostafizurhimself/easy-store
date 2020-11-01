@@ -192,14 +192,12 @@ class FabricPurchaseOrder extends Resource
                         })
                         ->onlyOnDetail(),
                 ],
-                "Purchase Items" => [
-                    HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\FabricPurchaseItem'),
-                ],
                 "Receive Items" => [
                     HasMany::make('Receive Items', 'receiveItems', 'App\Nova\FabricReceiveItem'),
                 ]
             ]))->withToolbar(),
 
+            HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\FabricPurchaseItem'),
 
         ];
     }
