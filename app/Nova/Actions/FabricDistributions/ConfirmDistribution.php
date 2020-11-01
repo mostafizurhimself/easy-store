@@ -32,14 +32,20 @@ class ConfirmDistribution extends Action
     {
         foreach($models as $model){
 
-            //Decrease the item quantity
-            $model->fabric->decrement('quantity', $model->quantity);
+            // Check model status is draft or not
+            if($model->status == DistributionStatus::DRAFT()){
+                //Decrease the item quantity
+                $model->fabric->decrement('quantity', $model->quantity);
 
-            //Update the distribution status
-            $model->status = DistributionStatus::CONFIRMED();
+                //Update the distribution status
+                $model->status = DistributionStatus::CONFIRMED();
 
-            //Save the model
-            $model->save();
+                //Save the model
+                $model->save();
+            }else{
+                return Action::danger('Already Confirmed.');
+            }
+
         }
     }
 

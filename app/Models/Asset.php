@@ -88,6 +88,26 @@ class Asset extends Model implements HasMedia
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function purchaseItems()
+    {
+       return $this->hasMany(AssetPurchaseItem::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function receiveItems()
+    {
+       return $this->hasMany(AssetReceiveItem::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function distributionItems()
     {
        return $this->hasMany(AssetDistributionItem::class);

@@ -28,6 +28,7 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\MaterialTransferInvoices\ConfirmInvoice;
 use App\Nova\Lenses\MaterialTransferInvoice\TransferInvoices;
 use App\Nova\Actions\MaterialTransferInvoices\GenerateInvoice;
+use Eminiarts\Tabs\Tabs;
 
 class MaterialTransferInvoice extends Resource
 {
@@ -124,73 +125,84 @@ class MaterialTransferInvoice extends Resource
     public function fields(Request $request)
     {
         return [
-            RouterLink::make('Invoice No', 'id')
-                ->sortable()
-                ->withMeta([
-                    'label' => $this->readableId,
-                ]),
 
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->sortable()
-                ->readonly(),
+            (new Tabs("Transfer Invoice Details", [
+                "Invoice Info" => [
+                    RouterLink::make('Invoice No', 'id')
+                        ->sortable()
+                        ->withMeta([
+                            'label' => $this->readableId,
+                        ]),
 
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
+                    Date::make('Date')
+                        ->rules('required')
+                        ->default(Carbon::now())
+                        ->sortable()
+                        ->readonly(),
 
-            BelongsTo::make('Location')->sortable()
-                ->searchable()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                    Hidden::make('Date')
+                        ->default(Carbon::now())
+                        ->hideWhenUpdating(),
 
-            Currency::make('Transfer Amount', 'total_transfer_amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    BelongsTo::make('Location')->sortable()
+                        ->searchable()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            Currency::make('Receive Amount', 'total_receive_amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Transfer Amount', 'total_transfer_amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Trix::make('Note')
-                ->rules('nullable', 'max:500'),
+                    Currency::make('Receive Amount', 'total_receive_amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Files::make('Attachments', 'transfer-attachments')
-                ->singleMediaRules('max:5000') // max 5000kb
-                ->hideFromIndex(),
+                    Trix::make('Note')
+                        ->rules('nullable', 'max:500'),
 
-            Select::make('Receiver', 'receiver_id')
-                ->options(function () {
-                    return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
-                })
-                ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
-                ->searchable()
-                ->onlyOnForms(),
+                    Files::make('Attachments', 'transfer-attachments')
+                        ->singleMediaRules('max:5000') // max 5000kb
+                        ->hideFromIndex(),
 
-            Text::make('Receiver', function () {
-                return $this->receiver->name;
-            })->sortable(),
+                    Select::make('Receiver', 'receiver_id')
+                        ->options(function () {
+                            return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                        })
+                        ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
+                        ->searchable()
+                        ->onlyOnForms(),
 
-            Badge::make('Status')->map([
-                TransferStatus::DRAFT()->getValue()     => 'warning',
-                TransferStatus::CONFIRMED()->getValue() => 'info',
-                TransferStatus::PARTIAL()->getValue()   => 'danger',
-                TransferStatus::RECEIVED()->getValue()  => 'success',
-            ])
-                ->sortable()
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                    Text::make('Receiver', function () {
+                        return $this->receiver->name;
+                    })->sortable(),
 
-            HasMany::make('Transfer Items', 'transferItems', \App\Nova\MaterialTransferItem::class),
-            HasMany::make('Receive Items', 'receiveItems', \App\Nova\MaterialTransferReceiveItem::class),
+                    Badge::make('Status')->map([
+                        TransferStatus::DRAFT()->getValue()     => 'warning',
+                        TransferStatus::CONFIRMED()->getValue() => 'info',
+                        TransferStatus::PARTIAL()->getValue()   => 'danger',
+                        TransferStatus::RECEIVED()->getValue()  => 'success',
+                    ])
+                        ->sortable()
+                        ->label(function () {
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
+
+                ],
+                "Transfer Items" => [
+                    HasMany::make('Transfer Items', 'transferItems', \App\Nova\MaterialTransferItem::class),
+                ],
+                "Receive Items" => [
+                    HasMany::make('Receive Items', 'receiveItems', \App\Nova\MaterialTransferReceiveItem::class),
+                ]
+            ]))->withToolbar(),
+
+
         ];
     }
 
@@ -251,7 +263,7 @@ class MaterialTransferInvoice extends Resource
             (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm material transfer invoices');
             })
-            ->confirmButtonText('Confirm'),
+                ->confirmButtonText('Confirm'),
 
             (new GenerateInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate material transfer invoices');

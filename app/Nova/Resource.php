@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Facades\Settings;
 use Illuminate\Support\Str;
 use Laravel\Nova\Resource as NovaResource;
 use Laravel\Nova\Http\Requests\NovaRequest;

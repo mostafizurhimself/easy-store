@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use Eminiarts\Tabs\Tabs;
 use App\Rules\ReceiverRule;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -123,73 +124,82 @@ class FabricTransferInvoice extends Resource
     public function fields(Request $request)
     {
         return [
-            RouterLink::make('Invoice No', 'id')
-                ->sortable()
-                ->withMeta([
-                    'label' => $this->readableId,
-                ]),
+            (new Tabs("Transfer Invoice Details", [
+                "Invoice Info" => [
+                    RouterLink::make('Invoice No', 'id')
+                        ->sortable()
+                        ->withMeta([
+                            'label' => $this->readableId,
+                        ]),
 
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->sortable()
-                ->readonly(),
+                    Date::make('Date')
+                        ->rules('required')
+                        ->default(Carbon::now())
+                        ->sortable()
+                        ->readonly(),
 
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
+                    Hidden::make('Date')
+                        ->default(Carbon::now())
+                        ->hideWhenUpdating(),
 
-            BelongsTo::make('Location')->sortable()
-                ->searchable()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                    BelongsTo::make('Location')->sortable()
+                        ->searchable()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            Currency::make('Transfer Amount', 'total_transfer_amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Transfer Amount', 'total_transfer_amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Currency::make('Receive Amount', 'total_receive_amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Receive Amount', 'total_receive_amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Trix::make('Note')
-                ->rules('nullable', 'max:500'),
+                    Trix::make('Note')
+                        ->rules('nullable', 'max:500'),
 
-            Files::make('Attachments', 'transfer-attachments')
-                ->singleMediaRules('max:5000') // max 5000kb
-                ->hideFromIndex(),
+                    Files::make('Attachments', 'transfer-attachments')
+                        ->singleMediaRules('max:5000') // max 5000kb
+                        ->hideFromIndex(),
 
-            Select::make('Receiver', 'receiver_id')
-                ->options(function () {
-                    return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
-                })
-                ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
-                ->searchable()
-                ->onlyOnForms(),
+                    Select::make('Receiver', 'receiver_id')
+                        ->options(function () {
+                            return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                        })
+                        ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
+                        ->searchable()
+                        ->onlyOnForms(),
 
-            Text::make('Receiver', function () {
-                return $this->receiver->name;
-            })->sortable(),
+                    Text::make('Receiver', function () {
+                        return $this->receiver->name;
+                    })->sortable(),
 
-            Badge::make('Status')->map([
-                TransferStatus::DRAFT()->getValue()     => 'warning',
-                TransferStatus::CONFIRMED()->getValue() => 'info',
-                TransferStatus::PARTIAL()->getValue()   => 'danger',
-                TransferStatus::RECEIVED()->getValue()  => 'success',
-            ])
-                ->sortable()
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                    Badge::make('Status')->map([
+                        TransferStatus::DRAFT()->getValue()     => 'warning',
+                        TransferStatus::CONFIRMED()->getValue() => 'info',
+                        TransferStatus::PARTIAL()->getValue()   => 'danger',
+                        TransferStatus::RECEIVED()->getValue()  => 'success',
+                    ])
+                        ->sortable()
+                        ->label(function () {
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
+                ],
+                "Transfer Items" => [
+                    HasMany::make('Transfer Items', 'transferItems', \App\Nova\FabricTransferItem::class),
+                ],
+                "Receive Items" => [
+                    HasMany::make('Receive Items', 'receiveItems', \App\Nova\FabricTransferReceiveItem::class),
+                ]
+            ]))->withToolbar(),
 
-            HasMany::make('Transfer Items', 'transferItems', \App\Nova\FabricTransferItem::class),
-            HasMany::make('Receive Items', 'receiveItems', \App\Nova\FabricTransferReceiveItem::class),
+
         ];
     }
 

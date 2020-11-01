@@ -71,6 +71,11 @@ Route::group(['middleware' => 'nova'], function () {
         Route::get('assets/{purchaseOrder}', 'PurchaseOrderController@assetPurchaseOrder')->name('purchase-orders.assets');
     });
 
+    // Stock summary route
+    Route::group(['prefix' => 'stock-summaries'], function () {
+        Route::get('assets/{asset}', "StockSummaryController@assetStockSummary")->name('stock-summaries.assets');
+    });
+
     // Helper Controller
     Route::get('dump-download/{filename}', "HelperController@dumpDownload")->name('dump-download');
     Route::get('test', function(){

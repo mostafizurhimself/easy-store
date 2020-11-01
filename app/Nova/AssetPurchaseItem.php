@@ -47,6 +47,13 @@ class AssetPurchaseItem extends Resource
     public static $permissions = ['can download'];
 
     /**
+     * The number of resources to show per page via relationships.
+     *
+     * @var int
+     */
+    public static $perPageViaRelationship = 10;
+
+    /**
      * Get the displayable label of the resource.
      *
      * @return string

@@ -128,17 +128,6 @@ class MaterialDistribution extends Resource
                 ->exceptOnForms()
                 ->sortable(),
 
-            // BelongsTo::make('Material', 'material', \App\Nova\Material::class)
-            //     ->searchable()
-            //     ->onlyOnForms()
-            //     ->sortable()
-            //     ->canSee(function ($request) {
-            //         if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
-            //             return true;
-            //         }
-            //         return false;
-            //     }),
-
             Select::make('Material', 'material_id')
                 ->options(\App\Models\Material::where('location_id', $request->user()->locationId)->pluck('name', 'id'))
                 ->searchable()
@@ -173,13 +162,14 @@ class MaterialDistribution extends Resource
                 ->creationRules(new DistributionQuantityRule(\App\Nova\MaterialDistribution::uriKey(), $request->get('material_id') ?? $request->get('material')))
                 ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\MaterialDistribution::uriKey(), !empty($request->get('material_id')) ?? $request->get('material'), $this->resource->quantity, $this->resource->materialId))
                 ->rules('required', 'numeric', 'min:1')
+                ->sortable()
                 ->onlyOnForms(),
 
             Text::make('Quantity', function () {
                 return $this->quantity . " " . $this->unitName;
             })
-                ->sortable()
-                ->exceptOnForms(),
+            ->exceptOnForms()
+            ->sortable(),
 
 
 

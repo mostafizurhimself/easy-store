@@ -40,6 +40,10 @@ class ConfirmReceiveItem extends Action
         foreach($models as $model){
             if($model->unitId == $model->material->unitId)
             {
+                // Check status is draft or not.
+                if($model->status != PurchaseStatus::DRAFT()){
+                    return Action::danger('Already Confirmed');
+                }
                 $model->material->increment('quantity', $model->quantity);
                 $model->status = PurchaseStatus::CONFIRMED();
                 $model->save();

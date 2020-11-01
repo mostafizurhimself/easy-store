@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use Eminiarts\Tabs\Tabs;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use App\Enums\PaymentMethod;
@@ -22,12 +23,12 @@ use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricPurchaseOrders\Recalculate;
 use App\Nova\Actions\FabricPurchaseOrders\ConfirmPurchase;
 use App\Nova\Actions\FabricPurchaseOrders\GeneratePurchaseOrder;
-use App\Nova\Filters\PurchaseStatusFilter;
 
 class FabricPurchaseOrder extends Resource
 {
@@ -74,7 +75,7 @@ class FabricPurchaseOrder extends Resource
      */
     public function subtitle()
     {
-      return "Supplier: {$this->supplier->name}";
+        return "Supplier: {$this->supplier->name}";
     }
 
     /**
@@ -84,7 +85,7 @@ class FabricPurchaseOrder extends Resource
      */
     public static function label()
     {
-      return "Purchases";
+        return "Purchases";
     }
 
     /**
@@ -94,7 +95,7 @@ class FabricPurchaseOrder extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-file-invoice';
+        return 'fas fa-file-invoice';
     }
 
     /**
@@ -125,76 +126,81 @@ class FabricPurchaseOrder extends Resource
     public function fields(Request $request)
     {
         return [
-            RouterLink::make('PO Number', 'id')
-                ->withMeta([
-                    'label' => $this->readableId,
-                ])
-                ->sortable(),
+            (new Tabs("Purchase Details", [
+                "Purchase Info" => [
+                    RouterLink::make('PO Number', 'id')
+                        ->withMeta([
+                            'label' => $this->readableId,
+                        ])
+                        ->sortable(),
 
-            BelongsTo::make('Location')
-                ->searchable()
-                ->sortable()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                    BelongsTo::make('Location')
+                        ->searchable()
+                        ->sortable()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->sortable()
-                ->readonly(),
+                    Date::make('Date')
+                        ->rules('required')
+                        ->default(Carbon::now())
+                        ->sortable()
+                        ->readonly(),
 
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
+                    Hidden::make('Date')
+                        ->default(Carbon::now())
+                        ->hideWhenUpdating(),
 
 
-            BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")
-                ->searchable()
-                ->sortable(),
+                    BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")
+                        ->searchable()
+                        ->sortable(),
 
-            Currency::make('Purchase Amount', 'total_purchase_amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Purchase Amount', 'total_purchase_amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Currency::make('Receive Amount', 'total_receive_amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Receive Amount', 'total_receive_amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Badge::make('Status')->map([
-                    PurchaseStatus::DRAFT()->getValue()     => 'warning',
-                    PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'danger',
-                    PurchaseStatus::RECEIVED()->getValue()  => 'success',
-                    PurchaseStatus::BILLED()->getValue()    => 'danger',
-                ])
-                ->sortable()
-                ->label(function(){
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                    Badge::make('Status')->map([
+                        PurchaseStatus::DRAFT()->getValue()     => 'warning',
+                        PurchaseStatus::CONFIRMED()->getValue() => 'info',
+                        PurchaseStatus::PARTIAL()->getValue()   => 'danger',
+                        PurchaseStatus::RECEIVED()->getValue()  => 'success',
+                        PurchaseStatus::BILLED()->getValue()    => 'danger',
+                    ])
+                        ->sortable()
+                        ->label(function () {
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
 
-            // Trix::make('Message')
-            //     ->rules('nullable', 'max:500'),
+                    Trix::make('Note')
+                        ->rules('nullable', 'max:500'),
 
-            Trix::make('Note')
-                ->rules('nullable', 'max:500'),
+                    Text::make('Approved By', function () {
+                        return $this->approve ? $this->approve->employee->name : null;
+                    })
+                        ->canSee(function () {
+                            return $this->approve()->exists();
+                        })
+                        ->onlyOnDetail(),
+                ],
+                "Purchase Items" => [
+                    HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\FabricPurchaseItem'),
+                ],
+                "Receive Items" => [
+                    HasMany::make('Receive Items', 'receiveItems', 'App\Nova\FabricReceiveItem'),
+                ]
+            ]))->withToolbar(),
 
-            Text::make('Approved By', function(){
-                    return $this->approve ? $this->approve->employee->name : null;
-                })
-                ->canSee(function(){
-                    return $this->approve()->exists();
-                })
-                ->onlyOnDetail(),
 
-            HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\FabricPurchaseItem'),
-
-            HasMany::make('Receive Items', 'receiveItems', 'App\Nova\FabricReceiveItem'),
         ];
     }
 
@@ -218,7 +224,7 @@ class FabricPurchaseOrder extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -252,26 +258,26 @@ class FabricPurchaseOrder extends Resource
     {
         return [
 
-            (new Recalculate)->canSee(function($request){
+            (new Recalculate)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin();
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return $request->user()->isSuperAdmin();
             }),
 
-            (new ConfirmPurchase)->canSee(function($request){
+            (new ConfirmPurchase)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm fabric purchase orders');
             }),
 
 
-            (new GeneratePurchaseOrder)->canSee(function($request){
+            (new GeneratePurchaseOrder)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate fabric purchase orders');
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate fabric purchase orders') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate purchase order?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate fabric purchase orders') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate purchase order?')
+                ->onlyOnDetail(),
         ];
     }
 }

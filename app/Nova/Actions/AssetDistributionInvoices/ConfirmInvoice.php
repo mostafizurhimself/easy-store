@@ -100,3 +100,4 @@ class ConfirmInvoice extends Action
         return [];
     }
 }
+

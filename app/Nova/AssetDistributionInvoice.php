@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use Eminiarts\Tabs\Tabs;
 use App\Rules\ReceiverRule;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -129,84 +130,92 @@ class AssetDistributionInvoice extends Resource
     public function fields(Request $request)
     {
         return [
-            RouterLink::make('Invoice No', 'id')
-                ->sortable()
-                ->withMeta([
-                    'label' => $this->readableId,
-                ]),
+            (new Tabs("Distribution Details", [
+                "Distribution Info" => [
+                    RouterLink::make('Invoice No', 'id')
+                        ->sortable()
+                        ->withMeta([
+                            'label' => $this->readableId,
+                        ]),
 
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->sortable()
-                ->readonly(),
+                    Date::make('Date')
+                        ->rules('required')
+                        ->default(Carbon::now())
+                        ->sortable()
+                        ->readonly(),
 
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
+                    Hidden::make('Date')
+                        ->default(Carbon::now())
+                        ->hideWhenUpdating(),
 
-            BelongsTo::make('Location')->sortable()
-                ->searchable()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                    BelongsTo::make('Location')->sortable()
+                        ->searchable()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            Currency::make('Distribution Amount', 'total_distribution_amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Distribution Amount', 'total_distribution_amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Currency::make('Receive Amount', 'total_receive_amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Receive Amount', 'total_receive_amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Trix::make('Note')
-                ->rules('nullable', 'max:500'),
+                    Trix::make('Note')
+                        ->rules('nullable', 'max:500'),
 
-            Files::make('Attachments', 'distribution-attachments')
-                ->singleMediaRules('max:5000') // max 5000kb
-                ->hideFromIndex(),
+                    Files::make('Attachments', 'distribution-attachments')
+                        ->singleMediaRules('max:5000') // max 5000kb
+                        ->hideFromIndex(),
 
-            Select::make('Receiver', 'receiver_id')
-                ->options(function () {
-                    return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
-                })
-                ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
-                ->searchable()
-                ->onlyOnForms(),
+                    Select::make('Receiver', 'receiver_id')
+                        ->options(function () {
+                            return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                        })
+                        ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
+                        ->searchable()
+                        ->onlyOnForms(),
 
-            Text::make('Receiver', function () {
-                return $this->receiver->name;
-            })->sortable(),
+                    Text::make('Receiver', function () {
+                        return $this->receiver->name;
+                    })->sortable(),
 
 
-            AjaxSelect::make('Requisition', 'requisition_id')
-                ->get('/locations/{receiver_id}/asset-requisitions')
-                ->parent('receiver_id')
-                ->onlyOnForms(),
+                    AjaxSelect::make('Requisition', 'requisition_id')
+                        ->get('/locations/{receiver_id}/asset-requisitions')
+                        ->parent('receiver_id')
+                        ->onlyOnForms(),
 
-            BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
-                ->searchable()
-                ->sortable()
-                ->exceptOnForms(),
+                    BelongsTo::make('Requisition', 'requisition', "App\Nova\AssetRequisition")
+                        ->searchable()
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Badge::make('Status')->map([
-                DistributionStatus::DRAFT()->getValue()     => 'warning',
-                DistributionStatus::CONFIRMED()->getValue() => 'info',
-                DistributionStatus::PARTIAL()->getValue()   => 'danger',
-                DistributionStatus::RECEIVED()->getValue()  => 'success',
-            ])
-                ->sortable()
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                    Badge::make('Status')->map([
+                        DistributionStatus::DRAFT()->getValue()     => 'warning',
+                        DistributionStatus::CONFIRMED()->getValue() => 'info',
+                        DistributionStatus::PARTIAL()->getValue()   => 'danger',
+                        DistributionStatus::RECEIVED()->getValue()  => 'success',
+                    ])
+                        ->sortable()
+                        ->label(function () {
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
+                ],
+                "Distribution Items" => [
+                    HasMany::make('Distribution Items', 'distributionItems', \App\Nova\AssetDistributionItem::class),
+                ],
+                "Receive Items" => [
+                    HasMany::make('Receive Items', 'receiveItems', \App\Nova\AssetDistributionReceiveItem::class),
+                ],
+            ]))->withToolbar(),
 
-            HasMany::make('Distribution Items', 'distributionItems', \App\Nova\AssetDistributionItem::class),
-            HasMany::make('Receive Items', 'receiveItems', \App\Nova\AssetDistributionReceiveItem::class),
         ];
     }
 

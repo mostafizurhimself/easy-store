@@ -33,6 +33,7 @@ use App\Nova\Actions\Assets\DownloadExcel;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Assets\MassUpdateQuantity;
+use App\Nova\Actions\Assets\GenerateStockSummary;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Assets\UpdateOpeningQuantity;
 use Benjacho\BelongsToManyField\BelongsToManyField;
@@ -60,7 +61,11 @@ class Asset extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can consume', 'can download', 'can convert unit of', 'can adjust quantity of',  'can mass update quantity of', 'can update opening quantity of'];
+    public static $permissions = [
+        'can consume', 'can download',
+        'can convert unit of', 'can adjust quantity of',  'can mass update quantity of',
+        'can generate stock summary of', 'can update opening quantity of'
+    ];
 
     /**
      * The side nav menu order.
@@ -265,7 +270,7 @@ class Asset extends Resource
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
                 ],
-                "Distribution History" => [
+                "Consume History" => [
                     HasMany::make('Consume History', 'consumes', \App\Nova\AssetConsume::class),
                 ],
                 "Adjust History" => [
@@ -354,10 +359,6 @@ class Asset extends Resource
                 return $request->user()->hasPermissionTo('can convert unit of assets') || $request->user()->isSuperAdmin();
             })->confirmButtonText('Confirm'),
 
-            (new UpdateOpeningQuantity)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can update opening quantity of assets') || $request->user()->isSuperAdmin();
-            })->onlyOnDetail(),
-
             (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
@@ -383,11 +384,23 @@ class Asset extends Resource
 
             (new MassUpdateQuantity)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can mass update quantity of assets') || $request->user()->isSuperAdmin();
-            })->confirmButtonText('Upload')
+            })
                 ->canRun(function ($request) {
                     return $request->user()->hasPermissionTo('can mass update quantity of assets') || $request->user()->isSuperAdmin();
                 })->confirmButtonText('Upload')
+                ->onlyOnIndex()
                 ->standalone(),
+
+            (new GenerateStockSummary)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can generate stock summary of assets') || $request->user()->isSuperAdmin();
+            })
+                ->confirmButtonText('Generate')
+                ->confirmText("Are you sure want to generate stock summary?")
+                ->onlyOnDetail(),
+
+            (new UpdateOpeningQuantity)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can update opening quantity of assets') || $request->user()->isSuperAdmin();
+            })->onlyOnDetail(),
         ];
     }
 }

@@ -34,6 +34,13 @@ class AssetDistributionItem extends Resource
     public static $model = \App\Models\AssetDistributionItem::class;
 
     /**
+     * The number of resources to show per page via relationships.
+     *
+     * @var int
+     */
+    public static $perPageViaRelationship = 10;
+
+    /**
      * The side nav menu order.
      *
      * @var int

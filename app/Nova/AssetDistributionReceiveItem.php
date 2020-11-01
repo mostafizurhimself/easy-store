@@ -35,6 +35,13 @@ class AssetDistributionReceiveItem extends Resource
     public static $model = \App\Models\AssetDistributionReceiveItem::class;
 
     /**
+     * The number of resources to show per page via relationships.
+     *
+     * @var int
+     */
+    public static $perPageViaRelationship = 10;
+
+    /**
      * Get the custom permissions name of the resource
      *
      * @var array

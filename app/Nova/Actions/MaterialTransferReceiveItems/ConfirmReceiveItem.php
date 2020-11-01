@@ -31,6 +31,11 @@ class ConfirmReceiveItem extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
+
+             // Check status is draft or not.
+            if($model->status != TransferStatus::DRAFT()){
+                return Action::danger('Already Confirmed');
+            }
             $model->material->increment('quantity', $model->quantity);
             $model->status = TransferStatus::CONFIRMED();
             $model->save();

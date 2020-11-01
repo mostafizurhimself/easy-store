@@ -31,9 +31,19 @@ class ConfirmReceiveItem extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach($models as $model){
-            $model->asset->increment('quantity', $model->quantity);
-            $model->status = DistributionStatus::CONFIRMED();
-            $model->save();
+            // Check the unit
+            if($model->unitId == $model->asset->unitId){
+
+                 // Check status is draft or not.
+                if($model->status != DistributionStatus::DRAFT()){
+                    return Action::danger('Already Confirmed');
+                }
+                $model->asset->increment('quantity', $model->quantity);
+                $model->status = DistributionStatus::CONFIRMED();
+                $model->save();
+            }else{
+                return Action::danger("Unit mismatch! You can't confirm it now.");
+            }
         }
 
         if($models->count() > 1){

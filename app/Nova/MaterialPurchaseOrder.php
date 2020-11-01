@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use Eminiarts\Tabs\Tabs;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use App\Enums\PaymentMethod;
@@ -125,73 +126,81 @@ class MaterialPurchaseOrder extends Resource
     {
         return [
 
-            RouterLink::make('PO Number', 'id')
-                ->withMeta([
-                    'label' => $this->readableId,
-                ])
-                ->sortable(),
+            (new Tabs("Purchase Details", [
+                "Purchase Info" => [
+                    RouterLink::make('PO Number', 'id')
+                        ->withMeta([
+                            'label' => $this->readableId,
+                        ])
+                        ->sortable(),
 
-            BelongsTo::make('Location')
-                ->searchable()
-                ->sortable()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                    BelongsTo::make('Location')
+                        ->searchable()
+                        ->sortable()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->sortable()
-                ->readonly(),
+                    Date::make('Date')
+                        ->rules('required')
+                        ->default(Carbon::now())
+                        ->sortable()
+                        ->readonly(),
 
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
+                    Hidden::make('Date')
+                        ->default(Carbon::now())
+                        ->hideWhenUpdating(),
 
-            BelongsTo::make('Supplier', 'supplier', 'App\Nova\Supplier')
-                ->sortable()
-                ->searchable(),
+                    BelongsTo::make('Supplier', 'supplier', 'App\Nova\Supplier')
+                        ->sortable()
+                        ->searchable(),
 
-            Currency::make('Purchase Amount', 'total_purchase_amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Purchase Amount', 'total_purchase_amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Currency::make('Receive Amount', 'total_receive_amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Receive Amount', 'total_receive_amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Badge::make('Status')->map([
-                PurchaseStatus::DRAFT()->getValue()     => 'warning',
-                PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                PurchaseStatus::PARTIAL()->getValue()   => 'danger',
-                PurchaseStatus::RECEIVED()->getValue()  => 'success',
-                PurchaseStatus::BILLED()->getValue()    => 'danger',
-            ])
-                ->sortable()
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                    Badge::make('Status')->map([
+                        PurchaseStatus::DRAFT()->getValue()     => 'warning',
+                        PurchaseStatus::CONFIRMED()->getValue() => 'info',
+                        PurchaseStatus::PARTIAL()->getValue()   => 'danger',
+                        PurchaseStatus::RECEIVED()->getValue()  => 'success',
+                        PurchaseStatus::BILLED()->getValue()    => 'danger',
+                    ])
+                        ->sortable()
+                        ->label(function () {
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
 
-            Trix::make('Note')
-                ->rules('nullable', 'max:500'),
+                    Trix::make('Note')
+                        ->rules('nullable', 'max:500'),
 
-            Text::make('Approved By', function () {
-                return $this->approve ? $this->approve->employee->name : null;
-            })
-                ->canSee(function () {
-                    return $this->approve()->exists();
-                })
-                ->sortable()
-                ->onlyOnDetail(),
+                    Text::make('Approved By', function () {
+                        return $this->approve ? $this->approve->employee->name : null;
+                    })
+                        ->canSee(function () {
+                            return $this->approve()->exists();
+                        })
+                        ->sortable()
+                        ->onlyOnDetail(),
+                ],
+                "Purchase Items" => [
+                    HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\MaterialPurchaseItem'),
+                ],
+                "Receive Items" => [
+                    HasMany::make('Receive Items', 'receiveItems', 'App\Nova\MaterialReceiveItem'),
+                ]
+            ]))->withToolbar(),
 
-            HasMany::make('Purchase Items', 'purchaseItems', 'App\Nova\MaterialPurchaseItem'),
 
-            HasMany::make('Receive Items', 'receiveItems', 'App\Nova\MaterialReceiveItem'),
         ];
     }
 
