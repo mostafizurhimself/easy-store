@@ -27,6 +27,7 @@
         "easystore/nova-theme": "*",
         "easystore/permission-checkbox": "*",
         "easystore/prevent-direct-create": "*",
+        "easystore/profile-tool": "*",
         "easystore/redirect": "*",
         "easystore/router-link": "*",
         "easystore/text-uppercase": "*",
@@ -50,11 +51,11 @@
         "myclabs/php-enum": "^1.7",
         "niklasravnsborg/laravel-pdf": "^4.0",
         "optimistdigital/nova-multiselect-field": "^1.10",
+        "optimistdigital/nova-tailwind": "^1.0",
         "orlyapps/nova-belongsto-depend": "^2.0",
         "pusher/pusher-php-server": "^4.1",
         "titasgailius/search-relations": "^1.0",
-        "treestoneit/text-wrap": "^1.1",
-        "easystore/profile-tool": "*"
+        "treestoneit/text-wrap": "^1.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
