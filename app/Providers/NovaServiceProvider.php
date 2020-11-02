@@ -158,10 +158,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             \Mirovit\NovaNotifications\NovaNotifications::make(),
 
             ProfileTool::make(),
-
-            // (new \Runline\ProfileTool\ProfileTool)->canSee(function(){
-            //     return false;
-            // }),
         ];
     }
 
