@@ -85,6 +85,10 @@
                     this.loading = false
                     if (error.response.status == 422) {
                         this.validationErrors = new Errors(error.response.data.errors)
+                        this.$toasted.show(
+                            this.__("The given data was invalid."),
+                            { type: 'error' }
+                        )
                     }
                 }
             },
