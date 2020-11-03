@@ -7,6 +7,7 @@ use Laravel\Nova\Nova;
 use App\Nova\Permission;
 use Illuminate\Http\Request;
 use Laravel\Nova\Cards\Help;
+use App\Nova\Metrics\ActiveUser;
 use App\Nova\Metrics\TotalShowroom;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Events\ServingNova;
@@ -77,6 +78,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             // Line 1
             new \Richardkeep\NovaTimenow\NovaTimenow,
             new TotalShowroom(),
+            new ActiveUser,
 
 
             // Line 2
