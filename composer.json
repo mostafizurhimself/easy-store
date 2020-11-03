@@ -37,6 +37,7 @@
         "epartment/nova-dependency-container": "^1.2",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
+        "gijsg/system-resources": "^1.0",
         "gregoriohc/laravel-nova-theme-responsive": "^0.8.1",
         "guzzlehttp/guzzle": "^7.0.1",
         "inspheric/nova-email-field": "^1.42",
@@ -51,9 +52,9 @@
         "myclabs/php-enum": "^1.7",
         "niklasravnsborg/laravel-pdf": "^4.0",
         "optimistdigital/nova-multiselect-field": "^1.10",
-        "optimistdigital/nova-tailwind": "^1.0",
         "orlyapps/nova-belongsto-depend": "^2.0",
         "pusher/pusher-php-server": "^4.1",
+        "richardkeep/nova-timenow": "^1.0",
         "titasgailius/search-relations": "^1.0",
         "treestoneit/text-wrap": "^1.1"
     },

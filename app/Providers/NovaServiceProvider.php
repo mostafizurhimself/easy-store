@@ -12,10 +12,12 @@ use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Events\ServingNova;
 use Easystore\ProfileTool\ProfileTool;
+use Coroowicaksono\NovaCarousel\Slider;
 use App\Nova\Metrics\DailyProductOutput;
 use App\Nova\Metrics\TotalAssetPurchase;
 use App\Nova\Metrics\TotalPurchaseOrder;
 use App\Nova\Metrics\TotalFabricPurchase;
+use App\Nova\Dashboards\GarmentsDashboard;
 use App\Nova\Metrics\TotalServiceDispatch;
 use App\Nova\Metrics\DailyProductFinishing;
 use App\Nova\Metrics\TotalMaterialPurchase;
@@ -53,9 +55,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function routes()
     {
         Nova::routes()
-                ->withAuthenticationRoutes()
-                ->withPasswordResetRoutes()
-                ->register();
+            ->withAuthenticationRoutes()
+            ->withPasswordResetRoutes()
+            ->register();
     }
 
     /**
@@ -82,50 +84,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function cards()
     {
         return [
-            // Line 1,
-            new TotalFabricPurchase(),
-            new TotalMaterialPurchase(),
-            new TotalAssetPurchase(),
+            // Line 1
+            new \Richardkeep\NovaTimenow\NovaTimenow,
+
 
             // Line 2
-            (new LineChart())
-                ->title('Purhcase Graph')
-                ->animations([
-                    'enabled' => true,
-                    'easing' => 'easeinout',
-                ])
-                ->series(array([
-                    'barPercentage' => 0.5,
-                    'label' => 'Fabric Purchase',
-                    'borderColor' => '#f7a35c',
-                    'data' => [80, 90, 80, 40, 62, 79, 79, 90, 90, 90, 92, 91],
-                ],
-                [
-                    'barPercentage' => 0.5,
-                    'label' => 'Material Purchase',
-                    'borderColor' => '#90ed7d',
-                    'data' => [90, 80, 40, 22, 79, 129, 90, 150, 90, 92, 91, 80],
-                ],
-                [
-                    'barPercentage' => 0.5,
-                    'label' => 'Asset Purchase',
-                    'borderColor' => '#03a9f4',
-                    'data' => [80, 30, 50, 80, 129, 50, 30, 50, 100, 102, 81, 90],
-                ]
-                ))
-                ->options([
-                    'xaxis' => [
-                        'categories' => [ 'Jan', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ]
-                    ],
-                ])
-                ->width('2/3'),
+            new \GijsG\SystemResources\SystemResources('ram', "1/3"),
+            new \GijsG\SystemResources\SystemResources('cpu', "1/3"),
 
-            new TotalPurchaseOrder(),
-
-            // Line 3
-            new DailyProductOutput(),
-            new DailyProductFinishing(),
-            new TotalServiceDispatch(),
         ];
     }
 
@@ -136,7 +102,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     protected function dashboards()
     {
-        return [];
+        return [
+            (new GarmentsDashboard())->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('view garments dashboard') || $request->user()->isSuperAdmin();
+            })
+        ];
     }
 
     /**
@@ -147,11 +117,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function tools()
     {
         return [
-            (\Eminiarts\NovaPermissions\NovaPermissions::make())->canSee(function(){
+            (\Eminiarts\NovaPermissions\NovaPermissions::make())->canSee(function () {
                 return false;
             })
-            ->roleResource(Role::class)
-            ->permissionResource(Permission::class),
+                ->roleResource(Role::class)
+                ->permissionResource(Permission::class),
 
             \ChrisWare\NovaBreadcrumbs\NovaBreadcrumbs::make()->withoutStyles(),
 

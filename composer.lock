@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eefb444df9ea614e47a538bf95ffbd9a",
+    "content-hash": "c94ed4c024765c27a83aa54a6ab4409d",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -2292,6 +2292,51 @@
                 }
             ],
             "time": "2020-04-28T08:47:37+00:00"
+        },
+        {
+            "name": "gijsg/system-resources",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GijsGoudzwaard/nova-system-resources.git",
+                "reference": "4ef6c581ee65b32db0e344785f6937a0eeb05d8e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GijsGoudzwaard/nova-system-resources/zipball/4ef6c581ee65b32db0e344785f6937a0eeb05d8e",
+                "reference": "4ef6c581ee65b32db0e344785f6937a0eeb05d8e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "GijsG\\SystemResources\\CardServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GijsG\\SystemResources\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova card.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/GijsGoudzwaard/nova-system-resources/issues",
+                "source": "https://github.com/GijsGoudzwaard/nova-system-resources/tree/v1.0.5"
+            },
+            "time": "2020-05-18T16:23:41+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -4703,66 +4748,6 @@
             "time": "2020-10-30T15:29:17+00:00"
         },
         {
-            "name": "optimistdigital/nova-tailwind",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/optimistdigital/nova-tailwind.git",
-                "reference": "0eceb682f9a275d2d5e3b45917ea12c91c643d11"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/optimistdigital/nova-tailwind/zipball/0eceb682f9a275d2d5e3b45917ea12c91c643d11",
-                "reference": "0eceb682f9a275d2d5e3b45917ea12c91c643d11",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/nova": "^1.0 || ^2.0 || ^3.0",
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "OptimistDigital\\Tailwind\\TailwindServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "OptimistDigital\\Tailwind\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tarvo Reinpalu",
-                    "email": "tarvoreinpalu@gmail.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Optimist Digital",
-                    "email": "info@optimistdigital.com",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "Tailwind loader for Laravel Nova.",
-            "keywords": [
-                "css",
-                "laravel",
-                "nova",
-                "tailwind"
-            ],
-            "support": {
-                "issues": "https://github.com/optimistdigital/nova-tailwind/issues",
-                "source": "https://github.com/optimistdigital/nova-tailwind/tree/master"
-            },
-            "time": "2020-08-31T07:54:36+00:00"
-        },
-        {
             "name": "optimistdigital/nova-translations-loader",
             "version": "1.0.5",
             "source": {
@@ -6037,6 +6022,63 @@
                 }
             ],
             "time": "2020-08-18T17:17:46+00:00"
+        },
+        {
+            "name": "richardkeep/nova-timenow",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/richardkeep/nova-timenow.git",
+                "reference": "6fc277e375cab6183f885594462ae0a2791b2c92"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/richardkeep/nova-timenow/zipball/6fc277e375cab6183f885594462ae0a2791b2c92",
+                "reference": "6fc277e375cab6183f885594462ae0a2791b2c92",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/nova": "*",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Richardkeep\\NovaTimenow\\TimenowServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Richardkeep\\NovaTimenow\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Richard Keep",
+                    "email": "r.kipsang@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel Nova card to display the current time from different timezones in the world.",
+            "homepage": "https://github.com/richardkeep/nova-timenow",
+            "keywords": [
+                "card",
+                "datetime",
+                "laravel",
+                "nova",
+                "timezone"
+            ],
+            "support": {
+                "issues": "https://github.com/richardkeep/nova-timenow/issues",
+                "source": "https://github.com/richardkeep/nova-timenow/tree/1.0.0"
+            },
+            "time": "2019-12-06T10:04:07+00:00"
         },
         {
             "name": "setasign/fpdi",
