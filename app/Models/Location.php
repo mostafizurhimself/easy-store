@@ -23,6 +23,13 @@ class Location extends Model
     protected $guarded = [];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['launch_date'];
+
+    /**
      * Add all attributes that are not listed in $guarded for log
      *
      * @var boolean

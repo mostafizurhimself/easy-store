@@ -3,25 +3,15 @@
 namespace App\Providers;
 
 use App\Nova\Role;
-use App\Nova\Location;
 use Laravel\Nova\Nova;
-use App\Nova\Department;
 use App\Nova\Permission;
 use Illuminate\Http\Request;
 use Laravel\Nova\Cards\Help;
+use App\Nova\Metrics\TotalShowroom;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Events\ServingNova;
 use Easystore\ProfileTool\ProfileTool;
-use Coroowicaksono\NovaCarousel\Slider;
-use App\Nova\Metrics\DailyProductOutput;
-use App\Nova\Metrics\TotalAssetPurchase;
-use App\Nova\Metrics\TotalPurchaseOrder;
-use App\Nova\Metrics\TotalFabricPurchase;
 use App\Nova\Dashboards\GarmentsDashboard;
-use App\Nova\Metrics\TotalServiceDispatch;
-use App\Nova\Metrics\DailyProductFinishing;
-use App\Nova\Metrics\TotalMaterialPurchase;
-use Coroowicaksono\ChartJsIntegration\LineChart;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -86,11 +76,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         return [
             // Line 1
             new \Richardkeep\NovaTimenow\NovaTimenow,
+            new TotalShowroom(),
 
 
             // Line 2
-            new \GijsG\SystemResources\SystemResources('ram', "1/3"),
-            new \GijsG\SystemResources\SystemResources('cpu', "1/3"),
+            new \GijsG\SystemResources\SystemResources('ram', "1/2"),
+            new \GijsG\SystemResources\SystemResources('cpu', "1/2"),
 
         ];
     }

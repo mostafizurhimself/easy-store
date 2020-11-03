@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\MorphOne;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\MorphMany;
@@ -29,7 +30,7 @@ class Location extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\Location';
+    public static $model = \App\Models\Location::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -136,6 +137,10 @@ class Location extends Resource
                 ->sortable()
                 ->creationRules('unique:locations,email')
                 ->updateRules('unique:locations,email,{{resourceId}}'),
+
+            DateTime::make("Launch Date")
+                ->sortable()
+                ->nullable(),
 
             Select::make('Status')
                 ->options(LocationStatus::titleCaseOptions())
