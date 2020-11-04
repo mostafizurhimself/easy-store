@@ -109,8 +109,8 @@ class AssetPolicy
      * @param  \App\Models\Asset  $asset
      * @return mixed
      */
-    public function addAssetDistributionItem(User $user, Asset $asset)
-    {
-        return false;
-    }
+    // public function addAssetDistributionItem(User $user, Asset $asset)
+    // {
+    //     return false;
+    // }
 }
