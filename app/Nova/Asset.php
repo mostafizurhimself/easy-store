@@ -270,6 +270,9 @@ class Asset extends Resource
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
                 ],
+                "Distribution History" => [
+                    HasMany::make('Distribution History', 'distributionItems', \App\Nova\AssetDistributionItem::class),
+                ],
                 "Consume History" => [
                     HasMany::make('Consume History', 'consumes', \App\Nova\AssetConsume::class),
                 ],

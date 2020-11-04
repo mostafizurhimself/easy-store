@@ -101,4 +101,16 @@ class AssetPolicy
                 ($user->hasPermissionTo('force delete assets') && $user->locationId == $asset->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data');
     }
+
+    /**
+     * Determine whether the user can add a distribution item to the asset.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Asset  $asset
+     * @return mixed
+     */
+    public function addAssetDistributionItem(User $user, Asset $asset)
+    {
+        return false;
+    }
 }
