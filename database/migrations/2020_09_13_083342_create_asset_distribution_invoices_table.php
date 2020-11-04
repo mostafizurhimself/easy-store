@@ -28,7 +28,7 @@ class CreateAssetDistributionInvoicesTable extends Migration
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');
             $table->foreign('receiver_id')->references('id')->on('locations');
-            $table->foreign('requisition_id')->references('id')->on('locations');
+            $table->foreign('requisition_id')->references('id')->on('asset_requisitions');
         });
     }
 
