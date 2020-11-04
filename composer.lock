@@ -4682,21 +4682,21 @@
         },
         {
             "name": "optimistdigital/nova-multiselect-field",
-            "version": "1.11.0",
+            "version": "1.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/optimistdigital/nova-multiselect-field.git",
-                "reference": "f67eb5c6fe8e2ad83d801aa23ad5a84e72a54e21"
+                "reference": "f37875aee466b34505b21e74d10ec398fdcef802"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/optimistdigital/nova-multiselect-field/zipball/f67eb5c6fe8e2ad83d801aa23ad5a84e72a54e21",
-                "reference": "f67eb5c6fe8e2ad83d801aa23ad5a84e72a54e21",
+                "url": "https://api.github.com/repos/optimistdigital/nova-multiselect-field/zipball/f37875aee466b34505b21e74d10ec398fdcef802",
+                "reference": "f37875aee466b34505b21e74d10ec398fdcef802",
                 "shasum": ""
             },
             "require": {
                 "laravel/nova": "^2.0.11 || ^3.0",
-                "optimistdigital/nova-translations-loader": "^1.0.4",
+                "optimistdigital/nova-translations-loader": "^2.0.0",
                 "php": ">=7.1.0"
             },
             "type": "library",
@@ -4737,7 +4737,7 @@
             ],
             "support": {
                 "issues": "https://github.com/optimistdigital/nova-multiselect-field/issues",
-                "source": "https://github.com/optimistdigital/nova-multiselect-field/tree/1.11.0"
+                "source": "https://github.com/optimistdigital/nova-multiselect-field/tree/1.11.1"
             },
             "funding": [
                 {
@@ -4745,20 +4745,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-30T15:29:17+00:00"
+            "time": "2020-11-03T10:46:43+00:00"
         },
         {
             "name": "optimistdigital/nova-translations-loader",
-            "version": "1.0.5",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/optimistdigital/nova-translations-loader.git",
-                "reference": "f57bd768eaba81b8d655871bb679a4da50ba2a70"
+                "reference": "2c0b99114d778adb62b3f1279a5a651c2737bf8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/optimistdigital/nova-translations-loader/zipball/f57bd768eaba81b8d655871bb679a4da50ba2a70",
-                "reference": "f57bd768eaba81b8d655871bb679a4da50ba2a70",
+                "url": "https://api.github.com/repos/optimistdigital/nova-translations-loader/zipball/2c0b99114d778adb62b3f1279a5a651c2737bf8e",
+                "reference": "2c0b99114d778adb62b3f1279a5a651c2737bf8e",
                 "shasum": ""
             },
             "require": {
@@ -4791,9 +4791,9 @@
             ],
             "support": {
                 "issues": "https://github.com/optimistdigital/nova-translations-loader/issues",
-                "source": "https://github.com/optimistdigital/nova-translations-loader/tree/1.0.5"
+                "source": "https://github.com/optimistdigital/nova-translations-loader/tree/2.0.0"
             },
-            "time": "2020-10-22T10:36:50+00:00"
+            "time": "2020-11-03T10:41:57+00:00"
         },
         {
             "name": "orlyapps/nova-belongsto-depend",
@@ -6266,23 +6266,23 @@
         },
         {
             "name": "spatie/laravel-activitylog",
-            "version": "3.16.0",
+            "version": "3.16.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-activitylog.git",
-                "reference": "a01fce5f3011c8b7eac86b18e2121da55f0564cd"
+                "reference": "ade270f291f4cb5883b3653919304a0b4e1cc284"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-activitylog/zipball/a01fce5f3011c8b7eac86b18e2121da55f0564cd",
-                "reference": "a01fce5f3011c8b7eac86b18e2121da55f0564cd",
+                "url": "https://api.github.com/repos/spatie/laravel-activitylog/zipball/ade270f291f4cb5883b3653919304a0b4e1cc284",
+                "reference": "ade270f291f4cb5883b3653919304a0b4e1cc284",
                 "shasum": ""
             },
             "require": {
                 "illuminate/config": "^6.0 || ^7.0 || ^8.0",
                 "illuminate/database": "^6.0 || ^7.0 || ^8.0",
                 "illuminate/support": "^6.0 || ^7.0 || ^8.0",
-                "php": "^7.2"
+                "php": "^7.2 || ^8.0"
             },
             "require-dev": {
                 "ext-json": "*",
@@ -6340,7 +6340,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-activitylog/issues",
-                "source": "https://github.com/spatie/laravel-activitylog/tree/3.16.0"
+                "source": "https://github.com/spatie/laravel-activitylog/tree/3.16.1"
             },
             "funding": [
                 {
@@ -6352,7 +6352,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-16T15:28:13+00:00"
+            "time": "2020-11-03T11:34:26+00:00"
         },
         {
             "name": "spatie/laravel-medialibrary",
