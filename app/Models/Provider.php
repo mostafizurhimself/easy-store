@@ -45,6 +45,11 @@ class Provider extends Model
      */
     protected static $readableIdLength = 5;
 
+    public function services()
+    {
+        return $this->belongsToMany(Service::class, 'service_provider')->withTrashed();
+    }
+
     /**
      * Get the provider address
      *

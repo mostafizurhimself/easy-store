@@ -13,7 +13,7 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Number;
-use App\Nova\Filters\DateFilter;
+use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
@@ -268,7 +268,7 @@ class ProductOutput extends Resource
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
-            new DateFilter('date'),
+            new DateRangeFilter('date'),
 
             new OutputStatusFilter,
         ];

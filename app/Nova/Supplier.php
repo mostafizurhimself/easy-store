@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Helpers\Money;
 use Laravel\Nova\Panel;
+use Eminiarts\Tabs\Tabs;
 use App\Enums\ActiveStatus;
 use Illuminate\Support\Str;
 use Inspheric\Fields\Email;
@@ -24,6 +25,7 @@ use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Suppliers\UpdateOpeningBalance;
+use Laravel\Nova\Fields\BelongsToMany;
 
 class Supplier extends Resource
 {
@@ -33,7 +35,7 @@ class Supplier extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\Supplier';
+    public static $model = \App\Models\Supplier::class;
 
     /**
      * The group associated with the resource.
@@ -94,75 +96,88 @@ class Supplier extends Resource
     public function fields(Request $request)
     {
         return [
-            RouterLink::make('Supplier Id', 'id')
-                ->withMeta([
-                    'label' => $this->readableId,
-                ])
-                ->sortable(),
+            (new Tabs("Supplier Details", [
+                "Supplier Info" => [
+                    RouterLink::make('Supplier Id', 'id')
+                        ->withMeta([
+                            'label' => $this->readableId,
+                        ])
+                        ->sortable(),
 
-            Text::make('Name')
-                ->rules('required', 'max:45', 'multi_space')
-                ->creationRules('unique:suppliers,name')
-                ->updateRules('unique:suppliers,name,{{resourceId}}')
-                ->fillUsing(function ($request, $model) {
-                    $model['name'] = Str::title($request->name);
-                })
-                ->sortable()
-                ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
+                    Text::make('Name')
+                        ->rules('required', 'max:45', 'multi_space')
+                        ->creationRules('unique:suppliers,name')
+                        ->updateRules('unique:suppliers,name,{{resourceId}}')
+                        ->fillUsing(function ($request, $model) {
+                            $model['name'] = Str::title($request->name);
+                        })
+                        ->sortable()
+                        ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
 
-            PhoneNumber::make('Mobile')
-                ->withCustomFormats('+88 ### #### ####')
-                ->onlyCustomFormats()
-                ->rules('required'),
+                    PhoneNumber::make('Mobile')
+                        ->withCustomFormats('+88 ### #### ####')
+                        ->onlyCustomFormats()
+                        ->rules('required'),
 
-            PhoneNumber::make('Telephone')
-                ->withCustomFormats('## #### ####')
-                ->onlyCustomFormats()
-                ->hideFromIndex(),
+                    PhoneNumber::make('Telephone')
+                        ->withCustomFormats('## #### ####')
+                        ->onlyCustomFormats()
+                        ->hideFromIndex(),
 
-            Email::make('Email')
-                ->alwaysClickable()
-                ->sortable()
-                ->rules('nullable', 'email'),
+                    Email::make('Email')
+                        ->alwaysClickable()
+                        ->sortable()
+                        ->rules('nullable', 'email'),
 
-            Text::make('Fax')
-                ->rules("nullable", 'max:200')
-                ->sortable()
-                ->hideFromIndex(),
+                    Text::make('Fax')
+                        ->rules("nullable", 'max:200')
+                        ->sortable()
+                        ->hideFromIndex(),
 
-            Text::make('Vat Number')
-                ->rules('nullable', 'max:200')
-                ->sortable()
-                ->hideFromIndex(),
+                    Text::make('Vat Number')
+                        ->rules('nullable', 'max:200')
+                        ->sortable()
+                        ->hideFromIndex(),
 
-            Currency::make('Opening Balance')
-                ->currency('BDT')
-                ->rules('required', 'numeric', 'min:0')
-                ->sortable()
-                ->hideWhenUpdating()
-                ->hideFromIndex(),
+                    Currency::make('Opening Balance')
+                        ->currency('BDT')
+                        ->rules('required', 'numeric', 'min:0')
+                        ->sortable()
+                        ->hideWhenUpdating()
+                        ->hideFromIndex(),
 
-            Currency::make('Balance')
-                ->currency('BDT')
-                ->sortable()
-                ->rules('required', 'numeric', 'min:0')
-                ->exceptOnForms(),
+                    Currency::make('Balance')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->rules('required', 'numeric', 'min:0')
+                        ->exceptOnForms(),
 
-            Select::make('Status')
-                ->options(ActiveStatus::titleCaseOptions())
-                ->default(ActiveStatus::ACTIVE())
-                ->rules('required')
-                ->onlyOnForms(),
+                    Select::make('Status')
+                        ->options(ActiveStatus::titleCaseOptions())
+                        ->default(ActiveStatus::ACTIVE())
+                        ->rules('required')
+                        ->onlyOnForms(),
 
 
-            Badge::make('Status')->map([
-                ActiveStatus::ACTIVE()->getValue()   => 'success',
-                ActiveStatus::INACTIVE()->getValue() => 'danger',
-            ])
-                ->sortable()
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                    Badge::make('Status')->map([
+                        ActiveStatus::ACTIVE()->getValue()   => 'success',
+                        ActiveStatus::INACTIVE()->getValue() => 'danger',
+                    ])
+                        ->sortable()
+                        ->label(function () {
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
+                ],
+                "Fabrics" => [
+                    BelongsToMany::make("Fabrics"),
+                ],
+                "Materials" => [
+                    BelongsToMany::make("Materials"),
+                ],
+                "Assets" => [
+                    BelongsToMany::make("Assets"),
+                ]
+            ]))->withToolbar(),
 
             MorphMany::make('Address'),
 

@@ -26,6 +26,7 @@ use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Lenses\AlertQuantities;
 use App\Nova\Filters\ActiveStatusFilter;
+use App\Nova\Lenses\Fabric\StockSummary;
 use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Actions\Fabrics\DownloadPdf;
 use Easystore\TextUppercase\TextUppercase;
@@ -58,7 +59,7 @@ class Fabric extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can convert unit of', 'can adjust quantity of', 'can update opening quantity of'];
+    public static $permissions = ['can download', 'can convert unit of', 'can adjust quantity of', 'can view stock summary of', 'can update opening quantity of'];
 
     /**
      * The group associated with the resource.
@@ -330,6 +331,9 @@ class Fabric extends Resource
     public function lenses(Request $request)
     {
         return [
+            (new StockSummary)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can view stock summary of fabrics') || $request->user()->isSuperAdmin();
+            }),
             new AlertQuantities,
         ];
     }

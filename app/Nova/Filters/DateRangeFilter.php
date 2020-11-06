@@ -4,9 +4,9 @@ namespace App\Nova\Filters;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Ampeco\Filters\DateRangeFilter;
+use Ampeco\Filters\DateRangeFilter as Base;
 
-class DateFilter extends DateRangeFilter
+class DateRangeFilter extends Base
 {
     /**
      * The displayable name of the filter.

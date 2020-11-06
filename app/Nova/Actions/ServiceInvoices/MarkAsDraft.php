@@ -4,14 +4,13 @@ namespace App\Nova\Actions\ServiceInvoices;
 
 use App\Enums\DispatchStatus;
 use Illuminate\Bus\Queueable;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ConfirmInvoice extends Action
+class MarkAsDraft extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -24,33 +23,26 @@ class ConfirmInvoice extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model)
-        {
-            if($model->status == DispatchStatus::DRAFT()){
-                //Check model has relation items
-                if($model->dispatches()->count() == 0)
-                {
-                    return Action::danger("No dispatch item added.");
-                }
-
-                //increment total dispatch quantity
-                foreach($model->dispatches as $dispatch){
-                    $dispatch->service->increment('total_dispatch_quantity', $dispatch->dispatchQuantity);
+        foreach ($models as $model) {
+            // check if model status is confirmed or not
+            if ($model->status == DispatchStatus::CONFIRMED() && !$model->receives()->exists()) {
+                //decrement total dispatch quantity
+                foreach ($model->dispatches as $dispatch) {
+                    $dispatch->service->decrement('total_dispatch_quantity', $dispatch->dispatchQuantity);
 
                     //Update the dispatch status
-                    $dispatch->status = DispatchStatus::CONFIRMED();
+                    $dispatch->status = DispatchStatus::DRAFT();
                     $dispatch->save();
                 }
 
                 //update the model status
-                $model->status = DispatchStatus::CONFIRMED();
+                $model->status = DispatchStatus::DRAFT();
                 $model->save();
-            }else{
-                return Action::danger('Already confirmed.');
+            } else {
+                return Action::danger("Can not mark as Draft.");
             }
         }
-
-        return Action::message('Service invoice confirmed successfully.');
+        return Action::message('Service invoice marked as draft successfully.');
     }
 
     /**

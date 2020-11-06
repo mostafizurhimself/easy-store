@@ -12,7 +12,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
-use App\Nova\Filters\DateFilter;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Lenses\ReturnItems;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
@@ -217,7 +217,7 @@ class MaterialReturnInvoice extends Resource
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
-            new DateFilter('date'),
+            new DateRangeFilter('date'),
 
             new ReturnStatusFilter,
         ];

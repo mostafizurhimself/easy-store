@@ -12,7 +12,6 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
-use App\Nova\Filters\DateFilter;
 use Laravel\Nova\Fields\HasMany;
 use App\Nova\Lenses\ReceiveItems;
 use Laravel\Nova\Fields\Currency;
@@ -20,8 +19,10 @@ use App\Nova\Lenses\DispatchItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\ServiceInvoices\MarkAsDraft;
 use App\Nova\Actions\ServiceInvoices\Recalculate;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceInvoices\ConfirmInvoice;
@@ -51,7 +52,7 @@ class ServiceInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate'];
+    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
 
     /**
      * The group associated with the resource.
@@ -209,7 +210,7 @@ class ServiceInvoice extends Resource
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
-            new DateFilter('date'),
+            new DateRangeFilter('date'),
 
             new DispatchStatusFilter,
         ];
@@ -245,12 +246,22 @@ class ServiceInvoice extends Resource
                 return $request->user()->isSuperAdmin();
             }),
 
+            (new MarkAsDraft)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft service invoices') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can mark as draft service invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Mark As Draft')
+                ->confirmText('Are you sure want to mark the invoice as draft')
+                ->onlyOnDetail(),
+
             (new ConfirmInvoice)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can confirm service invoices');
+                return $request->user()->hasPermissionTo('can confirm service invoices') || $request->user()->isSuperAdmin();
             })->confirmButtonText('Confirm'),
 
             (new GenerateInvoice)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can generate service invoices');
+                return $request->user()->hasPermissionTo('can generate service invoices') || $request->user()->isSuperAdmin();
             })
                 ->canRun(function ($request) {
                     return $request->user()->hasPermissionTo('can generate service invoices') || $request->user()->isSuperAdmin();

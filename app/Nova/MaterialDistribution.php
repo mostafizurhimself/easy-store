@@ -11,7 +11,7 @@ use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
-use App\Nova\Filters\DateFilter;
+use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
@@ -261,7 +261,7 @@ class MaterialDistribution extends Resource
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
-            new DateFilter,
+            new DateRangeFilter,
 
             new DistributionStatusFilter,
         ];

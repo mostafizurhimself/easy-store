@@ -15,7 +15,7 @@ use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
-use App\Nova\Filters\DateFilter;
+use App\Nova\Filters\DateRangeFilter;
 use Illuminate\Support\Optional;
 use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
@@ -243,7 +243,7 @@ class AssetDistributionInvoice extends Resource
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
-            new DateFilter('date'),
+            new DateRangeFilter('date'),
 
             new DistributionStatusFilter,
         ];

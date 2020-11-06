@@ -14,7 +14,7 @@ use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
-use App\Nova\Filters\DateFilter;
+use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Markdown;
@@ -223,7 +223,7 @@ class AssetReceiveItem extends Resource
             (new BelongsToLocationFilter('purchaseOrder'))->canSee(function($request){
                 return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
             }),
-            new DateFilter('date'),
+            new DateRangeFilter('date'),
             new PurchaseStatusFilter,
         ];
     }

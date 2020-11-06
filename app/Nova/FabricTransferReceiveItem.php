@@ -14,7 +14,7 @@ use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
-use App\Nova\Filters\DateFilter;
+use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\Currency;
 use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
@@ -192,7 +192,7 @@ class FabricTransferReceiveItem extends Resource
     public function filters(Request $request)
     {
         return [
-            new DateFilter('date'),
+            new DateRangeFilter('date'),
             new TransferStatusFilter,
         ];
     }

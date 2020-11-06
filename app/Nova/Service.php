@@ -37,7 +37,7 @@ class Service extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\Service';
+    public static $model = \App\Models\Service::class;
 
      /**
      * Get the custom permissions name of the resource
@@ -182,21 +182,30 @@ class Service extends Resource
                     return $this->totalDispatchQuantity . " " . $this->unit->name;
                 })
                 ->sortable()
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->canSee(function($request){
+                    return empty($request->viaResource);
+                }),
 
             Text::make('Receive')
                 ->displayUsing(function () {
                     return $this->totalReceiveQuantity . " " . $this->unit->name;
                 })
                 ->sortable()
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->canSee(function($request){
+                    return empty($request->viaResource);
+                }),
 
             Text::make('Remaining')
                 ->displayUsing(function () {
                     return $this->totalRemainingQuantity . " " . $this->unit->name;
                 })
                 ->sortable()
-                ->exceptOnForms(),
+                ->exceptOnForms()
+                ->canSee(function($request){
+                    return empty($request->viaResource);
+                }),
 
             BelongsTo::make('Unit')
                 ->hideFromIndex()
@@ -227,7 +236,7 @@ class Service extends Resource
                     return true;
                 }),
 
-            BelongsToManyField::make('Providers', 'providers', 'App\Nova\Provider')
+            BelongsToManyField::make('Providers', 'providers', \App\Nova\Provider::class)
                 ->hideFromIndex(),
 
             Select::make('Status')
