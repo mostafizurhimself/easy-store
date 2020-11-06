@@ -12,16 +12,17 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
-use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Lenses\ReturnItems;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\ReturnStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\AssetReturnInvoices\MarkAsDraft;
 use App\Nova\Actions\AssetReturnInvoices\ConfirmInvoice;
 use App\Nova\Actions\AssetReturnInvoices\GenerateInvoice;
 
@@ -48,8 +49,7 @@ class AssetReturnInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate'];
-
+    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
 
     /**
      * The side nav menu order.
@@ -244,6 +244,16 @@ class AssetReturnInvoice extends Resource
     public function actions(Request $request)
     {
         return [
+            (new MarkAsDraft)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft asset return invoices') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can mark as draft asset return invoices') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail()
+                ->confirmButtonText('Mark As Draft')
+                ->confirmText('Are you sure want to mark the return invoice as draft?'),
+
             (new ConfirmInvoice)->canSee(function($request){
                 return $request->user()->hasPermissionTo('can confirm asset return invoices');
             }),

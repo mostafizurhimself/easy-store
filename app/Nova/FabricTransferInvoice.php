@@ -15,16 +15,17 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
-use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use App\Nova\Lenses\TransferItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use App\Nova\Actions\FabricTransferInvoices\MarkAsDraft;
 use App\Nova\Actions\FabricTransferInvoices\ConfirmInvoice;
 use App\Nova\Lenses\FabricTransferInvoice\TransferInvoices;
 use App\Nova\Actions\FabricTransferInvoices\GenerateInvoice;
@@ -50,7 +51,7 @@ class FabricTransferInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate'];
+    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
 
     /**
      * The group associated with the resource.
@@ -255,6 +256,16 @@ class FabricTransferInvoice extends Resource
     public function actions(Request $request)
     {
         return [
+            (new MarkAsDraft)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft fabric transfer invoices') || $request->user()->isSuperAdmin();
+            })
+            ->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft fabric transfer invoices') || $request->user()->isSuperAdmin();
+            })
+            ->onlyOnDetail()
+            ->confirmButtonText('Mark As Draft')
+            ->confirmText('Are you sure want to mark the transfer invoice as draft?'),
+
             (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm fabric transfer invoices');
             })

@@ -70,6 +70,8 @@ class ConfirmPurchase extends Action
                     Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\FabricPurchaseOrder::uriKey(), $model));
                 }
 
+            }else{
+                return Action::danger('Already confirmed.');
             }
         }
     }

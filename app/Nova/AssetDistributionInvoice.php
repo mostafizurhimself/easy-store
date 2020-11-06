@@ -15,7 +15,6 @@ use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
-use App\Nova\Filters\DateRangeFilter;
 use Illuminate\Support\Optional;
 use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
@@ -23,6 +22,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Lenses\DistributionItems;
 use App\Nova\Lenses\DistributionHistory;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -30,6 +30,7 @@ use App\Nova\Filters\DistributionStatusFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetDistributionInvoices\AutoReceive;
+use App\Nova\Actions\AssetDistributionInvoices\MarkAsDraft;
 use App\Nova\Actions\AssetDistributionInvoices\ConfirmInvoice;
 use App\Nova\Actions\AssetDistributionInvoices\GenerateInvoice;
 use App\Nova\Lenses\AssetDistributionInvoice\DistributionInvoices;
@@ -275,12 +276,22 @@ class AssetDistributionInvoice extends Resource
             (new AutoReceive)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can auto receive asset distribution invoices') || $request->user()->isSuperAdmin();
             })
-            ->canRun(function ($request) {
-                return $request->user()->hasPermissionTo('can auto receive asset distribution invoices') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Auto Receive')
-            ->confirmText("Are you sure want to auto receive this invoice?")
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can auto receive asset distribution invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Auto Receive')
+                ->confirmText("Are you sure want to auto receive this invoice?")
+                ->onlyOnDetail(),
+
+            // (new MarkAsDraft)->canSee(function ($request) {
+            //     return $request->user()->hasPermissionTo('can mark as draft asset distribution invoices') || $request->user()->isSuperAdmin();
+            // })
+            //     ->canRun(function ($request) {
+            //         return $request->user()->hasPermissionTo('can mark as draft asset distribution invoices') || $request->user()->isSuperAdmin();
+            //     })
+            //     ->onlyOnDetail()
+            //     ->confirmButtonText('Mark As Draft')
+            //     ->confirmText('Are you sure want to mark the distribution invoice as draft?'),
 
             (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm asset distribution invoices') || $request->user()->isSuperAdmin();

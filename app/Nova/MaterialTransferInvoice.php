@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use Eminiarts\Tabs\Tabs;
 use App\Rules\ReceiverRule;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -15,20 +16,20 @@ use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
-use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use App\Nova\Lenses\TransferItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use App\Nova\Actions\MaterialTransferInvoices\MarkAsDraft;
 use App\Nova\Actions\MaterialTransferInvoices\ConfirmInvoice;
 use App\Nova\Lenses\MaterialTransferInvoice\TransferInvoices;
 use App\Nova\Actions\MaterialTransferInvoices\GenerateInvoice;
-use Eminiarts\Tabs\Tabs;
 
 class MaterialTransferInvoice extends Resource
 {
@@ -51,7 +52,7 @@ class MaterialTransferInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate'];
+    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
 
     /**
      * The group associated with the resource.
@@ -258,6 +259,16 @@ class MaterialTransferInvoice extends Resource
     public function actions(Request $request)
     {
         return [
+            (new MarkAsDraft)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft material transfer invoices') || $request->user()->isSuperAdmin();
+            })
+            ->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft material transfer invoices') || $request->user()->isSuperAdmin();
+            })
+            ->onlyOnDetail()
+            ->confirmButtonText('Mark As Draft')
+            ->confirmText('Are you sure want to mark the transfer invoice as draft?'),
+
             (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm material transfer invoices');
             })

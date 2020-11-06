@@ -15,7 +15,6 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
-use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\HasMany;
 use App\Nova\Lenses\ReceiveItems;
 use Laravel\Nova\Fields\Currency;
@@ -23,9 +22,11 @@ use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\FabricPurchaseOrders\MarkAsDraft;
 use App\Nova\Actions\FabricPurchaseOrders\Recalculate;
 use App\Nova\Actions\FabricPurchaseOrders\ConfirmPurchase;
 use App\Nova\Actions\FabricPurchaseOrders\GeneratePurchaseOrder;
@@ -38,7 +39,7 @@ class FabricPurchaseOrder extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\FabricPurchaseOrder';
+    public static $model = \App\Models\FabricPurchaseOrder::class;
 
     /**
      * The side nav menu order.
@@ -66,7 +67,7 @@ class FabricPurchaseOrder extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate'];
+    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
 
     /**
      * Get the search result subtitle for the resource.
@@ -262,13 +263,24 @@ class FabricPurchaseOrder extends Resource
                 return $request->user()->isSuperAdmin();
             }),
 
+
+            (new MarkAsDraft)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft fabric purchase orders') || $request->user()->isSuperAdmin();
+            })
+            ->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft fabric purchase orders') || $request->user()->isSuperAdmin();
+            })
+            ->onlyOnDetail()
+            ->confirmButtonText('Mark As Draft')
+            ->confirmText('Are you sure want to mark the purchase order as draft?'),
+
             (new ConfirmPurchase)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can confirm fabric purchase orders');
+                return $request->user()->hasPermissionTo('can confirm fabric purchase orders') || $request->user()->isSuperAdmin();
             }),
 
 
             (new GeneratePurchaseOrder)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can generate fabric purchase orders');
+                return $request->user()->hasPermissionTo('can generate fabric purchase orders') || $request->user()->isSuperAdmin();
             })
                 ->canRun(function ($request) {
                     return $request->user()->hasPermissionTo('can generate fabric purchase orders') || $request->user()->isSuperAdmin();

@@ -12,18 +12,19 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
-use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Lenses\ReturnItems;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
+use App\Nova\Filters\ReturnStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\MaterialReturnInvoices\MarkAsDraft;
 use App\Nova\Actions\MaterialReturnInvoices\ConfirmInvoice;
 use App\Nova\Actions\MaterialReturnInvoices\GenerateInvoice;
-use App\Nova\Filters\ReturnStatusFilter;
 
 class MaterialReturnInvoice extends Resource
 {
@@ -41,7 +42,7 @@ class MaterialReturnInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate'];
+    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
 
     /**
      * The group associated with the resource.
@@ -245,6 +246,16 @@ class MaterialReturnInvoice extends Resource
     public function actions(Request $request)
     {
         return [
+            (new MarkAsDraft)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft material return invoices') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can mark as draft material return invoices') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail()
+                ->confirmButtonText('Mark As Draft')
+                ->confirmText('Are you sure want to mark the return invoice as draft?'),
+
             (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm material return invoices');
             }),

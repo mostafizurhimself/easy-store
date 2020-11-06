@@ -67,8 +67,12 @@ class ConfirmPurchase extends Action
                     $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
                     Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\AssetPurchaseOrder::uriKey(), $model));
                 }
+            }else{
+                return Action::danger('Already confirmed.');
             }
         }
+
+        return Action::message('Purchase Order confirmed successfully.');
     }
 
     /**

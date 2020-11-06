@@ -4,14 +4,13 @@ namespace App\Nova\Actions\FabricReturnInvoices;
 
 use App\Enums\ReturnStatus;
 use Illuminate\Bus\Queueable;
-use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ConfirmInvoice extends Action
+class MarkAsDraft extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -25,38 +24,31 @@ class ConfirmInvoice extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach($models as $model){
-            //Check model has relation items
-            if($model->returnItems()->count() == 0)
-            {
-                return Action::danger("No retun item added.");
-            }
 
-            if($model->status == ReturnStatus::DRAFT()){
+            if($model->status == ReturnStatus::CONFIRMED()){
 
                 //Update the relate return items status
                 foreach($model->returnItems as $returnItem){
 
-                    if($returnItem->status == ReturnStatus::DRAFT()){
+                    if($returnItem->status == ReturnStatus::CONFIRMED()){
 
-                        //Decrease the item quantity
-                        $returnItem->fabric->decrement('quantity', $returnItem->quantity);
-                        $returnItem->status =  ReturnStatus::CONFIRMED();
+                        //increase the item quantity
+                        $returnItem->fabric->increment('quantity', $returnItem->quantity);
+                        $returnItem->status =  ReturnStatus::DRAFT();
                         $returnItem->save();
                     }
                 }
 
-
                 //Update the model status
-                $model->approve()->create(['employee_id' => $fields->approved_by]);
-                $model->status = ReturnStatus::CONFIRMED();
+                $model->approve()->forceDelete();
+                $model->status = ReturnStatus::DRAFT();
                 $model->save();
             }else{
-                return Action::danger('Already confirmed.');
+                return Action::danger('Can not mark as draft.');
             }
         }
 
-        return Action::message('Return invoice confirmed successfully.');
-
+        return Action::message('Return invoice marked as draft successfully.');
     }
 
     /**
@@ -66,10 +58,6 @@ class ConfirmInvoice extends Action
      */
     public function fields()
     {
-        return [
-            Select::make('Approved By')
-                ->rules('required')
-                ->options(\App\Models\Employee::approvers())
-        ];
+        return [];
     }
 }

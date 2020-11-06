@@ -2,8 +2,6 @@
 
 namespace App\Nova\Actions\AssetDistributionInvoices;
 
-use App\Models\Role;
-use App\Facades\Settings;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use App\Enums\DistributionStatus;
@@ -11,19 +9,10 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Notifications\DistributionConfirmed;
-use Illuminate\Support\Facades\Notification;
 
-class ConfirmInvoice extends Action
+class MarkAsDraft extends Action
 {
     use InteractsWithQueue, Queueable;
-
-    /**
-     * The text to be used for the action's confirm button.
-     *
-     * @var string
-     */
-    public $confirmButtonText = 'Confirm';
 
     /**
      * Perform the action on the given models.
@@ -36,11 +25,7 @@ class ConfirmInvoice extends Action
     {
         foreach ($models as $model) {
 
-            if ($model->distributionItems()->count() == 0) {
-                return Action::danger("No distribution item added.");
-            }
-
-            if ($model->status == DistributionStatus::DRAFT()) {
+            if ($model->status == DistributionStatus::CONFIRMED() && !$model->receiveItems()->exists()) {
                 //Get all the distribution items of the distribution invoice
                 foreach ($model->distributionItems as $distributionItem) {
 
@@ -56,11 +41,11 @@ class ConfirmInvoice extends Action
                         $distributionItem->requisitionItem->updateStatus();
                     }
 
-                    //Decrease the asset quantity
-                    $distributionItem->asset->decrement('quantity', $distributionItem->distributionQuantity);
+                    //increase the asset quantity
+                    $distributionItem->asset->increment('quantity', $distributionItem->distributionQuantity);
 
                     //Update the distribution item status
-                    $distributionItem->status = DistributionStatus::CONFIRMED();
+                    $distributionItem->status = DistributionStatus::DRAFT();
                     $distributionItem->save();
                 }
 
@@ -74,24 +59,14 @@ class ConfirmInvoice extends Action
                 }
 
                 //Update the distribution invoice status
-                $model->status = DistributionStatus::CONFIRMED();
+                $model->status = DistributionStatus::DRAFT();
                 $model->save();
             }else{
-                return Action::message('Already confirmed.');
-            }
-
-            //Notify the users
-            $users = \App\Models\User::permission(['view asset distribution invoices', 'view any asset distribution invoices'])->where('location_id', $model->receiverId)->get();
-            Notification::send($users, new DistributionConfirmed(\App\Nova\AssetDistributionInvoice::uriKey(), $model));
-
-            //Notify super admins
-            if (Settings::superAdminNotification()) {
-                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
-                Notification::send($users, new DistributionConfirmed(\App\Nova\AssetDistributionInvoice::uriKey(), $model));
+                return Action::danger('Can not mark as draft.');
             }
         }
 
-        return Action::message('Distribution Invoice confirmed successfully.');
+        return Action::message('Distribution Invoice marked as draft successfully.');
     }
 
     /**

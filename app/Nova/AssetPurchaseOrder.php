@@ -15,7 +15,6 @@ use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
-use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\HasMany;
 use App\Nova\Lenses\ReceiveItems;
 use Laravel\Nova\Fields\Currency;
@@ -23,9 +22,11 @@ use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\AssetPurchaseOrders\MarkAsDraft;
 use App\Nova\Actions\AssetPurchaseOrders\Recalculate;
 use App\Nova\Actions\AssetPurchaseOrders\ConfirmPurchase;
 use App\Nova\Actions\AssetPurchaseOrders\GeneratePurchaseOrder;
@@ -45,7 +46,7 @@ class AssetPurchaseOrder extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate'];
+    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
 
     /**
      * The side nav menu order.
@@ -261,6 +262,16 @@ class AssetPurchaseOrder extends Resource
             })->canRun(function ($request) {
                 return $request->user()->isSuperAdmin();
             }),
+
+            (new MarkAsDraft)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft asset purchase orders') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can mark as draft asset purchase orders') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail()
+                ->confirmButtonText('Mark As Draft')
+                ->confirmText('Are you sure want to mark the purchase order as draft?'),
 
             (new ConfirmPurchase)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm asset purchase orders');

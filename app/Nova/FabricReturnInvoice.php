@@ -12,18 +12,19 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
-use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Lenses\ReturnItems;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
+use App\Nova\Filters\ReturnStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\FabricReturnInvoices\MarkAsDraft;
 use App\Nova\Actions\FabricReturnInvoices\ConfirmInvoice;
 use App\Nova\Actions\FabricReturnInvoices\GenerateInvoice;
-use App\Nova\Filters\ReturnStatusFilter;
 
 class FabricReturnInvoice extends Resource
 {
@@ -40,7 +41,7 @@ class FabricReturnInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate'];
+    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
 
     /**
      * The group associated with the resource.
@@ -72,7 +73,7 @@ class FabricReturnInvoice extends Resource
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
@@ -82,7 +83,7 @@ class FabricReturnInvoice extends Resource
      */
     public static function label()
     {
-      return "Return Invoices";
+        return "Return Invoices";
     }
 
     /**
@@ -102,7 +103,7 @@ class FabricReturnInvoice extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-undo-alt';
+        return 'fas fa-undo-alt';
     }
 
     /**
@@ -159,8 +160,8 @@ class FabricReturnInvoice extends Resource
                 }),
 
             BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")
-                    ->searchable()
-                    ->sortable(),
+                ->searchable()
+                ->sortable(),
 
             Currency::make('Total Amount', 'total_return_amount')
                 ->currency('BDT')
@@ -168,23 +169,23 @@ class FabricReturnInvoice extends Resource
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
-                    ReturnStatus::DRAFT()->getValue()     => 'warning',
-                    ReturnStatus::CONFIRMED()->getValue() => 'info',
-                    ReturnStatus::BILLED()->getValue()    => 'danger',
-                ])
+                ReturnStatus::DRAFT()->getValue()     => 'warning',
+                ReturnStatus::CONFIRMED()->getValue() => 'info',
+                ReturnStatus::BILLED()->getValue()    => 'danger',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
 
-            Text::make('Approved By', function(){
-                    return $this->approve ? $this->approve->employee->name : null;
-                })
+            Text::make('Approved By', function () {
+                return $this->approve ? $this->approve->employee->name : null;
+            })
                 ->sortable()
-                ->canSee(function(){
+                ->canSee(function () {
                     return $this->approve()->exists();
                 })
                 ->onlyOnDetail(),
@@ -213,7 +214,7 @@ class FabricReturnInvoice extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -245,19 +246,29 @@ class FabricReturnInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmInvoice)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can confirm fabric return invoices');
+            (new MarkAsDraft)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft fabric return invoices') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can mark as draft fabric return invoices') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail()
+                ->confirmButtonText('Mark As Draft')
+                ->confirmText('Are you sure want to mark the return invoice as draft?'),
+
+            (new ConfirmInvoice)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can confirm fabric return invoices') || $request->user()->isSuperAdmin();
             }),
 
-            (new GenerateInvoice)->canSee(function($request){
-                return $request->user()->hasPermissionTo('can generate fabric return invoices');
-            })
-            ->canRun(function($request){
+            (new GenerateInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate fabric return invoices') || $request->user()->isSuperAdmin();
             })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate invoice now?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate fabric return invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate invoice now?')
+                ->onlyOnDetail(),
         ];
     }
 }
