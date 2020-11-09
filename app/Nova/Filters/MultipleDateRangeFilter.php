@@ -32,7 +32,7 @@ class MultipleDateRangeFilter extends DateRangeFilter
         $this->params = $params;
     }
 
-     /**
+    /**
      * Apply the filter to the given query.
      *
      * @param  \Illuminate\Http\Request  $request

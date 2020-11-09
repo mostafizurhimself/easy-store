@@ -204,19 +204,21 @@ class FabricReturnItem extends Resource
      */
     public static function relatableFabrics(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\FabricReturnInvoice::find($request->viaResourceId);
-        if (empty($invoice)) {
-            $invoice = \App\Models\FabricReturnItem::find($request->resourceId)->invoice;
-        }
-        try {
-            $fabricId = $request->findResourceOrFail()->fabricId;
-        } catch (\Throwable $th) {
-            $fabricId = null;
-        }
-        return $query->whereHas('suppliers', function ($supplier) use ($invoice) {
-            $supplier->where('supplier_id', $invoice->supplierId)
+        if(!$request->isResourceIndexRequest()){
+            $invoice = \App\Models\FabricReturnInvoice::find($request->viaResourceId);
+            if (empty($invoice)) {
+                $invoice = \App\Models\FabricReturnItem::find($request->resourceId)->invoice;
+            }
+            try {
+                $fabricId = $request->findResourceOrFail()->fabricId;
+            } catch (\Throwable $th) {
+                $fabricId = null;
+            }
+            return $query->whereHas('suppliers', function ($supplier) use ($invoice) {
+                $supplier->where('supplier_id', $invoice->supplierId)
                 ->where('location_id', $invoice->locationId);
-        })->whereNotIn('id', $invoice->fabricIds($fabricId));
+            })->whereNotIn('id', $invoice->fabricIds($fabricId));
+        }
     }
 
     /**

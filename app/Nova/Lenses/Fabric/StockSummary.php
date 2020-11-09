@@ -10,7 +10,7 @@ use Laravel\Nova\Fields\Number;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\LensRequest;
-use App\Nova\Filters\MultipleDateRangeFilter;
+use App\Nova\Filters\Lens\FabricSummaryDateRangeFilter;
 
 class StockSummary extends Lens
 {
@@ -25,12 +25,8 @@ class StockSummary extends Lens
     {
         return $request->withoutTableOrderPrefix()->withOrdering($request->withFilters(
             $query->select(self::columns())
-                ->leftJoin('fabric_receive_items', 'fabrics.id', '=', 'fabric_receive_items.fabric_id')
-                ->leftJoin('fabric_distributions', 'fabrics.id', '=', 'fabric_distributions.fabric_id')
-                ->leftJoin('fabric_return_items', 'fabrics.id', '=', 'fabric_return_items.fabric_id')
-                ->leftJoin('fabric_transfer_items', 'fabrics.id', '=', 'fabric_transfer_items.fabric_id')
-                ->join('locations', 'fabrics.location_id', '=', 'locations.id')
-                ->join('units', 'fabrics.unit_id', '=', 'units.id')
+                ->leftJoin('locations', 'fabrics.location_id', '=', 'locations.id')
+                ->leftJoin('units', 'fabrics.unit_id', '=', 'units.id')
                 ->where('fabrics.deleted_at', "=", null)
                 ->groupBy('fabrics.id')
                 ->withoutGlobalScopes()
@@ -48,10 +44,6 @@ class StockSummary extends Lens
             'fabrics.id',
             'locations.name as location_name',
             'fabrics.name',
-            DB::raw('sum(COALESCE(fabric_receive_items.quantity, 0)) as purchase_quantity'),
-            DB::raw('sum(COALESCE(fabric_distributions.quantity, 0)) as distribution_quantity'),
-            DB::raw('sum(COALESCE(fabric_return_items.quantity, 0)) as return_quantity'),
-            DB::raw('sum(COALESCE(fabric_transfer_items.transfer_quantity, 0)) as transfer_quantity'),
             'units.name as unit_name',
         ];
     }
@@ -73,24 +65,36 @@ class StockSummary extends Lens
             Text::make('Name', 'name')
                 ->sortable(),
 
-            Text::make('Purchase Quantity', function () {
-                return $this->purchase_quantity . " " . $this->unit_name;
+            Text::make('Purchase', function () {
+                if(!empty($this->purchase_quantity)){
+                    return $this->purchase_quantity . " " . $this->unit_name;
+                }
+                return 0;
             })
                 ->sortable(),
 
-            Text::make('Distribution Quantity', function () {
+            Text::make('Distribution', function () {
+                if(!empty($this->distribution_quantity)){
                     return $this->distribution_quantity . " " . $this->unit_name;
-                })
-                    ->sortable(),
-
-            Text::make('Return Quantity', function () {
-                return $this->return_quantity . " " . $this->unit_name;
+                }
+                return 0;
             })
                 ->sortable(),
 
-            Text::make('Transfer Quantity', function () {
+            Text::make('Return', function () {
+                if(!empty($this->return_quantity)){
+                    return $this->return_quantity . " " . $this->unit_name;
+                }
+                return 0;
+            })
+                ->sortable(),
+
+            Text::make('Transfer', function () {
+                if(!empty($this->transfer_quantity)){
                     return $this->transfer_quantity . " " . $this->unit_name;
-                })
+                }
+                return 0;
+            })
                     ->sortable(),
         ];
     }
@@ -115,9 +119,7 @@ class StockSummary extends Lens
     public function filters(Request $request)
     {
         return [
-            new MultipleDateRangeFilter([
-                ['table' => 'fabric_distributions', 'column' => 'created_at'],
-            ]),
+            new FabricSummaryDateRangeFilter(),
         ];
     }
 
