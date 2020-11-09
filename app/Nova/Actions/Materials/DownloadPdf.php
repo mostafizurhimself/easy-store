@@ -23,6 +23,13 @@ class DownloadPdf extends Action
     public static $chunkCount = 200000000;
 
     /**
+     * Disables action log events for this action.
+     *
+     * @var bool
+     */
+    public $withoutActionEvents = true;
+
+    /**
      * Perform the action on the given models.
      *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
@@ -31,10 +38,6 @@ class DownloadPdf extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        if($models->count() > 1000)
-        {
-            return Action::danger('Maximum rows exceeded.');
-        }
         $filename = "materials_".time().".pdf";
         $subtitle = $fields->subtitle;
 

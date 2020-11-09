@@ -22,6 +22,14 @@ class DownloadExcel extends Action
      */
     public static $chunkCount = 200000000;
 
+        /**
+     * Disables action log events for this action.
+     *
+     * @var bool
+     */
+    public $withoutActionEvents = true;
+
+
     /**
      * Perform the action on the given models.
      *
