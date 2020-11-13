@@ -87,7 +87,7 @@ class FabricSummaryDateRangeFilter extends DateRangeFilter
             where fabric_distributions.created_at between '$from' and '$to'
             and fabric_distributions.fabric_id = fabrics.id
             and fabric_distributions.status = 'confirmed'
-            and fabric_distributions.deleted_at is null), 0)) as distribution_quantity"),
+            and fabric_distributions.deleted_at  is null), 0)) as distribution_quantity"),
 
             // Returns
             DB::raw("COALESCE((select sum(fabric_return_items.quantity) from fabric_return_items

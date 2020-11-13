@@ -78,11 +78,7 @@ class AdjustQuantity extends Model
      */
     public function adjust()
     {
-        if($this->isIncremented()){
-            $this->adjustable()->increment('quantity', $this->quantity);
-        }else{
-            $this->adjustable()->decrement('quantity', $this->quantity);
-        }
+        $this->adjustable()->increment('quantity', $this->quantity);
     }
 
 }

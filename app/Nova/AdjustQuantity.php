@@ -63,10 +63,6 @@ class AdjustQuantity extends Resource
 
             Date::make('Date')->sortable(),
 
-            Text::make('Adjust Type', function () {
-                return Str::title($this->type);
-            })->sortable(),
-
             Text::make('Quantity', function () {
                 return $this->quantity . " " . $this->unit->name;
             })->sortable(),

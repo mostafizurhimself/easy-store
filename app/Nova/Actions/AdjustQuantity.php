@@ -33,7 +33,6 @@ class AdjustQuantity extends Action
 
             $adjustQuantity = $model->adjustQuantities()->create([
                 'date'        => Carbon::now(),
-                'type'        => $fields->type,
                 'quantity'    => $fields->quantity,
                 'rate'        => $model->rate,
                 'amount'      => $model->rate * $fields->quantity,
@@ -54,12 +53,8 @@ class AdjustQuantity extends Action
     public function fields()
     {
         return [
-            Select::make('Adjust Type', 'type')
-                ->rules('required')
-                ->options(AdjustType::titleCaseOptions()),
-
             Number::make('Quantity', 'quantity')
-                ->rules('required', 'numeric', 'min:0'),
+                ->rules('required', 'numeric'),
 
             Textarea::make('Description', 'description')
                 ->rules('required', 'max:500')
