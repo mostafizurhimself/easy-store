@@ -20,12 +20,12 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\MorphOne;
 use Laravel\Nova\Fields\MorphMany;
 use Easystore\RouterLink\RouterLink;
+use Laravel\Nova\Fields\BelongsToMany;
 use App\Nova\Filters\ActiveStatusFilter;
 use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use App\Nova\Actions\Suppliers\UpdateOpeningBalance;
-use Laravel\Nova\Fields\BelongsToMany;
 
 class Supplier extends Resource
 {
@@ -49,7 +49,7 @@ class Supplier extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can update opening balance of'];
+    public static $permissions = [];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -229,10 +229,6 @@ class Supplier extends Resource
      */
     public function actions(Request $request)
     {
-        return [
-            (new UpdateOpeningBalance)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can update opening balance of suppliers');
-            })->onlyOnDetail(),
-        ];
+        return [];
     }
 }

@@ -33,7 +33,6 @@ use Easystore\TextUppercase\TextUppercase;
 use App\Nova\Actions\Fabrics\DownloadExcel;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
-use App\Nova\Actions\Fabrics\UpdateOpeningQuantity;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
 
@@ -59,7 +58,7 @@ class Fabric extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can convert unit of', 'can adjust quantity of', 'can view stock summary of', 'can update opening quantity of'];
+    public static $permissions = ['can download', 'can convert unit of', 'can adjust quantity of', 'can view stock summary of'];
 
     /**
      * The group associated with the resource.
@@ -373,10 +372,6 @@ class Fabric extends Resource
             })
                 ->onlyOnDetail()
                 ->confirmButtonText('Adjust'),
-
-            (new UpdateOpeningQuantity)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can update opening quantity of fabrics');
-            })->onlyOnDetail(),
         ];
     }
 }

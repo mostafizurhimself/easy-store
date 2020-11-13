@@ -101,8 +101,8 @@ class FabricReceiveItem extends Resource
      * @var array
      */
     public static $searchRelations = [
-        'purchaseOrder' => ['name'],
-        'fabric' => ['name'],
+        'purchaseOrder' => ['readable_id'],
+        'fabric' => ['name', 'code'],
     ];
 
     /**

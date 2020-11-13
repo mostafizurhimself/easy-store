@@ -35,7 +35,6 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Assets\MassUpdateQuantity;
 use App\Nova\Actions\Assets\GenerateStockSummary;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
-use App\Nova\Actions\Assets\UpdateOpeningQuantity;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
 
@@ -64,7 +63,7 @@ class Asset extends Resource
     public static $permissions = [
         'can consume', 'can download',
         'can convert unit of', 'can adjust quantity of',  'can mass update quantity of',
-        'can generate stock summary of', 'can update opening quantity of'
+        'can generate stock summary of'
     ];
 
     /**
@@ -395,10 +394,6 @@ class Asset extends Resource
                 ->confirmButtonText('Generate')
                 ->confirmText("Are you sure want to generate stock summary?")
                 ->onlyOnDetail(),
-
-            (new UpdateOpeningQuantity)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can update opening quantity of assets') || $request->user()->isSuperAdmin();
-            })->onlyOnDetail(),
         ];
     }
 }

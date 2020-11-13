@@ -35,7 +35,6 @@ use App\Nova\Actions\Materials\DownloadExcel;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
-use App\Nova\Actions\Materials\UpdateOpeningQuantity;
 
 class Material extends Resource
 {
@@ -52,7 +51,7 @@ class Material extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can convert unit of', 'can adjust quantity of', 'can update opening quantity of'];
+    public static $permissions = ['can download', 'can convert unit of', 'can adjust quantity of'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -372,12 +371,6 @@ class Material extends Resource
                 })
                 ->onlyOnDetail()
                 ->confirmButtonText('Adjust'),
-
-            (new UpdateOpeningQuantity)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can update opening quantity of materials');
-            })->onlyOnDetail(),
-
-
         ];
     }
 }

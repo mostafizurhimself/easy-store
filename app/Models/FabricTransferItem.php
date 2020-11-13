@@ -99,7 +99,7 @@ class FabricTransferItem extends Model
      */
     public function scopeDraft($query)
     {
-        return $query->where('statu', TransferStatus::DRAFT());
+        return $query->where('status', TransferStatus::DRAFT());
     }
 
         /**

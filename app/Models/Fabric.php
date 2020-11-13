@@ -103,6 +103,16 @@ class Fabric extends Model implements HasMedia
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transferItems()
+    {
+       return $this->hasMany(FabricTransferItem::class);
+    }
+
+    /**
      * Get the model adjust quantities
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -121,7 +131,8 @@ class Fabric extends Model implements HasMedia
     {
         return $this->quantity -
                 $this->distributions()->draft()->sum('quantity') -
-                $this->returnItems()->draft()->sum('quantity') ;
+                $this->returnItems()->draft()->sum('quantity') -
+                $this->transferItems()->draft()->sum('quantity') ;
     }
 
     /**

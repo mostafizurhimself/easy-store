@@ -9,7 +9,9 @@ use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Fields\Number;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Fields\BelongsTo;
+use Treestoneit\TextWrap\TextWrap;
 use Laravel\Nova\Http\Requests\LensRequest;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\Lens\FabricSummaryDateRangeFilter;
 
 class StockSummary extends Lens
@@ -62,11 +64,21 @@ class StockSummary extends Lens
             Text::make('Location', 'location_name')
                 ->sortable(),
 
-            Text::make('Name', 'name')
+            TextWrap::make('Name', 'name')
+                ->sortable()
+                ->wrapMethod('length', 30),
+
+            Text::make('Previous', function () {
+                if (isset($this->purchase_quantity)) {
+                    $this->previous_quantity = ($this->opening_quantity + $this->previous_purchase_quantity) - ($this->previous_distribution_quantity + $this->previous_return_quantity + $this->previous_transfer_quantity);
+                    return $this->previous_quantity . " " . $this->unit_name;
+                }
+                return 0;
+            })
                 ->sortable(),
 
             Text::make('Purchase', function () {
-                if(!empty($this->purchase_quantity)){
+                if (isset($this->purchase_quantity)) {
                     return $this->purchase_quantity . " " . $this->unit_name;
                 }
                 return 0;
@@ -74,7 +86,7 @@ class StockSummary extends Lens
                 ->sortable(),
 
             Text::make('Distribution', function () {
-                if(!empty($this->distribution_quantity)){
+                if (isset($this->distribution_quantity)) {
                     return $this->distribution_quantity . " " . $this->unit_name;
                 }
                 return 0;
@@ -82,7 +94,7 @@ class StockSummary extends Lens
                 ->sortable(),
 
             Text::make('Return', function () {
-                if(!empty($this->return_quantity)){
+                if (isset($this->return_quantity)) {
                     return $this->return_quantity . " " . $this->unit_name;
                 }
                 return 0;
@@ -90,12 +102,21 @@ class StockSummary extends Lens
                 ->sortable(),
 
             Text::make('Transfer', function () {
-                if(!empty($this->transfer_quantity)){
+                if (isset($this->transfer_quantity)) {
                     return $this->transfer_quantity . " " . $this->unit_name;
                 }
                 return 0;
             })
-                    ->sortable(),
+                ->sortable(),
+
+            Text::make('Remaining', function () {
+                if (isset($this->previous_quantity)) {
+                    $this->remaining_quantity = ($this->previous_quantity + $this->purchase_quantity) - ($this->distribution_quantity + $this->return_quantity + $this->transfer_quantity);
+                    return $this->remaining_quantity . " " . $this->unit_name;
+                }
+                return 0;
+            })
+                ->sortable(),
         ];
     }
 
@@ -143,4 +164,5 @@ class StockSummary extends Lens
     {
         return 'fabric-stock-summary';
     }
+
 }

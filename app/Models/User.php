@@ -6,10 +6,11 @@ use App\Traits\Authorize;
 use App\Traits\CamelCasing;
 use App\Traits\Locationable;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -135,5 +136,18 @@ class User extends Authenticatable implements HasMedia
     public function isEmployee()
     {
         return $this->employeeId ? true : false;
+    }
+
+    /**
+     * Get the filter options of the model
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        // Cache::forget('nova-user-filter-options');
+        return Cache::remember('nova-user-filter-options', 3600, function () {
+            return self::pluck('id', 'name')->toArray();
+        });
     }
 }

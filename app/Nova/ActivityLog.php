@@ -4,8 +4,16 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\Text;
 use App\Traits\WithOutLocation;
+use App\Nova\Filters\UserFilter;
+use Laravel\Nova\Fields\MorphTo;
+use Laravel\Nova\Fields\DateTime;
+use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\ActivityLog\SubjectTypeFilter;
+use App\Nova\Filters\ActivityLog\LogDescription;
 use ChrisWare\NovaBreadcrumbs\Traits\Breadcrumbs;
 use Bolechen\NovaActivitylog\Resources\Activitylog as BaseActivityLog;
 
@@ -37,6 +45,29 @@ class ActivityLog extends BaseActivityLog
     public static $displayInNavigation = true;
 
     /**
+     * Get the fields displayed by the resource.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function fields(Request $request)
+    {
+        return [
+            ID::make()->sortable(),
+
+            Text::make('Description')->sortable(),
+            Text::make('Subject Id')->sortable(),
+            Text::make('Subject Type')->sortable(),
+            MorphTo::make('Causer')->sortable(),
+            Text::make('Causer Ip', 'properties->ip')->onlyOnIndex()->sortable(),
+
+            Code::make('Properties')->json(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+            DateTime::make('Created At')->sortable(),
+        ];
+    }
+
+    /**
      * Get the cards available for the request.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -55,7 +86,12 @@ class ActivityLog extends BaseActivityLog
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new DateRangeFilter,
+            new UserFilter,
+            new LogDescription,
+            new SubjectTypeFilter,
+        ];
     }
 
     /**

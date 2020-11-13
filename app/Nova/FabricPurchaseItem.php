@@ -34,7 +34,7 @@ class FabricPurchaseItem extends Resource
      */
     public static $model = \App\Models\FabricPurchaseItem::class;
 
-     /**
+    /**
      * The number of resources to show per page via relationships.
      *
      * @var int
@@ -70,7 +70,7 @@ class FabricPurchaseItem extends Resource
      * @var array
      */
     public static $searchRelations = [
-        'purchaseOrder' => ['name'],
+        'purchaseOrder' => ['readable_id'],
         'fabric' => ['name'],
     ];
 
@@ -82,7 +82,7 @@ class FabricPurchaseItem extends Resource
      */
     public static function label()
     {
-      return "Purchase Items";
+        return "Purchase Items";
     }
 
     /**
@@ -109,14 +109,14 @@ class FabricPurchaseItem extends Resource
     {
         return [
             // ID::make()->sortable(),
-            Text::make("Location",function(){
+            Text::make("Location", function () {
                 return $this->location->name;
             })
                 ->sortable()
                 ->exceptOnForms()
-                ->canSee(function($request){
+                ->canSee(function ($request) {
                     return ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin())
-                    && (empty($request->viaResource));
+                        && (empty($request->viaResource));
                 }),
 
             Date::make('Date', function () {
@@ -124,7 +124,7 @@ class FabricPurchaseItem extends Resource
             })
                 ->sortable()
                 ->exceptOnForms()
-                ->canSee(function($request){
+                ->canSee(function ($request) {
                     return empty($request->viaResource);
                 }),
 
@@ -141,19 +141,19 @@ class FabricPurchaseItem extends Resource
                 ->rules('required', 'numeric', 'min:0')
                 ->onlyOnForms(),
 
-            Text::make('Purchase Quantity', function(){
-                return $this->purchaseQuantity." ".$this->unitName;
+            Text::make('Purchase Quantity', function () {
+                return $this->purchaseQuantity . " " . $this->unitName;
             })
-            ->sortable()
-            ->exceptOnForms(),
+                ->sortable()
+                ->exceptOnForms(),
 
 
 
-            Text::make('Receive Quantity', function(){
-                return $this->receiveQuantity." ".$this->unitName;
+            Text::make('Receive Quantity', function () {
+                return $this->receiveQuantity . " " . $this->unitName;
             })
-            ->sortable()
-            ->exceptOnForms(),
+                ->sortable()
+                ->exceptOnForms(),
 
             Currency::make('Purchase Rate')
                 ->currency('BDT')
@@ -171,14 +171,14 @@ class FabricPurchaseItem extends Resource
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
-                    PurchaseStatus::DRAFT()->getValue()     => 'warning',
-                    PurchaseStatus::CONFIRMED()->getValue() => 'info',
-                    PurchaseStatus::PARTIAL()->getValue()   => 'danger',
-                    PurchaseStatus::RECEIVED()->getValue()  => 'success',
-                    PurchaseStatus::BILLED()->getValue()    => 'danger',
-                ])
+                PurchaseStatus::DRAFT()->getValue()     => 'warning',
+                PurchaseStatus::CONFIRMED()->getValue() => 'info',
+                PurchaseStatus::PARTIAL()->getValue()   => 'danger',
+                PurchaseStatus::RECEIVED()->getValue()  => 'success',
+                PurchaseStatus::BILLED()->getValue()    => 'danger',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -208,7 +208,7 @@ class FabricPurchaseItem extends Resource
     public function filters(Request $request)
     {
         return [
-            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function($request){
+            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
             }),
             new BelongsToDateFilter('purchaseOrder'),
@@ -237,16 +237,16 @@ class FabricPurchaseItem extends Resource
     public function actions(Request $request)
     {
         return [
-            (new DownloadPdf)->onlyOnIndex()->canSee(function($request){
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
 
-            (new DownloadExcel)->onlyOnIndex()->canSee(function($request){
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download fabric purchase items') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
@@ -264,21 +264,23 @@ class FabricPurchaseItem extends Resource
      */
     public static function relatableFabrics(NovaRequest $request, $query)
     {
-        $purchase = \App\Models\FabricPurchaseOrder::find($request->viaResourceId);
+        if (!$request->isResourceIndexRequest()) {
+            $purchase = \App\Models\FabricPurchaseOrder::find($request->viaResourceId);
 
-        if(empty($purchase)){
-            $purchase = $request->findResourceOrFail()->purchaseOrder;
-        }
+            if (empty($purchase)) {
+                $purchase = $request->findResourceOrFail()->purchaseOrder;
+            }
 
-        try {
-            $fabricId = $request->findResourceOrFail()->fabricId;
-        } catch (\Throwable $th) {
-           $fabricId = null;
-        }
-        return $query->whereHas('suppliers', function($supplier) use($purchase){
+            try {
+                $fabricId = $request->findResourceOrFail()->fabricId;
+            } catch (\Throwable $th) {
+                $fabricId = null;
+            }
+            return $query->whereHas('suppliers', function ($supplier) use ($purchase) {
                 $supplier->where('supplier_id', $purchase->supplierId)
-                        ->where('location_id', $purchase->locationId);
-        })->whereNotIn('id', $purchase->fabricIds($fabricId));
+                    ->where('location_id', $purchase->locationId);
+            })->whereNotIn('id', $purchase->fabricIds($fabricId));
+        }
     }
 
     /**
@@ -290,7 +292,7 @@ class FabricPurchaseItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -302,10 +304,10 @@ class FabricPurchaseItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }
