@@ -182,7 +182,7 @@ class MaterialPurchaseOrder extends Resource
                         }),
 
                     Trix::make('Note')
-                        ->rules('nullable', 'max:500'),
+                        ->rules('nullable', 'max:2000'),
 
                     Text::make('Approved By', function () {
                         return $this->approve ? $this->approve->employee->name : null;
