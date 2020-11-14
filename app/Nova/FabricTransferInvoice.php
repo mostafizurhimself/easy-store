@@ -20,6 +20,7 @@ use Laravel\Nova\Fields\Currency;
 use App\Nova\Lenses\TransferItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Filters\ReceiverFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\TransferStatusFilter;
@@ -225,6 +226,8 @@ class FabricTransferInvoice extends Resource
             LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
+
+            new ReceiverFilter,
 
             new DateRangeFilter('date'),
 
