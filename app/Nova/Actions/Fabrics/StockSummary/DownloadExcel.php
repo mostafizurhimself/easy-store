@@ -3,11 +3,13 @@
 namespace App\Nova\Actions\Fabrics\StockSummary;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Fields\ActionFields;
+use Illuminate\Queue\InteractsWithQueue;
+use App\Exports\FabricStockSummaryExport;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class DownloadExcel extends Action
 {
@@ -20,6 +22,13 @@ class DownloadExcel extends Action
      */
     public static $chunkCount = 200000000;
 
+         /**
+     * Disables action log events for this action.
+     *
+     * @var bool
+     */
+    public $withoutActionEvents = true;
+
     /**
      * Perform the action on the given models.
      *
@@ -29,7 +38,11 @@ class DownloadExcel extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        //
+        // Store on default disk
+        $filename = "fabric_stock_summary_".time().".xlsx";
+        Excel::store(new FabricStockSummaryExport($models), $filename, 'local');
+
+        return Action::redirect( route('dump-download', compact('filename')) );
     }
 
     /**

@@ -62,6 +62,7 @@ class FabricSummaryDateRangeFilter extends DateRangeFilter
             'locations.name as location_name',
             'fabrics.name',
             'fabrics.opening_quantity',
+            'fabric_categories.name as category_name',
 
             // Purchases
             DB::raw("(COALESCE((select sum(fabric_receive_items.quantity) from fabric_receive_items

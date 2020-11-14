@@ -3,11 +3,12 @@
 namespace App\Nova\Actions\Fabrics\StockSummary;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class DownloadPdf extends Action
 {
@@ -21,6 +22,13 @@ class DownloadPdf extends Action
     public static $chunkCount = 200000000;
 
     /**
+     * Indicates if need to skip log action events for models.
+     *
+     * @var bool
+     */
+    public $withoutActionEvents = true;
+
+    /**
      * Perform the action on the given models.
      *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
@@ -29,7 +37,17 @@ class DownloadPdf extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        //
+        $filename = "fabrics_stock_summary_".time().".pdf";
+        $subtitle = $fields->subtitle;
+
+        ini_set("pcre.backtrack_limit", "10000000000");
+        $pdf = \PDF::loadView('pdf.pages.fabric-stock-summaries', compact('models', 'subtitle'), [], [
+            'mode' => 'utf-8',
+            'orientation' => 'L'
+        ]);
+        $pdf->save(Storage::path($filename));
+
+        return Action::redirect( route('dump-download', compact('filename')) );
     }
 
     /**

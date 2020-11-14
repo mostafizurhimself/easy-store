@@ -6,11 +6,11 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Lenses\Lens;
-use Laravel\Nova\Fields\Number;
-use Illuminate\Support\Facades\DB;
-use Laravel\Nova\Fields\BelongsTo;
+use App\Models\FabricCategory;
 use Treestoneit\TextWrap\TextWrap;
-use App\Nova\Filters\LocationFilter;
+use App\Nova\Filters\CategoryFilter;
+use AwesomeNova\Filters\DependentFilter;
+use App\Nova\Filters\FabricLocationFilter;
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Fabrics\StockSummary\DownloadPdf;
@@ -30,6 +30,7 @@ class StockSummary extends Lens
     {
         return $request->withoutTableOrderPrefix()->withOrdering($request->withFilters(
             $query->select(self::columns())
+                ->leftJoin('fabric_categories', 'fabrics.category_id', '=', 'fabric_categories.id')
                 ->leftJoin('locations', 'fabrics.location_id', '=', 'locations.id')
                 ->leftJoin('units', 'fabrics.unit_id', '=', 'units.id')
                 ->where('fabrics.deleted_at', "=", null)
@@ -50,6 +51,7 @@ class StockSummary extends Lens
             'locations.name as location_name',
             'fabrics.name',
             'units.name as unit_name',
+            'fabric_categories.name as category_name',
         ];
     }
 
@@ -67,6 +69,9 @@ class StockSummary extends Lens
             Text::make('Location', 'location_name')
                 ->sortable(),
 
+            Text::make('Category', 'category_name')
+                ->sortable(),
+
             TextWrap::make('Name', 'name')
                 ->sortable()
                 ->wrapMethod('length', 30),
@@ -77,7 +82,7 @@ class StockSummary extends Lens
                         $this->previous_adjust_quantity;
                     return $this->previous_quantity . " " . $this->unit_name;
                 }
-                return 0;
+                return "N/A";
             })
                 ->sortable(),
 
@@ -85,7 +90,7 @@ class StockSummary extends Lens
                 if (isset($this->purchase_quantity)) {
                     return $this->purchase_quantity . " " . $this->unit_name;
                 }
-                return 0;
+                return "N/A";
             })
                 ->sortable(),
 
@@ -93,7 +98,7 @@ class StockSummary extends Lens
                 if (isset($this->distribution_quantity)) {
                     return $this->distribution_quantity . " " . $this->unit_name;
                 }
-                return 0;
+                return "N/A";
             })
                 ->sortable(),
 
@@ -101,7 +106,7 @@ class StockSummary extends Lens
                 if (isset($this->return_quantity)) {
                     return $this->return_quantity . " " . $this->unit_name;
                 }
-                return 0;
+                return "N/A";
             })
                 ->sortable(),
 
@@ -109,7 +114,7 @@ class StockSummary extends Lens
                 if (isset($this->transfer_quantity)) {
                     return $this->transfer_quantity . " " . $this->unit_name;
                 }
-                return 0;
+                return "N/A";
             })
                 ->sortable(),
 
@@ -117,7 +122,7 @@ class StockSummary extends Lens
                 if (isset($this->receive_quantity)) {
                     return $this->receive_quantity . " " . $this->unit_name;
                 }
-                return 0;
+                return "N/A";
             })
                 ->sortable(),
 
@@ -125,7 +130,7 @@ class StockSummary extends Lens
                 if (isset($this->adjust_quantity)) {
                     return $this->adjust_quantity . " " . $this->unit_name;
                 }
-                return 0;
+                return "N/A";
             })
                 ->sortable(),
 
@@ -135,7 +140,7 @@ class StockSummary extends Lens
                         + $this->adjust_quantity;
                     return $this->remaining_quantity . " " . $this->unit_name;
                 }
-                return 0;
+                return "N/A";
             })
                 ->sortable(),
         ];
@@ -161,10 +166,26 @@ class StockSummary extends Lens
     public function filters(Request $request)
     {
         return [
-            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
+            FabricLocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
+
+            DependentFilter::make('Category', 'category_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return FabricCategory::where('location_id', $filters['location_id'])
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+
+            (new CategoryFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
             new FabricSummaryDateRangeFilter(),
+
         ];
     }
 
