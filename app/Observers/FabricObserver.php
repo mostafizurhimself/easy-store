@@ -30,7 +30,7 @@ class FabricObserver
      */
     public function saved(Fabric $fabric)
     {
-        if(empty($fabric->code)){
+        if (empty($fabric->code)) {
             $fabric->code = Helper::generateReadableId($fabric->id, "FB", 5);
             $fabric->save();
         }
@@ -44,14 +44,16 @@ class FabricObserver
      */
     public function updated(Fabric $fabric)
     {
-        //Notify the users
-        $users = \App\Models\User::permission(['view fabrics', 'view any fabrics'])->where('location_id', $fabric->locationId)->get();
-        Notification::send($users, new AlertQuantityNotification(\App\Nova\Fabric::uriKey(), $fabric, 'Fabric'));
-
-        //Notify super admins
-        if (Settings::superAdminNotification()) {
-            $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+        if ($fabric->alertQuantity >= $fabric->quantity) {
+            //Notify the users
+            $users = \App\Models\User::permission(['view fabrics', 'view any fabrics'])->where('location_id', $fabric->locationId)->get();
             Notification::send($users, new AlertQuantityNotification(\App\Nova\Fabric::uriKey(), $fabric, 'Fabric'));
+
+            //Notify super admins
+            if (Settings::superAdminNotification()) {
+                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+                Notification::send($users, new AlertQuantityNotification(\App\Nova\Fabric::uriKey(), $fabric, 'Fabric'));
+            }
         }
     }
 

@@ -30,7 +30,7 @@ class AssetObserver
      */
     public function saved(Asset $asset)
     {
-        if(empty($asset->code)){
+        if (empty($asset->code)) {
             $asset->code = Helper::generateReadableId($asset->id, "AS", 5);
             $asset->save();
         }
@@ -44,15 +44,17 @@ class AssetObserver
      */
     public function updated(Asset $asset)
     {
-         //Notify the users
-         $users = \App\Models\User::permission(['view assets', 'view any assets'])->where('location_id', $asset->locationId)->get();
-         Notification::send($users, new AlertQuantityNotification(\App\Nova\Asset::uriKey(), $asset, 'Asset'));
+        if ($asset->alertQuantity >= $asset->quantity) {
+            //Notify the users
+            $users = \App\Models\User::permission(['view assets', 'view any assets'])->where('location_id', $asset->locationId)->get();
+            Notification::send($users, new AlertQuantityNotification(\App\Nova\Asset::uriKey(), $asset, 'Asset'));
 
-         //Notify super admins
-         if (Settings::superAdminNotification()) {
-             $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
-             Notification::send($users, new AlertQuantityNotification(\App\Nova\Asset::uriKey(), $asset, 'Asset'));
-         }
+            //Notify super admins
+            if (Settings::superAdminNotification()) {
+                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+                Notification::send($users, new AlertQuantityNotification(\App\Nova\Asset::uriKey(), $asset, 'Asset'));
+            }
+        }
     }
 
     /**

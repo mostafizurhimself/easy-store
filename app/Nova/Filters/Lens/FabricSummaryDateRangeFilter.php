@@ -119,6 +119,32 @@ class FabricSummaryDateRangeFilter extends DateRangeFilter
             and fabric_transfer_items.deleted_at is null
             and fabric_transfer_items.status = 'confirmed'), 0) as transfer_quantity"),
 
+            // Receives
+            DB::raw("(COALESCE((select sum(fabric_transfer_receive_items.quantity) from fabric_transfer_receive_items
+            where fabric_transfer_receive_items.date < '$from'
+            and fabric_transfer_receive_items.fabric_id = fabrics.id
+            and fabric_transfer_receive_items.deleted_at is null
+            and fabric_transfer_receive_items.status = 'confirmed'), 0)) as previous_receive_quantity"),
+
+            DB::raw("(COALESCE((select sum(fabric_transfer_receive_items.quantity) from fabric_transfer_receive_items
+            where fabric_transfer_receive_items.date between '$from' and '$to'
+            and fabric_transfer_receive_items.fabric_id = fabrics.id
+            and fabric_transfer_receive_items.deleted_at is null
+            and fabric_transfer_receive_items.status = 'confirmed'), 0)) as receive_quantity"),
+
+            // Adjust
+            DB::raw("(COALESCE((select sum(adjust_quantities.quantity) from adjust_quantities
+            where adjust_quantities.created_at < '$from'
+            and adjust_quantities.adjustable_id = fabrics.id
+            and adjust_quantities.adjustable_type = 'App\Models\Fabric'
+            and adjust_quantities.deleted_at is null), 0)) as previous_adjust_quantity"),
+
+            DB::raw("(COALESCE((select sum(adjust_quantities.quantity) from adjust_quantities
+            where adjust_quantities.created_at between '$from' and '$to'
+            and adjust_quantities.adjustable_id = fabrics.id
+            and adjust_quantities.adjustable_type = 'App\Models\Fabric'
+            and adjust_quantities.deleted_at  is null), 0)) as adjust_quantity"),
+
             "units.name as unit_name",
         ];
     }

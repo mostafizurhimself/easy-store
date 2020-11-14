@@ -89,7 +89,7 @@
             <tr>
                 <td colspan="2"></td>
                 <td class="font-weight-bold" >GRAND TOTAL</td>
-                <td class="font-weight-bold" >{{$invoice->distributionItems->sum('distribution_quantity')}} {{$invoice->distributionItems->first()->unit->name}}</td>
+                <td class="font-weight-bold" >{{$invoice->distributionItems->sum('distribution_quantity')}}</td>
             </tr>
         </tfoot>
     </table>

@@ -25,11 +25,11 @@ use App\Nova\Actions\AdjustQuantity;
 use App\Nova\Actions\Assets\Consume;
 use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
-use App\Nova\Lenses\AlertQuantities;
 use App\Nova\Actions\Assets\DownloadPdf;
 use App\Nova\Filters\ActiveStatusFilter;
 use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Actions\Assets\DownloadExcel;
+use App\Nova\Lenses\Asset\AlertQuantities;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Assets\MassUpdateQuantity;
@@ -41,6 +41,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 class Asset extends Resource
 {
     use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *

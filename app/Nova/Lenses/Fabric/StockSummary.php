@@ -10,9 +10,12 @@ use Laravel\Nova\Fields\Number;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
+use App\Nova\Filters\LocationFilter;
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\Fabrics\StockSummary\DownloadPdf;
 use App\Nova\Filters\Lens\FabricSummaryDateRangeFilter;
+use App\Nova\Actions\Fabrics\StockSummary\DownloadExcel;
 
 class StockSummary extends Lens
 {
@@ -70,7 +73,8 @@ class StockSummary extends Lens
 
             Text::make('Previous', function () {
                 if (isset($this->purchase_quantity)) {
-                    $this->previous_quantity = ($this->opening_quantity + $this->previous_purchase_quantity) - ($this->previous_distribution_quantity + $this->previous_return_quantity + $this->previous_transfer_quantity);
+                    $this->previous_quantity = ($this->opening_quantity + $this->previous_purchase_quantity + $this->previous_receive_quantity) - ($this->previous_distribution_quantity + $this->previous_return_quantity + $this->previous_transfer_quantity) +
+                        $this->previous_adjust_quantity;
                     return $this->previous_quantity . " " . $this->unit_name;
                 }
                 return 0;
@@ -109,9 +113,26 @@ class StockSummary extends Lens
             })
                 ->sortable(),
 
+            Text::make('Receive', function () {
+                if (isset($this->receive_quantity)) {
+                    return $this->receive_quantity . " " . $this->unit_name;
+                }
+                return 0;
+            })
+                ->sortable(),
+
+            Text::make('Adjust', function () {
+                if (isset($this->adjust_quantity)) {
+                    return $this->adjust_quantity . " " . $this->unit_name;
+                }
+                return 0;
+            })
+                ->sortable(),
+
             Text::make('Remaining', function () {
                 if (isset($this->previous_quantity)) {
-                    $this->remaining_quantity = ($this->previous_quantity + $this->purchase_quantity) - ($this->distribution_quantity + $this->return_quantity + $this->transfer_quantity);
+                    $this->remaining_quantity = ($this->previous_quantity + $this->purchase_quantity + $this->receive_quantity) - ($this->distribution_quantity + $this->return_quantity + $this->transfer_quantity)
+                        + $this->adjust_quantity;
                     return $this->remaining_quantity . " " . $this->unit_name;
                 }
                 return 0;
@@ -140,6 +161,9 @@ class StockSummary extends Lens
     public function filters(Request $request)
     {
         return [
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            }),
             new FabricSummaryDateRangeFilter(),
         ];
     }
@@ -152,7 +176,21 @@ class StockSummary extends Lens
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
+        ];
     }
 
     /**
@@ -164,5 +202,4 @@ class StockSummary extends Lens
     {
         return 'fabric-stock-summary';
     }
-
 }

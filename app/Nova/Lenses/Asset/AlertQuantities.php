@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Lenses;
+namespace App\Nova\Lenses\Asset;
 
 use App\Enums\ActiveStatus;
 use Illuminate\Support\Str;
@@ -29,7 +29,7 @@ class AlertQuantities extends Lens
     public static function query(LensRequest $request, $query)
     {
         return $request->withOrdering($request->withFilters(
-            $query->where('alert_quantity', '>', 'quantity')
+            $query->where('alert_quantity', '>=', 'quantity')
         ));
     }
 
@@ -74,7 +74,7 @@ class AlertQuantities extends Lens
                 ->sortable()
                 ->exceptOnForms(),
 
-            BelongsTo::make('Category', 'category', 'App\Nova\MaterialCategory')
+            BelongsTo::make('Category', 'category', 'App\Nova\AssetCategory')
                 ->sortable(),
 
             Badge::make('Status')->map([
@@ -128,6 +128,6 @@ class AlertQuantities extends Lens
      */
     public function uriKey()
     {
-        return 'alert-quantities';
+        return 'asset-alert-quantities';
     }
 }
