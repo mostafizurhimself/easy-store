@@ -132,7 +132,7 @@ class Fabric extends Model implements HasMedia
         return $this->quantity -
                 $this->distributions()->draft()->sum('quantity') -
                 $this->returnItems()->draft()->sum('quantity') -
-                $this->transferItems()->draft()->sum('quantity') ;
+                $this->transferItems()->draft()->sum('transfer_quantity') ;
     }
 
     /**
