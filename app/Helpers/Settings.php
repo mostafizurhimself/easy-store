@@ -67,7 +67,7 @@ class Settings
     }
 
     /**
-     * Get the approver employees
+     * Get the super admin notification settings
      *
      * @return array
      */
@@ -84,5 +84,15 @@ class Settings
     public function maxInvoiceItem()
     {
         return !empty(self::application()->max_invoice_item) ? self::application()->max_invoice_item : -1;
+    }
+
+    /**
+     * Get the product module settings
+     *
+     * @return array
+     */
+    public function isProductModuleEnabled()
+    {
+        return !empty(self::application()->enable_product_module) ? self::application()->enable_product_module : false;
     }
 }

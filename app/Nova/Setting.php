@@ -11,6 +11,7 @@ use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\Textarea;
 use Easystore\RouterLink\RouterLink;
 use App\Models\Setting as SettingModel;
@@ -103,7 +104,7 @@ class Setting extends Resource
                 ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png')
                 ->croppable()
                 ->hideFromIndex()
-                ->readonly(function($request){
+                ->readonly(function ($request) {
                     return !$request->user()->isSuperAdmin();
                 })
                 ->canSee(function () {
@@ -141,13 +142,13 @@ class Setting extends Resource
                 ->displayUsing(function () {
                     $value = '';
 
-                    if(!empty(json_decode($this->resource->settings)->approvers)){
-                        foreach(json_decode($this->resource->settings)->approvers as $approver){
+                    if (!empty(json_decode($this->resource->settings)->approvers)) {
+                        foreach (json_decode($this->resource->settings)->approvers as $approver) {
                             $employee = \App\Models\Employee::find($approver);
                             $value .= "<p class='pb-4'>{$employee->name}({$employee->readableId})</p>";
                         }
                         return $value;
-                    }else{
+                    } else {
                         return null;
                     }
                 })
@@ -169,10 +170,9 @@ class Setting extends Resource
             Text::make('Output Unit')
                 ->displayUsing(function () {
 
-                    if(!empty(json_decode($this->resource->settings)->output_unit)){
+                    if (!empty(json_decode($this->resource->settings)->output_unit)) {
                         return Unit::find(json_decode($this->resource->settings)->output_unit)->name;
                     }
-
                 })
                 ->asHtml()
                 ->onlyOnDetail()
@@ -190,26 +190,38 @@ class Setting extends Resource
                     return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
                 }),
 
+            Heading::make('Module Settings')
+                ->canSee(function ($request) {
+                    return $request->user()->isSystemAdmin();
+                }),
 
+            Boolean::make('Enable Product Module', 'enable_product_module')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->enable_product_module ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function ($request) {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS && $request->user()->isSystemAdmin();
+                }),
 
 
             NovaDependencyContainer::make([
 
                 Json::make('Settings', [
                     Text::make('App Name', 'name')
-                        ->readonly(function($request){
+                        ->readonly(function ($request) {
                             return !$request->user()->isSuperAdmin();
                         })
                         ->rules('nullable', 'string', 'max:100'),
 
                     Email::make('Email', 'email')
-                        ->readonly(function($request){
+                        ->readonly(function ($request) {
                             return !$request->user()->isSuperAdmin();
                         })
                         ->rules('nullable', 'email'),
 
                     PhoneNumber::make('Mobile', 'mobile')
-                        ->readonly(function($request){
+                        ->readonly(function ($request) {
                             return !$request->user()->isSuperAdmin();
                         })
                         ->withCustomFormats('+88 ### #### ####')
@@ -225,7 +237,7 @@ class Setting extends Resource
                         ->reorderable(), // Allows reordering functionality
 
                     Boolean::make('Super Admin Notification', 'super_admin_notification')
-                        ->readonly(function($request){
+                        ->readonly(function ($request) {
                             return !$request->user()->isSuperAdmin();
                         }),
 
@@ -235,6 +247,16 @@ class Setting extends Resource
 
                     Number::make('Maximum Invoice Item', 'max_invoice_item')
                         ->rules('required', 'numeric', 'min:3', 'max:50'),
+
+                    Heading::make('Module Settings')
+                        ->canSee(function ($request) {
+                            return $request->user()->isSystemAdmin();
+                        }),
+
+                    Boolean::make('Enable Product Module', 'enable_product_module')
+                        ->canSee(function ($request) {
+                            return $request->user()->isSystemAdmin();
+                        }),
 
 
                 ])

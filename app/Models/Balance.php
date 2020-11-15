@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\HasReadableIdWithDate;
 use Spatie\MediaLibrary\HasMedia;
+use App\Traits\HasReadableIdWithDate;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -58,7 +58,7 @@ class Balance extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('balance-attachments');
+        $this->addMediaCollection('balance-attachments');
     }
 
     /**
@@ -78,7 +78,6 @@ class Balance extends Model implements HasMedia
      */
     public function expenser()
     {
-       return $this->belongsTo(Expenser::class);
+        return $this->belongsTo(Expenser::class);
     }
-
 }

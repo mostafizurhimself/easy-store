@@ -271,6 +271,6 @@ class User extends Resource
      */
     public static function relatableRoles(NovaRequest $request, $query)
     {
-        return $query->where('name', '!=', \App\Models\Role::SUPER_ADMIN);
+        return $query->whereNotIn('name', [\App\Models\Role::SUPER_ADMIN, \App\Models\Role::SYSTEM_ADMIN]);
     }
 }

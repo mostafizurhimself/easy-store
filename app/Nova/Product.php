@@ -23,11 +23,11 @@ use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Actions\AdjustQuantity;
 use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
-use App\Nova\Lenses\AlertQuantities;
 use App\Nova\Filters\ActiveStatusFilter;
 use AwesomeNova\Filters\DependentFilter;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Lenses\Product\AlertQuantities;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Titasgailius\SearchRelations\SearchesRelations;
 

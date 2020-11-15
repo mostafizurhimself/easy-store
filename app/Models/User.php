@@ -86,6 +86,16 @@ class User extends Authenticatable implements HasMedia
         return !$this->hasRole('super-admin');
     }
 
+     /**
+     * Determines if the User is a System admin
+     *
+     * @return boolean
+    */
+    public function isSystemAdmin()
+    {
+        return $this->hasRole('system-admin');
+    }
+
     /**
      * Register the media collections
      *

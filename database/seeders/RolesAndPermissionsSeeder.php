@@ -150,7 +150,9 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::updateOrCreate(['name' => 'force delete all locations data'],['group' => 'super admin', 'name' => 'force delete all locations data', 'group_order' => 40007]);
 
         // Create a Super-Admin Role and assign all Permissions
-        $role = Role::updateOrCreate(['name' => Role::SUPER_ADMIN], ['name' => Role::SUPER_ADMIN, 'display_name' => 'Super Admin']);
-        $role->givePermissionTo(Permission::all());
+        $superAdmin = Role::updateOrCreate(['name' => Role::SUPER_ADMIN], ['name' => Role::SUPER_ADMIN, 'display_name' => 'Super Admin']);
+        $superAdmin->givePermissionTo(Permission::all());
+        $systemAdmin = Role::updateOrCreate(['name' => Role::SYSTEM_ADMIN], ['name' => Role::SYSTEM_ADMIN, 'display_name' => 'System Admin']);
+        $systemAdmin->givePermissionTo(Permission::all());
     }
 }

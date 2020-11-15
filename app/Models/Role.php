@@ -19,4 +19,11 @@ class Role extends Base
      */
     const SUPER_ADMIN = 'super-admin';
 
+    /**
+     * The name of the system-admin role.
+     *
+     * @var string
+     */
+    const SYSTEM_ADMIN = 'system-admin';
+
 }
