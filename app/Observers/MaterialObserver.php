@@ -44,7 +44,7 @@ class MaterialObserver
      */
     public function updated(Material $material)
     {
-        if ($material->alertQuantity >= $material->quantity) {
+        if ($material->alertQuantity > $material->quantity) {
             //Notify the users
             $users = \App\Models\User::permission(['view materials', 'view any materials'])->where('location_id', $material->locationId)->get();
             Notification::send($users, new AlertQuantityNotification(\App\Nova\Material::uriKey(), $material, 'Material'));

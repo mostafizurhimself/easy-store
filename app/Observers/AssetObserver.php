@@ -44,7 +44,7 @@ class AssetObserver
      */
     public function updated(Asset $asset)
     {
-        if ($asset->alertQuantity >= $asset->quantity) {
+        if ($asset->alertQuantity > $asset->quantity) {
             //Notify the users
             $users = \App\Models\User::permission(['view assets', 'view any assets'])->where('location_id', $asset->locationId)->get();
             Notification::send($users, new AlertQuantityNotification(\App\Nova\Asset::uriKey(), $asset, 'Asset'));
