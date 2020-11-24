@@ -66,4 +66,14 @@ class Expenser extends Model implements HasMedia
         return $this->balance - $this->expenses->where('status', ExpenseStatus::DRAFT())->sum('amount');
     }
 
+    /**
+     * Determines one-to-one relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

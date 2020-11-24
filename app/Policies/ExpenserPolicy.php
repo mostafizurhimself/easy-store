@@ -2,9 +2,10 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\Expenser;
 use App\Models\User;
+use App\Models\Expenser;
+use App\Models\Role;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ExpenserPolicy
 {
@@ -30,6 +31,9 @@ class ExpenserPolicy
      */
     public function view(User $user, Expenser $expenser)
     {
+        if($user->hasRole(Role::EXPENSER)){
+            return $user->id == $expenser->userId;
+        }
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('view expensers') && $user->locationId == $expenser->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
@@ -43,6 +47,9 @@ class ExpenserPolicy
      */
     public function create(User $user)
     {
+        if($user->hasRole(Role::EXPENSER)){
+            return false;
+        }
         return $user->isSuperAdmin() || $user->hasPermissionTo('create expensers');
     }
 
@@ -55,6 +62,9 @@ class ExpenserPolicy
      */
     public function update(User $user, Expenser $expenser)
     {
+        if($user->hasRole(Role::EXPENSER)){
+            return false;
+        }
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update expensers') && $user->locationId == $expenser->locationId ) ||
                 $user->hasPermissionTo('update all locations data');
@@ -69,6 +79,9 @@ class ExpenserPolicy
      */
     public function delete(User $user, Expenser $expenser)
     {
+        if($user->hasRole(Role::EXPENSER)){
+            return false;
+        }
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete expensers') && $user->locationId == $expenser->locationId ) ||
                 $user->hasPermissionTo('delete all locations data');
@@ -83,6 +96,9 @@ class ExpenserPolicy
      */
     public function restore(User $user, Expenser $expenser)
     {
+        if($user->hasRole(Role::EXPENSER)){
+            return false;
+        }
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore expensers') && $user->locationId == $expenser->locationId ) ||
                 $user->hasPermissionTo('restore all locations data');
@@ -97,6 +113,9 @@ class ExpenserPolicy
      */
     public function forceDelete(User $user, Expenser $expenser)
     {
+        if($user->hasRole(Role::EXPENSER)){
+            return false;
+        }
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete expensers') && $user->locationId == $expenser->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data');

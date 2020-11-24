@@ -60,7 +60,7 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        if($role->name == Role::SUPER_ADMIN || $role->name == Role::SYSTEM_ADMIN){
+        if($role->name == Role::SUPER_ADMIN || $role->name == Role::SYSTEM_ADMIN  || $role->name == Role::EXPENSER){
             return false;
         }
         return $user->isSuperAdmin() ||
@@ -76,7 +76,7 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        if($role->name == Role::SUPER_ADMIN || $role->name == Role::SYSTEM_ADMIN){
+        if($role->name == Role::SUPER_ADMIN || $role->name == Role::SYSTEM_ADMIN  || $role->name == Role::EXPENSER){
             return false;
         }
         return $user->isSuperAdmin() ||
@@ -92,7 +92,7 @@ class RolePolicy
      */
     public function restore(User $user, Role $role)
     {
-        if($role->name == Role::SUPER_ADMIN || $role->name == Role::SYSTEM_ADMIN){
+        if($role->name == Role::SUPER_ADMIN || $role->name == Role::SYSTEM_ADMIN  || $role->name == Role::EXPENSER){
             return false;
         }
 
@@ -109,7 +109,7 @@ class RolePolicy
      */
     public function forceDelete(User $user, Role $role)
     {
-        if($role->name == Role::SUPER_ADMIN && $role->name == Role::SYSTEM_ADMIN){
+        if($role->name == Role::SUPER_ADMIN && $role->name == Role::SYSTEM_ADMIN  || $role->name == Role::EXPENSER){
             return false;
         }
 

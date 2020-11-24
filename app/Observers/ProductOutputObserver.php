@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Style;
+use App\Facades\Settings;
 use App\Models\ProductOutput;
 
 class ProductOutputObserver

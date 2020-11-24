@@ -67,33 +67,53 @@ class User extends Authenticatable implements HasMedia
     }
 
     /**
+     * Determines one-to-one relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function expenser()
+    {
+        return $this->hasOne(Expenser::class);
+    }
+
+    /**
      * Determines if the User is a Super admin
      *
      * @return boolean
-    */
+     */
     public function isSuperAdmin()
     {
-        return $this->hasRole('super-admin');
+        return $this->hasRole(Role::SUPER_ADMIN);
     }
 
     /**
      * Determines if the User is not a Super admin
      *
      * @return boolean
-    */
+     */
     public function isNotSuperAdmin()
     {
-        return !$this->hasRole('super-admin');
+        return !$this->hasRole(Role::SUPER_ADMIN);
     }
 
-     /**
+    /**
      * Determines if the User is a System admin
      *
      * @return boolean
-    */
+     */
     public function isSystemAdmin()
     {
-        return $this->hasRole('system-admin');
+        return $this->hasRole(Role::SYSTEM_ADMIN);
+    }
+
+    /**
+     * Determines if the User is an expenser
+     *
+     * @return boolean
+     */
+    public function isExpenser()
+    {
+        return $this->hasRole(Role::EXPENSER);
     }
 
     /**
@@ -125,7 +145,7 @@ class User extends Authenticatable implements HasMedia
      */
     public function employee()
     {
-       return $this->belongsTo(Employee::class)->withTrashed();
+        return $this->belongsTo(Employee::class)->withTrashed();
     }
 
     /**
@@ -135,7 +155,7 @@ class User extends Authenticatable implements HasMedia
      */
     public function consumes()
     {
-       return $this->hasMany(AssetConsume::class, 'consumer');
+        return $this->hasMany(AssetConsume::class, 'consumer');
     }
 
     /**

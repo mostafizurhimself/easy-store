@@ -26,4 +26,11 @@ class Role extends Base
      */
     const SYSTEM_ADMIN = 'system-admin';
 
+    /**
+     * The name of the expenser role.
+     *
+     * @var string
+     */
+    const EXPENSER = 'expenser';
+
 }

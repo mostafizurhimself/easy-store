@@ -149,10 +149,14 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::updateOrCreate(['name' => 'restore all locations data'],['group' => 'super admin', 'name' => 'restore all locations data', 'group_order' => 40006]);
         Permission::updateOrCreate(['name' => 'force delete all locations data'],['group' => 'super admin', 'name' => 'force delete all locations data', 'group_order' => 40007]);
 
-        // Create a Super-Admin Role and assign all Permissions
+        // Create a Super-Admin, System admin & Expenser Role and assign Permissions
         $superAdmin = Role::updateOrCreate(['name' => Role::SUPER_ADMIN], ['name' => Role::SUPER_ADMIN, 'display_name' => 'Super Admin']);
         $superAdmin->givePermissionTo(Permission::all());
         $systemAdmin = Role::updateOrCreate(['name' => Role::SYSTEM_ADMIN], ['name' => Role::SYSTEM_ADMIN, 'display_name' => 'System Admin']);
         $systemAdmin->givePermissionTo(Permission::all());
+        $expenser = Role::updateOrCreate(['name' => Role::EXPENSER], ['name' => Role::EXPENSER, 'display_name' => 'Expenser']);
+        $expenser->givePermissionTo(['view expensers', 'view any expensers', 'view expense categories', 'view any expense categories', 'view expenses',
+                                    'view any expenses', 'create expenses', 'update expenses', 'delete expenses', 'restore expenses', 'force delete expenses', 'can confirm expenses',
+                                    'view balances', 'view any balances', 'create balances', 'update balances', 'delete balances', 'restore balances', 'force delete balances', 'can confirm balances']);
     }
 }

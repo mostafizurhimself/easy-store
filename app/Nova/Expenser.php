@@ -10,10 +10,12 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Illuminate\Validation\Rule;
+use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Actions\Expensers\AddUser;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -26,6 +28,13 @@ class Expenser extends Resource
      * @var string
      */
     public static $model = \App\Models\Expenser::class;
+
+    /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can add user to'];
 
     /**
      * The group associated with the resource.
@@ -156,6 +165,9 @@ class Expenser extends Resource
                     return false;
                 }),
 
+            BelongsTo::make('User', 'user', \App\Nova\User::class)
+                ->onlyOnDetail(),
+
             Currency::make('Opening Balance')
                 ->currency('BDT')
                 ->rules('required', 'numeric', 'min:0')
@@ -167,7 +179,7 @@ class Expenser extends Resource
                 ->currency('BDT')
                 ->sortable()
                 ->rules('required', 'numeric', 'min:0')
-                ->exceptOnForms(),
+                ->onlyOnDetail(),
 
             Select::make('Status')
                 ->options(ActiveStatus::titleCaseOptions())
@@ -183,7 +195,6 @@ class Expenser extends Resource
                 ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
-
 
         ];
     }
@@ -233,6 +244,12 @@ class Expenser extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new AddUser)->canSee(function($request){
+                return $request->user()->hasPermissionTo('can add user to expensers') || $request->user()->isSuperAdmin();
+            })
+                ->onlyOnDetail()
+                ->confirmButtonText('Add'),
+        ];
     }
 }
