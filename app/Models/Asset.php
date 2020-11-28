@@ -40,7 +40,7 @@ class Asset extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('asset-images')->singleFile();
+        $this->addMediaCollection('asset-images')->singleFile();
     }
 
     /**
@@ -50,7 +50,7 @@ class Asset extends Model implements HasMedia
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class)->withTrashed();
+        return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -60,7 +60,7 @@ class Asset extends Model implements HasMedia
      */
     public function category()
     {
-       return $this->belongsTo(AssetCategory::class, 'category_id')->withTrashed();
+        return $this->belongsTo(AssetCategory::class, 'category_id')->withTrashed();
     }
 
     /**
@@ -70,7 +70,7 @@ class Asset extends Model implements HasMedia
      */
     public function suppliers()
     {
-        return $this->belongsToMany( Supplier::class)->withTrashed();
+        return $this->belongsToMany(Supplier::class)->withTrashed();
     }
 
     /**
@@ -80,7 +80,7 @@ class Asset extends Model implements HasMedia
      */
     public function consumes()
     {
-       return $this->hasMany(AssetConsume::class);
+        return $this->hasMany(AssetConsume::class);
     }
 
     /**
@@ -90,7 +90,7 @@ class Asset extends Model implements HasMedia
      */
     public function purchaseItems()
     {
-       return $this->hasMany(AssetPurchaseItem::class);
+        return $this->hasMany(AssetPurchaseItem::class);
     }
 
     /**
@@ -100,7 +100,7 @@ class Asset extends Model implements HasMedia
      */
     public function receiveItems()
     {
-       return $this->hasMany(AssetReceiveItem::class);
+        return $this->hasMany(AssetReceiveItem::class);
     }
 
     /**
@@ -110,7 +110,7 @@ class Asset extends Model implements HasMedia
      */
     public function distributionItems()
     {
-       return $this->hasMany(AssetDistributionItem::class);
+        return $this->hasMany(AssetDistributionItem::class);
     }
 
     /**
@@ -120,7 +120,7 @@ class Asset extends Model implements HasMedia
      */
     public function returnItems()
     {
-       return $this->hasMany(AssetReturnItem::class);
+        return $this->hasMany(AssetReturnItem::class);
     }
 
     /**
@@ -141,10 +141,23 @@ class Asset extends Model implements HasMedia
     public function getStockAttribute()
     {
         return $this->quantity -
-                $this->distributionItems()->draft()->sum('distribution_quantity') -
-                $this->returnItems()->draft()->sum('quantity');
+            $this->distributionItems()->draft()->sum('distribution_quantity') -
+            $this->returnItems()->draft()->sum('quantity');
     }
 
+    /**
+     * Get the filter options of materials
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        return Cache::remember('nova-asset-filter-options', 3600, function () {
+            $assets = self::setEagerLoads([])->get(['id', 'name'])->orderBy('name');
 
-
+            return $assets->mapWithKeys(function ($asset) {
+                return [$asset->name => $asset->id];
+            })->toArray();
+        });
+    }
 }

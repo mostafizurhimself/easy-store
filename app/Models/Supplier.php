@@ -7,6 +7,7 @@ use App\Enums\AddressType;
 use App\Traits\ActiveScope;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -109,5 +110,18 @@ class Supplier extends Model
         }
 
         return null;
+    }
+
+    /**
+     * Get the filter options of suppliers
+     *
+     * @return array
+     */
+    public static function belongsToFilterOptions()
+    {
+        // Cache::forget('nova-supplier-belongs-to-filter-options');
+        return Cache::remember('nova-supplier-belongs-to-filter-options', 3600, function () {
+            return self::orderBy('name')->pluck('id', 'name')->toArray();
+        });
     }
 }

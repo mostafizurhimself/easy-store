@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Models\Asset;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -15,20 +16,24 @@ use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Boolean;
+use App\Nova\Filters\AssetFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Markdown;
 use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\DateRangeFilter;
+use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\BelongsToLocationFilter;
+use App\Nova\Filters\BelongsToSupplierFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\AssetReceiveItems\DownloadPdf;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetReceiveItems\DownloadExcel;
+use App\Nova\Filters\BelongsToDependentLocationFilter;
 use App\Nova\Actions\AssetReceiveItems\ConfirmReceiveItem;
 
 class AssetReceiveItem extends Resource
@@ -220,9 +225,25 @@ class AssetReceiveItem extends Resource
     public function filters(Request $request)
     {
         return [
-            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function($request){
-                return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
+            BelongsToDependentLocationFilter::make('Location', 'location_id', 'purchaseOrder')
+                ->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            DependentFilter::make('Asset', 'asset_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Asset::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new AssetFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
+            new BelongsToSupplierFilter('purchaseOrder'),
             new DateRangeFilter('date'),
             new PurchaseStatusFilter,
         ];

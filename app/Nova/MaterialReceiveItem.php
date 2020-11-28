@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Models\Material;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -14,20 +15,24 @@ use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
-use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Markdown;
 use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\MaterialFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
+use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\BelongsToLocationFilter;
+use App\Nova\Filters\BelongsToSupplierFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialReceiveItems\DownloadPdf;
+use App\Nova\Filters\BelongsToDependentLocationFilter;
 use App\Nova\Actions\MaterialReceiveItems\DownloadExcel;
 use App\Nova\Actions\MaterialReceiveItems\ConfirmReceiveItem;
 
@@ -124,7 +129,7 @@ class MaterialReceiveItem extends Resource
                         && (empty($request->viaResource));
                 }),
 
-             Date::make('Date')
+            Date::make('Date')
                 ->rules('required')
                 ->default(Carbon::now())
                 ->sortable()
@@ -218,9 +223,25 @@ class MaterialReceiveItem extends Resource
     public function filters(Request $request)
     {
         return [
-            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function($request){
-                return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
+            BelongsToDependentLocationFilter::make('Location', 'location_id', 'purchaseOrder')
+                ->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            DependentFilter::make('Material', 'material_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Material::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new MaterialFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
+            new BelongsToSupplierFilter('purchaseOrder'),
             new DateRangeFilter('date'),
             new PurchaseStatusFilter,
         ];

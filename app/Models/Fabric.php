@@ -143,7 +143,7 @@ class Fabric extends Model implements HasMedia
     public static function filterOptions()
     {
         return Cache::remember('nova-fabric-filter-options', 3600, function () {
-            $fabrics = self::setEagerLoads([])->get(['id', 'name']);
+            $fabrics = self::setEagerLoads([])->get(['id', 'name'])->orderBy('name');
 
             return $fabrics->mapWithKeys(function ($fabric) {
                 return [$fabric->name => $fabric->id];

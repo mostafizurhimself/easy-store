@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Models\Fabric;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -14,13 +15,16 @@ use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
-use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Markdown;
+use App\Nova\Filters\FabricFilter;
 use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
+use Treestoneit\TextWrap\TextWrap;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
+use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -29,7 +33,9 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReceiveItems\DownloadPdf;
 use App\Nova\Actions\FabricReceiveItems\DownloadExcel;
+use App\Nova\Filters\BelongsToDependentLocationFilter;
 use App\Nova\Actions\FabricReceiveItems\ConfirmReceiveItem;
+use App\Nova\Filters\BelongsToSupplierFilter;
 
 class FabricReceiveItem extends Resource
 {
@@ -41,7 +47,7 @@ class FabricReceiveItem extends Resource
      */
     public static $model = \App\Models\FabricReceiveItem::class;
 
-     /**
+    /**
      * The number of resources to show per page via relationships.
      *
      * @var int
@@ -176,6 +182,15 @@ class FabricReceiveItem extends Resource
                 ->sortable()
                 ->rules('nullable', 'string', 'max:200'),
 
+            // TextWrap::make("Supplier", function () {
+            //     return $this->purchaseOrder->supplier->name;
+            // })
+            //     ->canSee(function ($request) {
+            //         return empty($request->viaResource);
+            //     })
+            //     ->sortable()
+            //     ->wrapMethod('length', 20),
+
             Files::make('Attachments', 'receive-item-attachments')
                 ->hideFromIndex(),
 
@@ -218,9 +233,25 @@ class FabricReceiveItem extends Resource
     public function filters(Request $request)
     {
         return [
-            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function($request){
-                return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
+            BelongsToDependentLocationFilter::make('Location', 'location_id', 'purchaseOrder')
+                ->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            DependentFilter::make('Fabric', 'fabric_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Fabric::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new FabricFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
+            new BelongsToSupplierFilter('purchaseOrder'),
             new DateRangeFilter('date'),
             new PurchaseStatusFilter,
         ];

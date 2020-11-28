@@ -20,6 +20,7 @@
                 <td>Location</td>
                 <td>Date</td>
                 <td>Order No</td>
+                <td>Reference</td>
                 <td>Asset</td>
                 <td>Quantity</td>
                 <td>Rate</td>
@@ -32,6 +33,7 @@
                     <td>{{$model->location->name}}</td>
                     <td>{{$model->date}}</td>
                     <td>{{$model->purchaseOrder->readableId}}</td>
+                    <td>{{$model->reference}}</td>
                     <td>{{$model->asset->name}} ({{$model->asset->code}})</td>
                     <td>{{$model->quantity}} {{$model->unitName}}</td>
                     <td>{{Helper::currencyShortPdf($model->rate)}}</td>

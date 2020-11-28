@@ -40,7 +40,7 @@ class Material extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('material-images')->singleFile();
+        $this->addMediaCollection('material-images')->singleFile();
     }
 
     /**
@@ -50,7 +50,7 @@ class Material extends Model implements HasMedia
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class)->withTrashed();
+        return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -60,7 +60,7 @@ class Material extends Model implements HasMedia
      */
     public function category()
     {
-       return $this->belongsTo(MaterialCategory::class, 'category_id')->withTrashed();
+        return $this->belongsTo(MaterialCategory::class, 'category_id')->withTrashed();
     }
 
     /**
@@ -80,7 +80,7 @@ class Material extends Model implements HasMedia
      */
     public function distributions()
     {
-       return $this->hasMany(MaterialDistribution::class);
+        return $this->hasMany(MaterialDistribution::class);
     }
 
     /**
@@ -90,7 +90,7 @@ class Material extends Model implements HasMedia
      */
     public function returnItems()
     {
-       return $this->hasMany(MaterialReturnItem::class);
+        return $this->hasMany(MaterialReturnItem::class);
     }
 
     /**
@@ -100,7 +100,7 @@ class Material extends Model implements HasMedia
      */
     public function transferItems()
     {
-       return $this->hasMany(MaterialTransferItem::class);
+        return $this->hasMany(MaterialTransferItem::class);
     }
 
     /**
@@ -121,9 +121,24 @@ class Material extends Model implements HasMedia
     public function getStockAttribute()
     {
         return $this->quantity -
-                $this->distributions()->draft()->sum('quantity') -
-                $this->returnItems()->draft()->sum('quantity') -
-                $this->transferItems()->draft()->sum('transfer_quantity');
+            $this->distributions()->draft()->sum('quantity') -
+            $this->returnItems()->draft()->sum('quantity') -
+            $this->transferItems()->draft()->sum('transfer_quantity');
     }
 
+    /**
+     * Get the filter options of materials
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        return Cache::remember('nova-material-filter-options', 3600, function () {
+            $materials = self::setEagerLoads([])->get(['id', 'name'])->orderBy('name');
+
+            return $materials->mapWithKeys(function ($material) {
+                return [$material->name => $material->id];
+            })->toArray();
+        });
+    }
 }
