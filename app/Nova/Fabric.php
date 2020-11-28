@@ -213,6 +213,9 @@ class Fabric extends Resource
 
                     Text::make('Quantity')
                         ->displayUsing(function () {
+                            if ($this->alertQuantity > $this->quantity) {
+                                return "<span class='text-danger'>" . $this->quantity . " " . $this->unit->name . "</span>";
+                            }
                             return $this->quantity . " " . $this->unit->name;
                         })
                         ->sortable()
@@ -330,7 +333,7 @@ class Fabric extends Resource
     public function lenses(Request $request)
     {
         return [
-            (new StockSummary)->canSee(function($request){
+            (new StockSummary)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can view stock summary of fabrics') || $request->user()->isSuperAdmin();
             }),
             new AlertQuantities,
@@ -367,9 +370,9 @@ class Fabric extends Resource
             (new AdjustQuantity)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can adjust quantity of fabrics') || $request->user()->isSuperAdmin();
             })
-            ->canRun(function ($request) {
-                return $request->user()->hasPermissionTo('can adjust quantity of fabrics') || $request->user()->isSuperAdmin();
-            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can adjust quantity of fabrics') || $request->user()->isSuperAdmin();
+                })
                 ->onlyOnDetail()
                 ->confirmButtonText('Adjust'),
         ];

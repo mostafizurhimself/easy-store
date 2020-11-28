@@ -14,15 +14,17 @@ use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
-use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\DateRangeFilter;
 use App\Rules\ServiceReceiveQuantityRule;
 use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Rules\ServiceReceiveQuantityRuleForUpdate;
+use App\Nova\Actions\ServiceTransferReceiveItems\DownloadPdf;
 use App\Nova\Actions\ServiceTransferReceiveItem\ConfirmReceive;
+use App\Nova\Actions\ServiceTransferReceiveItems\DownloadExcel;
 
 class ServiceTransferReceiveItem extends Resource
 {
@@ -70,7 +72,7 @@ class ServiceTransferReceiveItem extends Resource
      */
     public static function label()
     {
-        return "Receive Items";
+        return "Transfer Receive Items";
     }
 
     /**
@@ -98,6 +100,12 @@ class ServiceTransferReceiveItem extends Resource
     public function fields(Request $request)
     {
         return [
+            Date::make('Date')
+                ->rules('required')
+                ->default(Carbon::now())
+                ->sortable()
+                ->readonly(),
+
             BelongsTo::make('Invoice', 'invoice', \App\Nova\ServiceTransferInvoice::class)
                 ->sortable()
                 ->exceptOnForms(),
@@ -109,12 +117,6 @@ class ServiceTransferReceiveItem extends Resource
             BelongsTo::make('Service')
                 ->sortable()
                 ->exceptOnForms(),
-
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->sortable()
-                ->readonly(),
 
             Hidden::make('Date')
                 ->default(Carbon::now())
@@ -222,6 +224,20 @@ class ServiceTransferReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service transfer receive items') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service transfer receive items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service transfer receive items') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service transfer receive items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
+
             (new ConfirmReceive)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm service transfer receive items');
             }),

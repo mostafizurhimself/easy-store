@@ -258,7 +258,7 @@ class ServiceTransferInvoice extends Resource
 
             new TransferItems,
 
-            // new TransferReceiveItems,
+            new TransferReceiveItems,
         ];
     }
 
