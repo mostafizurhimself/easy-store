@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Nova\Actions\ServiceDispatches;
+namespace App\Nova\Actions\ServiceTransferItems;
 
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Fields\ActionFields;
-use App\Exports\ServiceDispatchExport;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Exports\ServiceTransferItemExport;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class DownloadExcel extends Action
@@ -39,8 +39,8 @@ class DownloadExcel extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         // Store on default disk
-        $filename = "service_dispatches_" . time() . ".xlsx";
-        Excel::store(new ServiceDispatchExport($models), $filename, 'local');
+        $filename = "service_transfer_items_" . time() . ".xlsx";
+        Excel::store(new ServiceTransferItemExport($models), $filename, 'local');
 
         return Action::redirect(route('dump-download', compact('filename')));
     }

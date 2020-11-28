@@ -89,6 +89,16 @@ class MaterialPurchaseOrder extends Resource
     }
 
     /**
+     * Get the displayable singular label of the resource.
+     *
+     * @return string
+     */
+    public static function singularLabel()
+    {
+        return 'Material Purchase Order';
+    }
+
+    /**
      * The icon of the resource.
      *
      * @return string
@@ -265,12 +275,12 @@ class MaterialPurchaseOrder extends Resource
             (new MarkAsDraft)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can mark as draft material purchase orders') || $request->user()->isSuperAdmin();
             })
-            ->canRun(function ($request) {
-                return $request->user()->hasPermissionTo('can mark as draft material purchase orders') || $request->user()->isSuperAdmin();
-            })
-            ->onlyOnDetail()
-            ->confirmButtonText('Mark As Draft')
-            ->confirmText('Are you sure want to mark the purchase order as draft?'),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can mark as draft material purchase orders') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail()
+                ->confirmButtonText('Mark As Draft')
+                ->confirmText('Are you sure want to mark the purchase order as draft?'),
 
             (new ConfirmPurchase)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm material purchase orders');

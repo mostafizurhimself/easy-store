@@ -90,6 +90,16 @@ class AssetPurchaseOrder extends Resource
     }
 
     /**
+     * Get the displayable singular label of the resource.
+     *
+     * @return string
+     */
+    public static function singularLabel()
+    {
+        return 'Asset Purchase Order';
+    }
+
+    /**
      * The icon of the resource.
      *
      * @return string

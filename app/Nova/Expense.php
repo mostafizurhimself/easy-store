@@ -159,7 +159,7 @@ class Expense extends Resource
                 ->searchable()
                 ->onlyOnForms()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if ((!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) && !$request->user()->isExpenser()) {
                         return true;
                     }
                     return false;
@@ -199,10 +199,14 @@ class Expense extends Resource
                 ->hideFromIndex()
                 ->sortable(),
 
-            Text::make('PO Number')
-                ->rules('nullable', 'string', 'max:15')
+            MorphTo::make('Purchase Type', 'purchase')->types([
+                FabricPurchaseOrder::class,
+                MaterialPurchaseOrder::class,
+                AssetPurchaseOrder::class,
+            ])
+                ->nullable()
                 ->hideFromIndex()
-                ->sortable(),
+                ->searchable(),
 
             Currency::make('Amount')
                 ->currency('BDT')
@@ -300,5 +304,35 @@ class Expense extends Resource
                 return $request->user()->hasPermissionTo('can confirm expenses');
             }),
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        // // Get for expensers
+        // if ($request->user()->isExpenser()) {
+        //     return $query->with(['expenser' => function($expenser) use($request){
+        //         $expenser->where('user_id', $request->user()->id);
+        //     }]);
+        // }
+
+        // Query for non expensers
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query;
     }
 }

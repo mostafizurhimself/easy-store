@@ -88,14 +88,14 @@ class ServiceDispatch extends Resource
     public function fields(Request $request)
     {
         return [
-            Text::make("Location",function(){
+            Text::make("Location", function () {
                 return $this->location->name;
             })
                 ->sortable()
                 ->exceptOnForms()
-                ->canSee(function($request){
+                ->canSee(function ($request) {
                     return ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin())
-                    && (empty($request->viaResource));
+                        && (empty($request->viaResource));
                 }),
 
             Date::make('Date', function () {
@@ -103,7 +103,7 @@ class ServiceDispatch extends Resource
             })
                 ->sortable()
                 ->exceptOnForms()
-                ->canSee(function($request){
+                ->canSee(function ($request) {
                     return empty($request->viaResource);
                 }),
 
@@ -197,7 +197,7 @@ class ServiceDispatch extends Resource
     public function filters(Request $request)
     {
         return [
-            (new BelongsToLocationFilter('invoice'))->canSee(function($request){
+            (new BelongsToLocationFilter('invoice'))->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
             }),
             new BelongsToDateFilter('invoice'),
@@ -225,18 +225,18 @@ class ServiceDispatch extends Resource
     public function actions(Request $request)
     {
         return [
-            (new DownloadPdf)->onlyOnIndex()->canSee(function($request){
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download'),
 
-            (new DownloadExcel)->onlyOnIndex()->canSee(function($request){
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download service dispatches') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
-            ->confirmText('Are you sure want to download excel?'),
+                ->confirmText('Are you sure want to download excel?'),
         ];
     }
 
@@ -251,19 +251,21 @@ class ServiceDispatch extends Resource
      */
     public static function relatableServices(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\ServiceInvoice::find($request->viaResourceId);
-        if (empty($invoice)) {
-            $invoice = $request->findResourceOrFail()->invoice;
+        if (!$request->isResourceIndexRequest()) {
+            $invoice = \App\Models\ServiceInvoice::find($request->viaResourceId);
+            if (empty($invoice)) {
+                $invoice = $request->findResourceOrFail()->invoice;
+            }
+            try {
+                $serviceId = $request->findResourceOrFail()->serviceId;
+            } catch (\Throwable $th) {
+                $serviceId = null;
+            }
+            return $query->whereHas('providers', function ($supplier) use ($invoice) {
+                $supplier->where('provider_id', $invoice->providerId)
+                    ->where('location_id', $invoice->locationId);
+            })->whereNotIn('id', $invoice->serviceIds($serviceId));
         }
-        try {
-            $serviceId = $request->findResourceOrFail()->serviceId;
-        } catch (\Throwable $th) {
-            $serviceId = null;
-        }
-        return $query->whereHas('providers', function ($supplier) use ($invoice) {
-            $supplier->where('provider_id', $invoice->providerId)
-                ->where('location_id', $invoice->locationId);
-        })->whereNotIn('id', $invoice->serviceIds($serviceId));
     }
 
     /**

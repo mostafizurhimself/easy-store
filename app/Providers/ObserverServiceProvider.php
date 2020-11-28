@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Asset;
 use App\Models\Fabric;
+use App\Models\Expense;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\Employee;
@@ -32,6 +33,7 @@ use App\Models\FabricPurchaseItem;
 use App\Models\FabricTransferItem;
 use App\Models\MaterialReturnItem;
 use App\Models\ProductRequisition;
+use App\Observers\ExpenseObserver;
 use App\Observers\ProductObserver;
 use App\Observers\ServiceObserver;
 use App\Models\FabricPurchaseOrder;
@@ -168,5 +170,6 @@ class ObserverServiceProvider extends ServiceProvider
         ProductRequisition::observe(ProductRequisitionObserver::class);
         ProductRequisitionItem::observe(ProductRequisitionItemObserver::class);
         Expenser::observe(ExpenserObserver::class);
+        Expense::observe(ExpenseObserver::class);
     }
 }

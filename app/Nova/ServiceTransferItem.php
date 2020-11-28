@@ -5,17 +5,21 @@ namespace App\Nova;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use App\Enums\TransferStatus;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
-use App\Enums\TransferStatus;
-use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\BelongsToDateFilter;
+use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\ServiceTransferItems\DownloadPdf;
+use App\Nova\Actions\ServiceTransferItems\DownloadExcel;
 
 class ServiceTransferItem extends Resource
 {
@@ -91,6 +95,12 @@ class ServiceTransferItem extends Resource
     public function fields(Request $request)
     {
         return [
+            Date::make('Date', function(){
+                return $this->invoice->date->format('Y-m-d');
+            })
+                ->sortable()
+                ->exceptOnForms(),
+
             BelongsTo::make('Invoice', 'invoice', \App\Nova\ServiceTransferInvoice::class)
                 ->sortable()
                 ->exceptOnForms(),
@@ -179,6 +189,7 @@ class ServiceTransferItem extends Resource
     public function filters(Request $request)
     {
         return [
+            new BelongsToDateFilter('invoice'),
             new TransferStatusFilter,
         ];
     }
@@ -202,7 +213,21 @@ class ServiceTransferItem extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service transfer items') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service transfer items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service transfer items') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service transfer items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
+        ];
     }
 
     /**
@@ -216,17 +241,19 @@ class ServiceTransferItem extends Resource
      */
     public static function relatableServices(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\ServiceTransferInvoice::find($request->viaResourceId);
-        if (empty($invoice)) {
-            $invoice = $request->findResourceOrFail()->invoice;
+        if (!$request->isResourceIndexRequest()) {
+            $invoice = \App\Models\ServiceTransferInvoice::find($request->viaResourceId);
+            if (empty($invoice)) {
+                $invoice = $request->findResourceOrFail()->invoice;
+            }
+            try {
+                $serviceId = $request->findResourceOrFail()->serviceId;
+            } catch (\Throwable $th) {
+                $serviceId = null;
+            }
+            return $query->where('location_id', $invoice->locationId)
+                ->whereNotIn('id', $invoice->serviceIds($serviceId));
         }
-        try {
-            $serviceId = $request->findResourceOrFail()->serviceId;
-        } catch (\Throwable $th) {
-            $serviceId = null;
-        }
-        return $query->where('location_id', $invoice->locationId)
-            ->whereNotIn('id', $invoice->serviceIds($serviceId));
     }
 
     /**

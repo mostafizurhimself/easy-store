@@ -19,7 +19,7 @@ class CreateTransactionsTable extends Migration
             $table->bigInteger('account_id')->unsigned()->nullable();
             $table->string('type');
             $table->double('amount')->default(0);
-            $table->string('reference')->nullable();
+            $table->string('reference')->nullable()->index('transaction_reference_index');
             $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

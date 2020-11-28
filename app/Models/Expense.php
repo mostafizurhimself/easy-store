@@ -90,4 +90,12 @@ class Expense extends Model implements HasMedia
        return $this->belongsTo(ExpenseCategory::class)->withTrashed();
     }
 
+    /**
+     * Get the owning purchase model.
+     */
+    public function purchase()
+    {
+        return $this->morphTo();
+    }
+
 }

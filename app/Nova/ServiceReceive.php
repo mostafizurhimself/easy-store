@@ -14,14 +14,16 @@ use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
-use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\DateRangeFilter;
 use App\Rules\ServiceReceiveQuantityRule;
 use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use App\Nova\Actions\ServiceReceives\DownloadPdf;
 use App\Rules\ServiceReceiveQuantityRuleForUpdate;
+use App\Nova\Actions\ServiceReceives\DownloadExcel;
 use App\Nova\Actions\ServiceReceives\ConfirmReceive;
 
 class ServiceReceive extends Resource
@@ -221,6 +223,20 @@ class ServiceReceive extends Resource
     public function actions(Request $request)
     {
         return [
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service receives') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service receives') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service receives') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service receives') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
+
             (new ConfirmReceive)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm service receives');
             }),
