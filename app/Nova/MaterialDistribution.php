@@ -11,7 +11,6 @@ use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
-use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
@@ -19,6 +18,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Rules\DistributionQuantityRule;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\DistributionStatusFilter;
@@ -160,7 +160,7 @@ class MaterialDistribution extends Resource
 
             Number::make('Quantity')
                 ->creationRules(new DistributionQuantityRule(\App\Nova\MaterialDistribution::uriKey(), $request->get('material_id') ?? $request->get('material')))
-                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\MaterialDistribution::uriKey(), !empty($request->get('material_id')) ?? $request->get('material'), $this->resource->quantity, $this->resource->materialId))
+                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\MaterialDistribution::uriKey(), $request->get('material_id') ?? $request->get('material'), $this->resource->quantity, $this->resource->materialId))
                 ->rules('required', 'numeric', 'min:1')
                 ->sortable()
                 ->onlyOnForms(),
