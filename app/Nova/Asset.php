@@ -226,6 +226,7 @@ class Asset extends Resource
                             }
                             return $this->quantity . " " . $this->unit->name;
                         })
+                        ->asHtml()
                         ->exceptOnForms(),
 
                     BelongsTo::make('Unit')
@@ -278,7 +279,13 @@ class Asset extends Resource
                 ],
                 "Adjust History" => [
                     MorphMany::make('Adjust Quantities', 'adjustQuantities', \App\Nova\AdjustQuantity::class)
-                ]
+                ],
+                // "Receive History" => [
+                //     HasMany::make('Receive Items', 'receiveItems', \App\Nova\AssetReceiveItem::class)
+                // ],
+                // "Distribution History" => [
+                //     HasMany::make('Distribution Items', 'distributionItems', \App\Nova\AssetDistributionItem::class)
+                // ]
             ]))->withToolbar(),
 
         ];

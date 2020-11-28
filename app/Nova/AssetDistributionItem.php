@@ -84,7 +84,7 @@ class AssetDistributionItem extends Resource
      */
     public static function label()
     {
-      return "Distribution Items";
+        return "Distribution Items";
     }
 
     /**
@@ -121,26 +121,32 @@ class AssetDistributionItem extends Resource
             Number::make('Quantity', 'distribution_quantity')
                 ->rules('required', 'numeric', 'min:0')
                 ->sortable()
-                ->creationRules(new DistributionQuantityRule(\App\Nova\AssetDistributionItem::uriKey(), $request->get('asset_id') ?? $request->get('asset')),
-                                new DistributionQuantityRuleOnRequisition($request->viaResource, $request->viaResourceId, $request->get('asset_id') ?? $request->get('asset')),
+                ->creationRules(
+                    new DistributionQuantityRule(\App\Nova\AssetDistributionItem::uriKey(), $request->get('asset_id') ?? $request->get('asset')),
+                    new DistributionQuantityRuleOnRequisition($request->viaResource, $request->viaResourceId, $request->get('asset_id') ?? $request->get('asset')),
                 )
-                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\AssetDistributionItem::uriKey(),
-                                                                    $request->get('asset_id') ?? $request->get('asset'),
-                                                                    $this->resource->distributionQuantity,
-                                                                    $this->resource->assetId),
-                            new DistributionQuantityRuleOnRequisitionForUpdate($request->viaResource,
-                                                                    $request->viaResourceId,
-                                                                    $request->get('asset_id') ?? $request->get('asset'),
-                                                                    $this->resource->assetId,
-                                                                    $this->resource->distributionQuantity),
-                            )
+                ->updateRules(
+                    new DistributionQuantityRuleForUpdate(
+                        \App\Nova\AssetDistributionItem::uriKey(),
+                        $request->get('asset_id') ?? $request->get('asset'),
+                        $this->resource->distributionQuantity,
+                        $this->resource->assetId
+                    ),
+                    new DistributionQuantityRuleOnRequisitionForUpdate(
+                        $request->viaResource,
+                        $request->viaResourceId,
+                        $request->get('asset_id') ?? $request->get('asset'),
+                        $this->resource->assetId,
+                        $this->resource->distributionQuantity
+                    ),
+                )
                 ->onlyOnForms(),
 
-            Text::make('Distribution Quantity', function(){
-                return $this->distributionQuantity." ".$this->unitName;
+            Text::make('Distribution Quantity', function () {
+                return $this->distributionQuantity . " " . $this->unitName;
             })
-            ->exceptOnForms()
-            ->sortable(),
+                ->exceptOnForms()
+                ->sortable(),
 
             Currency::make('Distribution Rate')
                 ->currency('BDT')
@@ -154,9 +160,9 @@ class AssetDistributionItem extends Resource
 
 
 
-            Text::make('Receive Quantity', function(){
-                    return $this->receiveQuantity." ".$this->unitName;
-                })
+            Text::make('Receive Quantity', function () {
+                return $this->receiveQuantity . " " . $this->unitName;
+            })
                 ->exceptOnForms()
                 ->sortable(),
 
@@ -166,13 +172,13 @@ class AssetDistributionItem extends Resource
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
-                    DistributionStatus::DRAFT()->getValue()     => 'warning',
-                    DistributionStatus::CONFIRMED()->getValue() => 'info',
-                    DistributionStatus::PARTIAL()->getValue()   => 'danger',
-                    DistributionStatus::RECEIVED()->getValue()  => 'success',
-                ])
+                DistributionStatus::DRAFT()->getValue()     => 'warning',
+                DistributionStatus::CONFIRMED()->getValue() => 'info',
+                DistributionStatus::PARTIAL()->getValue()   => 'danger',
+                DistributionStatus::RECEIVED()->getValue()  => 'success',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -237,29 +243,31 @@ class AssetDistributionItem extends Resource
      */
     public static function relatableAssets(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\AssetDistributionInvoice::find($request->viaResourceId);
+        if (!$request->isResourceIndexRequest()) {
+            $invoice = \App\Models\AssetDistributionInvoice::find($request->viaResourceId);
 
-        if(empty($invoice)){
-            $invoice = $request->findResourceOrFail()->invoice;
-        }
+            if (empty($invoice)) {
+                $invoice = $request->findResourceOrFail()->invoice;
+            }
 
-        try {
-            $assetId = $request->findResourceOrFail()->assetId;
-        } catch (\Throwable $th) {
-           $assetId = null;
-        }
+            try {
+                $assetId = $request->findResourceOrFail()->assetId;
+            } catch (\Throwable $th) {
+                $assetId = null;
+            }
 
-        if(!empty($invoice->requisitionId)){
-            return $query->whereIn('id',$invoice->requisition->assetIds())
-                ->whereNotIn('id', $invoice->assetIds($assetId))->get()->map(function($asset){
-                    return [ 'value' => $asset->id, 'label' => $asset->name."({$asset->code})" ];
+            if (!empty($invoice->requisitionId)) {
+                return $query->whereIn('id', $invoice->requisition->assetIds())
+                    ->whereNotIn('id', $invoice->assetIds($assetId))->get()->map(function ($asset) {
+                        return ['value' => $asset->id, 'label' => $asset->name . "({$asset->code})"];
+                    });
+            }
+
+            return $query->where('location_id', $invoice->locationId)
+                ->whereNotIn('id', $invoice->assetIds($assetId))->get()->map(function ($asset) {
+                    return ['value' => $asset->id, 'label' => $asset->name . "({$asset->code})"];
                 });
         }
-
-        return $query->where('location_id', $invoice->locationId)
-                ->whereNotIn('id', $invoice->assetIds($assetId))->get()->map(function($asset){
-                    return [ 'value' => $asset->id, 'label' => $asset->name."({$asset->code})" ];
-                });
     }
 
     /**
@@ -271,7 +279,7 @@ class AssetDistributionItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -283,11 +291,10 @@ class AssetDistributionItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
-
 }

@@ -113,4 +113,16 @@ class AssetPolicy
     // {
     //     return false;
     // }
+
+      /**
+     * Determine whether the user can add a receive item to the asset.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Asset  $asset
+     * @return mixed
+     */
+    // public function addAssetReceiveItem(User $user, Asset $asset)
+    // {
+    //     return false;
+    // }
 }

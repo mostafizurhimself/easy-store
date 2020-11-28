@@ -140,6 +140,7 @@ class ProductOutput extends Resource
 
             BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
                 ->sortable()
+                ->searchable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Category', 'category', 'App\Nova\ProductCategory')
@@ -165,6 +166,7 @@ class ProductOutput extends Resource
             BelongsTo::make('Style', 'style', 'App\Nova\Style')
                 ->showCreateRelationButton()
                 ->sortable()
+                ->searchable()
                 ->exceptOnForms(),
 
             BelongsTo::make('Style', 'style', 'App\Nova\Style')->searchable()

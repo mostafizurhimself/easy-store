@@ -218,6 +218,7 @@ class Fabric extends Resource
                             }
                             return $this->quantity . " " . $this->unit->name;
                         })
+                        ->asHtml()
                         ->sortable()
                         ->exceptOnForms(),
 

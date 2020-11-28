@@ -100,6 +100,26 @@ class AssetPurchaseOrder extends Resource
     }
 
     /**
+     * Get the text for the create resource button.
+     *
+     * @return string|null
+     */
+    public static function createButtonLabel()
+    {
+        return __('Create Purchase');
+    }
+
+    /**
+     * Get the text for the update resource button.
+     *
+     * @return string|null
+     */
+    public static function updateButtonLabel()
+    {
+        return __('Update Purchase');
+    }
+
+    /**
      * The icon of the resource.
      *
      * @return string
