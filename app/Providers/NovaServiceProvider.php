@@ -36,8 +36,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         });
     }
 
-
-
     /**
      * Register the Nova routes.
      *

@@ -29,6 +29,13 @@ abstract class Resource extends NovaResource
     ];
 
     /**
+     * Indicates whether Nova should check for modifications between viewing and updating a resource.
+     *
+     * @var bool
+     */
+    public static $trafficCop = false;
+
+    /**
      * Get the custom permissions name of the resource
      *
      * @var array
