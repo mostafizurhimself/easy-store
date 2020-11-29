@@ -154,7 +154,7 @@ class Asset extends Model implements HasMedia
     public static function filterOptions()
     {
         return Cache::remember('nova-asset-filter-options', 3600, function () {
-            $assets = self::setEagerLoads([])->get(['id', 'name'])->orderBy('name');
+            $assets = self::setEagerLoads([])->orderBy('name')->get(['id', 'name']);
 
             return $assets->mapWithKeys(function ($asset) {
                 return [$asset->name => $asset->id];

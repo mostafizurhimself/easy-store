@@ -135,7 +135,7 @@ class Material extends Model implements HasMedia
     public static function filterOptions()
     {
         return Cache::remember('nova-material-filter-options', 3600, function () {
-            $materials = self::setEagerLoads([])->get(['id', 'name'])->orderBy('name');
+            $materials = self::setEagerLoads([])->orderBy('name')->get(['id', 'name']);
 
             return $materials->mapWithKeys(function ($material) {
                 return [$material->name => $material->id];
