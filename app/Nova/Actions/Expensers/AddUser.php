@@ -46,7 +46,9 @@ class AddUser extends Action
                 ]);
 
                 // Add media
-                $user->addMedia($fields->profile_picture)->toMediaCollection('avatar');
+                if(!empty($fields->profile_picture)){
+                    $user->addMedia($fields->profile_picture)->toMediaCollection('avatar');
+                }
 
                 // Add Role
                 $user->assignRole(Role::EXPENSER);
@@ -80,7 +82,8 @@ class AddUser extends Action
             Password::make('Password')
                 ->rules('required', 'string', 'min:4', 'max:20', 'confirmed'),
 
-            PasswordConfirmation::make('Password Confirmation'),
+            PasswordConfirmation::make('Password Confirmation')
+                ->required(),
         ];
     }
 }

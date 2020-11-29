@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Actions\AdjustBalance;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Actions\Expensers\AddUser;
 use Easystore\TextUppercase\TextUppercase;
@@ -34,7 +35,7 @@ class Expenser extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can add user to'];
+    public static $permissions = ['can add user to', 'can adjust balance of',];
 
     /**
      * The group associated with the resource.
@@ -245,11 +246,20 @@ class Expenser extends Resource
     public function actions(Request $request)
     {
         return [
-            (new AddUser)->canSee(function($request){
+            (new AddUser)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can add user to expensers') || $request->user()->isSuperAdmin();
             })
                 ->onlyOnDetail()
                 ->confirmButtonText('Add'),
+
+            (new AdjustBalance)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can adjust balance of expensers') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can adjust balance of expensers') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail()
+                ->confirmButtonText('Adjust'),
         ];
     }
 }

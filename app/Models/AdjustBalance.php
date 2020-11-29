@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AdjustQuantity extends Model
+class AdjustBalance extends Model
 {
     use LogsActivity, SoftDeletes, CamelCasing;
 
@@ -45,19 +45,9 @@ class AdjustQuantity extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function unit()
-    {
-       return $this->belongsTo(Unit::class)->withTrashed();
-    }
-
-    /**
-     * Determines one-to-many relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function user()
     {
-       return $this->belongsTo(User::class)->withTrashed();
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     /**
@@ -67,17 +57,16 @@ class AdjustQuantity extends Model
      */
     public function isIncremented()
     {
-        return $this->quantity > 0 ? true : false;
+        return $this->amount > 0 ? true : false;
     }
 
     /**
-     * Adjust the quantity of the model
+     * Adjust the balance of the model
      *
      * @return void
      */
     public function adjust()
     {
-        $this->adjustable()->increment('quantity', $this->quantity);
+        $this->adjustable()->increment('balance', $this->amount);
     }
-
 }

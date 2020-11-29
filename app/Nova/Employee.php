@@ -40,7 +40,7 @@ class Employee extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\Employee';
+    public static $model = \App\Models\Employee::class;
 
     /**
      * The group associated with the resource.

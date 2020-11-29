@@ -4,16 +4,15 @@ namespace App\Nova\Actions;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Textarea;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class AdjustQuantity extends Action
+class AdjustBalance extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -26,24 +25,19 @@ class AdjustQuantity extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
-            // Set the rate property.
-            $model->rate = $model->rate ?? $model->costPrice;
+        foreach ($models as $model) {
 
-            $adjustQuantity = $model->adjustQuantities()->create([
+            $adjustBalance = $model->adjustBalances()->create([
                 'date'        => Carbon::now(),
-                'quantity'    => $fields->quantity,
-                'rate'        => $model->rate,
-                'amount'      => $model->rate * $fields->quantity,
+                'amount'      => $fields->amount,
                 'description' => $fields->description,
-                'unit_id'     => $model->unit_id,
                 'user_id'     => request()->user()->id,
             ]);
 
-            $adjustQuantity->adjust();
+            $adjustBalance->adjust();
         }
 
-        Action::message('Quantity adjusted successfully.');
+        Action::message('Balance adjusted successfully.');
     }
 
     /**
@@ -54,7 +48,7 @@ class AdjustQuantity extends Action
     public function fields()
     {
         return [
-            Number::make('Quantity', 'quantity')
+            Currency::make('Amount', 'amount')
                 ->rules('required', 'numeric'),
 
             Textarea::make('Description', 'description')

@@ -33,7 +33,7 @@ class Expenser extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('expenser-images')->singleFile();
+        $this->addMediaCollection('expenser-images')->singleFile();
     }
 
     /**
@@ -43,7 +43,7 @@ class Expenser extends Model implements HasMedia
      */
     public function expenses()
     {
-       return $this->hasMany(Expense::class);
+        return $this->hasMany(Expense::class);
     }
 
     /**
@@ -53,7 +53,17 @@ class Expenser extends Model implements HasMedia
      */
     public function employee()
     {
-       return $this->belongsTo(Employee::class)->withTrashed();
+        return $this->belongsTo(Employee::class)->withTrashed();
+    }
+
+    /**
+     * Get the model adjust balances
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function adjustBalances()
+    {
+        return $this->morphMany(AdjustBalance::class, 'adjustable');
     }
 
     /**
@@ -75,5 +85,4 @@ class Expenser extends Model implements HasMedia
     {
         return $this->belongsTo(User::class);
     }
-
 }

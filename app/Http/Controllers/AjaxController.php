@@ -21,7 +21,7 @@ class AjaxController extends Controller
      */
     public function floorsViaLocation(Location $location)
     {
-        return $location->floors->map(function($floor) {
+        return $location->floors->sortBy('name')->values()->map(function($floor) {
             return [ 'value' => $floor->id, 'display' => $floor->name ];
         });
     }
@@ -34,7 +34,7 @@ class AjaxController extends Controller
      */
     public function stylesViaLocation(Location $location)
     {
-        return $location->styles->map(function($style) {
+        return $location->styles->sortBy('name')->values()->map(function($style) {
             return [ 'value' => $style->id, 'display' => "$style->name({$style->code})" ];
         });
     }
@@ -47,7 +47,7 @@ class AjaxController extends Controller
      */
     public function sectionsViaDepartment(Department $department)
     {
-        return $department->sections->map(function($section) {
+        return $department->sections->sortBy('name')->values()->map(function($section) {
             return [ 'value' => $section->id, 'display' => $section->name ];
         });
     }
@@ -60,7 +60,7 @@ class AjaxController extends Controller
      */
     public function departmentsViaLocation(Location $location)
     {
-        return $location->departments->map(function($department) {
+        return $location->departments->sortBy('name')->values()->map(function($department) {
             return [ 'value' => $department->id, 'display' => $department->name ];
         });
     }
@@ -73,7 +73,7 @@ class AjaxController extends Controller
      */
     public function sectionsViaLocation(Location $location)
     {
-        return $location->sections->map(function($section) {
+        return $location->sections->sortBy('name')->values()->map(function($section) {
             return [ 'value' => $section->id, 'display' => $section->name ];
         });
     }
@@ -86,7 +86,7 @@ class AjaxController extends Controller
      */
     public function sectionsViaFloor(Floor $floor)
     {
-        return $floor->sections->map(function($section) {
+        return $floor->sections->sortBy('name')->values()->map(function($section) {
             return [ 'value' => $section->id, 'display' => $section->name ];
         });
     }
@@ -99,7 +99,7 @@ class AjaxController extends Controller
      */
     public function subSectionsViaSection(Section $section)
     {
-        return $section->subSections->map(function($subSection) {
+        return $section->subSections->sortBy('name')->values()->map(function($subSection) {
             return [ 'value' => $subSection->id, 'display' => $subSection->name ];
         });
     }
@@ -112,7 +112,7 @@ class AjaxController extends Controller
      */
     public function designationsViaLocation(Location $location)
     {
-        return $location->designations->map(function($designation) {
+        return $location->designations->sortBy('name')->values()->map(function($designation) {
             return [ 'value' => $designation->id, 'display' => $designation->name ];
         });
     }
@@ -125,7 +125,7 @@ class AjaxController extends Controller
      */
     public function employeesViaLocation(Location $location)
     {
-        return $location->employees->map(function($employee) {
+        return $location->employees->sortBy('name')->values()->map(function($employee) {
             return [ 'value' => $employee->id, 'display' =>"$employee->name ($employee->readableId)" ];
         });
     }
@@ -138,7 +138,7 @@ class AjaxController extends Controller
      */
     public function fabricCategoriesViaLocation(Location $location)
     {
-        return $location->fabricCategories->map(function($category) {
+        return $location->fabricCategories->sortBy('name')->values()->map(function($category) {
             return [ 'value' => $category->id, 'display' => $category->name ];
         });
     }
@@ -151,7 +151,7 @@ class AjaxController extends Controller
      */
     public function fabricsViaLocation(Location $location)
     {
-        return $location->fabrics->map(function($fabric) {
+        return $location->fabrics->sortBy('name')->values()->map(function($fabric) {
             return [ 'value' => $fabric->id, 'display' => "$fabric->name ($fabric->code)" ];
         });
     }
@@ -164,7 +164,7 @@ class AjaxController extends Controller
      */
     public function materialCategoiesViaLocation(Location $location)
     {
-        return $location->materialCategories->map(function($category) {
+        return $location->materialCategories->sortBy('name')->values()->map(function($category) {
             return [ 'value' => $category->id, 'display' => $category->name ];
         });
     }
@@ -177,7 +177,7 @@ class AjaxController extends Controller
      */
     public function materialsViaLocation(Location $location)
     {
-        return $location->materials->map(function($material) {
+        return $location->materials->sortBy('name')->values()->map(function($material) {
             return [ 'value' => $material->id, 'display' => "$material->name ($material->code)" ];
         });
     }
@@ -190,7 +190,7 @@ class AjaxController extends Controller
      */
     public function assetCategoriesViaLocation(Location $location)
     {
-        return $location->assetCategories->map(function($category) {
+        return $location->assetCategories->sortBy('name')->values()->map(function($category) {
             return [ 'value' => $category->id, 'display' => $category->name ];
         });
     }
@@ -203,7 +203,7 @@ class AjaxController extends Controller
      */
     public function assetsViaLocation(Location $location)
     {
-        return $location->assets->map(function($asset) {
+        return $location->assets->sortBy('name')->values()->map(function($asset) {
             return [ 'value' => $asset->id, 'display' => "$asset->name ($asset->code)" ];
         });
     }
@@ -231,7 +231,7 @@ class AjaxController extends Controller
      */
     public function serviceCategoriesViaLocation(Location $location)
     {
-        return $location->serviceCategories->map(function($category) {
+        return $location->serviceCategories->sortBy('name')->values()->map(function($category) {
             return [ 'value' => $category->id, 'display' => $category->name ];
         });
     }
@@ -244,7 +244,7 @@ class AjaxController extends Controller
      */
     public function servicesViaLocation(Location $location)
     {
-        return $location->services->map(function($service) {
+        return $location->services->sortBy('name')->values()->map(function($service) {
             return [ 'value' => $service->id, 'display' => $service->name ];
         });
     }
@@ -257,7 +257,7 @@ class AjaxController extends Controller
      */
     public function productCategoriesViaLocation(Location $location)
     {
-        return $location->productCategories->map(function($category) {
+        return $location->productCategories->sortBy('name')->values()->map(function($category) {
             return [ 'value' => $category->id, 'display' => $category->name ];
         });
     }
@@ -270,7 +270,7 @@ class AjaxController extends Controller
      */
     public function productsViaLocation(Location $location)
     {
-        return $location->products->map(function($product) {
+        return $location->products->sortBy('name')->values()->map(function($product) {
             return [ 'value' => $product->id, 'display' => $product->name ];
         });
     }
@@ -283,7 +283,7 @@ class AjaxController extends Controller
      */
     public function expensersViaLocation(Location $location)
     {
-        return $location->expensers->map(function($expenser) {
+        return $location->expensers->sortBy('name')->values()->map(function($expenser) {
             return [ 'value' => $expenser->id, 'display' => $expenser->name ];
         });
     }
@@ -296,7 +296,7 @@ class AjaxController extends Controller
      */
     public function expenseCategoriesViaLocation(Location $location)
     {
-        return $location->expenseCategories->map(function($category) {
+        return $location->expenseCategories->sortBy('name')->values()->map(function($category) {
             return [ 'value' => $category->id, 'display' => $category->name ];
         });
     }
