@@ -321,12 +321,10 @@ class Expense extends Resource
             $query->orderBy(key(static::$sort), reset(static::$sort));
         }
 
-        // // Get for expensers
-        // if ($request->user()->isExpenser()) {
-        //     return $query->with(['expenser' => function($expenser) use($request){
-        //         $expenser->where('user_id', $request->user()->id);
-        //     }]);
-        // }
+        // Query for expensers
+        if ($request->user()->isExpenser()) {
+            return $query->where('expenser_id', $request->user()->expenser->id);
+        }
 
         // Query for non expensers
         if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {

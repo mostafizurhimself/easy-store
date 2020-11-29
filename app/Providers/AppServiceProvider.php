@@ -26,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        // dd();
+        // dd(\App\Models\Fabric::select('id', 'name')
+        //     ->where('status', 'active')
+        //     ->select('code', 'quantity')
+        //     ->toSql());
     }
 }

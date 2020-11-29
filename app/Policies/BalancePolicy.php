@@ -31,9 +31,11 @@ class BalancePolicy
      */
     public function view(User $user, Balance $balance)
     {
-        return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view balances') && $user->locationId == $balance->locationId ) ||
-                $user->hasPermissionTo('view all locations data');
+        if ($user->isExpenser()) {
+            return $balance->expenser->userId == $user->id;
+        }
+        return $user->isSuperAdmin() || ($user->hasPermissionTo('view balances') && $user->locationId == $balance->locationId) ||
+            $user->hasPermissionTo('view all locations data');
     }
 
     /**
@@ -56,10 +58,12 @@ class BalancePolicy
      */
     public function update(User $user, Balance $balance)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update balances') && $user->locationId == $balance->locationId ) ||
-                $user->hasPermissionTo('update all locations data')) &&
-                $balance->status == BalanceStatus::DRAFT();
+        if ($user->isExpenser()) {
+            return $balance->expenser->userId == $user->id;
+        }
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('update balances') && $user->locationId == $balance->locationId) ||
+            $user->hasPermissionTo('update all locations data')) &&
+            $balance->status == BalanceStatus::DRAFT();
     }
 
     /**
@@ -71,25 +75,29 @@ class BalancePolicy
      */
     public function delete(User $user, Balance $balance)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete balances') && $user->locationId == $balance->locationId ) ||
-                $user->hasPermissionTo('delete all locations data')) &&
-                $balance->status == BalanceStatus::DRAFT();
+        if ($user->isExpenser()) {
+            return $balance->expenser->userId == $user->id;
+        }
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('delete balances') && $user->locationId == $balance->locationId) ||
+            $user->hasPermissionTo('delete all locations data')) &&
+            $balance->status == BalanceStatus::DRAFT();
     }
 
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\User     $user
      * @param  \App\Models\Balance  $balance
      * @return mixed
      */
     public function restore(User $user, Balance $balance)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore balances') && $user->locationId == $balance->locationId ) ||
-                $user->hasPermissionTo('restore all locations data')) &&
-                $balance->status == BalanceStatus::DRAFT();
+        if ($user->isExpenser()) {
+            return $balance->expenser->userId == $user->id;
+        }
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('restore balances') && $user->locationId == $balance->locationId) ||
+            $user->hasPermissionTo('restore all locations data')) &&
+            $balance->status == BalanceStatus::DRAFT();
     }
 
     /**
@@ -101,9 +109,23 @@ class BalancePolicy
      */
     public function forceDelete(User $user, Balance $balance)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete balances') && $user->locationId == $balance->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data')) &&
-                $balance->status == BalanceStatus::DRAFT();
+        if ($user->isExpenser()) {
+            return $balance->expenser->userId == $user->id;
+        }
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('force delete balances') && $user->locationId == $balance->locationId) ||
+            $user->hasPermissionTo('force delete all locations data')) &&
+            $balance->status == BalanceStatus::DRAFT();
+    }
+
+    /**
+     * Determine whether the user can add an activity.
+     *
+     * @param  \App\Models\User     $user
+     * @param  \App\Models\Balance  $balance
+     * @return mixed
+     */
+    public function addActivity(User $user, Balance $balance)
+    {
+        return false;
     }
 }

@@ -53,6 +53,13 @@ class ServiceReceive extends Model implements HasMedia
     protected $dates = ['date'];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $append = ['location', 'unitName'];
+
+    /**
      * Register the media collections
      *
      * @return void
@@ -110,6 +117,16 @@ class ServiceReceive extends Model implements HasMedia
     public function getUnitNameAttribute()
     {
         return $this->unit->name;
+    }
+
+    /**
+     * Get the location of the model
+     *
+     * @return string
+     */
+    public function getLocationAttribute()
+    {
+        return $this->invoice->location;
     }
 
 

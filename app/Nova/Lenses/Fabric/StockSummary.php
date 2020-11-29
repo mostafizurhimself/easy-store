@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Lenses\Lens;
 use App\Models\FabricCategory;
+use Illuminate\Support\Facades\DB;
 use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Filters\CategoryFilter;
 use AwesomeNova\Filters\DependentFilter;
@@ -50,8 +51,48 @@ class StockSummary extends Lens
             'fabrics.id',
             'locations.name as location_name',
             'fabrics.name',
+            'fabrics.opening_quantity',
             'units.name as unit_name',
             'fabric_categories.name as category_name',
+
+            // Purchases
+            DB::raw("(COALESCE((select sum(fabric_receive_items.quantity) from fabric_receive_items
+            where fabric_receive_items.fabric_id = fabrics.id
+            and fabric_receive_items.deleted_at is null
+            and fabric_receive_items.status = 'confirmed'), 0)) as purchase_quantity"),
+
+            // Distributions
+            DB::raw("(COALESCE((select sum(fabric_distributions.quantity) from fabric_distributions
+            where fabric_distributions.fabric_id = fabrics.id
+            and fabric_distributions.status = 'confirmed'
+            and fabric_distributions.deleted_at  is null), 0)) as distribution_quantity"),
+
+            // Returns
+            DB::raw("COALESCE((select sum(fabric_return_items.quantity) from fabric_return_items
+            left join fabric_return_invoices on fabric_return_items.invoice_id = fabric_return_invoices.id
+            where fabric_return_items.fabric_id = fabrics.id
+            and fabric_return_items.deleted_at is null
+            and fabric_return_items.status = 'confirmed'), 0) as return_quantity"),
+
+            // Transfers
+            DB::raw("COALESCE((select sum(fabric_transfer_items.transfer_quantity) from fabric_transfer_items
+            left join fabric_transfer_invoices on fabric_transfer_items.invoice_id = fabric_transfer_invoices.id
+            where fabric_transfer_items.fabric_id = fabrics.id
+            and fabric_transfer_items.deleted_at is null
+            and fabric_transfer_items.status = 'confirmed'), 0) as transfer_quantity"),
+
+            // Transfer Receives
+            DB::raw("(COALESCE((select sum(fabric_transfer_receive_items.quantity) from fabric_transfer_receive_items
+            where fabric_transfer_receive_items.fabric_id = fabrics.id
+            and fabric_transfer_receive_items.deleted_at is null
+            and fabric_transfer_receive_items.status = 'confirmed'), 0)) as receive_quantity"),
+
+            // Adjust
+            DB::raw("(COALESCE((select sum(adjust_quantities.quantity) from adjust_quantities
+            where adjust_quantities.adjustable_id = fabrics.id
+            and adjust_quantities.adjustable_type = 'App\Models\Fabric'
+            and adjust_quantities.deleted_at  is null), 0)) as adjust_quantity"),
+
         ];
     }
 
@@ -77,12 +118,14 @@ class StockSummary extends Lens
                 ->wrapMethod('length', 30),
 
             Text::make('Previous', function () {
-                if (isset($this->purchase_quantity)) {
+                if (isset($this->previous_purchase_quantity) && isset($this->previous_distribution_quantity)) {
                     $this->previous_quantity = ($this->opening_quantity + $this->previous_purchase_quantity + $this->previous_receive_quantity) - ($this->previous_distribution_quantity + $this->previous_return_quantity + $this->previous_transfer_quantity) +
                         $this->previous_adjust_quantity;
-                    return $this->previous_quantity . " " . $this->unit_name;
+                }else{
+                    $this->previous_quantity = $this->opening_quantity;
                 }
-                return "N/A";
+                return $this->previous_quantity . " " . $this->unit_name;
+
             })
                 ->sortable(),
 

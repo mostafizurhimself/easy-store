@@ -31,12 +31,11 @@ class ExpensePolicy
      */
     public function view(User $user, Expense $expense)
     {
-        if($user->isExpenser()){
+        if ($user->isExpenser()) {
             return $expense->expenser->userId == $user->id;
         }
-        return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view expenses') && $user->locationId == $expense->locationId ) ||
-                $user->hasPermissionTo('view all locations data');
+        return $user->isSuperAdmin() || ($user->hasPermissionTo('view expenses') && $user->locationId == $expense->locationId) ||
+            $user->hasPermissionTo('view all locations data');
     }
 
     /**
@@ -59,13 +58,12 @@ class ExpensePolicy
      */
     public function update(User $user, Expense $expense)
     {
-        if($user->isExpenser()){
+        if ($user->isExpenser()) {
             return $expense->expenser->userId == $user->id;
         }
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update expenses') && $user->locationId == $expense->locationId ) ||
-                $user->hasPermissionTo('update all locations data')) &&
-                $expense->status == ExpenseStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('update expenses') && $user->locationId == $expense->locationId) ||
+            $user->hasPermissionTo('update all locations data')) &&
+            $expense->status == ExpenseStatus::DRAFT();
     }
 
     /**
@@ -77,13 +75,12 @@ class ExpensePolicy
      */
     public function delete(User $user, Expense $expense)
     {
-        if($user->isExpenser()){
+        if ($user->isExpenser()) {
             return $expense->expenser->userId == $user->id;
         }
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete expenses') && $user->locationId == $expense->locationId ) ||
-                $user->hasPermissionTo('delete all locations data')) &&
-                $expense->status == ExpenseStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('delete expenses') && $user->locationId == $expense->locationId) ||
+            $user->hasPermissionTo('delete all locations data')) &&
+            $expense->status == ExpenseStatus::DRAFT();
     }
 
     /**
@@ -95,13 +92,12 @@ class ExpensePolicy
      */
     public function restore(User $user, Expense $expense)
     {
-        if($user->isExpenser()){
+        if ($user->isExpenser()) {
             return $expense->expenser->userId == $user->id;
         }
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore expenses') && $user->locationId == $expense->locationId ) ||
-                $user->hasPermissionTo('restore all locations data')) &&
-                $expense->status == ExpenseStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('restore expenses') && $user->locationId == $expense->locationId) ||
+            $user->hasPermissionTo('restore all locations data')) &&
+            $expense->status == ExpenseStatus::DRAFT();
     }
 
     /**
@@ -113,16 +109,15 @@ class ExpensePolicy
      */
     public function forceDelete(User $user, Expense $expense)
     {
-        if($user->isExpenser()){
+        if ($user->isExpenser()) {
             return $expense->expenser->userId == $user->id;
         }
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete expenses') && $user->locationId == $expense->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data')) &&
-                $expense->status == ExpenseStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('force delete expenses') && $user->locationId == $expense->locationId) ||
+            $user->hasPermissionTo('force delete all locations data')) &&
+            $expense->status == ExpenseStatus::DRAFT();
     }
 
-        /**
+    /**
      * Determine whether the user can add an activity.
      *
      * @param  \App\Models\User  $user

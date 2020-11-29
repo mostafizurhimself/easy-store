@@ -2,11 +2,11 @@
 
 namespace App\Nova\Filters;
 
-use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
+use App\Nova\Filters\ServiceFilter;
 
-class BelongsToSupplierFilter extends Filter
+class ServiceFilter extends Filter
 {
     /**
      * The filter's component.
@@ -20,24 +20,7 @@ class BelongsToSupplierFilter extends Filter
      *
      * @var string
      */
-    public $name = "Supplier";
-
-    /**
-     * Relationship for the location
-     *
-     * @var string
-     */
-    public $relationship;
-
-    /**
-     * Set the relationship
-     *
-     * @return void
-     */
-    public function __construct($relationship)
-    {
-        return $this->relationship = $relationship;
-    }
+    public $name = "Service";
 
     /**
      * Apply the filter to the given query.
@@ -49,9 +32,7 @@ class BelongsToSupplierFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->whereHas($this->relationship, function ($invoice) use ($value) {
-            $invoice->where('supplier_id', $value);
-        });
+        return $query->where('service_id', $value);
     }
 
     /**
@@ -62,6 +43,6 @@ class BelongsToSupplierFilter extends Filter
      */
     public function options(Request $request)
     {
-        return Supplier::belongsToFilterOptions();
+        return ServiceFilter::filterOptions();
     }
 }

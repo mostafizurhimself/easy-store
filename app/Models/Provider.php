@@ -6,6 +6,7 @@ use App\Facades\Settings;
 use App\Enums\AddressType;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -28,7 +29,7 @@ class Provider extends Model
      */
     protected static $logUnguarded = true;
 
-     /**
+    /**
      * Set the model readable id prefix
      *
      * @var string
@@ -77,7 +78,7 @@ class Provider extends Model
      */
     public function getLocationAddressAttribute()
     {
-        if($this->address()->exists()){
+        if ($this->address()->exists()) {
 
             return $this->address->where('type', AddressType::LOCATION_ADDRESS())->first();
         }
@@ -85,4 +86,16 @@ class Provider extends Model
         return null;
     }
 
+    /**
+     * Get the filter options of providers
+     *
+     * @return array
+     */
+    public static function belongsToFilterOptions()
+    {
+        // Cache::forget('nova-providers-belongs-to-filter-options');
+        return Cache::remember('nova-providers-belongs-to-filter-options', 3600, function () {
+            return self::orderBy('name')->pluck('id', 'name')->toArray();
+        });
+    }
 }

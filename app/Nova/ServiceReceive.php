@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Models\Service;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -16,15 +17,19 @@ use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\ServiceFilter;
 use App\Nova\Filters\DateRangeFilter;
+use AwesomeNova\Filters\DependentFilter;
 use App\Rules\ServiceReceiveQuantityRule;
 use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\BelongsToProviderFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\ServiceReceives\DownloadPdf;
 use App\Rules\ServiceReceiveQuantityRuleForUpdate;
 use App\Nova\Actions\ServiceReceives\DownloadExcel;
 use App\Nova\Actions\ServiceReceives\ConfirmReceive;
+use App\Nova\Filters\BelongsToDependentLocationFilter;
 
 class ServiceReceive extends Resource
 {
@@ -92,6 +97,22 @@ class ServiceReceive extends Resource
     public function fields(Request $request)
     {
         return [
+            Text::make("Location", function () {
+                return $this->location->name;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin())
+                        && (empty($request->viaResource));
+                }),
+
+            Date::make('Date')
+                ->rules('required')
+                ->default(Carbon::now())
+                ->sortable()
+                ->readonly(),
+
             BelongsTo::make('Invoice', 'invoice', "App\Nova\ServiceInvoice")
                 ->exceptOnForms()
                 ->sortable(),
@@ -103,12 +124,6 @@ class ServiceReceive extends Resource
             BelongsTo::make('Service')
                 ->exceptOnForms()
                 ->sortable(),
-
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->sortable()
-                ->readonly(),
 
             Hidden::make('Date')
                 ->default(Carbon::now())
@@ -197,8 +212,25 @@ class ServiceReceive extends Resource
     public function filters(Request $request)
     {
         return [
-            new DateRangeFilter('date'),
+            BelongsToDependentLocationFilter::make('Location', 'location_id', 'invoice')
+                ->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
 
+            DependentFilter::make('Service', 'service_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Service::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+            (new ServiceFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+            new BelongsToProviderFilter('invoice'),
+            new DateRangeFilter('date'),
             new DispatchStatusFilter,
         ];
     }

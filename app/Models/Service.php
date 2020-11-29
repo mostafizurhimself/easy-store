@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\ActiveScope;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,7 +41,7 @@ class Service extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('service-images')->singleFile();
+        $this->addMediaCollection('service-images')->singleFile();
     }
 
     /**
@@ -50,7 +51,7 @@ class Service extends Model implements HasMedia
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class)->withTrashed();
+        return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -60,7 +61,7 @@ class Service extends Model implements HasMedia
      */
     public function category()
     {
-       return $this->belongsTo(ServiceCategory::class, 'category_id')->withTrashed();
+        return $this->belongsTo(ServiceCategory::class, 'category_id')->withTrashed();
     }
 
     /**
@@ -83,4 +84,19 @@ class Service extends Model implements HasMedia
         return $this->totalDispatchQuantity - $this->totalReceiveQuantity;
     }
 
+    /**
+     * Get the filter options of materials
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        return Cache::remember('nova-service-filter-options', 3600, function () {
+            $services = self::setEagerLoads([])->orderBy('name')->get(['id', 'name']);
+
+            return $services->mapWithKeys(function ($service) {
+                return [$service->name => $service->id];
+            })->toArray();
+        });
+    }
 }

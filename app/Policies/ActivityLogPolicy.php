@@ -41,7 +41,7 @@ class ActivityLogPolicy
      */
     public function create(User $user)
     {
-        return $user->isSuperAdmin();
+        return false;
     }
 
     /**
@@ -53,7 +53,7 @@ class ActivityLogPolicy
      */
     public function update(User $user, Activity $activity)
     {
-        return $user->isSuperAdmin();
+        return false;
     }
 
     /**
@@ -65,7 +65,7 @@ class ActivityLogPolicy
      */
     public function delete(User $user, Activity $activity)
     {
-        return $user->isSuperAdmin();
+        return false;
     }
 
     /**
@@ -77,7 +77,7 @@ class ActivityLogPolicy
      */
     public function restore(User $user, Activity $activity)
     {
-        return $user->isSuperAdmin();
+        return false;
     }
 
     /**
@@ -89,6 +89,6 @@ class ActivityLogPolicy
      */
     public function forceDelete(User $user, Activity $activity)
     {
-        return $user->isSuperAdmin();
+        return false;
     }
 }
