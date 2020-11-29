@@ -2,9 +2,9 @@
 
 namespace App\Nova\Filters;
 
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
-use App\Nova\Filters\ServiceFilter;
 
 class ServiceFilter extends Filter
 {
@@ -43,6 +43,6 @@ class ServiceFilter extends Filter
      */
     public function options(Request $request)
     {
-        return ServiceFilter::filterOptions();
+        return Service::filterOptions();
     }
 }
