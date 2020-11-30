@@ -2,8 +2,9 @@
 
 namespace App\Nova\Filters;
 
-use App\Enums\DispatchStatus;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Enums\DispatchStatus;
 use Laravel\Nova\Filters\Filter;
 
 class DispatchStatusFilter extends Filter
@@ -43,6 +44,12 @@ class DispatchStatusFilter extends Filter
      */
     public function options(Request $request)
     {
+        if(Str::contains($request->resource, "receive")){
+            return [
+                'Draft'     => DispatchStatus::DRAFT(),
+                'Confirmed' => DispatchStatus::CONFIRMED(),
+            ];
+        }
         return DispatchStatus::filterOptions();
     }
 }

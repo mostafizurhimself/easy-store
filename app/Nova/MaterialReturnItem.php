@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
+use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use App\Rules\ReturnQuantityRule;
 use Laravel\Nova\Fields\Currency;
@@ -17,9 +18,11 @@ use App\Nova\Filters\ReturnStatusFilter;
 use App\Rules\ReturnQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use Titasgailius\SearchRelations\SearchesRelations;
 
 class MaterialReturnItem extends Resource
 {
+    use WithOutLocation, SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
@@ -72,6 +75,15 @@ class MaterialReturnItem extends Resource
      */
     public static $search = [
         'id',
+    ];
+
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'location' => ['name'],
     ];
 
     /**

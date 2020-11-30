@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class GatePass extends Model
+class VisitorGatePass extends Model
 {
     use LogsActivity;
 

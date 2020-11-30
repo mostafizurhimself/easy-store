@@ -43,6 +43,12 @@ class PurchaseStatusFilter extends Filter
      */
     public function options(Request $request)
     {
+        if(Str::contains($request->resource, "receive")){
+            return [
+                'Draft'     => PurchaseStatus::DRAFT(),
+                'Confirmed' => PurchaseStatus::CONFIRMED(),
+            ];
+        }
         return PurchaseStatus::filterOptions();
     }
 }

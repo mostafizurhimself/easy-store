@@ -2,9 +2,10 @@
 
 namespace App\Nova\Filters;
 
-use App\Enums\DistributionStatus;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
+use App\Enums\DistributionStatus;
 
 class DistributionStatusFilter extends Filter
 {
@@ -43,6 +44,12 @@ class DistributionStatusFilter extends Filter
      */
     public function options(Request $request)
     {
+        if(Str::contains($request->resource, "receive")){
+            return [
+                'Draft'     => DistributionStatus::DRAFT(),
+                'Confirmed' => DistributionStatus::CONFIRMED(),
+            ];
+        }
         return DistributionStatus::filterOptions();
     }
 }

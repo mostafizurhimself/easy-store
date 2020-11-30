@@ -2,6 +2,7 @@
 
 namespace App\Nova\Filters;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Enums\TransferStatus;
 use Laravel\Nova\Filters\Filter;
@@ -43,6 +44,12 @@ class TransferStatusFilter extends Filter
      */
     public function options(Request $request)
     {
+        if(Str::contains($request->resource, "receive")){
+            return [
+                'Draft'     => TransferStatus::DRAFT(),
+                'Confirmed' => TransferStatus::CONFIRMED(),
+            ];
+        }
         return TransferStatus::filterOptions();
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
+use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use App\Rules\ReturnQuantityRule;
 use Laravel\Nova\Fields\Currency;
@@ -22,7 +23,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 
 class AssetReturnItem extends Resource
 {
-    use SearchesRelations;
+    use SearchesRelations, WithOutLocation;
 
     /**
      * The model the resource corresponds to.
