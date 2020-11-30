@@ -2,6 +2,7 @@
 
 namespace App\Nova\Filters;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Enums\PurchaseStatus;
 use Laravel\Nova\Filters\Filter;
