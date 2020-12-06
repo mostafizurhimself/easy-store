@@ -2,8 +2,9 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use League\Flysystem\Config;
+use Illuminate\Support\Carbon;
 
 class Helper
 {
@@ -97,6 +98,17 @@ class Helper
     public function currencyShortPdf($value)
     {
         return $value." /=";
+    }
+
+    /**
+     * Get the model resource
+     *
+     * @param string  model with namespace
+     * @return string resource with namespace
+     */
+    public function getModelResource($model)
+    {
+        return Str::replaceFirst('Models', 'Nova', $model);
     }
 
 }

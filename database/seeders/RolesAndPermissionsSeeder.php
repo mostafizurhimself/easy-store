@@ -103,6 +103,12 @@ class RolesAndPermissionsSeeder extends Seeder
             \App\Nova\Floor::class,
             \App\Nova\Style::class,
             \App\Nova\Unit::class,
+
+            // Gate Pass Section
+            \App\Nova\GoodsGatePass::class,
+            \App\Nova\VisitorGatePass::class,
+            \App\Nova\EmployeeGatePass::class,
+
         ];
 
         foreach($resources as $key=>$resource)

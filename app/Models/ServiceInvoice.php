@@ -51,13 +51,23 @@ class ServiceInvoice extends Model
     protected static $readableIdLength = 4;
 
     /**
+     * Get the model goodsGatePass
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function goodsGatePass()
+    {
+        return $this->morphOne(GoodsGatePass::class, 'invoice');
+    }
+
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function dispatches()
     {
-       return $this->hasMany(ServiceDispatch::class, 'invoice_id');
+        return $this->hasMany(ServiceDispatch::class, 'invoice_id');
     }
 
     /**
@@ -67,7 +77,7 @@ class ServiceInvoice extends Model
      */
     public function receives()
     {
-       return $this->hasMany(ServiceReceive::class, 'invoice_id');
+        return $this->hasMany(ServiceReceive::class, 'invoice_id');
     }
 
     /**
@@ -77,7 +87,7 @@ class ServiceInvoice extends Model
      */
     public function provider()
     {
-       return $this->belongsTo(Provider::class)->withTrashed();
+        return $this->belongsTo(Provider::class)->withTrashed();
     }
 
     /**
@@ -120,7 +130,7 @@ class ServiceInvoice extends Model
     public function isConfirmed()
     {
         $status = $this->dispatches()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == DispatchStatus::CONFIRMED()){
+        if ($status->count() == 1  && $status->first() == DispatchStatus::CONFIRMED()) {
             return true;
         }
         return false;
@@ -134,7 +144,7 @@ class ServiceInvoice extends Model
     public function isReceived()
     {
         $status = $this->dispatches()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == DispatchStatus::RECEIVED()){
+        if ($status->count() == 1  && $status->first() == DispatchStatus::RECEIVED()) {
             return true;
         }
         return false;
@@ -147,7 +157,7 @@ class ServiceInvoice extends Model
      */
     public function isPartial()
     {
-        if($this->receives()->exists()){
+        if ($this->receives()->exists()) {
             return true;
         }
         return false;
@@ -160,32 +170,28 @@ class ServiceInvoice extends Model
      */
     public function updateStatus()
     {
-        if($this->dispatches()->exists()){
+        if ($this->dispatches()->exists()) {
 
-            if($this->isConfirmed()){
+            if ($this->isConfirmed()) {
                 $this->status = DispatchStatus::CONFIRMED();
                 $this->save();
                 return;
             }
 
-            if($this->isReceived()){
+            if ($this->isReceived()) {
                 $this->status = DispatchStatus::RECEIVED();
                 $this->save();
                 return;
             }
 
-            if($this->isPartial()){
+            if ($this->isPartial()) {
                 $this->status = DispatchStatus::PARTIAL();
                 $this->save();
                 return;
             }
-
-        }else{
+        } else {
             $this->status = DispatchStatus::DRAFT();
             $this->save();
         }
     }
-
-
-
 }

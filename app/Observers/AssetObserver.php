@@ -44,17 +44,17 @@ class AssetObserver
      */
     public function updated(Asset $asset)
     {
-        if ($asset->alertQuantity > $asset->quantity) {
-            //Notify the users
-            $users = \App\Models\User::permission(['view assets', 'view any assets'])->where('location_id', $asset->locationId)->get();
-            Notification::send($users, new AlertQuantityNotification(\App\Nova\Asset::uriKey(), $asset, 'Asset'));
+        // if ($asset->alertQuantity > $asset->quantity) {
+        //     //Notify the users
+        //     $users = \App\Models\User::permission(['view assets', 'view any assets'])->where('location_id', $asset->locationId)->get();
+        //     Notification::send($users, new AlertQuantityNotification(\App\Nova\Asset::uriKey(), $asset, 'Asset'));
 
-            //Notify super admins
-            if (Settings::superAdminNotification()) {
-                $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
-                Notification::send($users, new AlertQuantityNotification(\App\Nova\Asset::uriKey(), $asset, 'Asset'));
-            }
-        }
+        //     //Notify super admins
+        //     if (Settings::superAdminNotification()) {
+        //         $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
+        //         Notification::send($users, new AlertQuantityNotification(\App\Nova\Asset::uriKey(), $asset, 'Asset'));
+        //     }
+        // }
     }
 
     /**

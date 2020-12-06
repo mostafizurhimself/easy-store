@@ -13,14 +13,22 @@ class CreateEmployeeGatePassesTable extends Migration
      */
     public function up()
     {
-        // Schema::create('employee_gate_passes', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('readable_id')->nullable();
-        //     $table->bigInteger('location_id')->unsigned()->nullable();
-        //     $table->timestamps();
-        //     $table->softDeletes();
-        //     $table->foreign('location_id')->references('id')->on('locations');
-        // });
+        Schema::create('employee_gate_passes', function (Blueprint $table) {
+            $table->id();
+            $table->string('readable_id')->nullable();
+            $table->bigInteger('location_id')->unsigned()->nullable();
+            $table->bigInteger('employee_id')->unsigned()->nullable();
+            $table->text('reason')->nullable();
+            $table->dateTime('out')->index('employee_gate_passes_out_time_index');
+            $table->dateTime('in')->nullable()->index('employee_gate_passes_in_time_index');
+            $table->string('status')->default('draft');
+            $table->bigInteger('passed_by')->unsigned()->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('location_id')->references('id')->on('locations');
+            $table->foreign('employee_id')->references('id')->on('employees');
+            $table->foreign('passed_by')->references('id')->on('users');
+        });
     }
 
     /**

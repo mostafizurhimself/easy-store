@@ -32,7 +32,7 @@ class Permission extends Resource
      *
      * @var string
      */
-    public static $group = 'ACL Section';
+    public static $group = '<span class="hidden">20</span>ACL Section';
 
     /**
      * The side nav menu order.
@@ -58,6 +58,12 @@ class Permission extends Resource
         return str_replace('-', ' ', static::uriKey());
     }
 
+    /**
+     * Hide resource from Nova's standard menu.
+     *
+     * @var bool
+     */
+    public static $displayInNavigation = false;
 
     /**
      * The columns that should be searched.

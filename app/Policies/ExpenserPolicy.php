@@ -2,9 +2,10 @@
 
 namespace App\Policies;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Expenser;
-use App\Models\Role;
+use App\Facades\Settings;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ExpenserPolicy
@@ -19,7 +20,12 @@ class ExpenserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isSuperAdmin() || $user->hasPermissionTo('view any expensers');
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+
+        return ($user->isSuperAdmin() || $user->hasPermissionTo('view any expensers'));
     }
 
     /**
@@ -31,6 +37,11 @@ class ExpenserPolicy
      */
     public function view(User $user, Expenser $expenser)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+        // check role for expense
         if($user->hasRole(Role::EXPENSER)){
             return $user->id == $expenser->userId;
         }
@@ -47,6 +58,11 @@ class ExpenserPolicy
      */
     public function create(User $user)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+        // check role for expense
         if($user->hasRole(Role::EXPENSER)){
             return false;
         }
@@ -62,6 +78,11 @@ class ExpenserPolicy
      */
     public function update(User $user, Expenser $expenser)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+        // check role for expense
         if($user->hasRole(Role::EXPENSER)){
             return false;
         }
@@ -79,6 +100,11 @@ class ExpenserPolicy
      */
     public function delete(User $user, Expenser $expenser)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+        // check role for expense
         if($user->hasRole(Role::EXPENSER)){
             return false;
         }
@@ -113,6 +139,11 @@ class ExpenserPolicy
      */
     public function forceDelete(User $user, Expenser $expenser)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+        // check role for expense
         if($user->hasRole(Role::EXPENSER)){
             return false;
         }

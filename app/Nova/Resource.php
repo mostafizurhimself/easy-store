@@ -17,7 +17,7 @@ abstract class Resource extends NovaResource
      *
      * @var string
      */
-    public static $group = 'Others Section';
+    public static $group = '<span class="hidden">21</span> Others Section';
 
     /**
      * Default ordering for index query.

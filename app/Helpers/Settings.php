@@ -67,6 +67,16 @@ class Settings
     }
 
     /**
+     * Get the gate pass approvers
+     *
+     * @return array
+     */
+    public function gatePassApprovers()
+    {
+        return !empty(self::application()->gate_pass_approvers) ? self::application()->gate_pass_approvers : [];
+    }
+
+    /**
      * Get the super admin notification settings
      *
      * @return array
@@ -89,10 +99,30 @@ class Settings
     /**
      * Get the product module settings
      *
-     * @return array
+     * @return bool
      */
     public function isProductModuleEnabled()
     {
         return !empty(self::application()->enable_product_module) ? self::application()->enable_product_module : false;
+    }
+
+    /**
+     * Get the expense module settings
+     *
+     * @return bool
+     */
+    public function isExpenseModuleEnabled()
+    {
+        return !empty(self::application()->enable_expense_module) ? self::application()->enable_expense_module : false;
+    }
+
+    /**
+     * Get the gate pass module settings
+     *
+     * @return bool
+     */
+    public function isGatePassModuleEnabled()
+    {
+        return !empty(self::application()->enable_gate_pass_module) ? self::application()->enable_gate_pass_module : false;
     }
 }

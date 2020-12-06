@@ -19,13 +19,15 @@ class CreateGoodsGatePassesTable extends Migration
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->bigInteger('invoice_id')->unsigned()->nullable();
             $table->string('invoice_type')->nullable();
-            $table->json('detail')->nullable();
-            $table->text('description')->nullable();
+            $table->json('details')->nullable();
+            $table->text('note')->nullable();
             $table->string('status')->default('draft');
-            $table->dateTime('passed_at')->nullable();
+            $table->bigInteger('passed_by')->unsigned()->nullable();
+            $table->dateTime('passed_at')->nullable()->index('goods_gate_passes_passed_at_index');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');
+            $table->foreign('passed_by')->references('id')->on('users');
             $table->index(['invoice_id', 'invoice_type'], 'goods_gate_passes_invoice_index');
         });
     }

@@ -78,8 +78,8 @@ class AssetPurchaseItem extends Resource
      * @var array
      */
     public static $searchRelations = [
-        'purchaseOrder' => ['name'],
-        'asset' => ['name'],
+        'purchaseOrder' => ['readable_id'],
+        'asset' => ['name', 'code'],
     ];
 
     /**

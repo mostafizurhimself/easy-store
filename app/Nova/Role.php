@@ -44,7 +44,7 @@ class Role extends Resource
      *
      * @var string
      */
-    public static $group = 'ACL Section';
+    public static $group = '<span class="hidden">20</span>ACL Section';
 
     /**
      * The side nav menu order.

@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Balance;
+use App\Facades\Settings;
 use App\Enums\BalanceStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -19,6 +20,10 @@ class BalancePolicy
      */
     public function viewAny(User $user)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() || $user->hasPermissionTo('view any balances');
     }
 
@@ -31,6 +36,11 @@ class BalancePolicy
      */
     public function view(User $user, Balance $balance)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+        //Check role for expenser
         if ($user->isExpenser()) {
             return $balance->expenser->userId == $user->id;
         }
@@ -46,6 +56,10 @@ class BalancePolicy
      */
     public function create(User $user)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() || $user->hasPermissionTo('create balances');
     }
 
@@ -58,6 +72,11 @@ class BalancePolicy
      */
     public function update(User $user, Balance $balance)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+        //Check role for expenser
         if ($user->isExpenser()) {
             return $balance->expenser->userId == $user->id;
         }
@@ -75,6 +94,11 @@ class BalancePolicy
      */
     public function delete(User $user, Balance $balance)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+        //Check role for expenser
         if ($user->isExpenser()) {
             return $balance->expenser->userId == $user->id;
         }
@@ -92,6 +116,11 @@ class BalancePolicy
      */
     public function restore(User $user, Balance $balance)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+        //Check role for expenser
         if ($user->isExpenser()) {
             return $balance->expenser->userId == $user->id;
         }
@@ -109,6 +138,11 @@ class BalancePolicy
      */
     public function forceDelete(User $user, Balance $balance)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
+        //Check role for expenser
         if ($user->isExpenser()) {
             return $balance->expenser->userId == $user->id;
         }

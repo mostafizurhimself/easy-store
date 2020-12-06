@@ -31,10 +31,8 @@ class AssetDistributionInvoicePolicy
      */
     public function view(User $user, AssetDistributionInvoice $assetDistributionInvoice)
     {
-        return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId ) ||
-                ($user->locationId == $assetDistributionInvoice->receiverId && $assetDistributionInvoice->status != DistributionStatus::DRAFT()) ||
-                $user->hasPermissionTo('view all locations data');
+        return $user->isSuperAdmin() || ($user->hasPermissionTo('view asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId) || ($user->locationId == $assetDistributionInvoice->receiverId && $assetDistributionInvoice->status != DistributionStatus::DRAFT()) ||
+            $user->hasPermissionTo('view all locations data');
     }
 
     /**
@@ -57,10 +55,9 @@ class AssetDistributionInvoicePolicy
      */
     public function update(User $user, AssetDistributionInvoice $assetDistributionInvoice)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId ) ||
-                $user->hasPermissionTo('update all locations data')) &&
-                $assetDistributionInvoice->status == DistributionStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('update asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId) ||
+            $user->hasPermissionTo('update all locations data')) &&
+            $assetDistributionInvoice->status == DistributionStatus::DRAFT();
     }
 
     /**
@@ -72,10 +69,9 @@ class AssetDistributionInvoicePolicy
      */
     public function delete(User $user, AssetDistributionInvoice $assetDistributionInvoice)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId ) ||
-                $user->hasPermissionTo('delete all locations data')) &&
-                $assetDistributionInvoice->status == DistributionStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('delete asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId) ||
+            $user->hasPermissionTo('delete all locations data')) &&
+            $assetDistributionInvoice->status == DistributionStatus::DRAFT();
     }
 
     /**
@@ -87,10 +83,9 @@ class AssetDistributionInvoicePolicy
      */
     public function restore(User $user, AssetDistributionInvoice $assetDistributionInvoice)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId ) ||
-                $user->hasPermissionTo('restore all locations data'))&&
-                $assetDistributionInvoice->status == DistributionStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('restore asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId) ||
+            $user->hasPermissionTo('restore all locations data')) &&
+            $assetDistributionInvoice->status == DistributionStatus::DRAFT();
     }
 
     /**
@@ -102,10 +97,9 @@ class AssetDistributionInvoicePolicy
      */
     public function forceDelete(User $user, AssetDistributionInvoice $assetDistributionInvoice)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data'))&&
-                $assetDistributionInvoice->status == DistributionStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('force delete asset distribution invoices') && $user->locationId == $assetDistributionInvoice->locationId) ||
+            $user->hasPermissionTo('force delete all locations data')) &&
+            $assetDistributionInvoice->status == DistributionStatus::DRAFT();
     }
 
     /**

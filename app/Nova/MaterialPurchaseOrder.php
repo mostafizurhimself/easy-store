@@ -38,7 +38,7 @@ class MaterialPurchaseOrder extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\MaterialPurchaseOrder';
+    public static $model = \App\Models\MaterialPurchaseOrder::class;
 
     /**
      * Get the custom permissions name of the resource

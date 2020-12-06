@@ -71,7 +71,7 @@ class FabricPurchaseItem extends Resource
      */
     public static $searchRelations = [
         'purchaseOrder' => ['readable_id'],
-        'fabric' => ['name'],
+        'fabric' => ['name', 'code'],
     ];
 
 

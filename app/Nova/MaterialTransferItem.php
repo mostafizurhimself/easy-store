@@ -212,22 +212,24 @@ class MaterialTransferItem extends Resource
      */
     public static function relatableMaterials(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\MaterialTransferInvoice::find($request->viaResourceId);
+        if (!$request->isResourceIndexRequest()) {
+            $invoice = \App\Models\MaterialTransferInvoice::find($request->viaResourceId);
 
-        if(empty($invoice)){
-            $invoice = $request->findResourceOrFail()->invoice;
-        }
+            if (empty($invoice)) {
+                $invoice = $request->findResourceOrFail()->invoice;
+            }
 
-        try {
-            $materialId = $request->findResourceOrFail()->materialId;
-        } catch (\Throwable $th) {
-           $materialId = null;
-        }
+            try {
+                $materialId = $request->findResourceOrFail()->materialId;
+            } catch (\Throwable $th) {
+                $materialId = null;
+            }
 
-        return $query->where('location_id', $invoice->locationId)
-                ->whereNotIn('id', $invoice->materialIds($materialId))->get()->map(function($material){
-                    return [ 'value' => $material->id, 'label' => $material->name."({$material->code})" ];
+            return $query->where('location_id', $invoice->locationId)
+                ->whereNotIn('id', $invoice->materialIds($materialId))->get()->map(function ($material) {
+                    return ['value' => $material->id, 'label' => $material->name . "({$material->code})"];
                 });
+        }
     }
 
     /**
@@ -239,7 +241,7 @@ class MaterialTransferItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -251,10 +253,10 @@ class MaterialTransferItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }

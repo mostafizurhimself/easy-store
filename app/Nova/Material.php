@@ -27,6 +27,7 @@ use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\ActiveStatusFilter;
 use App\Nova\Lenses\Material\ItSections;
 use AwesomeNova\Filters\DependentFilter;
+use App\Nova\Lenses\Material\StockSummary;
 use Easystore\TextUppercase\TextUppercase;
 use App\Nova\Actions\Materials\DownloadPdf;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -51,7 +52,7 @@ class Material extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can convert unit of', 'can adjust quantity of'];
+    public static $permissions = ['can download', 'can convert unit of', 'can adjust quantity of', 'can view stock summary of'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -335,7 +336,9 @@ class Material extends Resource
     public function lenses(Request $request)
     {
         return [
-            // new ItSections(),
+            // (new StockSummary)->canSee(function ($request) {
+            //     return $request->user()->hasPermissionTo('can view stock summary of materials') || $request->user()->isSuperAdmin();
+            // }),
             new AlertQuantities(),
         ];
     }

@@ -30,7 +30,9 @@ use App\Models\AssetConsume;
 use App\Policies\RolePolicy;
 use App\Policies\UnitPolicy;
 use App\Policies\UserPolicy;
+use App\Models\AdjustBalance;
 use App\Models\AssetCategory;
+use App\Models\GoodsGatePass;
 use App\Models\ProductOutput;
 use App\Policies\AssetPolicy;
 use App\Policies\FloorPolicy;
@@ -45,6 +47,7 @@ use App\Models\ExpenseCategory;
 use App\Models\ProductCategory;
 use App\Models\ServiceCategory;
 use App\Models\ServiceDispatch;
+use App\Models\VisitorGatePass;
 use App\Policies\BalancePolicy;
 use App\Policies\ExpensePolicy;
 use App\Policies\ProductPolicy;
@@ -53,6 +56,7 @@ use App\Policies\ServicePolicy;
 use App\Policies\SettingPolicy;
 use App\Models\AssetReceiveItem;
 use App\Models\AssetRequisition;
+use App\Models\EmployeeGatePass;
 use App\Models\FabricReturnItem;
 use App\Models\FinishingInvoice;
 use App\Models\MaterialCategory;
@@ -91,7 +95,9 @@ use App\Models\AssetDistributionItem;
 use App\Models\FabricTransferInvoice;
 use App\Models\MaterialPurchaseOrder;
 use App\Models\MaterialReturnInvoice;
+use App\Policies\AdjustBalancePolicy;
 use App\Policies\AssetCategoryPolicy;
+use App\Policies\GoodsGatePassPolicy;
 use App\Policies\ProductOutputPolicy;
 use App\Models\ProductRequisitionItem;
 use App\Models\ServiceTransferInvoice;
@@ -105,10 +111,12 @@ use App\Policies\ExpenseCategoryPolicy;
 use App\Policies\ProductCategoryPolicy;
 use App\Policies\ServiceCategoryPolicy;
 use App\Policies\ServiceDispatchPolicy;
+use App\Policies\VisitorGatePassPolicy;
 use Spatie\Activitylog\Models\Activity;
 use App\Models\AssetDistributionInvoice;
 use App\Policies\AssetReceiveItemPolicy;
 use App\Policies\AssetRequisitionPolicy;
+use App\Policies\EmployeeGatePassPolicy;
 use App\Policies\FabricReturnItemPolicy;
 use App\Policies\FinishingInvoicePolicy;
 use App\Policies\MaterialCategoryPolicy;
@@ -224,9 +232,13 @@ class AuthServiceProvider extends ServiceProvider
         Floor::class                        => FloorPolicy::class,
         Style::class                        => StylePolicy::class,
         Unit::class                         => UnitPolicy::class,
+        GoodsGatePass::class                => GoodsGatePassPolicy::class,
+        VisitorGatePass::class              => VisitorGatePassPolicy::class,
+        EmployeeGatePass::class             => EmployeeGatePassPolicy::class,
         Activity::class                     => ActivityLogPolicy::class,
         Setting::class                      => SettingPolicy::class,
         AdjustQuantity::class               => AdjustQuantityPolicy::class,
+        AdjustBalance::class                => AdjustBalancePolicy::class,
     ];
 
     /**

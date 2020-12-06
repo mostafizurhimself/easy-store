@@ -24,6 +24,7 @@ use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
+use App\Nova\Actions\GenerateGoodsGatePass;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetPurchaseOrders\MarkAsDraft;

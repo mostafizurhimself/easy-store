@@ -8,12 +8,12 @@ use App\Traits\Locationable;
 use Illuminate\Support\Collection;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\File;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model as BaseModel;
-
 
 class Model extends BaseModel
 {
-    use CamelCasing, Locationable, Authorize;
+    use CamelCasing, Locationable, Authorize, SoftDeletes;
 
     /**
      * Set the model readable id prefix

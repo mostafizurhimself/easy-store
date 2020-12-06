@@ -158,6 +158,26 @@ class Setting extends Resource
                     return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
                 }),
 
+            Text::make('Gate Pass Approvers')
+                ->displayUsing(function () {
+                    $value = '';
+
+                    if (!empty(json_decode($this->resource->settings)->gate_pass_approvers)) {
+                        foreach (json_decode($this->resource->settings)->gate_pass_approvers as $approver) {
+                            $employee = \App\Models\Employee::find($approver);
+                            $value .= "<p class='pb-4'>{$employee->name}({$employee->readableId})</p>";
+                        }
+                        return $value;
+                    } else {
+                        return null;
+                    }
+                })
+                ->asHtml()
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS;
+                }),
+
             Boolean::make('Super Admin Notification', 'super_admin_notification')
                 ->displayUsing(function () {
                     return json_decode($this->resource->settings)->super_admin_notification ?? null;
@@ -195,9 +215,56 @@ class Setting extends Resource
                     return $request->user()->isSystemAdmin();
                 }),
 
+            Boolean::make('Enable Expense Module', 'enable_expense_module')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->enable_expense_module ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function ($request) {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS && $request->user()->isSystemAdmin();
+                }),
+
+
+            Boolean::make('Enable Gate Pass Module', 'enable_gate_pass_module')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->enable_gate_pass_module ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function ($request) {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS && $request->user()->isSystemAdmin();
+                }),
+
+            Boolean::make('Enable Vendor Module', 'enable_vendor_module')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->enable_vendor_module ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function ($request) {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS && $request->user()->isSystemAdmin();
+                }),
+
+
             Boolean::make('Enable Product Module', 'enable_product_module')
                 ->displayUsing(function () {
                     return json_decode($this->resource->settings)->enable_product_module ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function ($request) {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS && $request->user()->isSystemAdmin();
+                }),
+
+            Boolean::make('Enable Timesheet Module', 'enable_timesheet_module')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->enable_timesheet_module ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function ($request) {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS && $request->user()->isSystemAdmin();
+                }),
+
+            Boolean::make('Enable Payroll Module', 'enable_payroll_module')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->enable_payroll_module ?? null;
                 })
                 ->onlyOnDetail()
                 ->canSee(function ($request) {
@@ -236,6 +303,14 @@ class Setting extends Resource
                         ->optionsLimit(5) // How many items to display at once
                         ->reorderable(), // Allows reordering functionality
 
+                    Multiselect::make('Gate Pass Approvers', 'gate_pass_approvers')
+                        ->options(\App\Models\Employee::toSelectOptions())
+                        ->placeholder('Choose options') // Placeholder text
+                        ->max(10) // Maximum number of items the user can choose
+                        ->saveAsJSON() // Saves value as JSON if the database column is of JSON type
+                        ->optionsLimit(5) // How many items to display at once
+                        ->reorderable(), // Allows reordering functionality
+
                     Boolean::make('Super Admin Notification', 'super_admin_notification')
                         ->readonly(function ($request) {
                             return !$request->user()->isSuperAdmin();
@@ -253,11 +328,30 @@ class Setting extends Resource
                             return $request->user()->isSystemAdmin();
                         }),
 
+                    Boolean::make('Enable Expense Module', 'enable_expense_module')
+                        ->canSee(function ($request) {
+                            return $request->user()->isSystemAdmin();
+                        }),
+
+                    Boolean::make('Enable Gate Pass Module', 'enable_gate_pass_module')
+                        ->canSee(function ($request) {
+                            return $request->user()->isSystemAdmin();
+                        }),
+
+                    Boolean::make('Enable Vendor Module', 'enable_vendor_module')
+                        ->canSee(function ($request) {
+                            return $request->user()->isSystemAdmin();
+                        }),
+
                     Boolean::make('Enable Product Module', 'enable_product_module')
                         ->canSee(function ($request) {
                             return $request->user()->isSystemAdmin();
                         }),
 
+                    Boolean::make('Enable Payroll Module', 'enable_payroll_module')
+                        ->canSee(function ($request) {
+                            return $request->user()->isSystemAdmin();
+                        }),
 
                 ])
                     ->flatten(),

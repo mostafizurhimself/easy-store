@@ -73,6 +73,7 @@ use App\Observers\AssetRequisitionObserver;
 use App\Observers\FabricReturnItemObserver;
 use App\Observers\FinishingInvoiceObserver;
 use App\Models\AssetDistributionReceiveItem;
+use App\Models\GoodsGatePass;
 use App\Observers\AssetPurchaseItemObserver;
 use App\Observers\FabricReceiveItemObserver;
 use App\Observers\AssetPurchaseOrderObserver;
@@ -102,6 +103,7 @@ use App\Observers\FabricTransferReceiveItemObserver;
 use App\Observers\ServiceTransferReceiveItemObserver;
 use App\Observers\MaterialTransferReceiveItemObserver;
 use App\Observers\AssetDistributionReceiveItemObserver;
+use App\Observers\GoodsGatePassObserver;
 
 class ObserverServiceProvider extends ServiceProvider
 {
@@ -171,5 +173,6 @@ class ObserverServiceProvider extends ServiceProvider
         ProductRequisitionItem::observe(ProductRequisitionItemObserver::class);
         Expenser::observe(ExpenserObserver::class);
         Expense::observe(ExpenseObserver::class);
+        GoodsGatePass::observe(GoodsGatePassObserver::class);
     }
 }

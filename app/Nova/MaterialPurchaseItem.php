@@ -92,8 +92,8 @@ class MaterialPurchaseItem extends Resource
      * @var array
      */
     public static $searchRelations = [
-        'purchaseOrder' => ['name'],
-        'material' => ['name'],
+        'purchaseOrder' => ['readable_id'],
+        'material' => ['name', 'code'],
     ];
 
     /**

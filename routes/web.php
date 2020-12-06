@@ -76,13 +76,16 @@ Route::group(['middleware' => 'nova'], function () {
         Route::get('assets/{asset}', "StockSummaryController@assetStockSummary")->name('stock-summaries.assets');
     });
 
+    // Gate pass route
+    Route::group(['prefix' => 'gate-passes'], function () {
+        Route::get('goods/{pass}', "GatePassController@goods")->name('gate-passes.goods');
+    });
+
     // Helper Controller
     Route::get('dump-download/{filename}', "HelperController@dumpDownload")->name('dump-download');
-    Route::get('test', function(){
+    Route::get('test', function () {
         $invoice = \App\Models\FinishingInvoice::first();
 
         return view('invoices.pages.finishing-invoice', compact('invoice'));
     });
-
-
 });

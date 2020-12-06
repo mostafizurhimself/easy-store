@@ -8,30 +8,33 @@ use App\Rules\ReceiverRule;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use App\Enums\GatePassStatus;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\Hidden;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
-use Illuminate\Support\Optional;
 use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\ReceiverFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Lenses\DistributionItems;
-use App\Nova\Lenses\DistributionHistory;
+use App\Nova\Actions\CreateGoodsGatePass;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\DistributionStatusFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetDistributionInvoices\AutoReceive;
-use App\Nova\Actions\AssetDistributionInvoices\MarkAsDraft;
 use App\Nova\Actions\AssetDistributionInvoices\ConfirmInvoice;
 use App\Nova\Actions\AssetDistributionInvoices\GenerateInvoice;
 use App\Nova\Lenses\AssetDistributionInvoice\DistributionInvoices;
@@ -59,7 +62,7 @@ class AssetDistributionInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate', 'can auto receive'];
+    public static $permissions = ['can confirm', 'can generate', 'can auto receive', 'can create gate pass of'];
 
     /**
      * The group associated with the resource.
@@ -94,6 +97,36 @@ class AssetDistributionInvoice extends Resource
     public static function label()
     {
         return "Distributions";
+    }
+
+    /**
+     * Get the displayable singular label of the resource.
+     *
+     * @return string
+     */
+    public static function singularLabel()
+    {
+        return "Asset Distribution";
+    }
+
+    /**
+     * Get the text for the create resource button.
+     *
+     * @return string|null
+     */
+    public static function createButtonLabel()
+    {
+        return __('Create Distribution');
+    }
+
+    /**
+     * Get the text for the update resource button.
+     *
+     * @return string|null
+     */
+    public static function updateButtonLabel()
+    {
+        return __("Update Distribution");
     }
 
     /**
@@ -215,6 +248,111 @@ class AssetDistributionInvoice extends Resource
                 "Receive Items" => [
                     HasMany::make('Receive Items', 'receiveItems', \App\Nova\AssetDistributionReceiveItem::class),
                 ],
+
+                "Gate Pass" => [
+
+                    Text::make('Gate Pass', function () {
+                        return $this->resource->goodsGatePass()->exists() ? $this->resource->goodsGatePass->readableId : null;
+                    })
+                        ->onlyOnDetail()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        }),
+
+                    Number::make('Total CTN', function () {
+                        return $this->resource->goodsGatePass()->exists() ? $this->resource->goodsGatePass->details['total_ctn'] : null;
+                    })
+                        ->onlyOnDetail()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        }),
+
+                    Number::make('Total Poly', function () {
+                        return $this->resource->goodsGatePass()->exists() ? $this->resource->goodsGatePass->details['total_poly'] : null;
+                    })
+                        ->onlyOnDetail()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        }),
+
+                    Number::make('Total Bag', function () {
+                        return $this->resource->goodsGatePass()->exists() ? $this->resource->goodsGatePass->details['total_bag'] : null;
+                    })
+                        ->onlyOnDetail()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        }),
+
+                    Textarea::make('Note', function () {
+                        return $this->resource->goodsGatePass()->exists() ? $this->resource->goodsGatePass->note : null;
+                    })
+                        ->onlyOnDetail()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        }),
+
+                    Text::make('Approved By', function () {
+                        if ($this->resource->goodsGatePass()->exists()) {
+                            return $this->resource->goodsGatePass->approve()->exists() ? $this->resource->goodsGatePass->approve->employee->name : null;
+                        }
+                    })
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists() && $this->resource->goodsGatePass->approve()->exists();
+                        })
+                        ->onlyOnDetail(),
+
+                    DateTime::make('Approved At', function () {
+                        if ($this->resource->goodsGatePass()->exists()) {
+                            return $this->resource->goodsGatePass->approve()->exists() ? $this->resource->goodsGatePass->approve->createdAt : null;
+                        }
+                    })
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists() && $this->resource->goodsGatePass->approve()->exists();
+                        })
+                        ->onlyOnDetail(),
+
+                    Text::make('Passed By', function () {
+                        if ($this->resource->goodsGatePass()->exists()) {
+                            return $this->resource->goodsGatePass->passedBy ? $this->resource->goodsGatePass->passedBy->name : null;
+                        }
+                    })
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists() && $this->resource->goodsGatePass->passedBy;
+                        })
+                        ->onlyOnDetail(),
+
+                    DateTime::make('Passed At', function () {
+                        if ($this->resource->goodsGatePass()->exists()) {
+                            return $this->resource->goodsGatePass->passedBy ? $this->resource->goodsGatePass->passedAt : null;
+                        }
+                    })
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists() && $this->resource->goodsGatePass->passedBy;
+                        })
+                        ->onlyOnDetail(),
+
+                    Text::make('Status', function(){
+                        if($this->resource->goodsGatePass()->exists()){
+                            if($this->resource->goodsGatePass->status == GatePassStatus::DRAFT()){
+                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-warning-light text-warning-dark'>".$this->resource->goodsGatePass->status."</span>";
+                            }
+
+                            if($this->resource->goodsGatePass->status == GatePassStatus::CONFIRMED()){
+                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-info-light text-info-dark'>".$this->resource->goodsGatePass->status."</span>";
+                            }
+
+                            if($this->resource->goodsGatePass->status == GatePassStatus::PASSED()){
+                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-success-light text-success-dark'>".$this->resource->goodsGatePass->status."</span>";
+                            }
+                        }
+                    })
+                        ->asHtml()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        })
+                        ->onlyOnDetail(),
+                ],
+
             ]))->withToolbar(),
 
             HasMany::make('Distribution Items', 'distributionItems', \App\Nova\AssetDistributionItem::class),
@@ -286,16 +424,6 @@ class AssetDistributionInvoice extends Resource
                 ->confirmText("Are you sure want to auto receive this invoice?")
                 ->onlyOnDetail(),
 
-            // (new MarkAsDraft)->canSee(function ($request) {
-            //     return $request->user()->hasPermissionTo('can mark as draft asset distribution invoices') || $request->user()->isSuperAdmin();
-            // })
-            //     ->canRun(function ($request) {
-            //         return $request->user()->hasPermissionTo('can mark as draft asset distribution invoices') || $request->user()->isSuperAdmin();
-            //     })
-            //     ->onlyOnDetail()
-            //     ->confirmButtonText('Mark As Draft')
-            //     ->confirmText('Are you sure want to mark the distribution invoice as draft?'),
-
             (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm asset distribution invoices') || $request->user()->isSuperAdmin();
             }),
@@ -309,6 +437,15 @@ class AssetDistributionInvoice extends Resource
                 ->confirmButtonText('Generate')
                 ->confirmText('Are you sure want to generate invoice now?')
                 ->onlyOnDetail(),
+
+            (new CreateGoodsGatePass)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can create gate pass of asset distribution invoices') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can create gate pass of asset distribution invoices') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail()
+                ->confirmButtonText('Create Or Update'),
         ];
     }
 }

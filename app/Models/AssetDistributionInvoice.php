@@ -46,6 +46,16 @@ class AssetDistributionInvoice extends Model implements HasMedia
     }
 
     /**
+     * Get the model goodsGatePass
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function goodsGatePass()
+    {
+        return $this->morphOne(GoodsGatePass::class, 'invoice');
+    }
+
+    /**
      * Set the model readable id length
      *
      * @var int
@@ -59,7 +69,7 @@ class AssetDistributionInvoice extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('distribution-attachments');
+        $this->addMediaCollection('distribution-attachments');
     }
 
     /**
@@ -69,7 +79,7 @@ class AssetDistributionInvoice extends Model implements HasMedia
      */
     public function distributionItems()
     {
-       return $this->hasMany(AssetDistributionItem::class, 'invoice_id');
+        return $this->hasMany(AssetDistributionItem::class, 'invoice_id');
     }
 
     /**
@@ -79,7 +89,7 @@ class AssetDistributionInvoice extends Model implements HasMedia
      */
     public function receiveItems()
     {
-       return $this->hasMany(AssetDistributionReceiveItem::class, 'invoice_id');
+        return $this->hasMany(AssetDistributionReceiveItem::class, 'invoice_id');
     }
 
     /**
@@ -89,7 +99,7 @@ class AssetDistributionInvoice extends Model implements HasMedia
      */
     public function receiver()
     {
-       return $this->belongsTo(Location::class, 'receiver_id')->withTrashed();
+        return $this->belongsTo(Location::class, 'receiver_id')->withTrashed();
     }
 
     /**
@@ -99,7 +109,7 @@ class AssetDistributionInvoice extends Model implements HasMedia
      */
     public function requisition()
     {
-       return $this->belongsTo(AssetRequisition::class, 'requisition_id')->withTrashed();
+        return $this->belongsTo(AssetRequisition::class, 'requisition_id')->withTrashed();
     }
 
     /**
@@ -153,7 +163,7 @@ class AssetDistributionInvoice extends Model implements HasMedia
     public function isConfirmed()
     {
         $status = $this->distributionItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == DistributionStatus::CONFIRMED()){
+        if ($status->count() == 1  && $status->first() == DistributionStatus::CONFIRMED()) {
             return true;
         }
         return false;
@@ -167,7 +177,7 @@ class AssetDistributionInvoice extends Model implements HasMedia
     public function isReceived()
     {
         $status = $this->distributionItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == DistributionStatus::RECEIVED()){
+        if ($status->count() == 1  && $status->first() == DistributionStatus::RECEIVED()) {
             return true;
         }
         return false;
@@ -180,7 +190,7 @@ class AssetDistributionInvoice extends Model implements HasMedia
      */
     public function isPartial()
     {
-        if($this->receiveItems()->exists()){
+        if ($this->receiveItems()->exists()) {
             return true;
         }
         return false;
@@ -193,27 +203,26 @@ class AssetDistributionInvoice extends Model implements HasMedia
      */
     public function updateStatus()
     {
-        if($this->distributionItems()->exists()){
+        if ($this->distributionItems()->exists()) {
 
-            if($this->isConfirmed()){
+            if ($this->isConfirmed()) {
                 $this->status = DistributionStatus::CONFIRMED();
                 $this->save();
                 return;
             }
 
-            if($this->isReceived()){
+            if ($this->isReceived()) {
                 $this->status = DistributionStatus::RECEIVED();
                 $this->save();
                 return;
             }
 
-            if($this->isPartial()){
+            if ($this->isPartial()) {
                 $this->status = DistributionStatus::PARTIAL();
                 $this->save();
                 return;
             }
-
-        }else{
+        } else {
             $this->status = DistributionStatus::DRAFT();
             $this->save();
         }
@@ -228,7 +237,4 @@ class AssetDistributionInvoice extends Model implements HasMedia
     {
         return $this->requisition ? $this->requisition->readableId : 'N/A';
     }
-
-
-
 }

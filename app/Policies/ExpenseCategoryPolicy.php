@@ -2,9 +2,10 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\ExpenseCategory;
 use App\Models\User;
+use App\Facades\Settings;
+use App\Models\ExpenseCategory;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ExpenseCategoryPolicy
 {
@@ -18,6 +19,10 @@ class ExpenseCategoryPolicy
      */
     public function viewAny(User $user)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() || $user->hasPermissionTo('view any expense categories');
     }
 
@@ -30,6 +35,10 @@ class ExpenseCategoryPolicy
      */
     public function view(User $user, ExpenseCategory $expenseCategory)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('view expense categories') && $user->locationId == $expenseCategory->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
@@ -43,6 +52,10 @@ class ExpenseCategoryPolicy
      */
     public function create(User $user)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() || $user->hasPermissionTo('create expense categories');
     }
 
@@ -55,6 +68,10 @@ class ExpenseCategoryPolicy
      */
     public function update(User $user, ExpenseCategory $expenseCategory)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update expense categories') && $user->locationId == $expenseCategory->locationId ) ||
                 $user->hasPermissionTo('update all locations data');
@@ -69,6 +86,10 @@ class ExpenseCategoryPolicy
      */
     public function delete(User $user, ExpenseCategory $expenseCategory)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete expense categories') && $user->locationId == $expenseCategory->locationId ) ||
                 $user->hasPermissionTo('delete all locations data');
@@ -83,6 +104,10 @@ class ExpenseCategoryPolicy
      */
     public function restore(User $user, ExpenseCategory $expenseCategory)
     {
+        // Check module is enabled or not
+        if(!Settings::isExpenseModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore expense categories') && $user->locationId == $expenseCategory->locationId ) ||
                 $user->hasPermissionTo('restore all locations data');

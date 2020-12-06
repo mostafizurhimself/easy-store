@@ -3,23 +3,29 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use Eminiarts\Tabs\Tabs;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use App\Enums\DispatchStatus;
+use App\Enums\GatePassStatus;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use App\Nova\Lenses\ReceiveItems;
 use Laravel\Nova\Fields\Currency;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Textarea;
 use App\Nova\Lenses\DispatchItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\DateRangeFilter;
+use App\Nova\Actions\CreateGoodsGatePass;
 use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\ServiceInvoices\MarkAsDraft;
@@ -52,7 +58,7 @@ class ServiceInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
+    public static $permissions = ['can confirm', 'can generate', 'can mark as draft', 'can create gate pass of'];
 
     /**
      * The group associated with the resource.
@@ -109,6 +115,36 @@ class ServiceInvoice extends Resource
     }
 
     /**
+     * Get the singular label of the resource.
+     *
+     * @return string
+     */
+    public static function singularLabel()
+    {
+        return "Service Invoice";
+    }
+
+    /**
+     * Get the text for the create resource button.
+     *
+     * @return string|null
+     */
+    public static function createButtonLabel()
+    {
+        return __('Create Invoice');
+    }
+
+    /**
+     * Get the text for the update resource button.
+     *
+     * @return string|null
+     */
+    public static function updateButtonLabel()
+    {
+        return __('Update Invoice');
+    }
+
+    /**
      * The icon of the resource.
      *
      * @return string
@@ -127,61 +163,173 @@ class ServiceInvoice extends Resource
     public function fields(Request $request)
     {
         return [
-            RouterLink::make('Invoice', 'id')
-                ->withMeta([
-                    'label' => $this->readableId,
-                ])
-                ->sortable(),
+            (new Tabs('Service Invoice Details', [
+                "Invoice Info" => [
+                    RouterLink::make('Invoice', 'id')
+                        ->withMeta([
+                            'label' => $this->readableId,
+                        ])
+                        ->sortable(),
 
-            Date::make('Date')
-                ->rules('required')
-                ->default(Carbon::now())
-                ->sortable()
-                ->readonly(),
+                    Date::make('Date')
+                        ->rules('required')
+                        ->default(Carbon::now())
+                        ->sortable()
+                        ->readonly(),
 
-            Hidden::make('Date')
-                ->default(Carbon::now())
-                ->hideWhenUpdating(),
+                    Hidden::make('Date')
+                        ->default(Carbon::now())
+                        ->hideWhenUpdating(),
 
 
-            BelongsTo::make('Location')
-                ->searchable()
-                ->sortable()
-                ->canSee(function ($request) {
-                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                        return true;
-                    }
-                    return false;
-                }),
+                    BelongsTo::make('Location')
+                        ->searchable()
+                        ->sortable()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
 
-            Trix::make('Description')
-                ->rules('nullable', 'max:500'),
+                    Trix::make('Description')
+                        ->rules('nullable', 'max:500'),
 
-            Currency::make('Total Dispatch Amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Total Dispatch Amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            Currency::make('Total Receive Amount')
-                ->currency('BDT')
-                ->sortable()
-                ->exceptOnForms(),
+                    Currency::make('Total Receive Amount')
+                        ->currency('BDT')
+                        ->sortable()
+                        ->exceptOnForms(),
 
-            BelongsTo::make('Provider', 'provider', 'App\Nova\Provider')->searchable(),
+                    BelongsTo::make('Provider', 'provider', 'App\Nova\Provider')->searchable(),
 
-            Badge::make('Status')->map([
-                DispatchStatus::DRAFT()->getValue()     => 'warning',
-                DispatchStatus::CONFIRMED()->getValue() => 'info',
-                DispatchStatus::PARTIAL()->getValue()   => 'danger',
-                DispatchStatus::RECEIVED()->getValue()  => 'success',
-            ])
-                ->sortable()
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+                    Badge::make('Status')->map([
+                        DispatchStatus::DRAFT()->getValue()     => 'warning',
+                        DispatchStatus::CONFIRMED()->getValue() => 'info',
+                        DispatchStatus::PARTIAL()->getValue()   => 'danger',
+                        DispatchStatus::RECEIVED()->getValue()  => 'success',
+                    ])
+                        ->sortable()
+                        ->label(function () {
+                            return Str::title(Str::of($this->status)->replace('_', " "));
+                        }),
+                ],
+                "Receives" => [
+                    HasMany::make('Receives', 'receives', \App\Nova\ServiceReceive::class)
+                ],
+
+
+                "Gate Pass" => [
+
+                    Text::make('Gate Pass', function () {
+                        return $this->resource->goodsGatePass()->exists() ? $this->resource->goodsGatePass->readableId : null;
+                    })
+                        ->onlyOnDetail()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        }),
+
+                    Number::make('Total CTN', function () {
+                        return $this->resource->goodsGatePass()->exists() ? $this->resource->goodsGatePass->details['total_ctn'] : null;
+                    })
+                        ->onlyOnDetail()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        }),
+
+                    Number::make('Total Poly', function () {
+                        return $this->resource->goodsGatePass()->exists() ? $this->resource->goodsGatePass->details['total_poly'] : null;
+                    })
+                        ->onlyOnDetail()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        }),
+
+                    Number::make('Total Bag', function () {
+                        return $this->resource->goodsGatePass()->exists() ? $this->resource->goodsGatePass->details['total_bag'] : null;
+                    })
+                        ->onlyOnDetail()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        }),
+
+                    Textarea::make('Note', function () {
+                        return $this->resource->goodsGatePass()->exists() ? $this->resource->goodsGatePass->note : null;
+                    })
+                        ->onlyOnDetail()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        }),
+
+                    Text::make('Approved By', function () {
+                        if ($this->resource->goodsGatePass()->exists()) {
+                            return $this->resource->goodsGatePass->approve()->exists() ? $this->resource->goodsGatePass->approve->employee->name : null;
+                        }
+                    })
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists() && $this->resource->goodsGatePass->approve()->exists();
+                        })
+                        ->onlyOnDetail(),
+
+                    DateTime::make('Approved At', function () {
+                        if ($this->resource->goodsGatePass()->exists()) {
+                            return $this->resource->goodsGatePass->approve()->exists() ? $this->resource->goodsGatePass->approve->createdAt : null;
+                        }
+                    })
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists() && $this->resource->goodsGatePass->approve()->exists();
+                        })
+                        ->onlyOnDetail(),
+
+                    Text::make('Passed By', function () {
+                        if ($this->resource->goodsGatePass()->exists()) {
+                            return $this->resource->goodsGatePass->passedBy ? $this->resource->goodsGatePass->passedBy->name : null;
+                        }
+                    })
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists() && $this->resource->goodsGatePass->passedBy;
+                        })
+                        ->onlyOnDetail(),
+
+                    DateTime::make('Passed At', function () {
+                        if ($this->resource->goodsGatePass()->exists()) {
+                            return $this->resource->goodsGatePass->passedBy ? $this->resource->goodsGatePass->passedAt : null;
+                        }
+                    })
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists() && $this->resource->goodsGatePass->passedBy;
+                        })
+                        ->onlyOnDetail(),
+
+                    Text::make('Status', function () {
+                        if ($this->resource->goodsGatePass()->exists()) {
+                            if ($this->resource->goodsGatePass->status == GatePassStatus::DRAFT()) {
+                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-warning-light text-warning-dark'>" . $this->resource->goodsGatePass->status . "</span>";
+                            }
+
+                            if ($this->resource->goodsGatePass->status == GatePassStatus::CONFIRMED()) {
+                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-info-light text-info-dark'>" . $this->resource->goodsGatePass->status . "</span>";
+                            }
+
+                            if ($this->resource->goodsGatePass->status == GatePassStatus::PASSED()) {
+                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-success-light text-success-dark'>" . $this->resource->goodsGatePass->status . "</span>";
+                            }
+                        }
+                    })
+                        ->asHtml()
+                        ->canSee(function () {
+                            return $this->resource->goodsGatePass()->exists();
+                        })
+                        ->onlyOnDetail(),
+                ]
+            ]))->withToolbar(),
+
 
             HasMany::make('Dispatches', 'dispatches', \App\Nova\ServiceDispatch::class),
-            HasMany::make('Receives', 'receives', \App\Nova\ServiceReceive::class)
 
         ];
     }
@@ -269,6 +417,15 @@ class ServiceInvoice extends Resource
                 ->confirmButtonText('Generate')
                 ->confirmText('Are you sure want to generate invoice now?')
                 ->onlyOnDetail(),
+
+            (new CreateGoodsGatePass)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can create gate pass of service invoices') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can create gate pass of service invoices') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail()
+                ->confirmButtonText('Create Or Update'),
         ];
     }
 }

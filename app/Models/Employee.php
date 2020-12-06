@@ -145,4 +145,21 @@ class Employee extends Model implements HasMedia
         return null;
     }
 
+    /**
+     * Get the get pass approvers list
+     *
+     * @return array
+     */
+    public static function gatePassApprovers()
+    {
+        if(Settings::gatePassApprovers()){
+            return static::whereIn('id', Settings::gatePassApprovers())->get()->map(function($employee){
+                return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
+            });
+        }
+
+        return null;
+    }
+
+
 }
