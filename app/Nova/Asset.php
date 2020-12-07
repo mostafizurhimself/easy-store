@@ -25,6 +25,7 @@ use App\Nova\Actions\AdjustQuantity;
 use App\Nova\Actions\Assets\Consume;
 use App\Nova\Filters\CategoryFilter;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Lenses\Asset\StockSummary;
 use App\Nova\Actions\Assets\DownloadPdf;
 use App\Nova\Filters\ActiveStatusFilter;
 use AwesomeNova\Filters\DependentFilter;
@@ -63,7 +64,7 @@ class Asset extends Resource
      */
     public static $permissions = [
         'can consume', 'can download',
-        'can convert unit of', 'can adjust quantity of',  'can mass update quantity of',
+        'can convert unit of', 'can adjust quantity of', 'can view stock summary of', 'can mass update quantity of',
         'can generate stock summary of'
     ];
 
@@ -341,6 +342,9 @@ class Asset extends Resource
     public function lenses(Request $request)
     {
         return [
+            // (new StockSummary)->canSee(function ($request) {
+            //     return $request->user()->hasPermissionTo('can view stock summary of assets') || $request->user()->isSuperAdmin();
+            // }),
             new AlertQuantities,
         ];
     }

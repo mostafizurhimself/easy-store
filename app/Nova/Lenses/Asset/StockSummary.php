@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Nova\Lenses\Material;
+namespace App\Nova\Lenses\Asset;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Lenses\Lens;
-use App\Models\MaterialCategory;
+use App\Models\FabricCategory;
 use Illuminate\Support\Facades\DB;
 use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Filters\CategoryFilter;
 use AwesomeNova\Filters\DependentFilter;
-use App\Nova\Filters\MaterialLocationFilter;
+use App\Nova\Filters\FabricLocationFilter;
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use App\Nova\Actions\Materials\StockSummary\DownloadPdf;
-use App\Nova\Filters\Lens\MaterialSummaryDateRangeFilter;
-use App\Nova\Actions\Materials\StockSummary\DownloadExcel;
+use App\Nova\Actions\Fabrics\StockSummary\DownloadPdf;
+use App\Nova\Filters\Lens\FabricSummaryDateRangeFilter;
+use App\Nova\Actions\Fabrics\StockSummary\DownloadExcel;
 
 class StockSummary extends Lens
 {
@@ -31,11 +31,11 @@ class StockSummary extends Lens
     {
         return $request->withoutTableOrderPrefix()->withOrdering($request->withFilters(
             $query->select(self::columns())
-                ->leftJoin('material_categories', 'materials.category_id', '=', 'material_categories.id')
-                ->leftJoin('locations', 'materials.location_id', '=', 'locations.id')
-                ->leftJoin('units', 'materials.unit_id', '=', 'units.id')
-                ->where('materials.deleted_at', "=", null)
-                ->groupBy('materials.id')
+                ->leftJoin('asset_categories', 'assets.category_id', '=', 'asset_categories.id')
+                ->leftJoin('locations', 'assets.location_id', '=', 'locations.id')
+                ->leftJoin('units', 'assets.unit_id', '=', 'units.id')
+                ->where('assets.deleted_at', "=", null)
+                ->groupBy('assets.id')
                 ->withoutGlobalScopes()
         ));
     }
@@ -48,49 +48,48 @@ class StockSummary extends Lens
     protected static function columns()
     {
         return [
-            'materials.id',
+            'assets.id',
             'locations.name as location_name',
-            'materials.name',
-            'materials.opening_quantity',
+            'assets.name',
+            'assets.opening_quantity',
             'units.name as unit_name',
-            'material_categories.name as category_name',
+            'asset_categories.name as category_name',
 
             // Purchases
-            DB::raw("(COALESCE((select sum(material_receive_items.quantity) from material_receive_items
-            where material_receive_items.material_id = materials.id
-            and material_receive_items.deleted_at is null
-            and material_receive_items.status = 'confirmed'), 0)) as purchase_quantity"),
+            DB::raw("(COALESCE((select sum(asset_receive_items.quantity) from asset_receive_items
+            where asset_receive_items.asset_id = assets.id
+            and asset_receive_items.deleted_at is null
+            and asset_receive_items.status = 'confirmed'), 0)) as purchase_quantity"),
 
-            // Distributions
-            DB::raw("(COALESCE((select sum(material_distributions.quantity) from material_distributions
-            where material_distributions.material_id = materials.id
-            and material_distributions.status = 'confirmed'
-            and material_distributions.deleted_at  is null), 0)) as distribution_quantity"),
+            // Consume
+            DB::raw("(COALESCE((select sum(asset_consumes.quantity) from asset_consumes
+            where asset_consumes.asset_id = assets.id
+            and asset_consumes.deleted_at  is null), 0)) as consume_quantity"),
 
             // Returns
-            DB::raw("COALESCE((select sum(material_return_items.quantity) from material_return_items
-            left join material_return_invoices on material_return_items.invoice_id = material_return_invoices.id
-            where material_return_items.material_id = materials.id
-            and material_return_items.deleted_at is null
-            and material_return_items.status = 'confirmed'), 0) as return_quantity"),
+            DB::raw("COALESCE((select sum(asset_return_items.quantity) from asset_return_items
+            left join asset_return_invoices on asset_return_items.invoice_id = asset_return_invoices.id
+            where asset_return_items.asset_id = assets.id
+            and asset_return_items.deleted_at is null
+            and asset_return_items.status = 'confirmed'), 0) as return_quantity"),
 
-            // Transfers
-            DB::raw("COALESCE((select sum(material_transfer_items.transfer_quantity) from material_transfer_items
-            left join material_transfer_invoices on material_transfer_items.invoice_id = material_transfer_invoices.id
-            where material_transfer_items.material_id = materials.id
-            and material_transfer_items.deleted_at is null
-            and material_transfer_items.status = 'confirmed'), 0) as transfer_quantity"),
+            // Distribution
+            DB::raw("COALESCE((select sum(asset_distribution_items.distribution_quantity) from asset_distribution_items
+            left join asset_distribution_invoices on asset_distribution_items.invoice_id = asset_distribution_invoices.id
+            where asset_distribution_items.asset_id = assets.id
+            and asset_distribution_items.deleted_at is null
+            and asset_distribution_items.status = 'confirmed'), 0) as distribution_quantity"),
 
-            // Transfer Receives
-            DB::raw("(COALESCE((select sum(material_transfer_receive_items.quantity) from material_transfer_receive_items
-            where material_transfer_receive_items.material_id = materials.id
-            and material_transfer_receive_items.deleted_at is null
-            and material_transfer_receive_items.status = 'confirmed'), 0)) as receive_quantity"),
+            // Distribution Receives
+            DB::raw("(COALESCE((select sum(asset_distribution_receive_items.quantity) from asset_distribution_receive_items
+            where asset_distribution_receive_items.asset_id = assets.id
+            and asset_distribution_receive_items.deleted_at is null
+            and asset_distribution_receive_items.status = 'confirmed'), 0)) as receive_quantity"),
 
             // Adjust
             DB::raw("(COALESCE((select sum(adjust_quantities.quantity) from adjust_quantities
-            where adjust_quantities.adjustable_id = materials.id
-            and adjust_quantities.adjustable_type = 'App\Models\Material'
+            where adjust_quantities.adjustable_id = assets.id
+            and adjust_quantities.adjustable_type = 'App\Models\Asset'
             and adjust_quantities.deleted_at  is null), 0)) as adjust_quantity"),
 
         ];
@@ -110,9 +109,8 @@ class StockSummary extends Lens
             Text::make('Location', 'location_name')
                 ->sortable(),
 
-            TextWrap::make('Category', 'category_name')
-                ->sortable()
-                ->wrapMethod('length', 20),
+            Text::make('Category', 'category_name')
+                ->sortable(),
 
             TextWrap::make('Name', 'name')
                 ->sortable()
@@ -120,7 +118,7 @@ class StockSummary extends Lens
 
             Text::make('Previous', function () {
                 if (isset($this->previous_purchase_quantity) && isset($this->previous_distribution_quantity)) {
-                    $this->previous_quantity = ($this->opening_quantity + $this->previous_purchase_quantity + $this->previous_receive_quantity) - ($this->previous_distribution_quantity + $this->previous_return_quantity + $this->previous_transfer_quantity) +
+                    $this->previous_quantity = ($this->opening_quantity + $this->previous_purchase_quantity + $this->previous_receive_quantity) - ($this->previous_consume_quantity + $this->previous_return_quantity + $this->previous_distribution_quantity) +
                         $this->previous_adjust_quantity;
                 }else{
                     $this->previous_quantity = $this->opening_quantity;
@@ -138,9 +136,9 @@ class StockSummary extends Lens
             })
                 ->sortable(),
 
-            Text::make('Distribution', function () {
-                if (isset($this->distribution_quantity)) {
-                    return $this->distribution_quantity . " " . $this->unit_name;
+            Text::make('Consume', function () {
+                if (isset($this->consume_quantity)) {
+                    return $this->consume_quantity . " " . $this->unit_name;
                 }
                 return "N/A";
             })
@@ -154,9 +152,9 @@ class StockSummary extends Lens
             })
                 ->sortable(),
 
-            Text::make('Transfer', function () {
-                if (isset($this->transfer_quantity)) {
-                    return $this->transfer_quantity . " " . $this->unit_name;
+            Text::make('Distribution', function () {
+                if (isset($this->distribution_quantity)) {
+                    return $this->distribution_quantity . " " . $this->unit_name;
                 }
                 return "N/A";
             })
@@ -180,7 +178,7 @@ class StockSummary extends Lens
 
             Text::make('Remaining', function () {
                 if (isset($this->previous_quantity)) {
-                    $this->remaining_quantity = ($this->previous_quantity + $this->purchase_quantity + $this->receive_quantity) - ($this->distribution_quantity + $this->return_quantity + $this->transfer_quantity)
+                    $this->remaining_quantity = ($this->previous_quantity + $this->purchase_quantity + $this->receive_quantity) - ($this->consume_quantity + $this->return_quantity + $this->distribution_quantity)
                         + $this->adjust_quantity;
                     return $this->remaining_quantity . " " . $this->unit_name;
                 }
@@ -210,14 +208,14 @@ class StockSummary extends Lens
     public function filters(Request $request)
     {
         return [
-            // MaterialLocationFilter::make('Location', 'location_id')->canSee(function ($request) {
+            // FabricLocationFilter::make('Location', 'location_id')->canSee(function ($request) {
             //     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             // }),
 
             // DependentFilter::make('Category', 'category_id')
             //     ->dependentOf('location_id')
             //     ->withOptions(function (Request $request, $filters) {
-            //         return MaterialCategory::where('location_id', $filters['location_id'])
+            //         return FabricCategory::where('location_id', $filters['location_id'])
             //             ->pluck('name', 'id');
             //     })->canSee(function ($request) {
             //         return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
@@ -243,16 +241,16 @@ class StockSummary extends Lens
     {
         return [
             // (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            //     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
             // })->canRun(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            //     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
             // })->confirmButtonText('Download')
             //     ->confirmText("Are you sure want to download pdf?"),
 
             // (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            //     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
             // })->canRun(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            //     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
             // })->confirmButtonText('Download')
             //     ->confirmText("Are you sure want to download excel?"),
         ];
@@ -265,6 +263,6 @@ class StockSummary extends Lens
      */
     public function uriKey()
     {
-        return 'material-stock-summary';
+        return 'fabric-stock-summary';
     }
 }
