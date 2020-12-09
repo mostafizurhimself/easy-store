@@ -263,6 +263,6 @@ class StockSummary extends Lens
      */
     public function uriKey()
     {
-        return 'fabric-stock-summary';
+        return 'asset-stock-summary';
     }
 }

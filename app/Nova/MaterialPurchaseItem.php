@@ -105,14 +105,14 @@ class MaterialPurchaseItem extends Resource
     public function fields(Request $request)
     {
         return [
-            Text::make("Location",function(){
+            Text::make("Location", function () {
                 return $this->location->name;
             })
                 ->sortable()
                 ->exceptOnForms()
-                ->canSee(function($request){
+                ->canSee(function ($request) {
                     return ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin())
-                    && (empty($request->viaResource));
+                        && (empty($request->viaResource));
                 }),
 
             Date::make('Date', function () {
@@ -120,7 +120,7 @@ class MaterialPurchaseItem extends Resource
             })
                 ->sortable()
                 ->exceptOnForms()
-                ->canSee(function($request){
+                ->canSee(function ($request) {
                     return empty($request->viaResource);
                 }),
 
@@ -202,7 +202,7 @@ class MaterialPurchaseItem extends Resource
     public function filters(Request $request)
     {
         return [
-            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function($request){
+            (new BelongsToLocationFilter('purchaseOrder'))->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin();
             }),
             new BelongsToDateFilter('purchaseOrder'),
@@ -257,21 +257,23 @@ class MaterialPurchaseItem extends Resource
      */
     public static function relatableMaterials(NovaRequest $request, $query)
     {
-        $purchase = \App\Models\MaterialPurchaseOrder::find($request->viaResourceId);
+        if (!$request->isResourceIndexRequest()) {
+            $purchase = \App\Models\MaterialPurchaseOrder::find($request->viaResourceId);
 
-        if (empty($purchase)) {
-            $purchase = $request->findResourceOrFail()->purchaseOrder;
-        }
+            if (empty($purchase)) {
+                $purchase = $request->findResourceOrFail()->purchaseOrder;
+            }
 
-        try {
-            $materialId = $request->findResourceOrFail()->materialId;
-        } catch (\Throwable $th) {
-            $materialId = null;
+            try {
+                $materialId = $request->findResourceOrFail()->materialId;
+            } catch (\Throwable $th) {
+                $materialId = null;
+            }
+            return $query->whereHas('suppliers', function ($supplier) use ($purchase) {
+                $supplier->where('supplier_id', $purchase->supplierId)
+                    ->where('location_id', $purchase->locationId);
+            })->whereNotIn('id', $purchase->materialIds($materialId));
         }
-        return $query->whereHas('suppliers', function ($supplier) use ($purchase) {
-            $supplier->where('supplier_id', $purchase->supplierId)
-                ->where('location_id', $purchase->locationId);
-        })->whereNotIn('id', $purchase->materialIds($materialId));
     }
 
     /**

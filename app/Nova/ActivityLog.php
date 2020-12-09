@@ -27,6 +27,13 @@ class ActivityLog extends BaseActivityLog
      */
     public static $group = 'Super Admin';
 
+    // /**
+    //  * The number of resources to show per page via relationships.
+    //  *
+    //  * @var int
+    //  */
+    // public static $perPageViaRelationship = 100;
+
     /**
      * The icon of the resource.
      *
@@ -59,8 +66,17 @@ class ActivityLog extends BaseActivityLog
             Text::make('Description')->sortable(),
             Text::make('Subject Id')->sortable(),
             Text::make('Subject Type')->sortable(),
-            MorphTo::make('Causer')->sortable(),
+            MorphTo::make('Causer'),
             Text::make('Causer Ip', 'properties->ip')->onlyOnIndex()->sortable(),
+        //     Text::make('Old Quantity', function(){
+        //         return $this->properties['old']['quantity'];
+        //     })
+        //    ,
+
+        //     Text::make('New Quantity', function(){
+        //         return $this->properties['attributes']['quantity'];
+        //     })
+        //     ,
 
             Code::make('Properties')->json(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
             DateTime::make('Created At')->sortable(),

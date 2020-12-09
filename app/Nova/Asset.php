@@ -342,9 +342,9 @@ class Asset extends Resource
     public function lenses(Request $request)
     {
         return [
-            // (new StockSummary)->canSee(function ($request) {
-            //     return $request->user()->hasPermissionTo('can view stock summary of assets') || $request->user()->isSuperAdmin();
-            // }),
+            (new StockSummary)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can view stock summary of assets') || $request->user()->isSuperAdmin();
+            }),
             new AlertQuantities,
         ];
     }

@@ -277,6 +277,9 @@ class Material extends Resource
                 "Adjust History" => [
                     MorphMany::make('Adjust Quantities', 'adjustQuantities', \App\Nova\AdjustQuantity::class)
                 ],
+                // "Activities" => [
+                //     MorphMany::make('Activities', 'activities', "App\Nova\ActivityLog"),
+                // ]
 
             ]))->withToolbar(),
 
@@ -336,9 +339,9 @@ class Material extends Resource
     public function lenses(Request $request)
     {
         return [
-            // (new StockSummary)->canSee(function ($request) {
-            //     return $request->user()->hasPermissionTo('can view stock summary of materials') || $request->user()->isSuperAdmin();
-            // }),
+            (new StockSummary)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can view stock summary of materials') || $request->user()->isSuperAdmin();
+            }),
             new AlertQuantities(),
         ];
     }

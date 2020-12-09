@@ -210,25 +210,25 @@ class StockSummary extends Lens
     public function filters(Request $request)
     {
         return [
-            // MaterialLocationFilter::make('Location', 'location_id')->canSee(function ($request) {
-            //     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
-            // }),
+            MaterialLocationFilter::make('Location', 'location_id')->canSee(function ($request) {
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            }),
 
-            // DependentFilter::make('Category', 'category_id')
-            //     ->dependentOf('location_id')
-            //     ->withOptions(function (Request $request, $filters) {
-            //         return MaterialCategory::where('location_id', $filters['location_id'])
-            //             ->pluck('name', 'id');
-            //     })->canSee(function ($request) {
-            //         return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
-            //     }),
+            DependentFilter::make('Category', 'category_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return MaterialCategory::where('location_id', $filters['location_id'])
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
 
 
-            // (new CategoryFilter)->canSee(function ($request) {
-            //     return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
-            // }),
+            (new CategoryFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
 
-            // new FabricSummaryDateRangeFilter(),
+            new MaterialSummaryDateRangeFilter(),
 
         ];
     }
@@ -242,19 +242,19 @@ class StockSummary extends Lens
     public function actions(Request $request)
     {
         return [
-            // (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
-            // })->canRun(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
-            // })->confirmButtonText('Download')
-            //     ->confirmText("Are you sure want to download pdf?"),
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
 
-            // (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
-            // })->canRun(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
-            // })->confirmButtonText('Download')
-            //     ->confirmText("Are you sure want to download excel?"),
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
         ];
     }
 

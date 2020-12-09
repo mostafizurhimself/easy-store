@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Models\Material;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -17,9 +18,11 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
+use App\Nova\Filters\MaterialFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\DateRangeFilter;
 use App\Rules\DistributionQuantityRule;
+use AwesomeNova\Filters\DependentFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\DistributionStatusFilter;
 use App\Rules\DistributionQuantityRuleForUpdate;
@@ -168,8 +171,8 @@ class MaterialDistribution extends Resource
             Text::make('Quantity', function () {
                 return $this->quantity . " " . $this->unitName;
             })
-            ->exceptOnForms()
-            ->sortable(),
+                ->exceptOnForms()
+                ->sortable(),
 
 
 
@@ -221,7 +224,7 @@ class MaterialDistribution extends Resource
                     return false;
                 }),
 
-            DateTime::make('Distributed At', 'Created At')
+            DateTime::make('Distributed At', 'created_at')
                 ->exceptOnForms()
                 ->sortable(),
 
@@ -259,6 +262,20 @@ class MaterialDistribution extends Resource
         return [
             LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            DependentFilter::make('Material', 'material_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Material::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new MaterialFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
 
             new DateRangeFilter,

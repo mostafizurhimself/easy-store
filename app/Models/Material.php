@@ -79,6 +79,16 @@ class Material extends Model implements HasMedia
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function receiveItems()
+    {
+       return $this->hasMany(MaterialReceiveItem::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function distributions()
     {
         return $this->hasMany(MaterialDistribution::class);
@@ -102,6 +112,16 @@ class Material extends Model implements HasMedia
     public function transferItems()
     {
         return $this->hasMany(MaterialTransferItem::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transferReceiveItems()
+    {
+       return $this->hasMany(MaterialTransferReceiveItem::class);
     }
 
     /**
