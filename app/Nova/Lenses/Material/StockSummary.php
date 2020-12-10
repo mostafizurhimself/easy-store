@@ -88,10 +88,10 @@ class StockSummary extends Lens
             and material_transfer_receive_items.status = 'confirmed'), 0)) as receive_quantity"),
 
             // Adjust
-            DB::raw("(COALESCE((select sum(adjust_quantities.quantity) from adjust_quantities
+            DB::raw('(COALESCE((select sum(adjust_quantities.quantity) from adjust_quantities
             where adjust_quantities.adjustable_id = materials.id
-            and adjust_quantities.adjustable_type = 'App\Models\Material'
-            and adjust_quantities.deleted_at  is null), 0)) as adjust_quantity"),
+            and adjust_quantities.adjustable_type = "App\\\Models\\\Material"
+            and adjust_quantities.deleted_at  is null), 0)) as adjust_quantity'),
 
         ];
     }

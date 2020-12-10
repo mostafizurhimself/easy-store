@@ -143,7 +143,7 @@ class MaterialSummaryDateRangeFilter extends DateRangeFilter
             DB::raw("(COALESCE((select sum(adjust_quantities.quantity) from adjust_quantities
             where adjust_quantities.created_at between '$from' and '$to'
             and adjust_quantities.adjustable_id = materials.id
-            and adjust_quantities.adjustable_type = 'App\Models\material'
+            and adjust_quantities.adjustable_type = 'App\\\Models\\\Material'
             and adjust_quantities.deleted_at  is null), 0)) as adjust_quantity"),
 
             "units.name as unit_name",
