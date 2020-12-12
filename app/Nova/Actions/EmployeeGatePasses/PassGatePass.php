@@ -34,7 +34,7 @@ class PassGatePass extends Action
     {
         foreach ($models as $model) {
             if ($model->status == GatePassStatus::CONFIRMED()) {
-                $model->in       = $fields->in;
+                $model->out       = $fields->out;
                 $model->passedBy = request()->user()->id;
                 $model->status   = GatePassStatus::PASSED();
                 $model->save();
@@ -54,7 +54,7 @@ class PassGatePass extends Action
     public function fields()
     {
         return [
-            DateTime::make('In')
+            DateTime::make('Out')
                 ->rules('required')
                 ->default(Carbon::now()),
         ];

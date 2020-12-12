@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Actions\GoodsGatePasses;
+namespace App\Nova\Actions\EmployeeGatePasses;
 
 use App\Enums\GatePassStatus;
 use Illuminate\Bus\Queueable;
@@ -23,16 +23,16 @@ class MarkAsDraft extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
-            if($model->status == GatePassStatus::CONFIRMED()){
-                 // Remove approver
-                 $model->approve()->forceDelete();
-                 //Update the model status
-                 $model->status = GatePassStatus::DRAFT();
-                 $model->save();
+        foreach ($models as $model) {
+            if ($model->status == GatePassStatus::CONFIRMED()) {
+                // Remove approver
+                $model->approve()->forceDelete();
+                //Update the model status
+                $model->status = GatePassStatus::DRAFT();
+                $model->save();
 
-                 return Action::message('Mark as draft successfully.');
-            }else{
+                return Action::message('Mark as draft successfully.');
+            } else {
                 return Action::danger('Can not mark as draft.');
             }
         }

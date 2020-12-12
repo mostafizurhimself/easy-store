@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Nova\Actions\GoodsGatePasses;
+namespace App\Nova\Actions\EmployeeGatePasses;
 
+use Carbon\Carbon;
 use App\Enums\GatePassStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Fields\DateTime;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MarkAsDraft extends Action
+class CheckIn extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -23,19 +25,16 @@ class MarkAsDraft extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
-            if($model->status == GatePassStatus::CONFIRMED()){
-                 // Remove approver
-                 $model->approve()->forceDelete();
-                 //Update the model status
-                 $model->status = GatePassStatus::DRAFT();
-                 $model->save();
-
-                 return Action::message('Mark as draft successfully.');
-            }else{
-                return Action::danger('Can not mark as draft.');
+        foreach ($models as $model) {
+            if ($model->status == GatePassStatus::PASSED()) {
+                $model->in = $fields->in;
+                $model->save();
+            } else {
+                return Action::danger('Can not check in now.');
             }
         }
+
+        return Action::message('Employee checked in successfully');
     }
 
     /**
@@ -45,6 +44,10 @@ class MarkAsDraft extends Action
      */
     public function fields()
     {
-        return [];
+        return [
+            DateTime::make('In')
+                ->rules('required')
+                ->default(Carbon::now()),
+        ];
     }
 }

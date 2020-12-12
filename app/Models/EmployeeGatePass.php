@@ -30,7 +30,7 @@ class EmployeeGatePass extends Model
      *
      * @var array
      */
-    protected $dates = ['in', 'out'];
+    protected $dates = ['in', 'out', 'approved_in', 'approved_out'];
 
      /**
      * Set the model readable id prefix

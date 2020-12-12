@@ -11,13 +11,18 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\EmployeeGatePasses\CheckIn;
+use App\Nova\Actions\EmployeeGatePasses\MarkAsDraft;
 use App\Nova\Actions\EmployeeGatePasses\PassGatePass;
 use App\Nova\Actions\EmployeeGatePasses\ConfirmGatePass;
+use App\Nova\Actions\EmployeeGatePasses\GenerateGatePass;
+use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 
 class EmployeeGatePass extends Resource
 {
@@ -132,7 +137,7 @@ class EmployeeGatePass extends Resource
                 }),
 
             BelongsTo::make('Employee', 'employee', \App\Nova\Employee::class)
-                ->onlyOnDetail()
+                ->exceptOnForms()
                 ->sortable(),
 
             BelongsTo::make('Employee', 'employee', \App\Nova\Employee::class)
@@ -157,10 +162,26 @@ class EmployeeGatePass extends Resource
                     return false;
                 }),
 
-            DateTime::make('Out')
+            DateTime::make('Approved Out')
                 ->sortable()
                 ->rules('required')
+                ->hideFromIndex()
                 ->default(Carbon::now()),
+
+            DateTime::make('Out')
+                ->sortable()
+                ->exceptOnForms(),
+
+            Boolean::make('Early Leave', 'early_leave')
+                ->onlyOnForms(),
+
+            NovaDependencyContainer::make([
+                DateTime::make('Approved In')
+                    ->sortable()
+                    ->hideFromIndex()
+                    ->rules('nullable')
+                    ->default(Carbon::now()),
+            ])->dependsOn('early_leave', 0),
 
             DateTime::make('In')
                 ->sortable()
@@ -169,6 +190,9 @@ class EmployeeGatePass extends Resource
             Textarea::make('Reason')
                 ->rules('nullable', 'max:500'),
 
+            Boolean::make('Early Leave', 'early_leave')
+                ->exceptOnForms(),
+
             Text::make('Approved By', function () {
                 return $this->approve()->exists() ? $this->approve->employee->name : null;
             })
@@ -176,15 +200,6 @@ class EmployeeGatePass extends Resource
                     return $this->approve()->exists();
                 })
                 ->onlyOnDetail()
-                ->sortable(),
-
-            DateTime::make('Approved At', function () {
-                return $this->approve()->exists() ? $this->approve->createdAt : null;
-            })
-                ->exceptOnForms()
-                ->canSee(function () {
-                    return $this->approve()->exists();
-                })
                 ->sortable(),
 
             BelongsTo::make('Passed By', 'passedBy', \App\Nova\User::class)
@@ -256,10 +271,38 @@ class EmployeeGatePass extends Resource
                 ->confirmButtonText('Pass')
                 ->onlyOnTableRow(),
 
+            (new CheckIn)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can pass employee gate passes') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can pass employee gate passes') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Check In')
+                ->onlyOnTableRow(),
+
+            (new MarkAsDraft)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft employee gate passes') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can mark as draft employee gate passes') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Mark As Draft')
+                ->confirmText('Are you sure want to mark the gate pass as draft')
+                ->onlyOnDetail(),
+
             (new ConfirmGatePass)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm employee gate passes') || $request->user()->isSuperAdmin();
             })
                 ->confirmButtonText('Confirm'),
+
+            (new GenerateGatePass)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can generate employee gate passes') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate employee gate passes') || $request->user()->isSuperAdmin();
+                })
+                ->withoutConfirmation()
+                ->onlyOnDetail(),
         ];
     }
 }

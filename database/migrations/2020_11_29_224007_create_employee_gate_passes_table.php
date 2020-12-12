@@ -19,8 +19,11 @@ class CreateEmployeeGatePassesTable extends Migration
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->bigInteger('employee_id')->unsigned()->nullable();
             $table->text('reason')->nullable();
-            $table->dateTime('out')->index('employee_gate_passes_out_time_index');
+            $table->dateTime('approved_out')->index('employee_gate_passes_approved_out_time_index');
+            $table->dateTime('out')->nullable()->index('employee_gate_passes_out_time_index');
+            $table->dateTime('approved_in')->nullable()->index('employee_gate_passes_approved_in_time_index');
             $table->dateTime('in')->nullable()->index('employee_gate_passes_in_time_index');
+            $table->boolean('early_leave')->default(false);
             $table->string('status')->default('draft');
             $table->bigInteger('passed_by')->unsigned()->nullable();
             $table->timestamps();
