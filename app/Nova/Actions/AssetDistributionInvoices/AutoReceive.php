@@ -46,9 +46,10 @@ class AutoReceive extends Action
                             'amount'               => $distributionItem->distributionQuantity * $distributionItem->distributionRate,
                             'unit_id'              => $distributionItem->unitId,
                         ]);
+                        return Action::message("Auto receive items are generated.");
                     }
+                    return Action::danger("Can not auto receive now.");
                 }
-                return Action::message("Auto receive items are generated.");
             }else{
                 return Action::danger("Sorry you are unauthorized!");
             }

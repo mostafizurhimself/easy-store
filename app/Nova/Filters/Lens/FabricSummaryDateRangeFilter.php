@@ -137,7 +137,7 @@ class FabricSummaryDateRangeFilter extends DateRangeFilter
             DB::raw("(COALESCE((select sum(adjust_quantities.quantity) from adjust_quantities
             where adjust_quantities.created_at < '$from'
             and adjust_quantities.adjustable_id = fabrics.id
-            and adjust_quantities.adjustable_type = 'App\Models\Fabric'
+            and adjust_quantities.adjustable_type = 'App\\\Models\\\Fabric'
             and adjust_quantities.deleted_at is null), 0)) as previous_adjust_quantity"),
 
             DB::raw("(COALESCE((select sum(adjust_quantities.quantity) from adjust_quantities

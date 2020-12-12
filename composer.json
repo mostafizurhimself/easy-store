@@ -42,6 +42,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "inspheric/nova-email-field": "^1.42",
         "klepak/nova-dynamic-page-title": "^1.0",
+        "klepak/nova-multiselect-filter": "^1.2",
         "laravel/framework": "^8.0",
         "laravel/legacy-factories": "^1.0",
         "laravel/nova": "*",

@@ -6,17 +6,17 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Lenses\Lens;
-use App\Models\FabricCategory;
+use App\Models\AssetCategory;
 use Illuminate\Support\Facades\DB;
 use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Filters\CategoryFilter;
 use AwesomeNova\Filters\DependentFilter;
-use App\Nova\Filters\FabricLocationFilter;
+use App\Nova\Filters\AssetLocationFilter;
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use App\Nova\Actions\Fabrics\StockSummary\DownloadPdf;
-use App\Nova\Filters\Lens\FabricSummaryDateRangeFilter;
-use App\Nova\Actions\Fabrics\StockSummary\DownloadExcel;
+use App\Nova\Actions\Assets\StockSummary\DownloadPdf;
+use App\Nova\Filters\Lens\AssetSummaryDateRangeFilter;
+use App\Nova\Actions\Assets\StockSummary\DownloadExcel;
 
 class StockSummary extends Lens
 {
@@ -78,7 +78,7 @@ class StockSummary extends Lens
             left join asset_distribution_invoices on asset_distribution_items.invoice_id = asset_distribution_invoices.id
             where asset_distribution_items.asset_id = assets.id
             and asset_distribution_items.deleted_at is null
-            and asset_distribution_items.status = 'confirmed'), 0) as distribution_quantity"),
+            and asset_distribution_items.status != 'draft'), 0) as distribution_quantity"),
 
             // Distribution Receives
             DB::raw("(COALESCE((select sum(asset_distribution_receive_items.quantity) from asset_distribution_receive_items
@@ -89,7 +89,7 @@ class StockSummary extends Lens
             // Adjust
             DB::raw("(COALESCE((select sum(adjust_quantities.quantity) from adjust_quantities
             where adjust_quantities.adjustable_id = assets.id
-            and adjust_quantities.adjustable_type = 'App\Models\Asset'
+            and adjust_quantities.adjustable_type = 'App\\\Models\\\Asset'
             and adjust_quantities.deleted_at  is null), 0)) as adjust_quantity"),
 
         ];
@@ -208,25 +208,25 @@ class StockSummary extends Lens
     public function filters(Request $request)
     {
         return [
-            // FabricLocationFilter::make('Location', 'location_id')->canSee(function ($request) {
-            //     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
-            // }),
+            AssetLocationFilter::make('Location', 'location_id')->canSee(function ($request) {
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            }),
 
-            // DependentFilter::make('Category', 'category_id')
-            //     ->dependentOf('location_id')
-            //     ->withOptions(function (Request $request, $filters) {
-            //         return FabricCategory::where('location_id', $filters['location_id'])
-            //             ->pluck('name', 'id');
-            //     })->canSee(function ($request) {
-            //         return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
-            //     }),
+            DependentFilter::make('Category', 'category_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return AssetCategory::where('location_id', $filters['location_id'])
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
 
 
-            // (new CategoryFilter)->canSee(function ($request) {
-            //     return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
-            // }),
+            (new CategoryFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
 
-            // new FabricSummaryDateRangeFilter(),
+            new AssetSummaryDateRangeFilter(),
 
         ];
     }
