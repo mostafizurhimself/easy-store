@@ -16,7 +16,9 @@ use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\VisitorGatePasses\PassGatePass;
 use App\Nova\Actions\VisitorGatePasses\ConfirmGatePass;
+use App\Nova\Actions\VisitorGatePasses\GenerateGatePass;
 
 class VisitorGatePass extends Resource
 {
@@ -39,7 +41,7 @@ class VisitorGatePass extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate'];
+    public static $permissions = ['can pass', 'can confirm', 'can generate'];
 
     /**
      * The side nav menu order.
@@ -238,11 +240,28 @@ class VisitorGatePass extends Resource
     public function actions(Request $request)
     {
         return [
+            (new PassGatePass)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can pass visitor gate passes') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can pass visitor gate passes') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Pass')
+                ->onlyOnTableRow(),
+
             (new ConfirmGatePass)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm visitor gate passes') || $request->user()->isSuperAdmin();
             })
-                ->confirmButtonText('Confirm')
-                ->onlyOnTableRow(),
+                ->confirmButtonText('Confirm'),
+
+            (new GenerateGatePass)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can generate visitor gate passes') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate visitor gate passes') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->onlyOnDetail(),
         ];
     }
 }

@@ -2,26 +2,17 @@
 
 namespace App\Nova\Actions\VisitorGatePasses;
 
-use Carbon\Carbon;
 use App\Enums\GatePassStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
-use Laravel\Nova\Fields\DateTime;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ConfirmGatePass extends Action
+class GenerateGatePass extends Action
 {
     use InteractsWithQueue, Queueable;
-
-    /**
-     * The displayable name of the action.
-     *
-     * @var string
-     */
-    public $name = "Confirm Gate Pass";
 
     /**
      * Perform the action on the given models.
@@ -32,16 +23,13 @@ class ConfirmGatePass extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
-            if($model->status == GatePassStatus::DRAFT()){
-                $model->status = GatePassStatus::CONFIRMED();
-                $model->save();
-            }else{
-                return Action::danger('Can not confirm gate pass now.');
+        foreach ($models as $model) {
+            if ($model->status != GatePassStatus::DRAFT()) {
+                return Action::openInNewTab(route('gate-passes.visitor', $model->id));
+            } else {
+                return Action::danger('Can not generate gate pass now.');
             }
         }
-
-        return Action::message('Gate Pass confirmed successfully.');
     }
 
     /**
@@ -51,8 +39,6 @@ class ConfirmGatePass extends Action
      */
     public function fields()
     {
-        return [
-            //
-        ];
+        return [];
     }
 }

@@ -80,6 +80,7 @@ Route::group(['middleware' => 'nova'], function () {
     Route::group(['prefix' => 'gate-passes'], function () {
         Route::get('goods/{pass}', "GatePassController@goods")->name('gate-passes.goods');
         Route::get('employee/{pass}', "GatePassController@employee")->name('gate-passes.employee');
+        Route::get('visitor/{pass}', "GatePassController@visitor")->name('gate-passes.visitor');
     });
 
     // Helper Controller

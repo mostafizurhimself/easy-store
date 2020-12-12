@@ -12,7 +12,7 @@ use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ConfirmGatePass extends Action
+class PassGatePass extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -21,7 +21,7 @@ class ConfirmGatePass extends Action
      *
      * @var string
      */
-    public $name = "Confirm Gate Pass";
+    public $name = "Pass";
 
     /**
      * Perform the action on the given models.
@@ -32,16 +32,17 @@ class ConfirmGatePass extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
-            if($model->status == GatePassStatus::DRAFT()){
-                $model->status = GatePassStatus::CONFIRMED();
+        foreach ($models as $model) {
+            if ($model->status == GatePassStatus::CONFIRMED()) {
+                $model->out       = $fields->out;
+                $model->status   = GatePassStatus::PASSED();
                 $model->save();
-            }else{
-                return Action::danger('Can not confirm gate pass now.');
+            } else {
+                return Action::danger('Can not pass the gate pass.');
             }
         }
 
-        return Action::message('Gate Pass confirmed successfully.');
+        return Action::message('Gate pass passed successfully.');
     }
 
     /**
@@ -52,7 +53,9 @@ class ConfirmGatePass extends Action
     public function fields()
     {
         return [
-            //
+            DateTime::make('Out')
+                ->rules('required')
+                ->default(Carbon::now()),
         ];
     }
 }

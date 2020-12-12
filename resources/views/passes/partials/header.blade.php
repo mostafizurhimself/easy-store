@@ -19,17 +19,37 @@
             </h6>
 
             {{-- Company Address --}}
-            @if(empty(Settings::company()->address))
+            {{-- @if(empty($pass->location->address))
                 <div>Address goes here</div>
             @else
-                <div >{{Settings::company()->address}}</div>
+                <div >{{$pass->location->address}}</div>
+            @endif --}}
+
+            @if ($pass->location->locationAddress)
+                <div class="address">
+                    @if ($pass->location->locationAddress->street)
+                        {{$pass->location->locationAddress->street}}
+                    @endif
+
+                    @if ($pass->location->locationAddress->city)
+                        <span>, </span>{{$pass->location->locationAddress->city}}
+                    @endif
+
+                    @if ($pass->location->locationAddress->zipcode)
+                        <span>- </span>{{$pass->location->locationAddress->zipcode}}
+                    @endif
+
+                    @if ($pass->location->locationAddress->country)
+                        <span>, </span>{{$pass->location->locationAddress->country}}
+                    @endif
+                </div>
             @endif
 
             {{-- Company Mobile --}}
-            @if(empty(Settings::company()->mobile))
+            @if(empty($pass->location->mobile))
                 <div>(123) 456-789</div>
             @else
-                <div >{{Settings::company()->mobile}}</div>
+                <div >{{$pass->location->mobile}}</div>
             @endif
         </div>
     </div>
