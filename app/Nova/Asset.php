@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Laravel\Nova\Panel;
 use Eminiarts\Tabs\Tabs;
 use App\Enums\ActiveStatus;
 use Illuminate\Support\Str;
@@ -275,20 +276,25 @@ class Asset extends Resource
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
                 ],
-                "Consume History" => [
-                    HasMany::make('Consume History', 'consumes', \App\Nova\AssetConsume::class),
+                "Receive History" => [
+                    HasMany::make('Receive Items', 'receiveItems', \App\Nova\AssetReceiveItem::class)
                 ],
                 "Adjust History" => [
                     MorphMany::make('Adjust Quantities', 'adjustQuantities', \App\Nova\AdjustQuantity::class)
                 ],
-                // "Receive History" => [
-                //     HasMany::make('Receive Items', 'receiveItems', \App\Nova\AssetReceiveItem::class)
-                // ],
-                // "Distribution History" => [
-                //     HasMany::make('Distribution Items', 'distributionItems', \App\Nova\AssetDistributionItem::class)
-                // ]
             ]))->withToolbar(),
 
+            new Tabs('Stock Information', [
+                "Consume History" => [
+                    HasMany::make('Consume History', 'consumes', \App\Nova\AssetConsume::class),
+                ],
+                "Distribution History" => [
+                    HasMany::make('Distribution Items', 'distributionItems', \App\Nova\AssetDistributionItem::class)
+                ],
+                "Return History" => [
+                    HasMany::make('Return Items', 'returnItems', \App\Nova\AssetReturnItem::class)
+                ]
+            ]),
         ];
     }
 

@@ -92,8 +92,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2"></td>
-                <td colspan="2">GRAND TOTAL</td>
+                <td colspan="3">GRAND TOTAL</td>
+                <td>{{$invoice->returnItems->sum('quantity')}}</td>
                 <td>{{Helper::currency($invoice->totalReturnAmount)}}</td>
             </tr>
         </tfoot>
