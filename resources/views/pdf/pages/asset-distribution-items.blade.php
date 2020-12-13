@@ -1,11 +1,11 @@
 @extends('pdf.layout')
 
 @section('title')
-    Asset Receive Items
+    Asset Distribution Items
 @endsection
 
 @section('content')
-    <h1>Asset Receive Items</h1>
+    <h1>Asset Distribution Items</h1>
     @if (!empty($subtitle))
         <p>{{$subtitle}}</p>
     @else
@@ -20,31 +20,32 @@
                 <td>Location</td>
                 <td>Date</td>
                 <td>Asset</td>
-                <td>Order No</td>
-                <td>Reference</td>
+                <td>Invoice</td>
                 <td>Rate</td>
                 <td>Quantity</td>
                 <td>Amount</td>
+                <td>Receiver</td>
                 <td>Status</td>
             </tr>
             @foreach ($models as $model)
                 <tr>
                     <td>{{$loop->iteration}}</td>
-                    <td>{{$model->location->name}}</td>
-                    <td>{{$model->date}}</td>
+                    <td>{{$model->invoice->location->name}}</td>
+                    <td>{{$model->invoice->date->format('Y-m-d')}}</td>
                     <td>{{$model->asset->name}} ({{$model->asset->code}})</td>
-                    <td>{{$model->purchaseOrder->readableId}}</td>
-                    <td>{{$model->reference}}</td>
-                    <td>{{Helper::currencyShortPdf($model->rate)}}</td>
-                    <td>{{$model->quantity}} {{$model->unitName}}</td>
-                    <td>{{Helper::currencyPdf($model->amount)}}</td>
+                    <td>{{$model->invoice->readableId}}</td>
+                    <td>{{Helper::currencyShortPdf($model->distributionRate)}}</td>
+                    <td>{{$model->distributionQuantity}} {{$model->unitName}}</td>
+                    <td>{{Helper::currencyPdf($model->distributionAmount)}}</td>
+                    <td>{{$model->invoice->receiver->name}}</td>
                     <td>{{Str::title($model->status)}}</td>
                 </tr>
             @endforeach
             <tr class="tfoot">
-                <td colspan="7">Grand Total</td>
-                <td>{{$models->sum('quantity')}}</td>
-                <td>{{Helper::currencyPdf($models->sum('amount'))}}</td>
+                <td colspan="6">Grand Total</td>
+                <td>{{$models->sum('distributionQuantity')}}</td>
+                <td>{{Helper::currencyPdf($models->sum('distributionAmount'))}}</td>
+                <td></td>
                 <td></td>
             </tr>
         </tbody>

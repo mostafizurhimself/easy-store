@@ -182,14 +182,12 @@ class FabricReceiveItem extends Resource
                 ->sortable()
                 ->rules('nullable', 'string', 'max:200'),
 
-            // TextWrap::make("Supplier", function () {
-            //     return $this->purchaseOrder->supplier->name;
-            // })
-            //     ->canSee(function ($request) {
-            //         return empty($request->viaResource);
-            //     })
-            //     ->sortable()
-            //     ->wrapMethod('length', 20),
+            TextWrap::make("Supplier", function () {
+                return $this->purchaseOrder->supplier->name;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->wrapMethod('length', 25),
 
             Files::make('Attachments', 'receive-item-attachments')
                 ->hideFromIndex(),

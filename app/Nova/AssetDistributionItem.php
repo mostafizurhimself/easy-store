@@ -2,9 +2,11 @@
 
 namespace App\Nova;
 
+use App\Models\Asset;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
 use App\Traits\WithOutLocation;
@@ -14,13 +16,21 @@ use Laravel\Nova\Fields\Select;
 use App\Enums\RequisitionStatus;
 use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
+use App\Nova\Filters\AssetFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use Treestoneit\TextWrap\TextWrap;
 use App\Rules\DistributionQuantityRule;
+use AwesomeNova\Filters\DependentFilter;
+use App\Nova\Filters\BelongsToDateFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\BelongsToReceiverFilter;
 use App\Nova\Filters\DistributionStatusFilter;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use App\Rules\DistributionQuantityRuleOnRequisition;
+use App\Nova\Filters\BelongsToDependentLocationFilter;
+use App\Nova\Actions\AssetDistributionItems\DownloadPdf;
+use App\Nova\Actions\AssetDistributionItems\DownloadExcel;
 use App\Rules\DistributionQuantityRuleOnRequisitionForUpdate;
 
 class AssetDistributionItem extends Resource
@@ -110,9 +120,25 @@ class AssetDistributionItem extends Resource
     public function fields(Request $request)
     {
         return [
+            Text::make("Location", function () {
+                return $this->invoice->location->name;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin())
+                        && (empty($request->viaResource));
+                }),
+
             BelongsTo::make('Invoice', 'invoice', "App\Nova\AssetDistributionInvoice")
                 ->exceptOnForms()
                 ->sortable(),
+
+            Date::make('Date', function () {
+                return $this->invoice->date->format('Y-m-d');
+            })
+                ->sortable()
+                ->exceptOnForms(),
 
             BelongsTo::make('Asset')
                 ->searchable()
@@ -151,14 +177,12 @@ class AssetDistributionItem extends Resource
             Currency::make('Distribution Rate')
                 ->currency('BDT')
                 ->sortable()
-                ->exceptOnForms(),
+                ->onlyOnDetail(),
 
             Currency::make('Distribution Amount')
                 ->currency('BDT')
                 ->sortable()
-                ->exceptOnForms(),
-
-
+                ->onlyOnDetail(),
 
             Text::make('Receive Quantity', function () {
                 return $this->receiveQuantity . " " . $this->unitName;
@@ -170,6 +194,13 @@ class AssetDistributionItem extends Resource
                 ->currency('BDT')
                 ->sortable()
                 ->onlyOnDetail(),
+
+            TextWrap::make("Receiver", function () {
+                return $this->invoice->receiver->name;
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->wrapMethod('length', 25),
 
             Badge::make('Status')->map([
                 DistributionStatus::DRAFT()->getValue()     => 'warning',
@@ -206,6 +237,29 @@ class AssetDistributionItem extends Resource
     public function filters(Request $request)
     {
         return [
+            BelongsToDependentLocationFilter::make('Location', 'location_id', 'invoice')
+                ->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            DependentFilter::make('Asset', 'asset_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Asset::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new AssetFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            new BelongsToDateFilter('invoice'),
+
+            new BelongsToReceiverFilter('invoice'),
+
             new DistributionStatusFilter,
         ];
     }
@@ -229,7 +283,21 @@ class AssetDistributionItem extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download asset distribution items') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download asset distribution items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download asset distribution items') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download asset distribution items') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
+        ];
     }
 
     /**

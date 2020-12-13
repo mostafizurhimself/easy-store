@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Nova\Actions\AssetReceiveItems;
+namespace App\Nova\Actions\AssetDistributionItems;
 
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Fields\ActionFields;
-use App\Exports\AssetReceiveItemExport;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Exports\AssetDistributionItemExport;
 
 class DownloadExcel extends Action
 {
@@ -29,7 +29,6 @@ class DownloadExcel extends Action
      */
     public $withoutActionEvents = true;
 
-
     /**
      * Perform the action on the given models.
      *
@@ -40,8 +39,8 @@ class DownloadExcel extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         // Store on default disk
-        $filename = "asset_receive_items_" . time() . ".xlsx";
-        Excel::store(new AssetReceiveItemExport($models), $filename, 'local');
+        $filename = "asset_distribution_items_" . time() . ".xlsx";
+        Excel::store(new AssetDistributionItemExport($models), $filename, 'local');
 
         return Action::redirect(route('dump-download', compact('filename')));
     }

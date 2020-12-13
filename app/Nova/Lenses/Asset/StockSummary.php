@@ -240,19 +240,19 @@ class StockSummary extends Lens
     public function actions(Request $request)
     {
         return [
-            // (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
-            // })->canRun(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
-            // })->confirmButtonText('Download')
-            //     ->confirmText("Are you sure want to download pdf?"),
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
 
-            // (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
-            // })->canRun(function ($request) {
-            //     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
-            // })->confirmButtonText('Download')
-            //     ->confirmText("Are you sure want to download excel?"),
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
         ];
     }
 

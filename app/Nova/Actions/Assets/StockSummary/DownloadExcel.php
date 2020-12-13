@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Nova\Actions\AssetReceiveItems;
+namespace App\Nova\Actions\Assets\StockSummary;
 
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Fields\ActionFields;
-use App\Exports\AssetReceiveItemExport;
+use App\Exports\AssetStockSummaryExport;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -22,13 +22,12 @@ class DownloadExcel extends Action
      */
     public static $chunkCount = 200000000;
 
-    /**
+         /**
      * Disables action log events for this action.
      *
      * @var bool
      */
     public $withoutActionEvents = true;
-
 
     /**
      * Perform the action on the given models.
@@ -40,10 +39,10 @@ class DownloadExcel extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         // Store on default disk
-        $filename = "asset_receive_items_" . time() . ".xlsx";
-        Excel::store(new AssetReceiveItemExport($models), $filename, 'local');
+        $filename = "asset_stock_summary_".time().".xlsx";
+        Excel::store(new AssetStockSummaryExport($models), $filename, 'local');
 
-        return Action::redirect(route('dump-download', compact('filename')));
+        return Action::redirect( route('dump-download', compact('filename')) );
     }
 
     /**

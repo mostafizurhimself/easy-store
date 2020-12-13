@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Nova\Actions\AssetReceiveItems;
+namespace App\Nova\Actions\Assets\StockSummary;
 
 use Illuminate\Bus\Queueable;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Fields\ActionFields;
-use App\Exports\AssetReceiveItemExport;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class DownloadExcel extends Action
+class DownloadPdf extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -23,12 +23,11 @@ class DownloadExcel extends Action
     public static $chunkCount = 200000000;
 
     /**
-     * Disables action log events for this action.
+     * Indicates if need to skip log action events for models.
      *
      * @var bool
      */
     public $withoutActionEvents = true;
-
 
     /**
      * Perform the action on the given models.
@@ -39,11 +38,17 @@ class DownloadExcel extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        // Store on default disk
-        $filename = "asset_receive_items_" . time() . ".xlsx";
-        Excel::store(new AssetReceiveItemExport($models), $filename, 'local');
+        $filename = "assets_stock_summary_".time().".pdf";
+        $subtitle = $fields->subtitle;
 
-        return Action::redirect(route('dump-download', compact('filename')));
+        ini_set("pcre.backtrack_limit", "10000000000");
+        $pdf = \PDF::loadView('pdf.pages.asset-stock-summaries', compact('models', 'subtitle'), [], [
+            'mode' => 'utf-8',
+            'orientation' => 'L'
+        ]);
+        $pdf->save(Storage::path($filename));
+
+        return Action::redirect( route('dump-download', compact('filename')) );
     }
 
     /**
@@ -53,6 +58,9 @@ class DownloadExcel extends Action
      */
     public function fields()
     {
-        return [];
+        return [
+            Text::make('Subtitle', 'subtitle')
+                ->rules('nullable', 'string', 'max:100')
+        ];
     }
 }

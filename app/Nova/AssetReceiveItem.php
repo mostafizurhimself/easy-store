@@ -21,6 +21,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Markdown;
 use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
+use Treestoneit\TextWrap\TextWrap;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\DateRangeFilter;
 use AwesomeNova\Filters\DependentFilter;
@@ -170,11 +171,17 @@ class AssetReceiveItem extends Resource
                     if ($request->viaResource == \App\Nova\AssetPurchaseItem::uriKey() && !empty($request->viaResourceId)) {
                         return \App\Models\AssetPurchaseItem::find($request->viaResourceId)->purchaseRate;
                     }
-                }),
+                })
+                ->onlyOnForms(),
+
+            Currency::make('Rate')
+                ->currency('BDT')
+                ->onlyOnDetail()
+                ->sortable(),
 
             Currency::make('Amount')
                 ->currency('BDT')
-                ->exceptOnForms()
+                ->onlyOnDetail()
                 ->sortable(),
 
             Text::make("Reference")
@@ -189,9 +196,12 @@ class AssetReceiveItem extends Resource
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
 
-            Text::make("Supplier", function(){
+            TextWrap::make("Supplier", function () {
                 return $this->purchaseOrder->supplier->name;
-            }),
+            })
+                ->sortable()
+                ->exceptOnForms()
+                ->wrapMethod('length', 25),
 
             Badge::make('Status')->map([
                 PurchaseStatus::DRAFT()->getValue()     => 'warning',

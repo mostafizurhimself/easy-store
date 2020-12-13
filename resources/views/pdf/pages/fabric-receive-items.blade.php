@@ -12,8 +12,6 @@
         <p>Add your subtitle here</p>
     @endif
     <table class="table">
-
-
         <tbody>
             <tr>
                 <td>#</td>
@@ -42,7 +40,8 @@
                 </tr>
             @endforeach
             <tr class="tfoot">
-                <td colspan="8">Grand Total</td>
+                <td colspan="7">Grand Total</td>
+                <td>{{$models->sum('quantity')}}</td>
                 <td>{{Helper::currencyPdf($models->sum('amount'))}}</td>
                 <td></td>
             </tr>
