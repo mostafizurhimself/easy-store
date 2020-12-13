@@ -19,11 +19,11 @@
                 <td>#</td>
                 <td>Location</td>
                 <td>Date</td>
+                <td>Material</td>
                 <td>Order No</td>
                 <td>Reference</td>
-                <td>Material</td>
-                <td>Quantity</td>
                 <td>Rate</td>
+                <td>Quantity</td>
                 <td>Amount</td>
                 <td>Status</td>
             </tr>
@@ -32,11 +32,11 @@
                     <td>{{$loop->iteration}}</td>
                     <td>{{$model->location->name}}</td>
                     <td>{{$model->date}}</td>
+                    <td>{{$model->material->name}} ({{$model->material->code}})</td>
                     <td>{{$model->purchaseOrder->readableId}}</td>
                     <td>{{$model->reference}}</td>
-                    <td>{{$model->material->name}} ({{$model->material->code}})</td>
-                    <td>{{$model->quantity}} {{$model->unitName}}</td>
                     <td>{{Helper::currencyShortPdf($model->rate)}}</td>
+                    <td>{{$model->quantity}} {{$model->unitName}}</td>
                     <td>{{Helper::currencyPdf($model->amount)}}</td>
                     <td>{{Str::title($model->status)}}</td>
                 </tr>

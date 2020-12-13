@@ -64,6 +64,7 @@
         <p style="text-align: justify;"><span class="font-weight-bold mr-2">Note:</span> {{$pass->note}}</p>
     </div>
 </div>
+@endif
 
 <div class="row mt-5 align-items-center">
     <div class="col-lg-6">
@@ -75,5 +76,4 @@
         </span>
     </div>
     </div>
-@endif
 @endsection

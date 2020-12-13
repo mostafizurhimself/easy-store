@@ -189,6 +189,10 @@ class AssetReceiveItem extends Resource
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
 
+            Text::make("Supplier", function(){
+                return $this->purchaseOrder->supplier->name;
+            }),
+
             Badge::make('Status')->map([
                 PurchaseStatus::DRAFT()->getValue()     => 'warning',
                 PurchaseStatus::CONFIRMED()->getValue() => 'info',
