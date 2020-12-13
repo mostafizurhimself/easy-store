@@ -28,7 +28,7 @@ class FabricReturnItemObserver
             $fabricReturnItem->rate = $fabric->rate;
         }
         $fabricReturnItem->unitId = $fabric->unitId;
-        $fabricReturnItem->amount = $fabric->rate * $fabricReturnItem->quantity;
+        $fabricReturnItem->amount = $fabricReturnItem->rate * $fabricReturnItem->quantity;
     }
 
     /**

@@ -23,6 +23,7 @@ use App\Nova\Filters\ReturnStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetReturnInvoices\MarkAsDraft;
+use App\Nova\Actions\AssetReturnInvoices\Recalculate;
 use App\Nova\Actions\AssetReturnInvoices\ConfirmInvoice;
 use App\Nova\Actions\AssetReturnInvoices\GenerateInvoice;
 
@@ -49,7 +50,7 @@ class AssetReturnInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
+    public static $permissions = ['can confirm', 'can generate', 'can recalculate', 'can mark as draft'];
 
     /**
      * The side nav menu order.
@@ -244,6 +245,15 @@ class AssetReturnInvoice extends Resource
     public function actions(Request $request)
     {
         return [
+            (new Recalculate)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can recalculate asset return invoices') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can recalculate asset return invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Recalculate')
+                ->confirmText('Are you sure want to recalculate invoice now?'),
+
             (new MarkAsDraft)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can mark as draft asset return invoices') || $request->user()->isSuperAdmin();
             })

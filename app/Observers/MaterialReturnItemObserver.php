@@ -31,7 +31,7 @@ class MaterialReturnItemObserver
         if(empty($materialReturnItem->unitId)){
             $materialReturnItem->unitId = $material->unitId;
         }
-        $materialReturnItem->amount = $material->rate * $materialReturnItem->quantity;
+        $materialReturnItem->amount = $materialReturnItem->rate * $materialReturnItem->quantity;
     }
 
     /**

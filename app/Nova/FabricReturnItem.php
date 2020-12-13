@@ -116,8 +116,6 @@ class FabricReturnItem extends Resource
                 ->sortable()
                 ->exceptOnForms(),
 
-
-
             Currency::make('Rate')
                 ->currency('BDT')
                 ->sortable()

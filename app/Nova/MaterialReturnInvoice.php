@@ -23,6 +23,7 @@ use App\Nova\Filters\ReturnStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\MaterialReturnInvoices\MarkAsDraft;
+use App\Nova\Actions\MaterialReturnInvoices\Recalculate;
 use App\Nova\Actions\MaterialReturnInvoices\ConfirmInvoice;
 use App\Nova\Actions\MaterialReturnInvoices\GenerateInvoice;
 
@@ -42,7 +43,7 @@ class MaterialReturnInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate', 'can mark as draft'];
+    public static $permissions = ['can confirm', 'can generate', 'can recalculate', 'can mark as draft'];
 
     /**
      * The group associated with the resource.
@@ -246,6 +247,15 @@ class MaterialReturnInvoice extends Resource
     public function actions(Request $request)
     {
         return [
+            (new Recalculate)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can recalculate material return invoices') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can recalculate material return invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Recalculate')
+                ->confirmText('Are you sure want to recalculate invoice now?'),
+
             (new MarkAsDraft)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can mark as draft material return invoices') || $request->user()->isSuperAdmin();
             })

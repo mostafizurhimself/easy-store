@@ -4,9 +4,9 @@ namespace App\Nova\Lenses\Asset;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use App\Models\AssetCategory;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Lenses\Lens;
-use App\Models\AssetCategory;
 use Illuminate\Support\Facades\DB;
 use Treestoneit\TextWrap\TextWrap;
 use App\Nova\Filters\CategoryFilter;
