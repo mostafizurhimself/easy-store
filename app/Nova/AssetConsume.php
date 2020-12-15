@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Actions\AssetConsumes\Discard;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class AssetConsume extends Resource
@@ -130,6 +131,15 @@ class AssetConsume extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new Discard)->canSee(function($request){
+                return $request->user()->isSuperAdmin();
+            })->canRun(function($request){
+                return $request->user()->isSuperAdmin();
+            })
+            ->onlyOnTableRow()
+            ->confirmText("Are you sure want to discard this consume?")
+            ->confirmButtonText('Discard'),
+        ];
     }
 }

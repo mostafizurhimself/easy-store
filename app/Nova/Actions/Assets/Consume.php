@@ -37,7 +37,6 @@ class Consume extends Action
 
                 $model->decrement('quantity', $fields->quantity);
             }else{
-
                 return Action::danger("You can not consume more than stock quantity");
             }
         }
