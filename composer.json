@@ -32,7 +32,6 @@
         "easystore/router-link": "*",
         "easystore/text-uppercase": "*",
         "ebess/advanced-nova-media-library": "^3.1",
-        "ecrmnn/laravel-https": "^1.0",
         "eminiarts/nova-permissions": "^1.0",
         "eminiarts/nova-tabs": "^1.2",
         "epartment/nova-dependency-container": "^1.2",
