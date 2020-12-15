@@ -27,9 +27,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         URL::forceScheme('https');
-        // dd(\App\Models\Fabric::select('id', 'name')
-        //     ->where('status', 'active')
-        //     ->select('code', 'quantity')
-        //     ->toSql());
     }
 }

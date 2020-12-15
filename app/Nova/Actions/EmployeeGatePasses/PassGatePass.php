@@ -8,6 +8,7 @@ use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\DateTime;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -35,7 +36,7 @@ class PassGatePass extends Action
         foreach ($models as $model) {
             if ($model->status == GatePassStatus::CONFIRMED()) {
                 $model->out       = $fields->out;
-                $model->passedBy = request()->user()->id;
+                $model->passedBy = Auth::user()->id;
                 $model->status   = GatePassStatus::PASSED();
                 $model->save();
             } else {

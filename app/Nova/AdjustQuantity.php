@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Traits\WithOutLocation;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class AdjustQuantity extends Resource
 {
+    use WithOutLocation;
+
     /**
      * The model the resource corresponds to.
      *

@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -30,7 +31,7 @@ class Consume extends Action
                     'quantity' => $fields->quantity,
                     'rate'     => $model->rate,
                     'amount'   => $fields->quantity * $model->rate,
-                    'user_id'  => request()->user()->id,
+                    'user_id'  => Auth::user()->id,
                     'unit_id'  => $model->unitId
                 ]);
 

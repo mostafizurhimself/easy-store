@@ -8,6 +8,7 @@ use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Textarea;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -31,7 +32,7 @@ class AdjustBalance extends Action
                 'date'        => Carbon::now(),
                 'amount'      => $fields->amount,
                 'description' => $fields->description,
-                'user_id'     => request()->user()->id,
+                'user_id'     => Auth::user()->id,
             ]);
 
             $adjustBalance->adjust();

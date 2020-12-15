@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Cards\Help;
 use App\Nova\Metrics\ActiveUser;
 use App\Nova\Metrics\TotalShowroom;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Events\ServingNova;
 use Easystore\ProfileTool\ProfileTool;
@@ -25,6 +26,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot()
     {
         parent::boot();
+
+        // Force HTTPS
+        URL::forceScheme('https');
 
         //Sort the resources by its priority property
         Nova::sortResourcesBy(function ($resource) {

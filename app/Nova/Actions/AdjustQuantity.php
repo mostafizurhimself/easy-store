@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\Textarea;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -37,7 +38,7 @@ class AdjustQuantity extends Action
                 'amount'      => $model->rate * $fields->quantity,
                 'description' => $fields->description,
                 'unit_id'     => $model->unit_id,
-                'user_id'     => request()->user()->id,
+                'user_id'     => Auth::user()->id,
             ]);
 
             $adjustQuantity->adjust();
