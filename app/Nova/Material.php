@@ -271,17 +271,29 @@ class Material extends Resource
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
                 ],
-                "Distribution history" => [
-                    HasMany::make('Distribution History', 'distributions', \App\Nova\MaterialDistribution::class),
+                "Purchase history" => [
+                    HasMany::make('Purchase History', 'receiveItems', \App\Nova\MaterialReceiveItem::class),
+                ],
+                "Receive history" => [
+                    HasMany::make('Receive History', 'transferReceiveItems', \App\Nova\MaterialTransferReceiveItem::class),
                 ],
                 "Adjust History" => [
-                    MorphMany::make('Adjust Quantities', 'adjustQuantities', \App\Nova\AdjustQuantity::class)
+                    MorphMany::make('Adjust History', 'adjustQuantities', \App\Nova\AdjustQuantity::class)
                 ],
-                // "Activities" => [
-                //     MorphMany::make('Activities', 'activities', "App\Nova\ActivityLog"),
-                // ]
 
             ]))->withToolbar(),
+
+            new Tabs('Stock Information', [
+                "Distribution History" => [
+                    HasMany::make('Distribution History', 'distributions', \App\Nova\MaterialDistribution::class)
+                ],
+                "Return History" => [
+                    HasMany::make('Return History', 'returnItems', \App\Nova\MaterialReturnItem::class)
+                ],
+                "Transfer History" => [
+                    HasMany::make('Transfer History', 'transferItems', \App\Nova\MaterialTransferItem::class)
+                ]
+            ]),
 
 
 

@@ -30,7 +30,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/fabric-return-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'fabric-return-invoices' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -44,7 +44,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/fabric-transfer-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'fabric-transfer-invoices' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -57,33 +57,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/fabric-transfer-receive-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
-        ) {
-            router.push({ name: "403" });
-
-            return;
-        }
-
-        next();
-    });
-
-    router.beforeEach((to, from, next) => {
-        if (
-            to.path === "/resources/fabric-transfer-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
-        ) {
-            router.push({ name: "403" });
-
-            return;
-        }
-
-        next();
-    });
-
-    router.beforeEach((to, from, next) => {
-        if (
-            to.path === "/resources/fabric-transfer-receive-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'fabric-transfer-items' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -97,7 +71,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/material-purchase-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'material-purchase-invoices' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -110,7 +84,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/material-receive-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'material-purchase-items' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -123,7 +97,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/material-return-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'material-return-invoices' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -136,7 +110,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/material-transfer-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'material-transfer-invoices' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -149,7 +123,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/material-transfer-receive-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'material-transfer-items' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -202,7 +176,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/asset-requisition-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'asset-requisitions' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -268,7 +242,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/service-transfer-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'service-transfer-invoices' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -281,7 +255,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/service-transfer-receive-items/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'service-transfer-items' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 
@@ -295,7 +269,7 @@ Nova.booting((Vue, router, store) => {
     router.beforeEach((to, from, next) => {
         if (
             to.path === "/resources/finishings/new" &&
-            (to.query.viaResource == null || to.query.viaResourceId == null)
+            (to.query.viaResource != 'finishing-invoices' || to.query.viaResourceId == null)
         ) {
             router.push({ name: "403" });
 

@@ -270,14 +270,29 @@ class Fabric extends Resource
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
                 ],
-                "Distribution History" => [
-                    HasMany::make('Distribution History', 'distributions', \App\Nova\FabricDistribution::class),
+                "Purchase history" => [
+                    HasMany::make('Purchase History', 'receiveItems', \App\Nova\FabricReceiveItem::class),
+                ],
+                "Receive history" => [
+                    HasMany::make('Receive History', 'transferReceiveItems', \App\Nova\FabricTransferReceiveItem::class),
                 ],
                 "Adjust History" => [
-                    MorphMany::make('Adjust Quantities', 'adjustQuantities', \App\Nova\AdjustQuantity::class)
+                    MorphMany::make('Adjust History', 'adjustQuantities', \App\Nova\AdjustQuantity::class)
                 ],
 
             ]))->withToolbar(),
+
+            new Tabs('Stock Information', [
+                "Distribution History" => [
+                    HasMany::make('Distribution History', 'distributions', \App\Nova\FabricDistribution::class)
+                ],
+                "Return History" => [
+                    HasMany::make('Return History', 'returnItems', \App\Nova\FabricReturnItem::class)
+                ],
+                "Transfer History" => [
+                    HasMany::make('Transfer History', 'transferItems', \App\Nova\FabricTransferItem::class)
+                ]
+            ]),
 
         ];
     }
