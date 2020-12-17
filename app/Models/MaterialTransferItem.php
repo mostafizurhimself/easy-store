@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MaterialTransferItem extends Model
 {
-    use LogsActivity, CamelCasing, HasReadableIdWithDate;
+    use LogsActivity, CamelCasing, SoftDeletes, HasReadableIdWithDate;
 
     /**
      * The attributes that are not mass assignable.
@@ -78,7 +78,7 @@ class MaterialTransferItem extends Model
      */
     public function receiveItems()
     {
-       return $this->hasMany(MaterialTransferReceiveItem::class, 'transfer_item_id');
+       return $this->hasMany(MaterialTransferReceiveItem::class, 'transfer_item_id')->withTrashed();
     }
 
     /**

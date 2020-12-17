@@ -25,20 +25,27 @@ class AssetReturnInvoiceObserver
      */
     public function updating(AssetReturnInvoice $assetReturnInvoice)
     {
-        if($assetReturnInvoice->isDirty('location_id') || $assetReturnInvoice->isDirty('supplier_id')){
+        if ($assetReturnInvoice->isDirty('location_id') || $assetReturnInvoice->isDirty('supplier_id')) {
             $assetReturnInvoice->returnItems()->forceDelete();
         }
     }
 
     /**
-     * Handle the asset return invoice "deleted" event.
+     * Handle the asset return invoice "deleting" event.
      *
      * @param  \App\Models\AssetReturnInvoice  $assetReturnInvoice
      * @return void
      */
-    public function deleted(AssetReturnInvoice $assetReturnInvoice)
+    public function deleting(AssetReturnInvoice $assetReturnInvoice)
     {
-        //
+        // Delete if force deleted
+        if ($assetReturnInvoice->isForceDeleting()) {
+            // Force Delete related return items
+            $assetReturnInvoice->returnItems()->forceDelete();
+        } else {
+            // Delete related return items
+            $assetReturnInvoice->returnItems()->delete();
+        }
     }
 
     /**
@@ -49,7 +56,8 @@ class AssetReturnInvoiceObserver
      */
     public function restored(AssetReturnInvoice $assetReturnInvoice)
     {
-        //
+        // Restore deleted items
+        $assetReturnInvoice->returnItems()->restore();
     }
 
     /**

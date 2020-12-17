@@ -25,20 +25,27 @@ class FabricReturnInvoiceObserver
      */
     public function updating(FabricReturnInvoice $fabricReturnInvoice)
     {
-        if($fabricReturnInvoice->isDirty('location_id') || $fabricReturnInvoice->isDirty('supplier_id')){
+        if ($fabricReturnInvoice->isDirty('location_id') || $fabricReturnInvoice->isDirty('supplier_id')) {
             $fabricReturnInvoice->returnItems()->forceDelete();
         }
     }
 
     /**
-     * Handle the fabric return invoice "deleted" event.
+     * Handle the fabric return invoice "deleting" event.
      *
      * @param  \App\Models\FabricReturnInvoice  $fabricReturnInvoice
      * @return void
      */
-    public function deleted(FabricReturnInvoice $fabricReturnInvoice)
+    public function deleting(FabricReturnInvoice $fabricReturnInvoice)
     {
-        //
+        // Delete if force deleted
+        if ($fabricReturnInvoice->isForceDeleting()) {
+            // Force Delete related return items
+            $fabricReturnInvoice->returnItems()->forceDelete();
+        } else {
+            // Delete related return items
+            $fabricReturnInvoice->returnItems()->delete();
+        }
     }
 
     /**
@@ -49,7 +56,8 @@ class FabricReturnInvoiceObserver
      */
     public function restored(FabricReturnInvoice $fabricReturnInvoice)
     {
-        //
+        // Restore deleted items
+        $fabricReturnInvoice->returnItems()->restore();
     }
 
     /**

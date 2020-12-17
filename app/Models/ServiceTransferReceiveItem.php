@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ServiceTransferReceiveItem extends Model implements HasMedia
 {
-    use LogsActivity, CamelCasing, InteractsWithMedia, HasReadableIdWithDate;
+    use LogsActivity, SoftDeletes, CamelCasing, InteractsWithMedia, HasReadableIdWithDate;
 
     /**
      * The attributes that are not mass assignable.

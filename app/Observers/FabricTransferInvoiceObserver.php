@@ -31,14 +31,26 @@ class FabricTransferInvoiceObserver
     }
 
     /**
-     * Handle the fabric transfer invoice "deleted" event.
+     * Handle the fabric transfer invoice "deleting" event.
      *
      * @param  \App\Models\FabricTransferInvoice  $fabricTransferInvoice
      * @return void
      */
-    public function deleted(FabricTransferInvoice $fabricTransferInvoice)
+    public function deleting(FabricTransferInvoice $fabricTransferInvoice)
     {
-        //
+        if($fabricTransferInvoice->isForceDeleting()){
+            // Force Delete transfer items
+            $fabricTransferInvoice->transferItems()->forceDelete();
+
+            // Force Delete receive items
+            $fabricTransferInvoice->receiveItems()->forceDelete();
+        }else{
+            // Delete transfer items
+            $fabricTransferInvoice->transferItems()->delete();
+
+            // Delete receive items
+            $fabricTransferInvoice->receiveItems()->delete();
+        }
     }
 
     /**
@@ -49,7 +61,10 @@ class FabricTransferInvoiceObserver
      */
     public function restored(FabricTransferInvoice $fabricTransferInvoice)
     {
-        //
+        // Restore transfer items
+        $fabricTransferInvoice->transferItems()->restore();
+        // Restore receive items
+        $fabricTransferInvoice->receiveItems()->restore();
     }
 
     /**

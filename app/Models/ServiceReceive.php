@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ServiceReceive extends Model implements HasMedia
 {
-    use LogsActivity, CamelCasing, InteractsWithMedia, HasReadableIdWithDate;
+    use LogsActivity, SoftDeletes, CamelCasing, InteractsWithMedia, HasReadableIdWithDate;
 
     /**
      * The attributes that are not mass assignable.
@@ -86,7 +86,7 @@ class ServiceReceive extends Model implements HasMedia
      */
     public function dispatch()
     {
-       return $this->belongsTo(ServiceDispatch::class, 'dispatch_id');
+       return $this->belongsTo(ServiceDispatch::class, 'dispatch_id')->withTrashed();
     }
 
     /**

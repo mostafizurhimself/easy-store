@@ -25,20 +25,24 @@ class ProductRequisitionObserver
      */
     public function updating(ProductRequisition $productRequisition)
     {
-        if($productRequisition->isDirty('receiver_id')){
+        if ($productRequisition->isDirty('receiver_id')) {
             $productRequisition->requisitionItems()->forceDelete();
         }
     }
 
     /**
-     * Handle the product requisition "deleted" event.
+     * Handle the product requisition "deleting" event.
      *
      * @param  \App\Models\ProductRequisition  $productRequisition
      * @return void
      */
-    public function deleted(ProductRequisition $productRequisition)
+    public function deleting(ProductRequisition $productRequisition)
     {
-        //
+        if ($productRequisition->isForceDeleting()) {
+            $productRequisition->requisitionItems()->forceDelete();
+        } else {
+            $productRequisition->requisitionItems()->delete();
+        }
     }
 
     /**
@@ -49,7 +53,7 @@ class ProductRequisitionObserver
      */
     public function restored(ProductRequisition $productRequisition)
     {
-        //
+        $productRequisition->requisitionItems()->restore();
     }
 
     /**

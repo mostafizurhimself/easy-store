@@ -13,6 +13,7 @@ use App\Models\Material;
 use App\Models\Provider;
 use App\Models\Supplier;
 use App\Models\Finishing;
+use App\Models\GoodsGatePass;
 use App\Models\ProductOutput;
 use App\Models\ServiceInvoice;
 use App\Models\ServiceReceive;
@@ -60,6 +61,7 @@ use App\Models\ServiceTransferInvoice;
 use App\Models\MaterialTransferInvoice;
 use Illuminate\Support\ServiceProvider;
 use App\Models\AssetDistributionInvoice;
+use App\Observers\GoodsGatePassObserver;
 use App\Observers\ProductOutputObserver;
 use App\Models\FabricTransferReceiveItem;
 use App\Observers\ServiceInvoiceObserver;
@@ -73,7 +75,6 @@ use App\Observers\AssetRequisitionObserver;
 use App\Observers\FabricReturnItemObserver;
 use App\Observers\FinishingInvoiceObserver;
 use App\Models\AssetDistributionReceiveItem;
-use App\Models\GoodsGatePass;
 use App\Observers\AssetPurchaseItemObserver;
 use App\Observers\FabricReceiveItemObserver;
 use App\Observers\AssetPurchaseOrderObserver;
@@ -103,7 +104,6 @@ use App\Observers\FabricTransferReceiveItemObserver;
 use App\Observers\ServiceTransferReceiveItemObserver;
 use App\Observers\MaterialTransferReceiveItemObserver;
 use App\Observers\AssetDistributionReceiveItemObserver;
-use App\Observers\GoodsGatePassObserver;
 
 class ObserverServiceProvider extends ServiceProvider
 {

@@ -25,20 +25,30 @@ class ServiceInvoiceObserver
      */
     public function updating(ServiceInvoice $serviceInvoice)
     {
-        if($serviceInvoice->isDirty('location_id') || $serviceInvoice->isDirty('provider_id')){
+        if ($serviceInvoice->isDirty('location_id') || $serviceInvoice->isDirty('provider_id')) {
             $serviceInvoice->dispatches()->forceDelete();
         }
     }
 
     /**
-     * Handle the service invoice "deleted" event.
+     * Handle the service invoice "deleting" event.
      *
      * @param  \App\Models\ServiceInvoice  $serviceInvoice
      * @return void
      */
-    public function deleted(ServiceInvoice $serviceInvoice)
+    public function deleting(ServiceInvoice $serviceInvoice)
     {
-        //
+        if ($serviceInvoice->isForceDeleting()) {
+            // Force Delete related dispatches
+            $serviceInvoice->dispatches()->forceDelete();
+            // Force Delete related receives
+            $serviceInvoice->receives()->forceDelete();
+        } else {
+            // Delete related dispatches
+            $serviceInvoice->dispatches()->delete();
+            // Delete related receives
+            $serviceInvoice->receives()->delete();
+        }
     }
 
     /**
@@ -49,7 +59,10 @@ class ServiceInvoiceObserver
      */
     public function restored(ServiceInvoice $serviceInvoice)
     {
-        //
+        // Restore related dispatches
+        $serviceInvoice->dispatches()->restore();
+        // Restore related receives
+        $serviceInvoice->receives()->restore();
     }
 
     /**

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FabricTransferReceiveItem extends Model implements HasMedia
 {
-    use LogsActivity, CamelCasing, HasReadableIdWithDate, InteractsWithMedia;
+    use LogsActivity, CamelCasing, SoftDeletes, HasReadableIdWithDate, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.
@@ -86,7 +86,7 @@ class FabricTransferReceiveItem extends Model implements HasMedia
      */
     public function transferItem()
     {
-       return $this->belongsTo(FabricTransferItem::class, 'transfer_item_id');
+       return $this->belongsTo(FabricTransferItem::class, 'transfer_item_id')->withTrashed();
     }
 
     /**

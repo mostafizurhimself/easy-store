@@ -27,8 +27,7 @@ class AssetPurchaseOrderObserver
         Notification::send($users, new NewPurchaseOrder(\App\Nova\AssetPurchaseOrder::uriKey(), $assetPurchaseOrder));
 
         //Notify super admins
-        if(Settings::superAdminNotification())
-        {
+        if (Settings::superAdminNotification()) {
             $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
             Notification::send($users, new NewPurchaseOrder(\App\Nova\AssetPurchaseOrder::uriKey(), $assetPurchaseOrder));
         }
@@ -42,20 +41,34 @@ class AssetPurchaseOrderObserver
      */
     public function updating(AssetPurchaseOrder $assetPurchaseOrder)
     {
-        if($assetPurchaseOrder->isDirty('location_id') || $assetPurchaseOrder->isDirty('supplier_id')){
+        if ($assetPurchaseOrder->isDirty('location_id') || $assetPurchaseOrder->isDirty('supplier_id')) {
             $assetPurchaseOrder->purchaseItems()->forceDelete();
         }
     }
 
     /**
-     * Handle the asset purchase order "deleted" event.
+     * Handle the asset purchase order "deleting" event.
      *
      * @param  \App\Models\AssetPurchaseOrder  $assetPurchaseOrder
      * @return void
      */
-    public function deleted(AssetPurchaseOrder $assetPurchaseOrder)
+    public function deleting(AssetPurchaseOrder $assetPurchaseOrder)
     {
-        //
+        // Delete if force deleted
+        if ($assetPurchaseOrder->isForceDeleting()) {
+            // Force Delete related purchase items
+            $assetPurchaseOrder->purchaseItems()->forceDelete();
+
+            // Force Delete related receive items
+            $assetPurchaseOrder->receiveItems()->forceDelete();
+        } else {
+
+            // Delete related purchase items
+            $assetPurchaseOrder->purchaseItems()->delete();
+
+            // Delete related receive items
+            $assetPurchaseOrder->receiveItems()->delete();
+        }
     }
 
     /**
@@ -66,7 +79,11 @@ class AssetPurchaseOrderObserver
      */
     public function restored(AssetPurchaseOrder $assetPurchaseOrder)
     {
-        //
+        // Delete related purchase items
+        $assetPurchaseOrder->purchaseItems()->restore();
+
+        // Delete related receive items
+        $assetPurchaseOrder->receiveItems()->restore();
     }
 
     /**

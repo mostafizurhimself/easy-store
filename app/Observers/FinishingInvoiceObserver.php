@@ -31,14 +31,18 @@ class FinishingInvoiceObserver
     }
 
     /**
-     * Handle the finishing invoice "deleted" event.
+     * Handle the finishing invoice "deleting" event.
      *
      * @param  \App\Models\FinishingInvoice  $finishingInvoice
      * @return void
      */
-    public function deleted(FinishingInvoice $finishingInvoice)
+    public function deleting(FinishingInvoice $finishingInvoice)
     {
-        //
+        if($finishingInvoice->isForceDeleting()){
+            $finishingInvoice->finishings()->forceDelete();
+        }else{
+            $finishingInvoice->finishings()->delete();
+        }
     }
 
     /**
@@ -49,7 +53,7 @@ class FinishingInvoiceObserver
      */
     public function restored(FinishingInvoice $finishingInvoice)
     {
-        //
+        $finishingInvoice->finishings()->restore();
     }
 
     /**

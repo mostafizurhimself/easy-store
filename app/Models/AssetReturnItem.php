@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AssetReturnItem extends Model implements HasMedia
 {
-    use LogsActivity, CamelCasing, HasReadableIdWithDate, InteractsWithMedia;
+    use LogsActivity, SoftDeletes, CamelCasing, HasReadableIdWithDate, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.

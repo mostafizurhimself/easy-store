@@ -48,14 +48,29 @@ class MaterialPurchaseOrderObserver
     }
 
     /**
-     * Handle the material purchase order "deleted" event.
+     * Handle the material purchase order "deleting" event.
      *
      * @param  \App\Models\MaterialPurchaseOrder  $materialPurchaseOrder
      * @return void
      */
-    public function deleted(MaterialPurchaseOrder $materialPurchaseOrder)
+    public function deleting(MaterialPurchaseOrder $materialPurchaseOrder)
     {
-        //
+         // Delete if force deleted
+         if ($materialPurchaseOrder->isForceDeleting()) {
+            // Force Delete related purchase items
+            $materialPurchaseOrder->purchaseItems()->forceDelete();
+
+            // Force Delete related receive items
+            $materialPurchaseOrder->receiveItems()->forceDelete();
+
+        }else{
+
+            // Delete related purchase items
+            $materialPurchaseOrder->purchaseItems()->delete();
+
+            // Delete related receive items
+            $materialPurchaseOrder->receiveItems()->delete();
+        }
     }
 
     /**
@@ -66,7 +81,11 @@ class MaterialPurchaseOrderObserver
      */
     public function restored(MaterialPurchaseOrder $materialPurchaseOrder)
     {
-        //
+        // Delete related purchase items
+        $materialPurchaseOrder->purchaseItems()->restore();
+
+        // Delete related receive items
+        $materialPurchaseOrder->receiveItems()->restore();
     }
 
     /**

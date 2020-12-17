@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AssetDistributionReceiveItem extends Model implements HasMedia
 {
-    use LogsActivity, CamelCasing, HasReadableIdWithDate, InteractsWithMedia;
+    use LogsActivity, SoftDeletes, CamelCasing, HasReadableIdWithDate, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.
@@ -79,7 +79,7 @@ class AssetDistributionReceiveItem extends Model implements HasMedia
      */
     public function distributionItem()
     {
-       return $this->belongsTo(AssetDistributionItem::class, 'distribution_item_id');
+       return $this->belongsTo(AssetDistributionItem::class, 'distribution_item_id')->withTrashed();
     }
 
     /**

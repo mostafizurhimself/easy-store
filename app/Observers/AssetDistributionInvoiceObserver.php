@@ -31,14 +31,24 @@ class AssetDistributionInvoiceObserver
     }
 
     /**
-     * Handle the asset distribution invoice "deleted" event.
+     * Handle the asset distribution invoice "deleting" event.
      *
      * @param  \App\Models\AssetDistributionInvoice  $assetDistributionInvoice
      * @return void
      */
-    public function deleted(AssetDistributionInvoice $assetDistributionInvoice)
+    public function deleting(AssetDistributionInvoice $assetDistributionInvoice)
     {
-        //
+        if($assetDistributionInvoice->isForceDeleting()){
+            // Force Delete related distribution items
+            $assetDistributionInvoice->distributionItems()->forceDelete();
+            // Force Delete related receive items
+            $assetDistributionInvoice->receiveItems()->forceDelete();
+        }else{
+            // Delete related distribution items
+            $assetDistributionInvoice->distributionItems()->delete();
+            // Delete related receive items
+            $assetDistributionInvoice->receiveItems()->delete();
+        }
     }
 
     /**
@@ -49,7 +59,10 @@ class AssetDistributionInvoiceObserver
      */
     public function restored(AssetDistributionInvoice $assetDistributionInvoice)
     {
-        //
+        // Restore related distribution items
+        $assetDistributionInvoice->distributionItems()->restore();
+        // Restore related receive items
+        $assetDistributionInvoice->receiveItems()->restore();
     }
 
     /**

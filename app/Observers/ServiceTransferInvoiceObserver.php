@@ -31,14 +31,24 @@ class ServiceTransferInvoiceObserver
     }
 
     /**
-     * Handle the service transfer invoice "deleted" event.
+     * Handle the service transfer invoice "deleting" event.
      *
      * @param  \App\Models\ServiceTransferInvoice  $serviceTransferInvoice
      * @return void
      */
-    public function deleted(ServiceTransferInvoice $serviceTransferInvoice)
+    public function deleting(ServiceTransferInvoice $serviceTransferInvoice)
     {
-        //
+        if($serviceTransferInvoice->isForceDeleting()){
+            // Force Delete related transfer items
+            $serviceTransferInvoice->transferItems()->forceDelete();
+            // Force Delete related receive items
+            $serviceTransferInvoice->receiveItems()->forceDelete();
+        }else{
+            // Delete related transfer items
+            $serviceTransferInvoice->transferItems()->delete();
+            // Delete related receive items
+            $serviceTransferInvoice->receiveItems()->delete();
+        }
     }
 
     /**
@@ -49,7 +59,10 @@ class ServiceTransferInvoiceObserver
      */
     public function restored(ServiceTransferInvoice $serviceTransferInvoice)
     {
-        //
+        // Restore related transfer items
+        $serviceTransferInvoice->transferItems()->restore();
+        // Restore related receive items
+        $serviceTransferInvoice->receiveItems()->restore();
     }
 
     /**

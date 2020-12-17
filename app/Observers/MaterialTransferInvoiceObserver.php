@@ -25,20 +25,32 @@ class MaterialTransferInvoiceObserver
      */
     public function updating(MaterialTransferInvoice $materialTransferInvoice)
     {
-        if($materialTransferInvoice->isDirty('location_id')){
+        if ($materialTransferInvoice->isDirty('location_id')) {
             $materialTransferInvoice->transferItems()->forceDelete();
         }
     }
 
     /**
-     * Handle the material transfer invoice "deleted" event.
+     * Handle the material transfer invoice "deleting" event.
      *
      * @param  \App\Models\MaterialTransferInvoice  $materialTransferInvoice
      * @return void
      */
-    public function deleted(MaterialTransferInvoice $materialTransferInvoice)
+    public function deleting(MaterialTransferInvoice $materialTransferInvoice)
     {
-        //
+        if ($materialTransferInvoice->isForceDeleting()) {
+            // Force Delete transfer items
+            $materialTransferInvoice->transferItems()->forceDelete();
+
+            // Force Delete receive items
+            $materialTransferInvoice->receiveItems()->forceDelete();
+        } else {
+            // Delete transfer items
+            $materialTransferInvoice->transferItems()->delete();
+
+            // Delete receive items
+            $materialTransferInvoice->receiveItems()->delete();
+        }
     }
 
     /**
@@ -49,7 +61,10 @@ class MaterialTransferInvoiceObserver
      */
     public function restored(MaterialTransferInvoice $materialTransferInvoice)
     {
-        //
+        // Restore transfer items
+        $materialTransferInvoice->transferItems()->restore();
+        // Restore receive items
+        $materialTransferInvoice->receiveItems()->restore();
     }
 
     /**

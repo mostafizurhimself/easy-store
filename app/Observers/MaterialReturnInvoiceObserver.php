@@ -25,20 +25,27 @@ class MaterialReturnInvoiceObserver
      */
     public function updating(MaterialReturnInvoice $materialReturnInvoice)
     {
-        if($materialReturnInvoice->isDirty('location_id') || $materialReturnInvoice->isDirty('supplier_id')){
+        if ($materialReturnInvoice->isDirty('location_id') || $materialReturnInvoice->isDirty('supplier_id')) {
             $materialReturnInvoice->returnItems()->forceDelete();
         }
     }
 
     /**
-     * Handle the material return invoice "deleted" event.
+     * Handle the material return invoice "deleting" event.
      *
      * @param  \App\Models\MaterialReturnInvoice  $materialReturnInvoice
      * @return void
      */
-    public function deleted(MaterialReturnInvoice $materialReturnInvoice)
+    public function deleting(MaterialReturnInvoice $materialReturnInvoice)
     {
-        //
+        // Delete if force deleted
+        if ($materialReturnInvoice->isForceDeleting()) {
+            // Force Delete related return items
+            $materialReturnInvoice->returnItems()->forceDelete();
+        } else {
+            // Delete related return items
+            $materialReturnInvoice->returnItems()->delete();
+        }
     }
 
     /**
@@ -49,7 +56,8 @@ class MaterialReturnInvoiceObserver
      */
     public function restored(MaterialReturnInvoice $materialReturnInvoice)
     {
-        //
+        // Restore deleted items
+        $materialReturnInvoice->returnItems()->restore();
     }
 
     /**

@@ -31,14 +31,20 @@ class AssetRequisitionObserver
     }
 
     /**
-     * Handle the asset requisition "deleted" event.
+     * Handle the asset requisition "deleting" event.
      *
      * @param  \App\Models\AssetRequisition  $assetRequisition
      * @return void
      */
-    public function deleted(AssetRequisition $assetRequisition)
+    public function deleting(AssetRequisition $assetRequisition)
     {
-        //
+        if($assetRequisition->isForceDeleting()){
+            // Force Delete related items
+            $assetRequisition->requisitionItems()->forceDelete();
+        }else{
+            // Delete related items
+            $assetRequisition->requisitionItems()->delete();
+        }
     }
 
     /**
@@ -49,7 +55,7 @@ class AssetRequisitionObserver
      */
     public function restored(AssetRequisition $assetRequisition)
     {
-        //
+        $assetRequisition->requisitionItems()->restore();
     }
 
     /**
