@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\FabricReceiveItem;
 use App\Models\FabricPurchaseItem;
 
@@ -24,10 +25,10 @@ class FabricReceiveItemObserver
         //Set fabric id
         $fabricReceiveItem->fabricId = $purchaseItem->fabricId;
         //Set rate
-        if(empty($fabricReceiveItem->rate)){
+        if (empty($fabricReceiveItem->rate)) {
             $fabricReceiveItem->rate = $purchaseItem->purchaseRate;
         }
-        if(empty($fabricReceiveItem->unitId)){
+        if (empty($fabricReceiveItem->unitId)) {
             $fabricReceiveItem->unitId = $purchaseItem->fabric->unitId;
         }
         //Set Amount
@@ -80,6 +81,22 @@ class FabricReceiveItemObserver
 
         //Change the purchase status
         $fabricReceiveItem->purchaseOrder->updateStatus();
+    }
+
+    /**
+     * Handle the receive item fabric "restoring" event.
+     *
+     * @param  \App\Models\FabricReceiveItem  $fabricReceiveItem
+     * @return void
+     */
+    public function restoring(FabricReceiveItem $fabricReceiveItem)
+    {
+        // echo $fabricReceiveItem->purchaseItem->remainingQuantity;
+        // // Check the quantity is greater than the purchase item quantity or not
+        // // To prevent receiving item more than the purchase item
+        // if ($fabricReceiveItem->quantity > $fabricReceiveItem->purchaseItem->remainingQuantity) {
+        //     throw new Exception('Can not restore this item.');
+        // }
     }
 
     /**

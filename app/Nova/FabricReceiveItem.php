@@ -153,7 +153,12 @@ class FabricReceiveItem extends Resource
                 ->rules('required', 'numeric', 'min:0')
                 ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
                 ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\FabricPurchaseItem::uriKey(), $this->resource->purchaseItemId, $this->resource->quantity))
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->default(function ($request) {
+                    if ($request->viaResource == \App\Nova\FabricPurchaseItem::uriKey() && !empty($request->viaResourceId)) {
+                        return \App\Models\FabricPurchaseItem::find($request->viaResourceId)->remainingQuantity;
+                    }
+                }),
 
             Text::make('Quantity', function () {
                 return $this->quantity . " " . $this->unitName;

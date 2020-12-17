@@ -154,7 +154,12 @@ class AssetReceiveItem extends Resource
                 ->sortable()
                 ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
                 ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\AssetPurchaseItem::uriKey(), $this->resource->purchaseItemId, $this->resource->quantity))
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->default(function ($request) {
+                    if ($request->viaResource == \App\Nova\AssetPurchaseItem::uriKey() && !empty($request->viaResourceId)) {
+                        return \App\Models\AssetPurchaseItem::find($request->viaResourceId)->remainingQuantity;
+                    }
+                }),
 
             Text::make('Quantity', function () {
                 return $this->quantity . " " . $this->unitName;

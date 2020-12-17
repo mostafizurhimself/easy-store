@@ -31,10 +31,8 @@ class MaterialTransferReceiveItemPolicy
      */
     public function view(User $user, MaterialTransferReceiveItem $materialTransferReceiveItem)
     {
-        return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view material transfer receive items') && $user->locationId == $materialTransferReceiveItem->invoice->receiverId ) ||
-                ($user->locationId == $materialTransferReceiveItem->invoice->locationId && $materialTransferReceiveItem->status != TransferStatus::DRAFT()) ||
-                $user->hasPermissionTo('view all locations data');
+        return $user->isSuperAdmin() || ($user->hasPermissionTo('view material transfer receive items') && $user->locationId == $materialTransferReceiveItem->invoice->receiverId) || ($user->locationId == $materialTransferReceiveItem->invoice->locationId && $materialTransferReceiveItem->status != TransferStatus::DRAFT()) ||
+            $user->hasPermissionTo('view all locations data');
     }
 
     /**
@@ -57,10 +55,9 @@ class MaterialTransferReceiveItemPolicy
      */
     public function update(User $user, MaterialTransferReceiveItem $materialTransferReceiveItem)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update material transfer receive items') && $user->locationId == $materialTransferReceiveItem->invoice->receiverId ) ||
-                $user->hasPermissionTo('update all locations data')) &&
-                $materialTransferReceiveItem->status == TransferStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('update material transfer receive items') && $user->locationId == $materialTransferReceiveItem->invoice->receiverId) ||
+            $user->hasPermissionTo('update all locations data')) &&
+            $materialTransferReceiveItem->status == TransferStatus::DRAFT();
     }
 
     /**
@@ -72,10 +69,9 @@ class MaterialTransferReceiveItemPolicy
      */
     public function delete(User $user, MaterialTransferReceiveItem $materialTransferReceiveItem)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete material transfer receive items') && $user->locationId == $materialTransferReceiveItem->invoice->receiverId ) ||
-                $user->hasPermissionTo('delete all locations data')) &&
-                $materialTransferReceiveItem->status == TransferStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('delete material transfer receive items') && $user->locationId == $materialTransferReceiveItem->invoice->receiverId) ||
+            $user->hasPermissionTo('delete all locations data')) &&
+            $materialTransferReceiveItem->status == TransferStatus::DRAFT();
     }
 
     /**
@@ -87,10 +83,15 @@ class MaterialTransferReceiveItemPolicy
      */
     public function restore(User $user, MaterialTransferReceiveItem $materialTransferReceiveItem)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore material transfer receive items') && $user->locationId == $materialTransferReceiveItem->invoice->receiverId ) ||
-                $user->hasPermissionTo('restore all locations data')) &&
-                $materialTransferReceiveItem->status == TransferStatus::DRAFT();
+        // Check the quantity is greater than the transfer item quantity or not
+        // To prevent receiving item more than the transfer item
+        if ($materialTransferReceiveItem->quantity > $materialTransferReceiveItem->transferItem->remainingQuantity) {
+            return false;
+        }
+        // Check Permissions
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('restore material transfer receive items') && $user->locationId == $materialTransferReceiveItem->invoice->receiverId) ||
+            $user->hasPermissionTo('restore all locations data')) &&
+            $materialTransferReceiveItem->status == TransferStatus::DRAFT();
     }
 
     /**
@@ -102,9 +103,8 @@ class MaterialTransferReceiveItemPolicy
      */
     public function forceDelete(User $user, MaterialTransferReceiveItem $materialTransferReceiveItem)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete material transfer receive items') && $user->locationId == $materialTransferReceiveItem->invoice->receiverId ) ||
-                $user->hasPermissionTo('force delete all locations data')) &&
-                $materialTransferReceiveItem->status == TransferStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('force delete material transfer receive items') && $user->locationId == $materialTransferReceiveItem->invoice->receiverId) ||
+            $user->hasPermissionTo('force delete all locations data')) &&
+            $materialTransferReceiveItem->status == TransferStatus::DRAFT();
     }
 }

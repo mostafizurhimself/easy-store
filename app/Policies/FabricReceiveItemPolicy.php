@@ -86,6 +86,12 @@ class FabricReceiveItemPolicy
      */
     public function restore(User $user, FabricReceiveItem $fabricReceiveItem)
     {
+        // Check the quantity is greater than the purchase item quantity or not
+        // To prevent receiving item more than the purchase item
+        if($fabricReceiveItem->quantity > $fabricReceiveItem->purchaseItem->remainingQuantity){
+            return false;
+        }
+        // Check permissions
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore fabric receive items') && $user->locationId == $fabricReceiveItem->purchaseOrder->locationId ) ||
                 $user->hasPermissionTo('restore all locations data');

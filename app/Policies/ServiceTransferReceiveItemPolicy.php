@@ -31,10 +31,8 @@ class ServiceTransferReceiveItemPolicy
      */
     public function view(User $user, ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
-        return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId ) ||
-                ($user->locationId == $serviceTransferReceiveItem->invoice->locationId && $serviceTransferReceiveItem->status != TransferStatus::DRAFT()) ||
-                $user->hasPermissionTo('view all locations data');
+        return $user->isSuperAdmin() || ($user->hasPermissionTo('view service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId) || ($user->locationId == $serviceTransferReceiveItem->invoice->locationId && $serviceTransferReceiveItem->status != TransferStatus::DRAFT()) ||
+            $user->hasPermissionTo('view all locations data');
     }
 
     /**
@@ -57,10 +55,9 @@ class ServiceTransferReceiveItemPolicy
      */
     public function update(User $user, ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId ) ||
-                $user->hasPermissionTo('update all locations data')) &&
-                $serviceTransferReceiveItem->status == TransferStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('update service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId) ||
+            $user->hasPermissionTo('update all locations data')) &&
+            $serviceTransferReceiveItem->status == TransferStatus::DRAFT();
     }
 
     /**
@@ -72,10 +69,9 @@ class ServiceTransferReceiveItemPolicy
      */
     public function delete(User $user, ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId ) ||
-                $user->hasPermissionTo('delete all locations data')) &&
-                $serviceTransferReceiveItem->status == TransferStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('delete service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId) ||
+            $user->hasPermissionTo('delete all locations data')) &&
+            $serviceTransferReceiveItem->status == TransferStatus::DRAFT();
     }
 
     /**
@@ -87,10 +83,15 @@ class ServiceTransferReceiveItemPolicy
      */
     public function restore(User $user, ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId ) ||
-                $user->hasPermissionTo('restore all locations data')) &&
-                $serviceTransferReceiveItem->status == TransferStatus::DRAFT();
+        // Check the quantity is greater than the transfer item quantity or not
+        // To prevent receiving item more than the transfer item
+        if ($serviceTransferReceiveItem->quantity > $serviceTransferReceiveItem->transferItem->remainingQuantity) {
+            return false;
+        }
+        // Check Permissions
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('restore service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId) ||
+            $user->hasPermissionTo('restore all locations data')) &&
+            $serviceTransferReceiveItem->status == TransferStatus::DRAFT();
     }
 
     /**
@@ -102,9 +103,8 @@ class ServiceTransferReceiveItemPolicy
      */
     public function forceDelete(User $user, ServiceTransferReceiveItem $serviceTransferReceiveItem)
     {
-        return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId ) ||
-                $user->hasPermissionTo('force delete all locations data')) &&
-                $serviceTransferReceiveItem->status == TransferStatus::DRAFT();
+        return ($user->isSuperAdmin() || ($user->hasPermissionTo('force delete service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId) ||
+            $user->hasPermissionTo('force delete all locations data')) &&
+            $serviceTransferReceiveItem->status == TransferStatus::DRAFT();
     }
 }
