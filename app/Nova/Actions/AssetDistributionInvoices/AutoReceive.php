@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use App\Enums\DistributionStatus;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,7 +33,7 @@ class AutoReceive extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach($models as $model){
-            if($model->receiverId == request()->user()->locationId || request()->user()->isSuperAdmin()){
+            if($model->receiverId == Auth::user()->locationId || Auth::user()->isSuperAdmin()){
                 foreach($model->distributionItems as $distributionItem ){
                     // Check already received or not
                     if(!$distributionItem->receiveItems()->exists() && $distributionItem->status != DistributionStatus::DRAFT()){
@@ -46,10 +47,9 @@ class AutoReceive extends Action
                             'amount'               => $distributionItem->distributionQuantity * $distributionItem->distributionRate,
                             'unit_id'              => $distributionItem->unitId,
                         ]);
-                        return Action::message("Auto receive items are generated.");
                     }
-                    return Action::danger("Can not auto receive now.");
                 }
+                return Action::message("Auto receive items are generated.");
             }else{
                 return Action::danger("Sorry you are unauthorized!");
             }

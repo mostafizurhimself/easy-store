@@ -34,7 +34,7 @@ class FabricDistribution extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Models\FabricDistribution';
+    public static $model = \App\Models\FabricDistribution::class;
 
     /**
      * The group associated with the resource.
