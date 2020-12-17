@@ -79,7 +79,7 @@ class AssetDistributionReceiveItem extends Model implements HasMedia
      */
     public function distributionItem()
     {
-       return $this->belongsTo(AssetDistributionItem::class, 'distribution_item_id')->withTrashed();
+       return $this->belongsTo(AssetDistributionItem::class, 'distribution_item_id');
     }
 
     /**

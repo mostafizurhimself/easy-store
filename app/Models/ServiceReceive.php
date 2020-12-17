@@ -86,7 +86,7 @@ class ServiceReceive extends Model implements HasMedia
      */
     public function dispatch()
     {
-       return $this->belongsTo(ServiceDispatch::class, 'dispatch_id')->withTrashed();
+       return $this->belongsTo(ServiceDispatch::class, 'dispatch_id');
     }
 
     /**

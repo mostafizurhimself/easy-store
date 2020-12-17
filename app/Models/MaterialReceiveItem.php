@@ -93,7 +93,7 @@ class MaterialReceiveItem extends Model implements HasMedia
      */
     public function purchaseItem()
     {
-       return $this->belongsTo(MaterialPurchaseItem::class, 'purchase_item_id')->withTrashed();
+       return $this->belongsTo(MaterialPurchaseItem::class, 'purchase_item_id');
     }
 
     /**

@@ -93,7 +93,7 @@ class AssetReceiveItem extends Model implements HasMedia
      */
     public function purchaseItem()
     {
-       return $this->belongsTo(AssetPurchaseItem::class, 'purchase_item_id')->withTrashed();
+       return $this->belongsTo(AssetPurchaseItem::class, 'purchase_item_id');
     }
 
     /**

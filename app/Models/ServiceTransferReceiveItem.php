@@ -79,7 +79,7 @@ class ServiceTransferReceiveItem extends Model implements HasMedia
      */
     public function transfer()
     {
-       return $this->belongsTo(ServiceTransferItem::class, 'transfer_id')->withTrashed();
+       return $this->belongsTo(ServiceTransferItem::class, 'transfer_id');
     }
 
     /**

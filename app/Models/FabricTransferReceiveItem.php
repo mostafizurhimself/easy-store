@@ -86,7 +86,7 @@ class FabricTransferReceiveItem extends Model implements HasMedia
      */
     public function transferItem()
     {
-       return $this->belongsTo(FabricTransferItem::class, 'transfer_item_id')->withTrashed();
+       return $this->belongsTo(FabricTransferItem::class, 'transfer_item_id');
     }
 
     /**

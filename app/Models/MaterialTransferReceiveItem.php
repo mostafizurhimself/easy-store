@@ -86,7 +86,7 @@ class MaterialTransferReceiveItem extends Model implements HasMedia
      */
     public function transferItem()
     {
-       return $this->belongsTo(MaterialTransferItem::class, 'transfer_item_id')->withTrashed();
+       return $this->belongsTo(MaterialTransferItem::class, 'transfer_item_id');
     }
 
     /**
