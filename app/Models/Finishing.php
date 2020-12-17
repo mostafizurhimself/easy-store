@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Finishing extends Model
 {
-    use LogsActivity, SoftDeletes, HasReadableIdWithDate, CamelCasing;
+    use LogsActivity, HasReadableIdWithDate, CamelCasing;
 
     /**
      * The attributes that are not mass assignable.

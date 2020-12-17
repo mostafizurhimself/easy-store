@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AssetRequisitionItem extends Model
 {
-    use LogsActivity, SoftDeletes, CamelCasing, HasReadableIdWithDate;
+    use LogsActivity, CamelCasing, HasReadableIdWithDate;
 
     /**
      * The attributes that are not mass assignable.
