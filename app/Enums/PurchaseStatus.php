@@ -13,4 +13,5 @@ class PurchaseStatus extends Enum
     private const PARTIAL   = 'partial';
     private const RECEIVED  = 'received';
     private const BILLED    = 'billed';
+    // private const OVERFLOW  = 'overflow';
 }

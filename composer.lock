@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a4efddc6c9fdc290c1b557227d4cea12",
+    "content-hash": "4f91d03f999fc79c58414120da204f30",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -6132,6 +6132,52 @@
                 "source": "https://github.com/richardkeep/nova-timenow/tree/1.0.0"
             },
             "time": "2019-12-06T10:04:07+00:00"
+        },
+        {
+            "name": "sadekd/nova-opening-hours-field",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sadekd/nova-opening-hours-field.git",
+                "reference": "ed4c2d2a42b6fc5fc919cffbb332451932d50e94"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sadekd/nova-opening-hours-field/zipball/ed4c2d2a42b6fc5fc919cffbb332451932d50e94",
+                "reference": "ed4c2d2a42b6fc5fc919cffbb332451932d50e94",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "SadekD\\NovaOpeningHoursField\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SadekD\\NovaOpeningHoursField\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Laravel Nova custom field for Spatie Opening Hours",
+            "keywords": [
+                "laravel",
+                "nova",
+                "opening hours"
+            ],
+            "support": {
+                "issues": "https://github.com/sadekd/nova-opening-hours-field/issues",
+                "source": "https://github.com/sadekd/nova-opening-hours-field/tree/v1.0.2"
+            },
+            "time": "2020-07-28T10:20:01+00:00"
         },
         {
             "name": "setasign/fpdi",

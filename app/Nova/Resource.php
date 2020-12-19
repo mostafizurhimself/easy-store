@@ -43,6 +43,16 @@ abstract class Resource extends NovaResource
     public static $permissions = [];
 
     /**
+     * Get the logical group associated with the resource.
+     *
+     * @return string
+     */
+    public static function group()
+    {
+        return static::$group;
+    }
+
+    /**
      * Get the navigation label of the resource
      *
      * @return string
@@ -77,8 +87,7 @@ abstract class Resource extends NovaResource
             $query->orderBy(key(static::$sort), reset(static::$sort));
         }
 
-        if($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data'))
-        {
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
             $query->where('location_id', $request->user()->location_id);
         }
 

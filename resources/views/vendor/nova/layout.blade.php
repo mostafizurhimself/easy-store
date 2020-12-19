@@ -1,4 +1,5 @@
 {{-- {{dd(\App\Models\AssetPurchaseOrder::all())}} --}}
+{{-- {{dd($navigation)}} --}}
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full font-sans antialiased">

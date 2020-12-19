@@ -18,23 +18,6 @@ class FabricSummaryDateRangeFilter extends DateRangeFilter
     public $name = "Date Between";
 
     /**
-     * The tables name and date column of the filter.
-     *
-     * @var array
-     */
-    public $params;
-
-    /**
-     * Set the filterable table and date column
-     *
-     * @return void
-     */
-    public function __construct($params = null)
-    {
-        $this->params = $params;
-    }
-
-    /**
      * Apply the filter to the given query.
      *
      * @param  \Illuminate\Http\Request  $request

@@ -84,22 +84,6 @@ class FabricReceiveItemObserver
     }
 
     /**
-     * Handle the receive item fabric "restoring" event.
-     *
-     * @param  \App\Models\FabricReceiveItem  $fabricReceiveItem
-     * @return void
-     */
-    public function restoring(FabricReceiveItem $fabricReceiveItem)
-    {
-        // echo $fabricReceiveItem->purchaseItem->remainingQuantity;
-        // // Check the quantity is greater than the purchase item quantity or not
-        // // To prevent receiving item more than the purchase item
-        // if ($fabricReceiveItem->quantity > $fabricReceiveItem->purchaseItem->remainingQuantity) {
-        //     throw new Exception('Can not restore this item.');
-        // }
-    }
-
-    /**
      * Handle the receive item fabric "restored" event.
      *
      * @param  \App\Models\FabricReceiveItem  $fabricReceiveItem
