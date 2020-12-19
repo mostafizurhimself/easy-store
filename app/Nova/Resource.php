@@ -17,7 +17,7 @@ abstract class Resource extends NovaResource
      *
      * @var string
      */
-    public static $group = '<span class="hidden">21</span> Others Section';
+    public static $group = 'Others Section';
 
     /**
      * Default ordering for index query.
@@ -49,7 +49,7 @@ abstract class Resource extends NovaResource
      */
     public static function group()
     {
-        return static::$group;
+        return "<span class='hidden'>".config('group-order')[static::$group]."</span>".static::$group;;
     }
 
     /**

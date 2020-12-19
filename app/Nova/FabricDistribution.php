@@ -41,7 +41,7 @@ class FabricDistribution extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">04</span>Fabrics Section';
+    public static $group = 'Fabrics Section';
 
     /**
      * Get the custom permissions name of the resource

@@ -22,7 +22,7 @@ class Shift extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">03</span>Time Section';
+    public static $group = 'Time Section';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -39,6 +39,26 @@ class Shift extends Resource
     public static $search = [
         'name',
     ];
+
+    /**
+     * The icon of the resource.
+     *
+     * @return string
+     */
+    public static function icon()
+    {
+      return 'fas fa-clock';
+    }
+
+    /**
+      * Get the navigation label of the resource
+      *
+      * @return string
+      */
+     public static function navigationLabel()
+     {
+         return "Office Shifts";
+     }
 
     /**
      * Get the fields displayed by the resource.

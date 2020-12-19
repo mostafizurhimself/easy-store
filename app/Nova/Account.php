@@ -25,7 +25,7 @@ class Account extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">10</span>Expense Section';
+    public static $group = 'Expense Section';
 
     /**
      * Hide resource from Nova's standard menu.

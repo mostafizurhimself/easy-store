@@ -56,7 +56,7 @@ class ProductRequisition extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">08</span>Product Section';
+    public static $group = 'Product Section';
 
     /**
      * The single value that should be used to represent the resource when being displayed.

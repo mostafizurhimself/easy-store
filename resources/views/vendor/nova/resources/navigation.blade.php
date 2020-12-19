@@ -1,5 +1,4 @@
 @if (count(\Laravel\Nova\Nova::availableResources(request())))
-    @dump($navigation)
     @foreach($navigation as $group => $resources)
         @if (count($groups) > 1)
             <h4 class="mb-4 text-xs text-white-50% uppercase tracking-wide">{!! $group !!}</h4>

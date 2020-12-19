@@ -26,7 +26,7 @@ class AssetCategory extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">06</span>Asset Section';
+    public static $group = 'Asset Section';
 
     /**
      * The side nav menu order.

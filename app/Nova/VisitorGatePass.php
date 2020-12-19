@@ -34,7 +34,7 @@ class VisitorGatePass extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">22</span>Gatepass Section';
+    public static $group = 'Gatepass Section';
 
     /**
      * Get the custom permissions name of the resource

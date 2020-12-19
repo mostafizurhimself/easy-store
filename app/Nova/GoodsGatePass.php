@@ -47,7 +47,7 @@ class GoodsGatePass extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">22</span>Gatepass Section';
+    public static $group = 'Gatepass Section';
 
     /**
      * The side nav menu order.

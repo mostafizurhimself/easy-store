@@ -37,7 +37,7 @@ class User extends Resource
      *
      * @var string
      */
-    public static $model = 'App\\Models\\User';
+    public static $model = \App\Models\User::class;
 
     /**
      * Get the custom permissions name of the resource
@@ -51,7 +51,7 @@ class User extends Resource
      *
      * @var string
      */
-    public static $group = '<span class="hidden">20</span>ACL Section';
+    public static $group = 'ACL Section';
 
     /**
      * The side nav menu order.

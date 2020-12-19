@@ -29,7 +29,7 @@ class Department extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">03</span>Organization';
+    public static $group = 'Organization';
 
     /**
      * The side nav menu order.

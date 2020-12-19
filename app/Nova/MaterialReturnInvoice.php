@@ -50,7 +50,7 @@ class MaterialReturnInvoice extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">05</span>Material Section';
+    public static $group = 'Material Section';
 
     /**
      * The side nav menu order.

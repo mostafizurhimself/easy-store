@@ -32,7 +32,7 @@ class Permission extends Resource
      *
      * @var string
      */
-    public static $group = '<span class="hidden">20</span>ACL Section';
+    public static $group = 'ACL Section';
 
     /**
      * The side nav menu order.

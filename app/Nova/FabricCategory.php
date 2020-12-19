@@ -72,7 +72,7 @@ class FabricCategory extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">04</span>Fabrics Section';
+    public static $group = 'Fabrics Section';
 
     /**
      * The icon of the resource.

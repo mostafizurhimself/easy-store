@@ -16,7 +16,7 @@ use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Fabrics\StockSummary\DownloadPdf;
 use App\Nova\Filters\Lens\FabricSummaryDateRangeFilter;
-use App\Nova\Actions\Fabrics\StockSummary\DownloadExcel;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class StockSummary extends Lens
 {
@@ -121,11 +121,10 @@ class StockSummary extends Lens
                 if (isset($this->previous_purchase_quantity) && isset($this->previous_distribution_quantity)) {
                     $this->previous_quantity = ($this->opening_quantity + $this->previous_purchase_quantity + $this->previous_receive_quantity) - ($this->previous_distribution_quantity + $this->previous_return_quantity + $this->previous_transfer_quantity) +
                         $this->previous_adjust_quantity;
-                }else{
+                } else {
                     $this->previous_quantity = $this->opening_quantity;
                 }
                 return $this->previous_quantity . " " . $this->unit_name;
-
             })
                 ->sortable(),
 
@@ -241,18 +240,13 @@ class StockSummary extends Lens
     public function actions(Request $request)
     {
         return [
-            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
-                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
-            })->canRun(function ($request) {
-                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
-            })->confirmButtonText('Download')
-                ->confirmText("Are you sure want to download pdf?"),
-
-            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
-                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
-            })->canRun(function ($request) {
-                return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
-            })->confirmButtonText('Download')
+            (new DownloadExcel)->withHeadings('#', 'Location', 'Category', 'Name', 'Previous', 'Purchase', 'Distribution', 'Return', 'Transfer', 'Receive', 'Adjust', 'Remaining')
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+                })
+                ->canRun(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+                })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
         ];
     }

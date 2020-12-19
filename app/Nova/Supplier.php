@@ -42,7 +42,7 @@ class Supplier extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">10</span>Vendor Section';
+    public static $group = 'Vendor Section';
 
     /**
      * Get the custom permissions name of the resource

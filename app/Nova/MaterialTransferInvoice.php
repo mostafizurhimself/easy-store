@@ -60,7 +60,7 @@ class MaterialTransferInvoice extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">05</span>Material Section';
+    public static $group = 'Material Section';
 
     /**
      * The single value that should be used to represent the resource when being displayed.

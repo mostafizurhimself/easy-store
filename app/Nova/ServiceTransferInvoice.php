@@ -61,7 +61,7 @@ class ServiceTransferInvoice extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">07</span>Service Section';
+    public static $group = 'Service Section';
 
     /**
      * The single value that should be used to represent the resource when being displayed.

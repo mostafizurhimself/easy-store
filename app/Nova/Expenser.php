@@ -42,7 +42,7 @@ class Expenser extends Resource
      *
      * @return string
      */
-    public static $group = '<span class="hidden">10</span>Expense Section';
+    public static $group = 'Expense Section';
 
     /**
      * The side nav menu order.

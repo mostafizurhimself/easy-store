@@ -27,6 +27,16 @@ class ActivityLog extends BaseActivityLog
      */
     public static $group = 'Super Admin';
 
+    /**
+     * Get the logical group associated with the resource.
+     *
+     * @return string
+     */
+    public static function group()
+    {
+        return "<span class='hidden'>" . config('group-order')[static::$group] . "</span>" . static::$group;;
+    }
+
     // /**
     //  * The number of resources to show per page via relationships.
     //  *
@@ -68,15 +78,15 @@ class ActivityLog extends BaseActivityLog
             Text::make('Subject Type')->sortable(),
             MorphTo::make('Causer'),
             Text::make('Causer Ip', 'properties->ip')->onlyOnIndex()->sortable(),
-        //     Text::make('Old Quantity', function(){
-        //         return $this->properties['old']['quantity'];
-        //     })
-        //    ,
+            //     Text::make('Old Quantity', function(){
+            //         return $this->properties['old']['quantity'];
+            //     })
+            //    ,
 
-        //     Text::make('New Quantity', function(){
-        //         return $this->properties['attributes']['quantity'];
-        //     })
-        //     ,
+            //     Text::make('New Quantity', function(){
+            //         return $this->properties['attributes']['quantity'];
+            //     })
+            //     ,
 
             Code::make('Properties')->json(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
             DateTime::make('Created At')->sortable(),

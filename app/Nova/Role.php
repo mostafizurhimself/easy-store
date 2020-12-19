@@ -44,7 +44,17 @@ class Role extends Resource
      *
      * @var string
      */
-    public static $group = '<span class="hidden">20</span>ACL Section';
+    public static $group = 'ACL Section';
+
+    /**
+     * Get the logical group associated with the resource.
+     *
+     * @return string
+     */
+    public static function group()
+    {
+        return "<span class='hidden'>" . config('group-order')[static::$group] . "</span>" . static::$group;;
+    }
 
     /**
      * The side nav menu order.
@@ -251,5 +261,4 @@ class Role extends Resource
 
         return $query;
     }
-
 }
