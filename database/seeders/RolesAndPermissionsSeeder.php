@@ -28,6 +28,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
             // Time Section
             \App\Nova\Shift::class,
+            \App\Nova\Holiday::class,
 
             // Fabric Section
             \App\Nova\FabricCategory::class,
@@ -116,21 +117,22 @@ class RolesAndPermissionsSeeder extends Seeder
 
         foreach($resources as $key=>$resource)
         {
-            $name  = $resource::readableName();
-            $order = $key*100;
-            Permission::updateOrCreate(['name' => 'view ' .$name ],['group' => $name, 'name' => 'view ' . $name, 'group_order' => ($order + 1)]);
-            Permission::updateOrCreate(['name' => 'view any ' .$name ],['group' => $name, 'name' => 'view any ' . $name, 'group_order' => ($order + 2)]);
-            Permission::updateOrCreate(['name' => 'create ' .$name ],['group' => $name, 'name' => 'create ' . $name, 'group_order' => ($order + 3)]);
-            Permission::updateOrCreate(['name' => 'update ' .$name ],['group' => $name, 'name' => 'update ' . $name, 'group_order' => ($order + 4)]);
-            Permission::updateOrCreate(['name' => 'delete ' .$name ],['group' => $name, 'name' => 'delete ' . $name, 'group_order' => ($order + 5)]);
-            Permission::updateOrCreate(['name' => 'restore ' .$name ],['group' => $name, 'name' => 'restore ' . $name, 'group_order' => ($order + 6)]);
-            Permission::updateOrCreate(['name' => 'force delete ' .$name ],['group' => $name, 'name' => 'force delete ' . $name, 'group_order' => ($order + 7)]);
+            $name     = $resource::readableName();
+            $show     = $resource::showPermissions();
+            $order    = $key*100;
+            Permission::updateOrCreate(['name' => 'view ' .$name ],['group' => $name, 'name' => 'view ' . $name, 'group_order' => ($order + 1), 'show' => $show]);
+            Permission::updateOrCreate(['name' => 'view any ' .$name ],['group' => $name, 'name' => 'view any ' . $name, 'group_order' => ($order + 2), 'show' => $show]);
+            Permission::updateOrCreate(['name' => 'create ' .$name ],['group' => $name, 'name' => 'create ' . $name, 'group_order' => ($order + 3), 'show' => $show]);
+            Permission::updateOrCreate(['name' => 'update ' .$name ],['group' => $name, 'name' => 'update ' . $name, 'group_order' => ($order + 4), 'show' => $show]);
+            Permission::updateOrCreate(['name' => 'delete ' .$name ],['group' => $name, 'name' => 'delete ' . $name, 'group_order' => ($order + 5), 'show' => $show]);
+            Permission::updateOrCreate(['name' => 'restore ' .$name ],['group' => $name, 'name' => 'restore ' . $name, 'group_order' => ($order + 6), 'show' => $show]);
+            Permission::updateOrCreate(['name' => 'force delete ' .$name ],['group' => $name, 'name' => 'force delete ' . $name, 'group_order' => ($order + 7), 'show' => $show]);
 
             foreach($resource::$permissions as $permission)
             {
                 $name = $permission." ".$resource::readableName();
                 $newOrder = $order + 20;
-                Permission::updateOrCreate(['name' => $name ],['group' => $resource::readableName(), 'name' => $name, 'group_order' => ($newOrder + 1)]);
+                Permission::updateOrCreate(['name' => $name ],['group' => $resource::readableName(), 'name' => $name, 'group_order' => ($newOrder + 1), 'show' => $show]);
 
                 $order++;
             }

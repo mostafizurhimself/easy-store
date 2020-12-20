@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Facades\Settings;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use App\Enums\ExpenseStatus;
@@ -45,6 +46,16 @@ class Expense extends Resource
      * @var array
      */
     public static $permissions = ['can confirm'];
+
+    /**
+     * Show the resources related permissions or not
+     *
+     * @return bool
+     */
+    public static function showPermissions()
+    {
+        return Settings::isExpenseModuleEnabled();
+    }
 
     /**
      * The group associated with the resource.

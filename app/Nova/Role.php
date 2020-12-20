@@ -47,6 +47,16 @@ class Role extends Resource
     public static $group = 'ACL Section';
 
     /**
+     * Show the resources related permissions or not
+     *
+     * @return bool
+     */
+    public static function showPermissions()
+    {
+        return true;
+    }
+
+    /**
      * Get the logical group associated with the resource.
      *
      * @return string
@@ -195,6 +205,7 @@ class Role extends Resource
             PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
                 ->withGroups()
                 ->options(Permission::whereIn('id', request()->user()->getAllPermissions()->pluck('id'))
+                    ->show()
                     ->get()->sortBy('group_order')->map(function ($permission, $key) {
                         return [
                             'group'  => __(Str::title($permission->group)),

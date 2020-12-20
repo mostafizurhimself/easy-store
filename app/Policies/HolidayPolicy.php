@@ -3,11 +3,11 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Shift;
+use App\Models\Holiday;
 use App\Facades\Settings;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ShiftPolicy
+class HolidayPolicy
 {
     use HandlesAuthorization;
 
@@ -22,23 +22,23 @@ class ShiftPolicy
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
-        return $user->isSuperAdmin() || $user->hasPermissionTo('view any shifts');
+        return $user->isSuperAdmin() || $user->hasPermissionTo('view any holidays');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Shift  $shift
+     * @param  \App\Models\Holiday  $holiday
      * @return mixed
      */
-    public function view(User $user, Shift $shift)
+    public function view(User $user, Holiday $holiday)
     {
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view shifts') && $user->locationId == $shift->locationId ) ||
+                ($user->hasPermissionTo('view holidays') && $user->locationId == $holiday->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -53,23 +53,23 @@ class ShiftPolicy
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
-        return $user->isSuperAdmin() || $user->hasPermissionTo('create shifts');
+        return $user->isSuperAdmin() || $user->hasPermissionTo('create holidays');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Shift  $shift
+     * @param  \App\Models\Holiday  $holiday
      * @return mixed
      */
-    public function update(User $user, Shift $shift)
+    public function update(User $user, Holiday $holiday)
     {
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update shifts') && $user->locationId == $shift->locationId ) ||
+                ($user->hasPermissionTo('update holidays') && $user->locationId == $holiday->locationId ) ||
                 $user->hasPermissionTo('update all locations data');
     }
 
@@ -77,16 +77,16 @@ class ShiftPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Shift  $shift
+     * @param  \App\Models\Holiday  $holiday
      * @return mixed
      */
-    public function delete(User $user, Shift $shift)
+    public function delete(User $user, Holiday $holiday)
     {
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete shifts') && $user->locationId == $shift->locationId ) ||
+                ($user->hasPermissionTo('delete holidays') && $user->locationId == $holiday->locationId ) ||
                 $user->hasPermissionTo('delete all locations data');
     }
 
@@ -94,16 +94,16 @@ class ShiftPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Shift  $shift
+     * @param  \App\Models\Holiday  $holiday
      * @return mixed
      */
-    public function restore(User $user, Shift $shift)
+    public function restore(User $user, Holiday $holiday)
     {
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore shifts') && $user->locationId == $shift->locationId ) ||
+                ($user->hasPermissionTo('restore holidays') && $user->locationId == $holiday->locationId ) ||
                 $user->hasPermissionTo('restore all locations data');
     }
 
@@ -111,16 +111,16 @@ class ShiftPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Shift  $shift
+     * @param  \App\Models\Holiday  $holiday
      * @return mixed
      */
-    public function forceDelete(User $user, Shift $shift)
+    public function forceDelete(User $user, Holiday $holiday)
     {
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete shifts') && $user->locationId == $shift->locationId ) ||
+                ($user->hasPermissionTo('force delete holidays') && $user->locationId == $holiday->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data');
     }
 
@@ -128,10 +128,10 @@ class ShiftPolicy
      * Determine whether the user can add a model item to the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Shift  $shift
+     * @param  \App\Models\Holiday  $holiday
      * @return mixed
      */
-    public function addModel(User $user, Shift $shift)
+    public function addModel(User $user, Holiday $holiday)
     {
         return true;
     }

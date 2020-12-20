@@ -12,6 +12,7 @@ use App\Models\Style;
 use App\Models\Fabric;
 use App\Models\Balance;
 use App\Models\Expense;
+use App\Models\Holiday;
 use App\Models\Product;
 use App\Models\Section;
 use App\Models\Service;
@@ -52,6 +53,7 @@ use App\Models\ServiceDispatch;
 use App\Models\VisitorGatePass;
 use App\Policies\BalancePolicy;
 use App\Policies\ExpensePolicy;
+use App\Policies\HolidayPolicy;
 use App\Policies\ProductPolicy;
 use App\Policies\SectionPolicy;
 use App\Policies\ServicePolicy;
@@ -173,6 +175,7 @@ class AuthServiceProvider extends ServiceProvider
         Designation::class                  => DesignationPolicy::class,
         Employee::class                     => EmployeePolicy::class,
         Shift::class                        => ShiftPolicy::class,
+        Holiday::class                      => HolidayPolicy::class,
         FabricCategory::class               => FabricCategoryPolicy::class,
         Fabric::class                       => FabricPolicy::class,
         FabricPurchaseOrder::class          => FabricPurchaseOrderPolicy::class,

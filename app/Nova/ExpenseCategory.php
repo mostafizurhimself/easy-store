@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Facades\Settings;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -24,7 +25,17 @@ class ExpenseCategory extends Resource
      */
     public static $model = \App\Models\ExpenseCategory::class;
 
-      /**
+    /**
+     * Show the resources related permissions or not
+     *
+     * @return bool
+     */
+    public static function showPermissions()
+    {
+        return Settings::isExpenseModuleEnabled();
+    }
+
+    /**
      * The group associated with the resource.
      *
      * @return string
@@ -52,7 +63,7 @@ class ExpenseCategory extends Resource
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
@@ -123,7 +134,7 @@ class ExpenseCategory extends Resource
                 ->updateRules([
                     Rule::unique('expense_categories', 'name')->where('location_id', request()->get('location') ?? request()->user()->locationId)->ignore($this->resource->id)
                 ])
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
@@ -156,7 +167,7 @@ class ExpenseCategory extends Resource
     public function filters(Request $request)
     {
         return [
-           LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
         ];
@@ -193,7 +204,7 @@ class ExpenseCategory extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 
     /**
@@ -205,6 +216,6 @@ class ExpenseCategory extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 }

@@ -37,6 +37,16 @@ class ActivityLog extends BaseActivityLog
         return "<span class='hidden'>" . config('group-order')[static::$group] . "</span>" . static::$group;;
     }
 
+    /**
+     * Show the resources related permissions or not
+     *
+     * @return bool
+     */
+    public static function showPermissions()
+    {
+        return true;
+    }
+
     // /**
     //  * The number of resources to show per page via relationships.
     //  *

@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Facades\Helper;
 use R64\NovaFields\JSON;
+use App\Facades\Settings;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use App\Nova\ServiceInvoice;
@@ -62,6 +63,16 @@ class GoodsGatePass extends Resource
      * @var array
      */
     public static $permissions = ['can pass', 'can confirm', 'can generate', 'can mark as draft'];
+
+    /**
+     * Show the resources related permissions or not
+     *
+     * @return bool
+     */
+    public static function showPermissions()
+    {
+        return Settings::isGatePassModuleEnabled();
+    }
 
     /**
      * The single value that should be used to represent the resource when being displayed.

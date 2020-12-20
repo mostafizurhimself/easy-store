@@ -36,7 +36,7 @@ class Settings
         return Setting::where('name', Setting::COMPANY_SETTINGS)->first()->getMedia('settings')->first() ? Setting::where('name', Setting::COMPANY_SETTINGS)->first()->getMedia('settings')->first()->getUrl()  : null;
     }
 
-     /**
+    /**
      * Get the application logo
      *
      * @return object
@@ -97,16 +97,6 @@ class Settings
     }
 
     /**
-     * Get the product module settings
-     *
-     * @return bool
-     */
-    public function isProductModuleEnabled()
-    {
-        return !empty(self::application()->enable_product_module) ? self::application()->enable_product_module : false;
-    }
-
-    /**
      * Get the expense module settings
      *
      * @return bool
@@ -124,5 +114,45 @@ class Settings
     public function isGatePassModuleEnabled()
     {
         return !empty(self::application()->enable_gate_pass_module) ? self::application()->enable_gate_pass_module : false;
+    }
+
+    /**
+     * Get the vendor module settings
+     *
+     * @return bool
+     */
+    public function isVendorModuleEnabled()
+    {
+        return !empty(self::application()->enable_vendor_module) ? self::application()->enable_vendor_module : false;
+    }
+
+    /**
+     * Get the product module settings
+     *
+     * @return bool
+     */
+    public function isProductModuleEnabled()
+    {
+        return !empty(self::application()->enable_product_module) ? self::application()->enable_product_module : false;
+    }
+
+    /**
+     * Get the timesheet module settings
+     *
+     * @return bool
+     */
+    public function isTimesheetModuleEnabled()
+    {
+        return !empty(self::application()->enable_timesheet_module) ? self::application()->enable_timesheet_module : false;
+    }
+
+    /**
+     * Get the payroll module settings
+     *
+     * @return bool
+     */
+    public function isPayrollModuleEnabled()
+    {
+        return !empty(self::application()->enable_payroll_module) ? self::application()->enable_payroll_module : false;
     }
 }

@@ -348,6 +348,11 @@ class Setting extends Resource
                             return $request->user()->isSystemAdmin();
                         }),
 
+                    Boolean::make('Enable Timesheet Module', 'enable_timesheet_module')
+                        ->canSee(function ($request) {
+                            return $request->user()->isSystemAdmin();
+                        }),
+
                     Boolean::make('Enable Payroll Module', 'enable_payroll_module')
                         ->canSee(function ($request) {
                             return $request->user()->isSystemAdmin();

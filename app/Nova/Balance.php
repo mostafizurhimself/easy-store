@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Carbon\Carbon;
 use R64\NovaFields\Trix;
+use App\Facades\Settings;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use App\Enums\BalanceStatus;
@@ -33,6 +34,16 @@ class Balance extends Resource
      * @var string
      */
     public static $model = \App\Models\Balance::class;
+
+    /**
+     * Show the resources related permissions or not
+     *
+     * @return bool
+     */
+    public static function showPermissions()
+    {
+        return Settings::isExpenseModuleEnabled();
+    }
 
     /**
      * Get the custom permissions name of the resource
@@ -97,7 +108,7 @@ class Balance extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-wallet';
+        return 'fas fa-wallet';
     }
 
     /**
@@ -110,10 +121,10 @@ class Balance extends Resource
     {
         return [
             RouterLink::make('Balance Id', 'id')
-            ->withMeta([
-                'label' => $this->readableId,
-            ])
-            ->sortable(),
+                ->withMeta([
+                    'label' => $this->readableId,
+                ])
+                ->sortable(),
 
             Date::make('Date')
                 ->rules('required')
@@ -121,88 +132,88 @@ class Balance extends Resource
                 ->default(Carbon::now()),
 
             BelongsTo::make('Location')
-            ->searchable()
-            ->sortable()
-            ->canSee(function ($request) {
-                if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                    return true;
-                }
-                return false;
-            }),
+                ->searchable()
+                ->sortable()
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
-        AjaxSelect::make('Expenser', 'expenser_id')
-            ->rules('required')
-            ->get('/locations/{location}/expensers')
-            ->parent('location')
-            ->onlyOnForms()
-            ->canSee(function ($request) {
-                if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
-                    return true;
-                }
-                return false;
-            }),
+            AjaxSelect::make('Expenser', 'expenser_id')
+                ->rules('required')
+                ->get('/locations/{location}/expensers')
+                ->parent('location')
+                ->onlyOnForms()
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
-        BelongsTo::make('Expenser', 'expenser', 'App\Nova\Expenser')
-            ->exceptOnForms()
-            ->sortable(),
+            BelongsTo::make('Expenser', 'expenser', 'App\Nova\Expenser')
+                ->exceptOnForms()
+                ->sortable(),
 
-        BelongsTo::make('Expenser', 'expenser', 'App\Nova\Expenser')
-        ->searchable()
-            ->onlyOnForms()
-            ->canSee(function ($request) {
-                if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin() && !$request->user()->isExpenser()) {
-                    return true;
-                }
-                return false;
-            }),
+            BelongsTo::make('Expenser', 'expenser', 'App\Nova\Expenser')
+                ->searchable()
+                ->onlyOnForms()
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin() && !$request->user()->isExpenser()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
-        Trix::make('Description')
-            ->rules('nullable', 'max:500'),
+            Trix::make('Description')
+                ->rules('nullable', 'max:500'),
 
-        Text::make('Reference')
-            ->rules('nullable', 'string', 'max:200')
-            ->hideFromIndex()
-            ->sortable(),
+            Text::make('Reference')
+                ->rules('nullable', 'string', 'max:200')
+                ->hideFromIndex()
+                ->sortable(),
 
-        Currency::make('Amount')
-            ->currency('BDT')
-            ->sortable()
-            ->rules('required', 'numeric', 'min:0'),
+            Currency::make('Amount')
+                ->currency('BDT')
+                ->sortable()
+                ->rules('required', 'numeric', 'min:0'),
 
-        Select::make('Payment Method', 'method')
-            ->options(PaymentMethod::titleCaseOptions())
-            ->rules('required')
-            ->onlyOnForms(),
+            Select::make('Payment Method', 'method')
+                ->options(PaymentMethod::titleCaseOptions())
+                ->rules('required')
+                ->onlyOnForms(),
 
-        Text::make('Payment Method', function(){
-            return Str::title(Str::of($this->method)->replace('_', " "));
-        })
-            ->exceptOnForms()
-            ->sortable(),
+            Text::make('Payment Method', function () {
+                return Str::title(Str::of($this->method)->replace('_', " "));
+            })
+                ->exceptOnForms()
+                ->sortable(),
 
-        Files::make('Attachments', 'balance-attachments')
-            ->singleMediaRules('max:5000') // max 5000kb
-            ->hideFromIndex(),
+            Files::make('Attachments', 'balance-attachments')
+                ->singleMediaRules('max:5000') // max 5000kb
+                ->hideFromIndex(),
 
-        Text::make('Approved By', function(){
+            Text::make('Approved By', function () {
                 return $this->approve ? $this->approve->employee->name : null;
             })
-            ->canSee(function(){
-                return $this->approve()->exists();
-            })
-            ->onlyOnDetail(),
+                ->canSee(function () {
+                    return $this->approve()->exists();
+                })
+                ->onlyOnDetail(),
 
 
-        Badge::make('Status')->map([
+            Badge::make('Status')->map([
                 BalanceStatus::DRAFT()->getValue()   => 'warning',
                 BalanceStatus::CONFIRMED()->getValue() => 'info',
             ])
-            ->sortable()
-            ->label(function(){
-                return Str::title(Str::of($this->status)->replace('_', " "));
-            }),
+                ->sortable()
+                ->label(function () {
+                    return Str::title(Str::of($this->status)->replace('_', " "));
+                }),
 
-        MorphMany::make('Activities', 'activities', "App\Nova\ActivityLog"),
+            MorphMany::make('Activities', 'activities', "App\Nova\ActivityLog"),
 
         ];
     }
@@ -227,7 +238,7 @@ class Balance extends Resource
     public function filters(Request $request)
     {
         return [
-           LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
         ];
@@ -253,7 +264,7 @@ class Balance extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmBalance)->canSee(function($request){
+            (new ConfirmBalance)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm balances');
             }),
         ];

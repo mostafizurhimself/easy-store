@@ -43,13 +43,23 @@ abstract class Resource extends NovaResource
     public static $permissions = [];
 
     /**
+     * Show the resources related permissions or not
+     *
+     * @return bool
+     */
+    public static function showPermissions()
+    {
+        return true;
+    }
+
+    /**
      * Get the logical group associated with the resource.
      *
      * @return string
      */
     public static function group()
     {
-        return "<span class='hidden'>".config('group-order')[static::$group]."</span>".static::$group;;
+        return "<span class='hidden'>" . config('group-order')[static::$group] . "</span>" . static::$group;;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Facades\Settings;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -42,6 +43,16 @@ class VisitorGatePass extends Resource
      * @var array
      */
     public static $permissions = ['can pass', 'can confirm', 'can generate'];
+
+    /**
+     * Show the resources related permissions or not
+     *
+     * @return bool
+     */
+    public static function showPermissions()
+    {
+        return Settings::isGatePassModuleEnabled();
+    }
 
     /**
      * The side nav menu order.

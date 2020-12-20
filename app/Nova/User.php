@@ -181,6 +181,7 @@ class User extends Resource
                     PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
                         ->withGroups()
                         ->options(Permission::whereIn('id', request()->user()->getAllPermissions()->pluck('id'))
+                            ->show()
                             ->get()->sortBy('group_order')->map(function ($permission, $key) {
                                 return [
                                     'group'  => __(Str::title($permission->group)),

@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Facades\Settings;
 use App\Enums\ActiveStatus;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -36,6 +37,16 @@ class Expenser extends Resource
      * @var array
      */
     public static $permissions = ['can add user to', 'can adjust balance of',];
+
+    /**
+     * Show the resources related permissions or not
+     *
+     * @return bool
+     */
+    public static function showPermissions()
+    {
+        return Settings::isExpenseModuleEnabled();
+    }
 
     /**
      * The group associated with the resource.
