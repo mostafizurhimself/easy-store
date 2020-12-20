@@ -5,6 +5,7 @@ namespace App\Nova;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use SadekD\NovaOpeningHoursField\NovaOpeningHoursField;
 
@@ -47,18 +48,18 @@ class Shift extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-clock';
+        return 'fas fa-clock';
     }
 
     /**
-      * Get the navigation label of the resource
-      *
-      * @return string
-      */
-     public static function navigationLabel()
-     {
-         return "Office Shifts";
-     }
+     * Get the navigation label of the resource
+     *
+     * @return string
+     */
+    public static function navigationLabel()
+    {
+        return "Office Shifts";
+    }
 
     /**
      * Get the fields displayed by the resource.
@@ -70,6 +71,15 @@ class Shift extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
+
+            BelongsTo::make('Location')
+                ->searchable()
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
+                }),
 
             Text::make('Name')
                 ->rules('required', 'string', 'max:50')

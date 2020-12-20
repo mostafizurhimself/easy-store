@@ -117,6 +117,20 @@ class AjaxController extends Controller
         });
     }
 
+
+    /**
+     * Get the location wise shifts
+     *
+     * @param \App\Models\Location
+     * @return array
+     */
+    public function shiftsViaLocation(Location $location)
+    {
+        return $location->shifts->sortBy('name')->values()->map(function($shift) {
+            return [ 'value' => $shift->id, 'display' => $shift->name ];
+        });
+    }
+
     /**
      * Get the location wise employees
      *

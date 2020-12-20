@@ -128,6 +128,16 @@ class Location extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function shifts()
+    {
+       return $this->hasMany(Shift::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function employees()
     {
        return $this->hasMany(Employee::class);

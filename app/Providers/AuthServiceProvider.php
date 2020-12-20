@@ -7,6 +7,7 @@ use App\Models\Unit;
 use App\Models\User;
 use App\Models\Asset;
 use App\Models\Floor;
+use App\Models\Shift;
 use App\Models\Style;
 use App\Models\Fabric;
 use App\Models\Balance;
@@ -36,6 +37,7 @@ use App\Models\GoodsGatePass;
 use App\Models\ProductOutput;
 use App\Policies\AssetPolicy;
 use App\Policies\FloorPolicy;
+use App\Policies\ShiftPolicy;
 use App\Policies\StylePolicy;
 use App\Models\AdjustQuantity;
 use App\Models\FabricCategory;
@@ -170,6 +172,7 @@ class AuthServiceProvider extends ServiceProvider
         SubSection::class                   => SubSectionPolicy::class,
         Designation::class                  => DesignationPolicy::class,
         Employee::class                     => EmployeePolicy::class,
+        Shift::class                        => ShiftPolicy::class,
         FabricCategory::class               => FabricCategoryPolicy::class,
         Fabric::class                       => FabricPolicy::class,
         FabricPurchaseOrder::class          => FabricPurchaseOrderPolicy::class,

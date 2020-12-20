@@ -26,6 +26,9 @@ class RolesAndPermissionsSeeder extends Seeder
             \App\Nova\Designation::class,
             \App\Nova\Employee::class,
 
+            // Time Section
+            \App\Nova\Shift::class,
+
             // Fabric Section
             \App\Nova\FabricCategory::class,
             \App\Nova\Fabric::class,

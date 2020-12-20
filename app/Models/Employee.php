@@ -95,6 +95,16 @@ class Employee extends Model implements HasMedia
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shift()
+    {
+       return $this->belongsTo(Shift::class)->withTrashed();
+    }
+
+    /**
      * Get the employee full name attribute
      *
      * @return string

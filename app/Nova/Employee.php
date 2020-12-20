@@ -277,6 +277,33 @@ class Employee extends Resource
                             return false;
                         }),
 
+                    AjaxSelect::make('Shift', 'shift_id')
+                        ->rules('required')
+                        ->get('/locations/{location}/shifts')
+                        ->parent('location')
+                        ->onlyOnForms()
+                        ->canSee(function ($request) {
+                            if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
+
+                    BelongsTo::make('Shift')
+                        ->onlyOnDetail()
+                        ->sortable(),
+
+                    BelongsTo::make('Shift')
+                        ->searchable()
+                        ->onlyOnForms()
+                        ->nullable()
+                        ->canSee(function ($request) {
+                            if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                                return true;
+                            }
+                            return false;
+                        }),
+
                     Date::make('Joining Date')
                         ->rules('required')
                         ->sortable()
@@ -296,7 +323,7 @@ class Employee extends Resource
                         EmployeeStatus::INACTIVE()->getValue() => 'danger',
                         EmployeeStatus::RESIGNED()->getValue() => 'danger',
                     ])
-                    ->sortable()
+                        ->sortable()
                         ->label(function () {
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
