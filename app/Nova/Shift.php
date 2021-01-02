@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\Shifts\GenerateSchedule;
 use SadekD\NovaOpeningHoursField\NovaOpeningHoursField;
 
 class Shift extends Resource
@@ -144,6 +145,10 @@ class Shift extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new GenerateSchedule)
+                ->onlyOnDetail()
+                ->confirmButtonText('Generate'),
+        ];
     }
 }

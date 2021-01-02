@@ -58,6 +58,7 @@
         "pusher/pusher-php-server": "^4.1",
         "richardkeep/nova-timenow": "^1.0",
         "sadekd/nova-opening-hours-field": "^1.0",
+        "spatie/opening-hours": "^2.10",
         "titasgailius/search-relations": "^1.0",
         "treestoneit/text-wrap": "^1.1"
     },

@@ -45,6 +45,9 @@ Route::group(['middleware' => 'nova'], function () {
     Route::get('locations/{location}/expensers', 'AjaxController@expensersViaLocation');
     Route::get('locations/{location}/expense-categories', 'AjaxController@expenseCategoriesViaLocation');
 
+    // Abstract Routes
+    Route::get('generate-schedule/{shift}', 'AbstractController@generateSchedule')->name('generate.schedule');
+
     // Invoice Routes
     Route::group(['prefix' => 'invoices'], function () {
         Route::get('fabric-returns/{invoice}', 'InvoiceController@fabricReturnInvoice')->name('invoices.fabric-returns');

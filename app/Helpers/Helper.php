@@ -2,9 +2,10 @@
 
 namespace App\Helpers;
 
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Str;
 use League\Flysystem\Config;
-use Illuminate\Support\Carbon;
 
 class Helper
 {
@@ -16,7 +17,7 @@ class Helper
      */
     public function generateReadableId($value, $prefix = null, $length = 7)
     {
-        return $prefix.\str_pad($value, $length, "0", STR_PAD_LEFT );
+        return $prefix . \str_pad($value, $length, "0", STR_PAD_LEFT);
     }
 
     /**
@@ -28,9 +29,9 @@ class Helper
     public function generateEmployeeId($value, $prefix = null)
     {
         //Generates equal length prefix
-        $prefix =  \str_pad($prefix, 3, "0", STR_PAD_RIGHT );
+        $prefix =  \str_pad($prefix, 3, "0", STR_PAD_RIGHT);
 
-        return $prefix.\str_pad($value, 5, "0", STR_PAD_LEFT );
+        return $prefix . \str_pad($value, 5, "0", STR_PAD_LEFT);
     }
 
     /**
@@ -38,13 +39,13 @@ class Helper
      *
      * @return string
      */
-    public function generateReadableIdWithDate($last, $prefix, $length=5)
+    public function generateReadableIdWithDate($last, $prefix, $length = 5)
     {
         //Set initial value
         $value = 1;
 
         //Set the prefix with date
-        $finalPrefix = $prefix.Carbon::now()->format('ym');
+        $finalPrefix = $prefix . Carbon::now()->format('ym');
 
         //Parse the last value
         $lastValue = intval(substr($last, strlen($finalPrefix), $length));
@@ -53,7 +54,7 @@ class Helper
         $lastMonth = intval(substr($last, (strlen($prefix) + 2), 2));
 
         //Set the value
-        if($lastMonth == Carbon::now()->month){
+        if ($lastMonth == Carbon::now()->month) {
             $value = $lastValue + 1;
         }
 
@@ -97,7 +98,7 @@ class Helper
      */
     public function currencyShortPdf($value)
     {
-        return $value." /=";
+        return $value . " /=";
     }
 
     /**
@@ -109,6 +110,25 @@ class Helper
     public function getModelResource($model)
     {
         return Str::replaceFirst('Models', 'Nova', $model);
+    }
+
+    /**
+     * Get all date between two dates
+     *
+     * @return array
+     */
+    public function getAllDates($start, $end)
+    {
+        $start = Carbon::parse($start);
+        $end = Carbon::parse($end);
+        $dateRange = CarbonPeriod::create($start, $end);
+
+        $dates = [];
+        foreach ($dateRange as $date) {
+            $dates[] = $date->format('Y-m-d');
+        }
+
+        return $dates;
     }
 
 }
