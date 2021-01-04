@@ -85,9 +85,9 @@ class ServiceTransferReceiveItemPolicy
     {
         // Check the quantity is greater than the transfer item quantity or not
         // To prevent receiving item more than the transfer item
-        if ($serviceTransferReceiveItem->quantity > $serviceTransferReceiveItem->transferItem->remainingQuantity) {
-            return false;
-        }
+        // if ($serviceTransferReceiveItem->quantity > $serviceTransferReceiveItem->transferItem->remainingQuantity) {
+        //     return false;
+        // }
         // Check Permissions
         return ($user->isSuperAdmin() || ($user->hasPermissionTo('restore service transfer receive items') && $user->locationId == $serviceTransferReceiveItem->invoice->receiverId) ||
             $user->hasPermissionTo('restore all locations data')) &&
