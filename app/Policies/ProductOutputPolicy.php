@@ -2,9 +2,10 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\ProductOutput;
 use App\Models\User;
+use App\Enums\OutputStatus;
+use App\Models\ProductOutput;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProductOutputPolicy
 {
@@ -55,9 +56,10 @@ class ProductOutputPolicy
      */
     public function update(User $user, ProductOutput $productOutput)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update product outputs') && $user->locationId == $productOutput->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+                $user->hasPermissionTo('update all locations data')) &&
+                $productOutput->status == OutputStatus::DRAFT();
     }
 
     /**
@@ -69,9 +71,10 @@ class ProductOutputPolicy
      */
     public function delete(User $user, ProductOutput $productOutput)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete product outputs') && $user->locationId == $productOutput->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+                $user->hasPermissionTo('delete all locations data')) &&
+                $productOutput->status == OutputStatus::DRAFT();
     }
 
     /**
@@ -83,9 +86,10 @@ class ProductOutputPolicy
      */
     public function restore(User $user, ProductOutput $productOutput)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore product outputs') && $user->locationId == $productOutput->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+                $user->hasPermissionTo('restore all locations data')) &&
+                $productOutput->status == OutputStatus::DRAFT();
     }
 
     /**
@@ -97,8 +101,9 @@ class ProductOutputPolicy
      */
     public function forceDelete(User $user, ProductOutput $productOutput)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete product outputs') && $user->locationId == $productOutput->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+                $user->hasPermissionTo('force delete all locations data')) &&
+                $productOutput->status == OutputStatus::DRAFT();
     }
 }

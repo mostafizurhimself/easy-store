@@ -20,6 +20,7 @@ use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\OutputStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\ProductOutputs\DownloadPdf;
+use App\Nova\Actions\ProductOutputs\ConfirmOutput;
 use App\Nova\Actions\ProductOutputs\DownloadExcel;
 use Titasgailius\SearchRelations\SearchesRelations;
 
@@ -39,7 +40,7 @@ class ProductOutput extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download'];
+    public static $permissions = ['can confirm', 'can download'];
 
     /**
      * The group associated with the resource.
@@ -296,6 +297,13 @@ class ProductOutput extends Resource
     public function actions(Request $request)
     {
         return [
+
+            (new ConfirmOutput)->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can confirm product outputs') || $request->user()->isSuperAdmin());
+            })
+                ->confirmButtonText('Confirm')
+                ->confirmText('Are you sure want to confirm?'),
+
             (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download product outputs') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
