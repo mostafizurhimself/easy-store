@@ -142,7 +142,6 @@ abstract class Resource extends NovaResource
         return parent::relatableQuery($request, $query);
     }
 
-
     /**
      * Get the displayable singular label of the resource.
      *

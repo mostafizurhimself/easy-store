@@ -41,9 +41,13 @@ class AbstractController extends Controller
         // Creating an opening hour object
         $openingHours = OpeningHours::create(array_merge($shift->openingHours, ['exceptions' => $exceptions]));
 
+        // dd($openingHours);
+
         // Get the dates form the range
         $start = Carbon::parse($request->start);
         $end = Carbon::parse($request->end);
         $dates = Helper::getAllDates($start, $end);
+
+        return view('others.schedule', compact('dates', 'openingHours'));
     }
 }

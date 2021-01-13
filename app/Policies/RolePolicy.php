@@ -121,7 +121,7 @@ class RolePolicy
      * Determine whether the user can add a receive item to the purchase.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Role  $role
      * @return mixed
      */
     public function attachAnyUser(User $user, Role $role)

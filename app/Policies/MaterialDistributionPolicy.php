@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\DistributionStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\MaterialDistribution;
 use App\Models\User;
@@ -55,9 +56,10 @@ class MaterialDistributionPolicy
      */
     public function update(User $user, MaterialDistribution $materialDistribution)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update material distributions') && $user->locationId == $materialDistribution->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+                $user->hasPermissionTo('update all locations data'))
+                && $materialDistribution->status == DistributionStatus::DRAFT();
     }
 
     /**
@@ -69,9 +71,10 @@ class MaterialDistributionPolicy
      */
     public function delete(User $user, MaterialDistribution $materialDistribution)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete material distributions') && $user->locationId == $materialDistribution->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+                $user->hasPermissionTo('delete all locations data'))
+                && $materialDistribution->status == DistributionStatus::DRAFT();
     }
 
     /**
@@ -83,9 +86,10 @@ class MaterialDistributionPolicy
      */
     public function restore(User $user, MaterialDistribution $materialDistribution)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore material distributions') && $user->locationId == $materialDistribution->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+                $user->hasPermissionTo('restore all locations data'))
+                && $materialDistribution->status == DistributionStatus::DRAFT();
     }
 
     /**
@@ -97,8 +101,9 @@ class MaterialDistributionPolicy
      */
     public function forceDelete(User $user, MaterialDistribution $materialDistribution)
     {
-        return $user->isSuperAdmin() ||
+        return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete material distributions') && $user->locationId == $materialDistribution->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+                $user->hasPermissionTo('force delete all locations data'))
+                && $materialDistribution->status == DistributionStatus::DRAFT();
     }
 }

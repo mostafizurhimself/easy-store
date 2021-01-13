@@ -29,7 +29,7 @@ class AlertQuantities extends Lens
     public static function query(LensRequest $request, $query)
     {
         return $request->withOrdering($request->withFilters(
-            $query->where('alert_quantity', '>=', 'quantity')
+            $query->where('alert_quantity', '>', 'quantity')
         ));
     }
 
@@ -69,9 +69,13 @@ class AlertQuantities extends Lens
 
             Text::make('Quantity')
                 ->displayUsing(function () {
+                    if ($this->alertQuantity > $this->quantity) {
+                        return "<span class='text-danger'>" . $this->quantity . " " . $this->unit->name . "</span>";
+                    }
                     return $this->quantity . " " . $this->unit->name;
                 })
                 ->sortable()
+                ->asHtml()
                 ->exceptOnForms(),
 
             BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')

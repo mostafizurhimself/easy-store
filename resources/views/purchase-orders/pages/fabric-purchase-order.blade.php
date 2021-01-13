@@ -30,8 +30,8 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="2"></td>
-            <td colspan="2">GRAND TOTAL</td>
+            <td colspan="3">GRAND TOTAL</td>
+            <td>{{$purchaseOrder->purchaseItems->sum('purchaseQuantity')}}</td>
             <td>{{Helper::currency($purchaseOrder->totalPurchaseAmount)}}</td>
         </tr>
     </tfoot>
