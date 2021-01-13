@@ -162,7 +162,7 @@ class EmployeeGatePass extends Resource
                 }),
 
             AjaxSelect::make('Employee', 'employee_id')
-                ->rules('nullable')
+                ->rules('required')
                 ->get('/locations/{location}/employees')
                 ->parent('location')
                 ->onlyOnForms()

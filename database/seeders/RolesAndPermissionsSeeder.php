@@ -29,6 +29,7 @@ class RolesAndPermissionsSeeder extends Seeder
             // Time Section
             \App\Nova\Shift::class,
             \App\Nova\Holiday::class,
+            \App\Nova\Leave::class,
 
             // Fabric Section
             \App\Nova\FabricCategory::class,
