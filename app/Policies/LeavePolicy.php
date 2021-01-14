@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Leave;
+use App\Facades\Settings;
 use App\Enums\LeaveStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -19,6 +20,9 @@ class LeavePolicy
      */
     public function viewAny(User $user)
     {
+        if(!Settings::isTimesheetModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() || $user->hasPermissionTo('view any leaves');
     }
 
@@ -31,6 +35,9 @@ class LeavePolicy
      */
     public function view(User $user, Leave $leave)
     {
+        if(!Settings::isTimesheetModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() ||
                 ($user->hasPermissionTo('view leaves') && $user->locationId == $leave->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
@@ -44,6 +51,9 @@ class LeavePolicy
      */
     public function create(User $user)
     {
+        if(!Settings::isTimesheetModuleEnabled()){
+            return false;
+        }
         return $user->isSuperAdmin() || $user->hasPermissionTo('create leaves');
     }
 
@@ -71,6 +81,9 @@ class LeavePolicy
      */
     public function delete(User $user, Leave $leave)
     {
+        if(!Settings::isTimesheetModuleEnabled()){
+            return false;
+        }
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete leaves') && $user->locationId == $leave->locationId ) ||
                 $user->hasPermissionTo('delete all locations data')) &&
@@ -86,6 +99,9 @@ class LeavePolicy
      */
     public function restore(User $user, Leave $leave)
     {
+        if(!Settings::isTimesheetModuleEnabled()){
+            return false;
+        }
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore leaves') && $user->locationId == $leave->locationId ) ||
                 $user->hasPermissionTo('restore all locations data')) &&
@@ -101,6 +117,9 @@ class LeavePolicy
      */
     public function forceDelete(User $user, Leave $leave)
     {
+        if(!Settings::isTimesheetModuleEnabled()){
+            return false;
+        }
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete leaves') && $user->locationId == $leave->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
