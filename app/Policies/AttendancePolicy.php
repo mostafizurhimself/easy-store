@@ -3,12 +3,12 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Holiday;
 use App\Facades\Settings;
-use App\Enums\HolidayStatus;
+use App\Models\Attendance;
+use App\Enums\AttendanceStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class HolidayPolicy
+class AttendancePolicy
 {
     use HandlesAuthorization;
 
@@ -23,23 +23,23 @@ class HolidayPolicy
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
-        return $user->isSuperAdmin() || $user->hasPermissionTo('view any holidays');
+        return $user->isSuperAdmin() || $user->hasPermissionTo('view any attendances');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Holiday  $holiday
+     * @param  \App\Models\Attendance  $attendance
      * @return mixed
      */
-    public function view(User $user, Holiday $holiday)
+    public function view(User $user, Attendance $attendance)
     {
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view holidays') && $user->locationId == $holiday->locationId ) ||
+                ($user->hasPermissionTo('view attendances') && $user->locationId == $attendance->locationId ) ||
                 $user->hasPermissionTo('view all locations data');
     }
 
@@ -54,89 +54,89 @@ class HolidayPolicy
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
-        return $user->isSuperAdmin() || $user->hasPermissionTo('create holidays');
+        return $user->isSuperAdmin() || $user->hasPermissionTo('create attendances');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Holiday  $holiday
+     * @param  \App\Models\Attendance  $attendance
      * @return mixed
      */
-    public function update(User $user, Holiday $holiday)
+    public function update(User $user, Attendance $attendance)
     {
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update holidays') && $user->locationId == $holiday->locationId ) ||
+                ($user->hasPermissionTo('update attendances') && $user->locationId == $attendance->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
-                $holiday->status == HolidayStatus::UNPUBLISHED();
+                $attendance->status == AttendanceStatus::DRAFT();
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Holiday  $holiday
+     * @param  \App\Models\Attendance  $attendance
      * @return mixed
      */
-    public function delete(User $user, Holiday $holiday)
+    public function delete(User $user, Attendance $attendance)
     {
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete holidays') && $user->locationId == $holiday->locationId ) ||
+                ($user->hasPermissionTo('delete attendances') && $user->locationId == $attendance->locationId ) ||
                 $user->hasPermissionTo('delete all locations data')) &&
-                $holiday->status == HolidayStatus::UNPUBLISHED();
+                $attendance->status == AttendanceStatus::DRAFT();
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Holiday  $holiday
+     * @param  \App\Models\Attendance  $attendance
      * @return mixed
      */
-    public function restore(User $user, Holiday $holiday)
+    public function restore(User $user, Attendance $attendance)
     {
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore holidays') && $user->locationId == $holiday->locationId ) ||
+                ($user->hasPermissionTo('restore attendances') && $user->locationId == $attendance->locationId ) ||
                 $user->hasPermissionTo('restore all locations data')) &&
-                $holiday->status == HolidayStatus::UNPUBLISHED();
+                $attendance->status == AttendanceStatus::DRAFT();
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Holiday  $holiday
+     * @param  \App\Models\Attendance  $attendance
      * @return mixed
      */
-    public function forceDelete(User $user, Holiday $holiday)
+    public function forceDelete(User $user, Attendance $attendance)
     {
         if(!Settings::isTimesheetModuleEnabled()){
             return false;
         }
         return ($user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete holidays') && $user->locationId == $holiday->locationId ) ||
+                ($user->hasPermissionTo('force delete attendances') && $user->locationId == $attendance->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
-                $holiday->status == HolidayStatus::UNPUBLISHED();
+                $attendance->status == AttendanceStatus::DRAFT();
     }
 
     /**
      * Determine whether the user can add a model item to the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Holiday  $holiday
+     * @param  \App\Models\Attendance  $attendance
      * @return mixed
      */
-    public function addModel(User $user, Holiday $holiday)
+    public function addModel(User $user, Attendance $attendance)
     {
         return true;
     }

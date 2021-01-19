@@ -28,6 +28,13 @@ class Holiday extends Resource
     public static $model = \App\Models\Holiday::class;
 
     /**
+     * The side nav menu order.
+     *
+     * @var int
+     */
+    public static $priority = 2;
+
+    /**
      * Get the custom permissions name of the resource
      *
      * @var array

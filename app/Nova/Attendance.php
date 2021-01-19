@@ -3,43 +3,22 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
-use App\Enums\LeaveStatus;
-use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Trix;
-use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
-use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Actions\Leaves\Approve;
-use App\Nova\Actions\Leaves\Confirm;
+use Laraning\NovaTimeField\TimeField;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Leave extends Resource
+class Attendance extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Leave::class;
-
-    /**
-     * The side nav menu order.
-     *
-     * @var int
-     */
-    public static $priority = 3;
-
-    /**
-     * Get the custom permissions name of the resource
-     *
-     * @var array
-     */
-    public static $permissions = ['can confirm', 'can approve', 'can download'];
+    public static $model = \App\Models\Attendance::class;
 
     /**
      * The group associated with the resource.
@@ -49,11 +28,34 @@ class Leave extends Resource
     public static $group = 'Time Section';
 
     /**
+     * The side nav menu order.
+     *
+     * @var int
+     */
+    public static $priority = 4;
+
+    /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can confirm', 'can download'];
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'id';
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'id',
+    ];
 
     /**
      * Indicates if the resource should be globally searchable.
@@ -63,23 +65,13 @@ class Leave extends Resource
     public static $globallySearchable = false;
 
     /**
-     * Get the displayable singular label of the resource.
-     *
-     * @return string
-     */
-    public static function singularLabel()
-    {
-        return "Leave";
-    }
-
-    /**
      * The icon of the resource.
      *
      * @return string
      */
     public static function icon()
     {
-        return 'fas fa-sign-out-alt';
+        return 'fas fa-calendar-check';
     }
 
     /**
@@ -92,6 +84,10 @@ class Leave extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
+
+            Date::make('Date')
+                ->default(Carbon::now())
+                ->sortable(),
 
             BelongsTo::make('Location')
                 ->searchable()
@@ -129,48 +125,40 @@ class Leave extends Resource
                     return false;
                 }),
 
-            Trix::make('Reason')
-                ->rules('required', 'max: 1000'),
-
-            Date::make('From')
-                ->sortable()
-                ->rules('required'),
-
-            Date::make('To')
-                ->sortable()
-                ->rules('required'),
-
-            Text::make('Total Days', function () {
-                return $this->totalDays . " days";
-            })
-                ->exceptOnForms(),
-
-
-            Text::make('Approved By', function () {
-                return $this->approve()->exists() ? $this->approve->employee->name : null;
-            })
-                ->canSee(function () {
-                    return $this->approve()->exists();
-                })
-                ->onlyOnDetail()
+            BelongsTo::make('Shift', 'shift', \App\Nova\Shift::class)
+                ->exceptOnForms()
                 ->sortable(),
 
-            Hidden::make('Total Days')
-                ->fillUsing(function ($request, $model) {
-                    $from = Carbon::parse($request->get('from'));
-                    $to   = Carbon::parse($request->get('to'));
-                    $model['total_days'] = $from->diffInDays($to) + 1;
+            BelongsTo::make('Shift', 'shift', \App\Nova\Shift::class)
+                ->sortable()
+                ->searchable()
+                ->canSee(function ($request) {
+                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
                 }),
 
-            Badge::make('Status')->map([
-                LeaveStatus::DRAFT()->getValue()     => 'warning',
-                LeaveStatus::CONFIRMED()->getValue() => 'info',
-                LeaveStatus::APPROVED()->getValue()  => 'success',
-            ])
-                ->sortable()
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
+            AjaxSelect::make('Shift', 'employee_id')
+                ->rules('required')
+                ->get('/locations/{location}/shifts')
+                ->parent('location')
+                ->onlyOnForms()
+                ->canSee(function ($request) {
+                    if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
+                        return true;
+                    }
+                    return false;
                 }),
+
+            TimeField::make('In Time', 'in')
+                ->sortable()
+                ->required(),
+
+            TimeField::make('Out Time', 'out')
+                ->sortable()
+                ->required(),
+
         ];
     }
 
@@ -215,21 +203,6 @@ class Leave extends Resource
      */
     public function actions(Request $request)
     {
-        return [
-            (new Confirm)->canSee(function ($request) {
-                return ($request->user()->hasPermissionTo('can confirm leaves') || $request->user()->isSuperAdmin());
-            })
-                ->confirmButtonText('Confirm')
-                ->confirmText('Are you sure want to confirm?'),
-
-            (new Approve)->canSee(function ($request) {
-                return ($request->user()->hasPermissionTo('can approve leaves') || $request->user()->isSuperAdmin());
-            })
-                ->canRun(function ($request) {
-                    return ($request->user()->hasPermissionTo('can approve leaves') || $request->user()->isSuperAdmin());
-                })
-                ->confirmButtonText('Approve')
-                ->confirmText('Are you sure want to approve?'),
-        ];
+        return [];
     }
 }

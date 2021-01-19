@@ -28,6 +28,13 @@ class Shift extends Resource
     public static $group = 'Time Section';
 
     /**
+     * The side nav menu order.
+     *
+     * @var int
+     */
+    public static $priority = 1;
+
+    /**
      * Show the resources related permissions or not
      *
      * @return bool

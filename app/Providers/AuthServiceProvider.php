@@ -25,6 +25,7 @@ use App\Models\Material;
 use App\Models\Provider;
 use App\Models\Supplier;
 use App\Models\Finishing;
+use App\Models\Attendance;
 use App\Models\Department;
 use App\Models\Permission;
 use App\Models\SubSection;
@@ -82,6 +83,7 @@ use App\Models\FabricPurchaseItem;
 use App\Models\FabricTransferItem;
 use App\Models\MaterialReturnItem;
 use App\Models\ProductRequisition;
+use App\Policies\AttendancePolicy;
 use App\Policies\DepartmentPolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\SubSectionPolicy;
@@ -179,6 +181,7 @@ class AuthServiceProvider extends ServiceProvider
         Shift::class                        => ShiftPolicy::class,
         Leave::class                        => LeavePolicy::class,
         Holiday::class                      => HolidayPolicy::class,
+        Attendance::class                   => AttendancePolicy::class,
         FabricCategory::class               => FabricCategoryPolicy::class,
         Fabric::class                       => FabricPolicy::class,
         FabricPurchaseOrder::class          => FabricPurchaseOrderPolicy::class,

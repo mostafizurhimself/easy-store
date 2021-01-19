@@ -198,10 +198,16 @@ class AssetDistributionInvoice extends Resource
                         ->sortable()
                         ->exceptOnForms(),
 
+                    Number::make('Item', function () {
+                        return $this->resource->distributionItems->count();
+                    })
+                        ->exceptOnForms()
+                        ->sortable(),
+
                     Currency::make('Receive Amount', 'total_receive_amount')
                         ->currency('BDT')
                         ->sortable()
-                        ->exceptOnForms(),
+                        ->onlyOnDetail(),
 
                     Trix::make('Note')
                         ->rules('nullable', 'max:500'),
@@ -331,18 +337,18 @@ class AssetDistributionInvoice extends Resource
                         })
                         ->onlyOnDetail(),
 
-                    Text::make('Status', function(){
-                        if($this->resource->goodsGatePass()->exists()){
-                            if($this->resource->goodsGatePass->status == GatePassStatus::DRAFT()){
-                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-warning-light text-warning-dark'>".$this->resource->goodsGatePass->status."</span>";
+                    Text::make('Status', function () {
+                        if ($this->resource->goodsGatePass()->exists()) {
+                            if ($this->resource->goodsGatePass->status == GatePassStatus::DRAFT()) {
+                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-warning-light text-warning-dark'>" . $this->resource->goodsGatePass->status . "</span>";
                             }
 
-                            if($this->resource->goodsGatePass->status == GatePassStatus::CONFIRMED()){
-                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-info-light text-info-dark'>".$this->resource->goodsGatePass->status."</span>";
+                            if ($this->resource->goodsGatePass->status == GatePassStatus::CONFIRMED()) {
+                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-info-light text-info-dark'>" . $this->resource->goodsGatePass->status . "</span>";
                             }
 
-                            if($this->resource->goodsGatePass->status == GatePassStatus::PASSED()){
-                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-success-light text-success-dark'>".$this->resource->goodsGatePass->status."</span>";
+                            if ($this->resource->goodsGatePass->status == GatePassStatus::PASSED()) {
+                                return "<span class='whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-success-light text-success-dark'>" . $this->resource->goodsGatePass->status . "</span>";
                             }
                         }
                     })

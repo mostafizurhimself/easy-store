@@ -185,7 +185,7 @@ class MaterialReceiveItem extends Resource
 
             Text::make("Reference")
                 ->help('Here you can enter the supplier invoice number.')
-                ->hideFromIndex()
+                // ->hideFromIndex()
                 ->sortable()
                 ->rules('nullable', 'string', 'max:200'),
 

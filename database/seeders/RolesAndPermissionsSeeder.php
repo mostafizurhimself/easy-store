@@ -30,6 +30,7 @@ class RolesAndPermissionsSeeder extends Seeder
             \App\Nova\Shift::class,
             \App\Nova\Holiday::class,
             \App\Nova\Leave::class,
+            \App\Nova\Attendance::class,
 
             // Fabric Section
             \App\Nova\FabricCategory::class,

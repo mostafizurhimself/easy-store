@@ -43,6 +43,7 @@
         "inspheric/nova-email-field": "^1.42",
         "klepak/nova-dynamic-page-title": "^1.0",
         "klepak/nova-multiselect-filter": "^1.2",
+        "laraning/nova-time-field": "^1.2",
         "laravel/framework": "^8.0",
         "laravel/legacy-factories": "^1.0",
         "laravel/nova": "*",

@@ -13,6 +13,7 @@ use App\Models\Material;
 use App\Models\Provider;
 use App\Models\Supplier;
 use App\Models\Finishing;
+use App\Models\Attendance;
 use App\Models\GoodsGatePass;
 use App\Models\ProductOutput;
 use App\Models\ServiceInvoice;
@@ -56,6 +57,7 @@ use App\Models\AssetDistributionItem;
 use App\Models\FabricTransferInvoice;
 use App\Models\MaterialPurchaseOrder;
 use App\Models\MaterialReturnInvoice;
+use App\Observers\AttendanceObserver;
 use App\Models\ProductRequisitionItem;
 use App\Models\ServiceTransferInvoice;
 use App\Models\MaterialTransferInvoice;
@@ -125,6 +127,7 @@ class ObserverServiceProvider extends ServiceProvider
     public function boot()
     {
         Employee::observe(EmployeeObserver::class);
+        Attendance::observe(AttendanceObserver::class);
         Fabric::observe(FabricObserver::class);
         Material::observe(MaterialObserver::class);
         Asset::observe(AssetObserver::class);
