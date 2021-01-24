@@ -32,6 +32,7 @@ use App\Nova\Filters\BelongsToLocationFilter;
 use App\Nova\Filters\BelongsToSupplierFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\AssetReceiveItems\DownloadPdf;
+use App\Nova\Actions\AssetReceiveItems\MarkAsDraft;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetReceiveItems\DownloadExcel;
 use App\Nova\Filters\BelongsToDependentLocationFilter;
@@ -59,7 +60,7 @@ class AssetReceiveItem extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can download'];
+    public static $permissions = ['can confirm', 'can download', 'can mark as draft'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -302,9 +303,18 @@ class AssetReceiveItem extends Resource
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
 
+            (new MarkAsDraft)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft asset receive items') || $request->user()->isSuperAdmin();
+            })->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can mark as draft asset receive items') || $request->user()->isSuperAdmin();
+            })
+                ->onlyOnDetail()
+                ->confirmButtonText('Mark As Draft'),
+
             (new ConfirmReceiveItem)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can confirm asset receive items');
+                return $request->user()->hasPermissionTo('can confirm asset receive items') || $request->user()->isSuperAdmin();
             }),
+
         ];
     }
 
