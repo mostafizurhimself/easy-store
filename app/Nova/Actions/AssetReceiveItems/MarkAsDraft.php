@@ -35,11 +35,6 @@ class MarkAsDraft extends Action
                 $model->asset->decrement('quantity', $model->quantity);
                 $model->status = PurchaseStatus::DRAFT();
                 $model->save();
-
-                // Update the purchase item status
-                $model->purchaseItem->updateStatus();
-                // Update the purchase order status
-                $model->purchaseOrder->updateStatus();
             } else {
                 return Action::danger('Already Confirmed');
             }
