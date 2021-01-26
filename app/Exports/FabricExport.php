@@ -27,6 +27,6 @@ class FabricExport implements FromView
     */
     public function view(): View
     {
-        return view('excel.pages.fabric-stock-summaries')->with('models', $this->models);
+        return view('excel.pages.fabrics')->with('models', $this->models);
     }
 }
