@@ -31,5 +31,9 @@ class FacadeServiceProvider extends ServiceProvider
         App::bind('settings', function(){
             return new \App\Helpers\Settings;
         });
+
+        App::bind('timesheet', function(){
+            return new \App\Helpers\Timesheet;
+        });
     }
 }

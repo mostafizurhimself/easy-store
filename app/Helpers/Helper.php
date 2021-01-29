@@ -3,9 +3,13 @@
 namespace App\Helpers;
 
 use Carbon\Carbon;
+use App\Models\Shift;
+use App\Models\Holiday;
+use App\Models\Location;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Str;
 use League\Flysystem\Config;
+use Spatie\OpeningHours\OpeningHours;
 
 class Helper
 {
@@ -130,5 +134,4 @@ class Helper
 
         return $dates;
     }
-
 }

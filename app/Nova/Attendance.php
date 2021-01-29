@@ -139,7 +139,7 @@ class Attendance extends Resource
                     return false;
                 }),
 
-            AjaxSelect::make('Shift', 'employee_id')
+            AjaxSelect::make('Shift', 'shift_id')
                 ->rules('required')
                 ->get('/locations/{location}/shifts')
                 ->parent('location')
@@ -204,5 +204,29 @@ class Attendance extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Return the location to redirect the user after creation.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Laravel\Nova\Resource  $resource
+     * @return string
+     */
+    public static function redirectAfterCreate(NovaRequest $request, $resource)
+    {
+        return '/resources/'.static::uriKey();
+    }
+
+    /**
+     * Return the location to redirect the user after update.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Laravel\Nova\Resource  resource
+     * @return string
+     */
+    public static function redirectAfterUpdate(NovaRequest $request, $resource)
+    {
+        return '/resources/'.static::uriKey();
     }
 }

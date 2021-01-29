@@ -23,6 +23,13 @@ class Attendance extends Model
     protected static $logUnguarded = true;
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['date'];
+
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
