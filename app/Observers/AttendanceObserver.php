@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Shift;
 use App\Facades\Timesheet;
 use App\Models\Attendance;
+use App\Enums\AttendanceStatus;
 
 class AttendanceObserver
 {
@@ -19,35 +20,51 @@ class AttendanceObserver
     public function saving(Attendance $attendance)
     {
         $in = Carbon::createFromTimeString($attendance->in);
-        $out = Carbon::createFromTimeString($attendance->out);
-        $attendance->totalWork = $out->diffInSeconds($in);
 
-        // Get the opening hour
+        // // Check if this attendance is exists
+        // $checkAttendance = Attendance::where('location_id', $attendance->locationId)
+        //                             ->where('date', $attendance->date)
+        //                             ->where('employee_id', $attendance->employeeId)
+        //                             ->first();
+
+        // if($checkAttendance){
+        //     $attendance = $checkAttendance;
+        // }
+
+        // Set the opening hour
         $openingHours = Timesheet::getOpeningHours($attendance->locationId, $attendance->shiftId);
 
-        // Get the working hour
+        // Set the working hour
         $workingHour = Timesheet::getWorkingHours($attendance->shiftId, $attendance->date);
 
-        // Get total late in seconds
+        // Set the opening hour
+        $attendance->openingHour = json_encode(Timesheet::getWorkingRange($attendance->shiftId, $attendance->date));
+
+        // Set total late in seconds
         $attendance->late = Timesheet::getLate($attendance->shiftId, $attendance->date, $attendance->in) ?? null;
 
-        // Get total early leave in seconds
-        $attendance->earlyLeave = Timesheet::getEarlyLeave($attendance->shiftId, $attendance->date, $attendance->out) ?? null;
+        // Set total early leave in seconds
+        if ($attendance->out) {
+            $out = Carbon::createFromTimeString($attendance->out);
 
-        // Check is open or not
-        if($openingHours->isOpenOn($attendance->date->format('Y-m-d'))){
+            // Set total work in seconds
+            $attendance->totalWork = $out->diffInSeconds($in);
+            // Set total earyly leave in seconds
+            $attendance->earlyLeave = Timesheet::getEarlyLeave($attendance->shiftId, $attendance->date, $attendance->out) ?? null;
 
-            // Set the overtime
-            if($attendance->totalWork > $workingHour){
-                $attendance->overtime = $attendance->totalWork - $workingHour;
+            // Check is open or not
+            if ($openingHours->isOpenOn($attendance->date->format('Y-m-d'))) {
+
+                // Set the overtime
+                if ($attendance->totalWork > $workingHour) {
+                    $attendance->overtime = $attendance->totalWork - $workingHour;
+                }
+            } else {
+                // Set total work as overtime
+                // if is not open
+                $attendance->overtime = $attendance->totalWork;
             }
-
-        }else{
-            // Set total work as overtime
-            // if is not open
-            $attendance->overtime = $attendance->totalWork;
         }
-
     }
 
     /**

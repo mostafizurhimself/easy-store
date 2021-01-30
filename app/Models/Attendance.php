@@ -30,13 +30,22 @@ class Attendance extends Model
     protected $dates = ['date'];
 
     /**
+     * The attributes that should be mutated to array.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'opening_hour' => 'array',
+    ];
+
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function employee()
     {
-       return $this->belongsTo(Employee::class)->withTrashed();
+        return $this->belongsTo(Employee::class)->withTrashed();
     }
 
     /**
@@ -46,7 +55,6 @@ class Attendance extends Model
      */
     public function shift()
     {
-       return $this->belongsTo(Shift::class)->withTrashed();
+        return $this->belongsTo(Shift::class)->withTrashed();
     }
-
 }

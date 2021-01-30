@@ -181,7 +181,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\NovaServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,
-
     ],
 
     /*

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\License;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,9 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/license', function () {
+    $license = License::first();
+    return view('license')->with('license', $license);
+})->middleware('license');
+
+Route::post('/license', 'AbstractController@createLicense');
 
 //Ajax Routes
 

@@ -18,6 +18,7 @@ class CreateAttendancesTable extends Migration
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->bigInteger('employee_id')->unsigned()->nullable();
             $table->bigInteger('shift_id')->unsigned()->nullable();
+            $table->json('opening_hour')->nullable();
             $table->date('date');
             $table->time('in');
             $table->time('out')->nullable();

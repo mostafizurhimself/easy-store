@@ -3,13 +3,24 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use Michielfb\Time\Time;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
+use App\Enums\ConfirmStatus;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use App\Enums\AttendanceStatus;
+use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laraning\NovaTimeField\TimeField;
+use App\Nova\Actions\Attendances\Confirm;
+use App\Nova\Actions\Attendances\CheckOut;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\Attendances\BulkAttendance;
+use App\Nova\Actions\Attendances\BulkAttendanceAdmin;
 
 class Attendance extends Resource
 {
@@ -39,7 +50,7 @@ class Attendance extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can download'];
+    public static $permissions = ['can take bulk', 'can confirm', 'can download'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -151,13 +162,59 @@ class Attendance extends Resource
                     return false;
                 }),
 
-            TimeField::make('In Time', 'in')
+            Time::make('In', 'in')
                 ->sortable()
+                ->format('HH:mm')
                 ->required(),
 
-            TimeField::make('Out Time', 'out')
+            Time::make('Out', 'out')
+                ->format('HH:mm')
                 ->sortable()
-                ->required(),
+                ->exceptOnForms(),
+
+            Text::make('Opening Hour', function () {
+                $range = json_decode($this->openingHour);
+                return "{$range[0]} to {$range[1]}";
+            })
+                ->onlyOnDetail(),
+
+            Text::make('Late', 'late')
+                ->sortable()
+                ->displayUsing(function ($late) {
+                    return gmdate("H:i:s", $late);
+                })
+                ->exceptOnForms(),
+
+            Text::make('Total Work')
+                ->sortable()
+                ->displayUsing(function ($totalWork) {
+                    return gmdate("H:i:s", $totalWork);
+                })
+                ->onlyOnDetail(),
+
+            Text::make('Early Leave')
+                ->sortable()
+                ->displayUsing(function ($earlyLeave) {
+                    return gmdate("H:i:s", $earlyLeave);
+                })
+                ->onlyOnDetail(),
+
+            Text::make('Overtime')
+                ->sortable()
+                ->displayUsing(function ($overtime) {
+                    return gmdate("H:i:s", $overtime);
+                })
+                ->onlyOnDetail(),
+
+            Badge::make('Status')->map([
+                ConfirmStatus::DRAFT()->getValue()       => 'warning',
+                ConfirmStatus::CONFIRMED()->getValue()   => 'info',
+            ])
+                ->sortable()
+                ->onlyOnDetail()
+                ->label(function () {
+                    return Str::title(Str::of($this->status)->replace('_', " "));
+                }),
 
         ];
     }
@@ -203,7 +260,39 @@ class Attendance extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new Confirm)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can confirm attendances') || $request->user()->isSuperAdmin();
+            })->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can confirm attendances') || $request->user()->isSuperAdmin();
+            })
+                ->confirmButtonText('Confirm')
+                ->confirmText('Are you sure want to confirm?'),
+
+            (new CheckOut)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('update attendances') || $request->user()->isSuperAdmin();
+            })->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('update attendances') || $request->user()->isSuperAdmin();
+            })
+                ->confirmButtonText('Check Out'),
+
+            (new BulkAttendance)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can take bulk attendances') && !$request->user()->isSuperAdmin();
+            })->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can take bulk attendances') && !$request->user()->isSuperAdmin();
+            })
+                ->confirmButtonText('Take Attendance')
+                ->confirmText('Are you sure want to take a bulk attendance?')
+                ->standalone(),
+
+            (new BulkAttendanceAdmin)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can take bulk attendances') && ($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('create all locations data'));
+            })->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can take bulk attendances') && ($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('create all locations data'));
+            })
+                ->confirmButtonText('Take Attendance')
+                ->standalone(),
+        ];
     }
 
     /**
@@ -215,7 +304,7 @@ class Attendance extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 
     /**
@@ -227,6 +316,6 @@ class Attendance extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        return '/resources/'.static::uriKey();
+        return '/resources/' . static::uriKey();
     }
 }

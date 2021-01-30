@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use App\Facades\Settings;
 use App\Models\Attendance;
-use App\Enums\AttendanceStatus;
+use App\Enums\ConfirmStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AttendancePolicy
@@ -72,7 +72,7 @@ class AttendancePolicy
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('update attendances') && $user->locationId == $attendance->locationId ) ||
                 $user->hasPermissionTo('update all locations data')) &&
-                $attendance->status == AttendanceStatus::DRAFT();
+                $attendance->status == ConfirmStatus::DRAFT();
     }
 
     /**
@@ -90,7 +90,7 @@ class AttendancePolicy
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('delete attendances') && $user->locationId == $attendance->locationId ) ||
                 $user->hasPermissionTo('delete all locations data')) &&
-                $attendance->status == AttendanceStatus::DRAFT();
+                $attendance->status == ConfirmStatus::DRAFT();
     }
 
     /**
@@ -108,7 +108,7 @@ class AttendancePolicy
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('restore attendances') && $user->locationId == $attendance->locationId ) ||
                 $user->hasPermissionTo('restore all locations data')) &&
-                $attendance->status == AttendanceStatus::DRAFT();
+                $attendance->status == ConfirmStatus::DRAFT();
     }
 
     /**
@@ -126,7 +126,7 @@ class AttendancePolicy
         return ($user->isSuperAdmin() ||
                 ($user->hasPermissionTo('force delete attendances') && $user->locationId == $attendance->locationId ) ||
                 $user->hasPermissionTo('force delete all locations data')) &&
-                $attendance->status == AttendanceStatus::DRAFT();
+                $attendance->status == ConfirmStatus::DRAFT();
     }
 
     /**

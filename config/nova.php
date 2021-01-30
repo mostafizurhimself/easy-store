@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ActiveUser;
+use App\Http\Middleware\VerifyLicense;
 use Laravel\Nova\Actions\ActionResource;
 use Laravel\Nova\Http\Middleware\Authenticate;
 use Laravel\Nova\Http\Middleware\Authorize;
@@ -100,6 +101,7 @@ return [
 
     'middleware' => [
         'web',
+        VerifyLicense::class,
         ActiveUser::class,
         Authenticate::class,
         DispatchServingNovaEvent::class,

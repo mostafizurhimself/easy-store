@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f06b539ccfa0e1b6d72293645249d09e",
+    "content-hash": "ccd183ea0014a1d590321765af25091c",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -4182,6 +4182,51 @@
                 "source": "https://github.com/MarkBaker/PHPMatrix/tree/PHP8"
             },
             "time": "2020-08-28T17:11:00+00:00"
+        },
+        {
+            "name": "michielfb/laravel-nova-time-field",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/michielfb/laravel-nova-time-field.git",
+                "reference": "abeeaf819b402007ad5e9e57b0e3b8be1bd3167a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/michielfb/laravel-nova-time-field/zipball/abeeaf819b402007ad5e9e57b0e3b8be1bd3167a",
+                "reference": "abeeaf819b402007ad5e9e57b0e3b8be1bd3167a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Michielfb\\Time\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Michielfb\\Time\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/michielfb/laravel-nova-time-field/issues",
+                "source": "https://github.com/michielfb/laravel-nova-time-field/tree/1.2.0"
+            },
+            "time": "2020-12-10T21:33:21+00:00"
         },
         {
             "name": "mirovit/nova-notifications",
