@@ -12,9 +12,9 @@ use Laravel\Nova\Fields\MorphTo;
 use Laravel\Nova\Fields\DateTime;
 use App\Nova\Filters\DateRangeFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use App\Nova\Filters\ActivityLog\SubjectTypeFilter;
 use App\Nova\Filters\ActivityLog\LogDescription;
 use ChrisWare\NovaBreadcrumbs\Traits\Breadcrumbs;
+use App\Nova\Filters\ActivityLog\SubjectTypeFilter;
 use Bolechen\NovaActivitylog\Resources\Activitylog as BaseActivityLog;
 
 class ActivityLog extends BaseActivityLog

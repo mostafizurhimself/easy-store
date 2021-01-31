@@ -10,8 +10,8 @@
 
     <style>
         #gate-pass {
-            font-family: 'Lato', sans-serif;
-            box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+            font-family: 'Nunito', sans-serif;
+            /* box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); */
             padding: 2mm;
             margin: 0 auto;
             width: 80mm;
@@ -114,7 +114,7 @@
             }
 
             #gate-pass {
-                font-family: 'Lato', sans-serif;
+                font-family: 'Nunito', sans-serif;
             }
 
 
