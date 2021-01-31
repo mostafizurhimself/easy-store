@@ -9,9 +9,11 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
     <style>
+        body {
+            font-family: 'Nunito', sans-serif !important;
+        }
+
         #gate-pass {
-            font-family: 'Nunito', sans-serif;
-            /* box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); */
             padding: 2mm;
             margin: 0 auto;
             width: 80mm;
@@ -97,7 +99,8 @@
             padding: 0.5rem 3rem;
             border: none;
             font-family: inherit;
-            /* text-transform: uppercase; */
+            text-transform: uppercase;
+            letter-spacing: 1px;
             font-weight: bold;
             cursor: pointer;
         }
@@ -113,10 +116,16 @@
                 line-height: 20px;
             }
 
-            #gate-pass {
-                font-family: 'Nunito', sans-serif;
+            body {
+                font-family: 'Nunito', sans-serif !important;
             }
 
+            @page {
+                size: auto;
+                /* auto is the initial value */
+                margin: 0mm;
+                /* this affects the margin in the printer settings */
+            }
 
         }
 
