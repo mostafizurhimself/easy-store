@@ -5,16 +5,10 @@ namespace App\Nova\Filters;
 use Illuminate\Http\Request;
 use App\Models\FabricCategory;
 use Laravel\Nova\Filters\Filter;
+use AwesomeNova\Filters\DependentFilter;
 
-class FabricCategoryFilter extends Filter
+class FabricCategoryFilter extends DependentFilter
 {
-    /**
-     * The filter's component.
-     *
-     * @var string
-     */
-    public $component = 'select-filter';
-
     /**
      * The displayable name of the filter.
      *
@@ -23,17 +17,11 @@ class FabricCategoryFilter extends Filter
     public $name = "Category";
 
     /**
-     * Apply the filter to the given query.
+     * Attribute name of filter. Also it is key of filter.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @var string
      */
-    public function apply(Request $request, $query, $value)
-    {
-        return $query->where('category_id', $value);
-    }
+    public $attribute = 'category_id';
 
     /**
      * Get the filter's available options.
@@ -41,8 +29,8 @@ class FabricCategoryFilter extends Filter
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function options(Request $request)
+    public function options(Request $request, array $filters = [])
     {
-        return FabricCategory::orderBy('name')->pluck('id', 'name');
+        return FabricCategory::orderBy('name')->where('location_id', auth()->user()->locationId)->pluck('name', 'id');
     }
 }

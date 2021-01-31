@@ -30,6 +30,7 @@ use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Actions\Fabrics\DownloadPdf;
 use Easystore\TextUppercase\TextUppercase;
 use App\Nova\Actions\Fabrics\DownloadExcel;
+use App\Nova\Filters\FabricCategoryFilter;
 use App\Nova\Lenses\Fabric\AlertQuantities;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -331,7 +332,7 @@ class Fabric extends Resource
                 }),
 
 
-            (new CategoryFilter)->canSee(function ($request) {
+            FabricCategoryFilter::make()->canSee(function ($request) {
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
 
