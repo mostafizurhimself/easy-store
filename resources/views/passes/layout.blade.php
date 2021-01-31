@@ -14,7 +14,6 @@
         }
 
         #gate-pass {
-            padding: 2mm;
             margin: 0 auto;
             width: 80mm;
             background: #FFF;
@@ -123,7 +122,8 @@
             @page {
                 size: auto;
                 /* auto is the initial value */
-                margin: 0mm;
+                margin: 2mm;
+                padding: 0;
                 /* this affects the margin in the printer settings */
             }
 
