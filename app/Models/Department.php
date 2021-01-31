@@ -52,7 +52,7 @@ class Department extends Model
     public static function filterOptions()
     {
         return Cache::remember('nova-department-filter-options', 3600, function () {
-            $departments = self::setEagerLoads([])->get(['id', 'name']);
+            $departments = self::setEagerLoads([])->orderBy('name')->get(['id', 'name']);
 
             return $departments->mapWithKeys(function ($department) {
                 return [$department->name => $department->id];

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Enums\Gender;
 use Eminiarts\Tabs\Tabs;
 use App\Enums\BloodGroup;
+use App\Models\Department;
 use App\Models\Designation;
 use Illuminate\Support\Str;
 use Inspheric\Fields\Email;
@@ -23,6 +24,8 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DepartmentFilter;
+use AwesomeNova\Filters\DependentFilter;
 use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
@@ -124,12 +127,21 @@ class Employee extends Resource
                         ])
                         ->sortable(),
 
+                    Text::make('Name')
+                        ->exceptOnForms()
+                        ->displayUsing(function () {
+                            return $this->name;
+                        })
+                        ->sortable(),
+
                     Text::make('First Name')
                         ->rules('required', 'string', 'max:50')
+                        ->onlyOnForms()
                         ->sortable(),
 
                     Text::make('Last Name')
                         ->rules('required', 'string', 'max:50')
+                        ->onlyOnForms()
                         ->sortable(),
 
                     Email::make('Personal Email')
@@ -219,7 +231,7 @@ class Employee extends Resource
                         }),
 
                     BelongsTo::make('Department')
-                        ->onlyOnDetail(),
+                        ->exceptOnForms(),
 
                     AjaxSelect::make('Department', 'department_id')
                         ->get('/locations/{location}/departments')
@@ -356,6 +368,20 @@ class Employee extends Resource
             (new LocationFilter)->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
+
+            (new DepartmentFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            DependentFilter::make('Department', 'department_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Department::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
         ];
     }
 

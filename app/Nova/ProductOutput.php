@@ -3,6 +3,8 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Models\Floor;
+use App\Models\Style;
 use App\Enums\OutputStatus;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -12,12 +14,17 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use App\Models\ProductCategory;
 use Laravel\Nova\Fields\Number;
+use App\Nova\Filters\FloorFilter;
+use App\Nova\Filters\StyleFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\OutputStatusFilter;
+use AwesomeNova\Filters\DependentFilter;
+use App\Nova\Filters\ProductCategoryFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\ProductOutputs\DownloadPdf;
 use App\Nova\Actions\ProductOutputs\ConfirmOutput;
@@ -274,6 +281,49 @@ class ProductOutput extends Resource
             new DateRangeFilter('date'),
 
             new OutputStatusFilter,
+
+            (new ProductCategoryFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            DependentFilter::make('Category', 'category_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return ProductCategory::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+
+            (new StyleFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            DependentFilter::make('Style', 'style_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Style::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new FloorFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            DependentFilter::make('Floor', 'floor_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Floor::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
         ];
     }
 
