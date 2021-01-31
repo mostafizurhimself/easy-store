@@ -55,10 +55,10 @@
 </table>
 
 <div class="row mt-5 align-items-center">
-    <div class="col-lg-6">
+    <div class="col">
         <div class="font-weight-bold">Thank you!</div>
     </div>
-    <div class="col-lg-6 d-flex align-items-end justify-content-end">
+    <div class="col text-right">
         <span class="font-weight-bold border-top p-2">
             Authorize Signature
         </span>

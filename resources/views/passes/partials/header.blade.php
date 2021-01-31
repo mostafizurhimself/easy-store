@@ -1,6 +1,6 @@
 <header>
     <div class="header">
-        <div class="logo text-center">
+        <div class="text-center">
             <a target="_blank" href="#">
                 @if(Settings::companyLogo())
                     <img src="{{Settings::companyLogo()}}" alt="Logo" height="60px">
@@ -9,21 +9,14 @@
                 @endif
             </a>
         </div>
-        <div class="company text-center mt-2">
-            <h6 class="name mb-0">
+        <div class="text-center">
+            <h6 class="name">
                 @if(empty(Settings::company()->name))
                     <a target="_blank" href="#">Company Name</a>
                 @else
                     <a target="_blank" href="#">{{Settings::company()->name}}</a>
                 @endif
             </h6>
-
-            {{-- Company Address --}}
-            {{-- @if(empty($pass->location->address))
-                <div>Address goes here</div>
-            @else
-                <div >{{$pass->location->address}}</div>
-            @endif --}}
 
             @if ($pass->location->locationAddress)
                 <div class="address">

@@ -12,7 +12,7 @@
 
 <body>
     <div class="container mt-5" style="max-width: 600px">
-        @if (isset($license) && $license->expirationDate->greaterThan(\Carbon\Carbon::now()))
+        @if ($license->expirationDate->greaterThan(\Carbon\Carbon::now()))
             <div class="alert alert-info text-center" role="alert">
                 Your transaction details is pending for verification.
             </div>
@@ -62,7 +62,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Status</label>
-                        <select name="package" class="form-control" readonly>
+                        <select name="package" class="form-control" disabled>
                             <option class="inactive" @if($license->status == "inactive") selected @endif>Inactive</option>
                             <option class="active" @if($license->status == "active") selected @endif >Active</option>
                         </select>
