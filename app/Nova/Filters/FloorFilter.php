@@ -2,6 +2,7 @@
 
 namespace App\Nova\Filters;
 
+use App\Models\Floor;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 

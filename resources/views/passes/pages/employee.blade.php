@@ -29,11 +29,11 @@
         </tr>
         <tr>
             <td class="font-weight-bold">Approved Out</td>
-            <td class="text-right">{{$pass->approvedOut->format('Y-m-d h:i a')}}</td>
+            <td class="text-right">{{$pass->approveOut ? $pass->approvedOut->format('Y-m-d h:i a') : "N/A"}}</td>
         </tr>
         <tr>
             <td class="font-weight-bold">Approved In</td>
-            <td class="text-right">{{$pass->approvedIn->format('Y-m-d h:i a')}}</td>
+            <td class="text-right">{{$pass->approveIn ? $pass->approvedIn->format('Y-m-d h:i a') : "N/A"}}</td>
         </tr>
 
         <tr>
