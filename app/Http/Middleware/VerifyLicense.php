@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Carbon\Carbon;
 use App\Models\License;
-use App\Enums\LicenseStatus;
+use App\Facades\Settings;
 
 class VerifyLicense
 {
@@ -18,17 +18,10 @@ class VerifyLicense
      */
     public function handle($request, Closure $next)
     {
-        // $license = License::first();
+        if(Settings::isLicenseEnabled() || $request->user()->isSystemAdmin()){
+            return $next($request);
+        }
 
-        // if($license->expiration_date->lessThan(Carbon::now())){
-        //     $license->status = LicenseStatus::INACTIVE();
-        //     $license->save();
-        // }
-
-        // if($license->expiration_date->lessThan(Carbon::now()) || ($license->expiration_date->greaterThan(Carbon::now()) && $license->status == LicenseStatus::INACTIVE())){
-        //     return redirect('/license');
-        // }
-
-        return $next($request);
+        return abort(403, 'License Expired');
     }
 }

@@ -155,4 +155,14 @@ class Settings
     {
         return !empty(self::application()->enable_payroll_module) ? self::application()->enable_payroll_module : false;
     }
+
+    /**
+     * Check is licenses is enabled
+     *
+     * @return bool
+     */
+    public function isLicenseEnabled()
+    {
+        return !empty(self::application()->license_status) ? self::application()->license_status : false;
+    }
 }

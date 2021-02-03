@@ -271,6 +271,15 @@ class Setting extends Resource
                     return $this->resource->name == SettingModel::APPLICATION_SETTINGS && $request->user()->isSystemAdmin();
                 }),
 
+            Boolean::make('License Status', 'license_status')
+                ->displayUsing(function () {
+                    return json_decode($this->resource->settings)->license_status ?? null;
+                })
+                ->onlyOnDetail()
+                ->canSee(function ($request) {
+                    return $this->resource->name == SettingModel::APPLICATION_SETTINGS && $request->user()->isSystemAdmin();
+                }),
+
 
             NovaDependencyContainer::make([
 
@@ -354,6 +363,11 @@ class Setting extends Resource
                         }),
 
                     Boolean::make('Enable Payroll Module', 'enable_payroll_module')
+                        ->canSee(function ($request) {
+                            return $request->user()->isSystemAdmin();
+                        }),
+
+                    Boolean::make('License Status', 'license_status')
                         ->canSee(function ($request) {
                             return $request->user()->isSystemAdmin();
                         }),
