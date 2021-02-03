@@ -45,7 +45,7 @@
     </tbody>
 </table>
 
-<div class="row mt-5 align-items-center">
+<div class="row mt-6 align-items-center">
     <div class="col">
         <div class="font-weight-bold">Thank you!</div>
     </div>

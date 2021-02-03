@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Carbon\Carbon;
-use App\Models\License;
 use App\Facades\Settings;
 
 class VerifyLicense

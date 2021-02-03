@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Gate Pass | @yield('title')</title>
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     <style>
         body {
             font-family: 'Nunito', sans-serif !important;
+            font-weight: 600;
         }
 
         #gate-pass {
@@ -47,7 +49,7 @@
         }
 
         .font-weight-bold {
-            font-weight: bold;
+            font-weight: 800;
         }
 
         .row {
@@ -72,6 +74,10 @@
 
         .mt-5 {
             margin-top: 2rem;
+        }
+
+        .mt-6 {
+            margin-top: 3rem;
         }
 
         .table {
@@ -133,7 +139,7 @@
 </head>
 
 <body>
-    <div id="gate-pass">
+    <div id="gate-pass" style="margin-bottom: 50px;">
 
         @include('passes.partials.toolbar')
         <div id="printableArea">
