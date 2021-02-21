@@ -3,5 +3,4 @@ stages:
 deploy:
   stage: deploy
   script:
-    - composer install
-    - php artisan migrate
+    - 'bash -s' < execute.sh
