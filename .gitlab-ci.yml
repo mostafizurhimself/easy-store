@@ -1,25 +1,12 @@
-# before_script:
-#   - echo "Before script"
-#   - cd /var/www/html/easy-store
-# Add gitlab to known_hosts
-# - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-# - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
-# Start the ssh agent and add the deploykey
-# - chmod 400 deploykey
-# - eval $(ssh-agent -s)
-# - ssh-add deploykey
 before_script:
-  - cd /var/www/html
-  # Git and SSH setup to clone private repos
-  # Needs the deploykey file to be installed in all dependent repositories
-  - git config --global url."git@gitlab.com:".insteadOf "https://gitlab.com/"
+  - echo "Before script"
+  - cd /var/www/html/easy-store
 building:
   stage: build
   script:
     - echo "Build Stage"
     - whoami
-    - git clone git@gitlab.com:999itsolution/easy-store.git
-    # - git pull --ff-only
+    - git pull
     # - php artisan cache:clear
     # - php artisan config:clear
     # - composer install
