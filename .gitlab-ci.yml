@@ -1,6 +1,6 @@
 before_script:
   - echo "Before script"
-  - cd /var/www/html/easy-store #your project path
+  - cd /var/www/html/easy-store
 building:
   stage: build
   script:
