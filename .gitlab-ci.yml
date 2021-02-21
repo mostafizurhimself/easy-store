@@ -9,9 +9,9 @@ before_script:
   - mkdir -p ~/.ssh && chmod 700 ~/.ssh
   - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
   # Start the ssh agent and add the deploykey
-  - chmod 400 deploykey
-  - eval $(ssh-agent -s)
-  - ssh-add deploykey
+  # - chmod 400 deploykey
+  # - eval $(ssh-agent -s)
+  # - ssh-add deploykey
 building:
   stage: build
   script:
