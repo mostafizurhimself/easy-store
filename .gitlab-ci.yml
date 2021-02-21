@@ -5,7 +5,7 @@ building:
   stage: build
   script:
     - echo "Build Stage"
-    # - php artisan cache:cleard
+    - php artisan cache:cleard
     # - php artisan config:clear
     # - git pull origin master
     # - composer install
