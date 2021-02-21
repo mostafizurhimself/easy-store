@@ -6,8 +6,8 @@ before_script:
   # Needs the deploykey file to be installed in all dependent repositories
   - git config --global url."git@gitlab.com:".insteadOf "https://gitlab.com/"
   # Add gitlab to known_hosts
-  - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-  - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
+  # - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+  # - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
   # Start the ssh agent and add the deploykey
   # - chmod 400 deploykey
   # - eval $(ssh-agent -s)
