@@ -2,6 +2,7 @@
 #   - echo "Before script"
 #   - cd /var/www/html/easy-store
 before_script:
+  - cd /var/www/html/easy-store
   # Git and SSH setup to clone private repos
   # Needs the deploykey file to be installed in all dependent repositories
   - git config --global url."git@gitlab.com:".insteadOf "https://gitlab.com/"
