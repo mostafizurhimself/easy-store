@@ -6,7 +6,7 @@ building:
   script:
     - echo "Build Stage"
     - git reset --hard
-    - git pull --ff-only
+    - git pull
     - php artisan cache:clear
     - php artisan config:clear
     # - composer install
