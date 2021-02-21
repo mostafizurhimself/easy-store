@@ -19,7 +19,6 @@ building:
     - echo "Build Stage"
     - whoami
     - git clone git@gitlab.com:999itsolution/easy-store.git
-    # - git reset --hard
     # - git pull --ff-only
     # - php artisan cache:clear
     # - php artisan config:clear
