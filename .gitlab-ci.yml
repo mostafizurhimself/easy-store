@@ -10,7 +10,3 @@ building:
     # - composer install
     # - php artisan cache:clear
     # - php artisan config:clear
-deploying:
-  stage: deploy
-  script:
-    - echo "Deployed"
