@@ -5,9 +5,9 @@ building:
   stage: build
   script:
     - echo "Build Stage"
-    - whoami
+    # - whoami
     # - git reset --hard
-    - git pull
+    - git pull --ff-only
     - php artisan cache:clear
     - php artisan config:clear
     # - composer install
