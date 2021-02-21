@@ -5,8 +5,13 @@ building:
   stage: build
   script:
     - echo "Build Stage"
+    - whoami
     - git reset --hard
     - git pull
     - php artisan cache:clear
     - php artisan config:clear
     # - composer install
+only:
+  - pushes
+  - master
+
