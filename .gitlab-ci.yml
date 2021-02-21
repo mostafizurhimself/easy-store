@@ -5,14 +5,11 @@ before_script:
 building:
   stage: build
   script:
-    - git pull origin master
-    - composer install
-    - php artisan cache:clear
-    - php artisan config:clear
-testing:
-  stage: test
-  script:
-    - php ./vendor/bin/phpunit
+    - echo "Build"
+    # - git pull origin master
+    # - composer install
+    # - php artisan cache:clear
+    # - php artisan config:clear
 deploying:
   stage: deploy
   script:
