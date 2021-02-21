@@ -6,6 +6,6 @@ building:
   script:
     - echo "Build Stage"
     - php artisan cache:clear
-    - php artisan config:clear
+    # - php artisan config:clear
     # - git pull origin master
     # - composer install
