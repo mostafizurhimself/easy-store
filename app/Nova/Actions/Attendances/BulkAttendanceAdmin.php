@@ -53,8 +53,11 @@ class BulkAttendanceAdmin extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         $employees = Employee::where('location_id', $fields->location)->get();
+        if (!empty($fields->department)) {
+            $employees = Employee::where('location_id', $fields->location)->where('department_id', $fields->department)->get();
+        }
 
-        foreach($employees as $employee){
+        foreach ($employees as $employee) {
             Attendance::create([
                 'location_id' => $fields->location,
                 'employee_id' => $employee->id,
@@ -81,6 +84,12 @@ class BulkAttendanceAdmin extends Action
             Select::make('Location')
                 ->options(Location::pluck('name', 'id')->toArray())
                 ->searchable(),
+
+            AjaxSelect::make('Department')
+                ->rules('required')
+                ->get('/locations/{location}/departments')
+                ->parent('location')
+                ->onlyOnForms(),
 
             AjaxSelect::make('Shift')
                 ->rules('required')

@@ -15,12 +15,15 @@ use NovaAjaxSelect\AjaxSelect;
 use App\Enums\AttendanceStatus;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\DateRangeFilter;
 use Laraning\NovaTimeField\TimeField;
 use App\Nova\Actions\Attendances\Confirm;
 use App\Nova\Actions\Attendances\CheckOut;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Attendances\BulkAttendance;
 use App\Nova\Actions\Attendances\BulkAttendanceAdmin;
+use App\Nova\Filters\AttendanceStatusFilter;
+use App\Nova\Lenses\Attendance\DailyAttendance;
 
 class Attendance extends Resource
 {
@@ -238,7 +241,11 @@ class Attendance extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new DateRangeFilter('date'),
+
+            new AttendanceStatusFilter,
+        ];
     }
 
     /**
@@ -249,7 +256,9 @@ class Attendance extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new DailyAttendance(),
+        ];
     }
 
     /**
