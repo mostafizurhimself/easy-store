@@ -8,6 +8,7 @@ use App\Models\GoodsGatePass;
 use App\Models\VisitorGatePass;
 use App\Models\EmployeeGatePass;
 use App\Http\Controllers\Controller;
+use App\Models\ManualGatePass;
 
 class GatePassController extends Controller
 {
@@ -19,14 +20,14 @@ class GatePassController extends Controller
      */
     public function goods(Request $request, GoodsGatePass $pass)
     {
-        if($request->user()->hasPermissionTo('can generate goods gate passes') && $pass->status != GatePassStatus::DRAFT()){
+        if ($request->user()->hasPermissionTo('can generate goods gate passes') && $pass->status != GatePassStatus::DRAFT()) {
             return view('passes.pages.goods', compact('pass'));
-        }else{
+        } else {
             abort(403);
         }
     }
 
-     /**
+    /**
      * Generate employee gate pass invoice
      *
      * @param  \App\Models\EmployeeGatePass  $pass
@@ -34,14 +35,29 @@ class GatePassController extends Controller
      */
     public function employee(Request $request, EmployeeGatePass $pass)
     {
-        if($request->user()->hasPermissionTo('can generate employee gate passes') && $pass->status != GatePassStatus::DRAFT()){
+        if ($request->user()->hasPermissionTo('can generate employee gate passes') && $pass->status != GatePassStatus::DRAFT()) {
             return view('passes.pages.employee', compact('pass'));
-        }else{
+        } else {
             abort(403);
         }
     }
 
-       /**
+    /**
+     * Generate employee gate pass invoice
+     *
+     * @param  \App\Models\ManualGatePass  $pass
+     * @return \Illuminate\Http\Response
+     */
+    public function manual(Request $request, ManualGatePass $pass)
+    {
+        if ($request->user()->hasPermissionTo('can generate manual gate passes') && $pass->status != GatePassStatus::DRAFT()) {
+            return view('passes.pages.manual', compact('pass'));
+        } else {
+            abort(403);
+        }
+    }
+
+    /**
      * Generate visitor gate pass invoice
      *
      * @param  \App\Models\VisitorGatePass  $pass
@@ -49,9 +65,9 @@ class GatePassController extends Controller
      */
     public function visitor(Request $request, VisitorGatePass $pass)
     {
-        if($request->user()->hasPermissionTo('can generate visitor gate passes') && $pass->status != GatePassStatus::DRAFT()){
+        if ($request->user()->hasPermissionTo('can generate visitor gate passes') && $pass->status != GatePassStatus::DRAFT()) {
             return view('passes.pages.visitor', compact('pass'));
-        }else{
+        } else {
             abort(403);
         }
     }

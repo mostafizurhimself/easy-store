@@ -38,7 +38,8 @@ class ManualGatePass extends Model
      * @var array
      */
     protected $casts = [
-        'details' => 'array',
+        'items'   => 'array',
+        'summary' => 'array',
     ];
 
     /**

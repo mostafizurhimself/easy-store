@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Filters;
+namespace App\Nova\Filters\Lens;
 
 use App\Models\Location;
 use Illuminate\Http\Request;

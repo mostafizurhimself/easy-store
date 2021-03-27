@@ -19,6 +19,7 @@ class CreateManualGatePassesTable extends Migration
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->json('items')->nullable();
             $table->json('summary')->nullable();
+            $table->double('total_quantity')->default(0);
             $table->text('note')->nullable();
             $table->string('status')->default('draft');
             $table->bigInteger('passed_by')->unsigned()->nullable();

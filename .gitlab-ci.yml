@@ -9,6 +9,7 @@ building:
     - git pull
     - composer install
     - php artisan migrate
+    - php artisan generate:permissions
     - php artisan cache:clear
     - php artisan config:clear
 

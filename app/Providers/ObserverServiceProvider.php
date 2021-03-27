@@ -16,6 +16,7 @@ use App\Models\Finishing;
 use App\Models\Attendance;
 use App\Models\GoodsGatePass;
 use App\Models\ProductOutput;
+use App\Models\ManualGatePass;
 use App\Models\ServiceInvoice;
 use App\Models\ServiceReceive;
 use App\Models\AssetReturnItem;
@@ -66,6 +67,7 @@ use App\Models\AssetDistributionInvoice;
 use App\Observers\GoodsGatePassObserver;
 use App\Observers\ProductOutputObserver;
 use App\Models\FabricTransferReceiveItem;
+use App\Observers\ManualGatePassObserver;
 use App\Observers\ServiceInvoiceObserver;
 use App\Observers\ServiceReceiveObserver;
 use App\Models\ServiceTransferReceiveItem;
@@ -177,5 +179,6 @@ class ObserverServiceProvider extends ServiceProvider
         Expenser::observe(ExpenserObserver::class);
         Expense::observe(ExpenseObserver::class);
         GoodsGatePass::observe(GoodsGatePassObserver::class);
+        ManualGatePass::observe(ManualGatePassObserver::class);
     }
 }
