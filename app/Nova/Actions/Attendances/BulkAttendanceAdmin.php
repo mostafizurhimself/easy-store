@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\BelongsTo;
+use Laraning\NovaTimeField\TimeField;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -97,9 +98,7 @@ class BulkAttendanceAdmin extends Action
                 ->parent('location')
                 ->onlyOnForms(),
 
-            Time::make('In', 'in')
-                ->sortable()
-                ->format('HH:mm')
+            TimeField::make('In', 'in')
                 ->required(),
         ];
     }

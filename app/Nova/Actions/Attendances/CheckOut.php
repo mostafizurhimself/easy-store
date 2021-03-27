@@ -7,6 +7,7 @@ use App\Enums\ConfirmStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
+use Laraning\NovaTimeField\TimeField;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -39,7 +40,7 @@ class CheckOut extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            if ($model->status == ConfirmStatus::CONFIRMED()) {
+            if ($model->status == ConfirmStatus::CONFIRMED() && empty($model->out)) {
                 $model->out = $fields->out;
                 $model->save();
             }else{
@@ -58,8 +59,7 @@ class CheckOut extends Action
     public function fields()
     {
         return [
-            Time::make('Out', 'out')
-                ->format('HH:mm')
+            TimeField::make('Out', 'out')
                 ->required(),
         ];
     }

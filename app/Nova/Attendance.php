@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Carbon\Carbon;
 use Michielfb\Time\Time;
+use App\Models\Department;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use App\Enums\ConfirmStatus;
@@ -15,15 +16,19 @@ use NovaAjaxSelect\AjaxSelect;
 use App\Enums\AttendanceStatus;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\DateRangeFilter;
 use Laraning\NovaTimeField\TimeField;
+use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Actions\Attendances\Confirm;
 use App\Nova\Actions\Attendances\CheckOut;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use App\Nova\Actions\Attendances\BulkAttendance;
-use App\Nova\Actions\Attendances\BulkAttendanceAdmin;
 use App\Nova\Filters\AttendanceStatusFilter;
 use App\Nova\Lenses\Attendance\DailyAttendance;
+use App\Nova\Actions\Attendances\BulkAttendance;
+use App\Nova\Filters\DepartmentFilterViaEmployee;
+use App\Nova\Actions\Attendances\BulkAttendanceAdmin;
+use App\Nova\Filters\AdminDepartmentFilterViaEmployee;
 
 class Attendance extends Resource
 {
@@ -165,13 +170,16 @@ class Attendance extends Resource
                     return false;
                 }),
 
-            Time::make('In', 'in')
+            // Time::make('In', 'in')
+            //     ->sortable()
+            //     ->format('HH:mm')
+            //     ->required(),
+
+            TimeField::make('In')
                 ->sortable()
-                ->format('HH:mm')
                 ->required(),
 
-            Time::make('Out', 'out')
-                ->format('HH:mm')
+            TimeField::make('Out', 'out')
                 ->sortable()
                 ->exceptOnForms(),
 
@@ -242,7 +250,20 @@ class Attendance extends Resource
     public function filters(Request $request)
     {
         return [
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            AdminDepartmentFilterViaEmployee::make('Department', 'department_id'),
+                // ->canSee(function ($request) {
+                //     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                // }),
+
             new DateRangeFilter('date'),
+
+            (new DepartmentFilterViaEmployee)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
 
             new AttendanceStatusFilter,
         ];

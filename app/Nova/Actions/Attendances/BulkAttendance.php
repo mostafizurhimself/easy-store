@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Laraning\NovaTimeField\TimeField;
 
 class BulkAttendance extends Action
 {
@@ -84,9 +85,7 @@ class BulkAttendance extends Action
                 ->options(Shift::where('location_id', Auth::user()->locationId)->pluck('name', 'id')->toArray())
                 ->searchable(),
 
-            Time::make('In', 'in')
-                ->sortable()
-                ->format('HH:mm')
+            TimeField::make('In', 'in')
                 ->required(),
         ];
     }
