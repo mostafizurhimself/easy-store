@@ -65,7 +65,9 @@
     </div>
 </div>
 @endif
-
+<div class="mt-3 text-center">
+    {{QrCode::generate($pass->readableId)}}
+</div>
 <div class="row mt-6 align-items-center">
     <div class="col">
         <div class="font-weight-bold">Thank you!</div>
