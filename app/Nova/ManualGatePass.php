@@ -1,0 +1,209 @@
+<?php
+
+namespace App\Nova;
+
+use R64\NovaFields\JSON;
+use Illuminate\Support\Str;
+use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use App\Enums\GatePassStatus;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Badge;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Titasgailius\SearchRelations\SearchesRelations;
+
+class ManualGatePass extends Resource
+{
+    use SearchesRelations;
+
+    /**
+     * The model the resource corresponds to.
+     *
+     * @var string
+     */
+    public static $model = \App\Models\ManualGatePass::class;
+
+    /**
+     * The group associated with the resource.
+     *
+     * @return string
+     */
+    public static $group = 'Gatepass Section';
+
+    /**
+     * The side nav menu order.
+     *
+     * @var int
+     */
+    public static $priority = 4;
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $title = 'readable_id';
+
+    /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+        return "Manual Passes";
+    }
+
+    /**
+     * Get the text for the create resource button.
+     *
+     * @return string|null
+     */
+    public static function createButtonLabel()
+    {
+        return __('Create Gate Pass');
+    }
+
+    /**
+     * Get the text for the update resource button.
+     *
+     * @return string|null
+     */
+    public static function updateButtonLabel()
+    {
+        return __('Update Gate Pass');
+    }
+
+    /**
+     * The icon of the resource.
+     *
+     * @return string
+     */
+    public static function icon()
+    {
+        return 'fas fa-clipboard-list';
+    }
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
+
+    /**
+     * Get the fields displayed by the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function fields(Request $request)
+    {
+        return [
+            ID::make(__('ID'), 'id')->sortable(),
+
+
+            JSON::make('Summary', [
+                Number::make('Total CTN', 'total_ctn')
+                    ->rules('nullable', 'numeric', 'min:0')
+                    ->default(0),
+
+                Number::make('Total Poly', 'total_poly')
+                    ->rules('nullable', 'numeric', 'min:0')
+                    ->default(0),
+
+                Number::make('Total Bag', 'total_bag')
+                    ->rules('nullable', 'numeric', 'min:0')
+                    ->default(0),
+            ])
+                ->flatten(),
+
+            Textarea::make('Note')
+                ->rules('nullable', 'max:500'),
+
+            Text::make('Approved By', function () {
+                return $this->approve()->exists() ? $this->approve->employee->name : null;
+            })
+                ->canSee(function () {
+                    return $this->approve()->exists();
+                })
+                ->onlyOnDetail()
+                ->sortable(),
+
+            DateTime::make('Approved At', function () {
+                return $this->approve()->exists() ? $this->approve->createdAt : null;
+            })
+                ->exceptOnForms()
+                ->sortable(),
+
+            BelongsTo::make('Passed By', 'passedBy', \App\Nova\User::class)
+                ->onlyOnDetail()
+                ->canSee(function () {
+                    return $this->passedBy;
+                }),
+
+            DateTime::make('Passed At')
+                ->exceptOnForms()
+                ->sortable(),
+
+            Badge::make('Status')->map([
+                GatePassStatus::DRAFT()->getValue()     => 'warning',
+                GatePassStatus::CONFIRMED()->getValue() => 'info',
+                GatePassStatus::PASSED()->getValue()    => 'success',
+            ])
+                ->sortable()
+                ->label(function () {
+                    return Str::title(Str::of($this->status)->replace('_', " "));
+                }),
+        ];
+    }
+
+    /**
+     * Get the cards available for the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function cards(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * Get the filters available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function filters(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * Get the lenses available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function lenses(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * Get the actions available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function actions(Request $request)
+    {
+        return [];
+    }
+}
