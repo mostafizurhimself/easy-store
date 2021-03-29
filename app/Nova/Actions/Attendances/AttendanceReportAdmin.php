@@ -16,7 +16,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Laravel\Nova\Fields\BelongsTo;
 
-class AttendanceReport extends Action
+class AttendanceReportAdmin extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -44,7 +44,7 @@ class AttendanceReport extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         if (Attendance::where('date', Carbon::parse($fields->date)->format("Y-m-d"))->count()) {
-            return Action::openInNewTab(route('attendance.report', [$fields->date, auth()->user()->locationId]));
+            return Action::openInNewTab(route('attendance.report', [$fields->date, $fields->location]));
         }
 
         return Action::danger('No data found');
@@ -58,6 +58,13 @@ class AttendanceReport extends Action
     public function fields()
     {
         return [
+            Select::make('Location', 'location')
+                ->searchable()
+                ->required()
+                ->options(function(){
+                    return Location::pluck('name', 'id')->toArray();
+                }),
+
             Date::make('Date', 'date')
                 ->default(Carbon::now())
                 ->required()

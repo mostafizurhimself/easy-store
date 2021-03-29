@@ -30,6 +30,7 @@ use App\Nova\Filters\DepartmentFilterViaEmployee;
 use App\Nova\Actions\Attendances\AttendanceReport;
 use App\Nova\Actions\Attendances\BulkAttendanceAdmin;
 use App\Nova\Filters\AdminDepartmentFilterViaEmployee;
+use App\Nova\Actions\Attendances\AttendanceReportAdmin;
 
 class Attendance extends Resource
 {
@@ -325,6 +326,17 @@ class Attendance extends Resource
                 ->standalone(),
 
             (new AttendanceReport)
+                ->canSee(function ($request) {
+                    return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate attendance report?')
+                ->standalone(),
+
+            (new AttendanceReportAdmin)
+                ->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                })
                 ->confirmButtonText('Generate')
                 ->confirmText('Are you sure want to generate attendance report?')
                 ->standalone(),
