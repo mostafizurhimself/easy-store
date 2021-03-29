@@ -31,6 +31,7 @@ use App\Nova\Actions\GoodsGatePasses\MarkAsDraft;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\GoodsGatePasses\ConfirmGatePass;
 use App\Nova\Actions\GoodsGatePasses\GenerateGatePass;
+use App\Nova\Actions\ScanGatePass;
 
 class GoodsGatePass extends Resource
 {
@@ -320,6 +321,15 @@ class GoodsGatePass extends Resource
                 })
                 ->withoutConfirmation()
                 ->onlyOnDetail(),
+
+            (new ScanGatePass)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can pass goods gate passes') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can pass goods gate passes') || $request->user()->isSuperAdmin();
+                })
+                ->withoutConfirmation()
+                ->standalone(),
         ];
     }
 

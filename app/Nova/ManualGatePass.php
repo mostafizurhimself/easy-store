@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Textarea;
+use App\Nova\Actions\ScanGatePass;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
@@ -286,6 +287,15 @@ class ManualGatePass extends Resource
                 })
                 ->withoutConfirmation()
                 ->onlyOnDetail(),
+
+            (new ScanGatePass)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can pass manual gate passes') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can pass manual gate passes') || $request->user()->isSuperAdmin();
+                })
+                ->withoutConfirmation()
+                ->standalone(),
         ];
     }
 }

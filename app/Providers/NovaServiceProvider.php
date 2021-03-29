@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Events\ServingNova;
 use Easystore\ProfileTool\ProfileTool;
+use Easystore\ScanGatepass\ScanGatepass;
 use App\Nova\Dashboards\GarmentsDashboard;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
@@ -123,6 +124,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             \Mirovit\NovaNotifications\NovaNotifications::make(),
 
             ProfileTool::make(),
+
+            ScanGatepass::make()
         ];
     }
 

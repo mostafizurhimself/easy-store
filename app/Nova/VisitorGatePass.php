@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Textarea;
+use App\Nova\Actions\ScanGatePass;
 use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use Bissolli\NovaPhoneField\PhoneNumber;
@@ -273,6 +274,15 @@ class VisitorGatePass extends Resource
                 })
                 ->confirmButtonText('Generate')
                 ->onlyOnDetail(),
+
+            (new ScanGatePass)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can pass visitor gate passes') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can pass visitor gate passes') || $request->user()->isSuperAdmin();
+                })
+                ->withoutConfirmation()
+                ->standalone(),
         ];
     }
 }

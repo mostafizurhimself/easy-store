@@ -51,6 +51,7 @@ Route::group(['middleware' => 'nova'], function () {
 
     // Abstract Routes
     Route::get('generate-schedule/{shift}', 'AbstractController@generateSchedule')->name('generate.schedule');
+    Route::get('attendance-report/{date}/{location}', 'AbstractController@attendanceReport')->name('attendance.report');
 
     // Invoice Routes
     Route::group(['prefix' => 'invoices'], function () {

@@ -87,7 +87,6 @@ class BulkAttendanceAdmin extends Action
                 ->searchable(),
 
             AjaxSelect::make('Department')
-                ->rules('required')
                 ->get('/locations/{location}/departments')
                 ->parent('location')
                 ->onlyOnForms(),
