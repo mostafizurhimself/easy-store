@@ -329,6 +329,7 @@ class GoodsGatePass extends Resource
                     return $request->user()->hasPermissionTo('can pass goods gate passes') || $request->user()->isSuperAdmin();
                 })
                 ->withoutConfirmation()
+                ->onlyOnIndex()
                 ->standalone(),
         ];
     }

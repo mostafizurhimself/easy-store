@@ -323,6 +323,7 @@ class EmployeeGatePass extends Resource
                     return $request->user()->hasPermissionTo('can pass employee gate passes') || $request->user()->isSuperAdmin();
                 })
                 ->withoutConfirmation()
+                ->onlyOnIndex()
                 ->standalone(),
         ];
     }

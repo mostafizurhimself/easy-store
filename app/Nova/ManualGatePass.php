@@ -295,6 +295,7 @@ class ManualGatePass extends Resource
                     return $request->user()->hasPermissionTo('can pass manual gate passes') || $request->user()->isSuperAdmin();
                 })
                 ->withoutConfirmation()
+                ->onlyOnIndex()
                 ->standalone(),
         ];
     }

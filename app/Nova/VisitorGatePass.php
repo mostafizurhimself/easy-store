@@ -282,6 +282,7 @@ class VisitorGatePass extends Resource
                     return $request->user()->hasPermissionTo('can pass visitor gate passes') || $request->user()->isSuperAdmin();
                 })
                 ->withoutConfirmation()
+                ->onlyOnIndex()
                 ->standalone(),
         ];
     }
