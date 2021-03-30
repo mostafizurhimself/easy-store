@@ -169,7 +169,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* Scoped Styles */\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* Scoped Styles */\r\n", ""]);
 
 // exports
 
@@ -788,6 +788,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   metaInfo: function metaInfo() {
@@ -797,6 +836,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   data: function data() {
     return {
+      errors: [],
       pass: "",
       details: null
     };
@@ -804,6 +844,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     submitPass: function submitPass() {
+      this.errors = [];
+      this.details = null;
       this.getDetailsData(this.pass);
     },
     getDetailsData: function getDetailsData(pass) {
@@ -812,8 +854,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       Nova.request().get("/nova-vendor/scan-gatepass/passes?pass=" + pass).then(function (response) {
         console.log("res data", response.data);
         _this.details = response.data;
+        _this.pass = "";
+      }).catch(function (err) {
+        if (err.response.status == 422) {
+          _this.details = null;
+          _this.errors = err.response.data.errors;
+          console.log(_this.errors);
+        }
       });
     }
+  },
+  mounted: function mounted() {
+    //
   }
 });
 
@@ -838,37 +890,57 @@ var render = function() {
         },
         [
           _c("div", { staticClass: "flex justify-center pb-2" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.pass,
-                  expression: "pass"
-                }
-              ],
-              staticClass:
-                "rounded-lg py-3 px-4 border border-70 outline-none mt-8",
-              attrs: { type: "text", placeholder: "Enter Gatepass" },
-              domProps: { value: _vm.pass },
-              on: {
-                keyup: function($event) {
-                  if (
-                    !$event.type.indexOf("key") &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
+            _c("div", [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.pass,
+                    expression: "pass"
                   }
-                  return _vm.submitPass($event)
+                ],
+                staticClass:
+                  "rounded-lg py-3 px-4 border border-70 outline-none mt-8",
+                attrs: {
+                  type: "text",
+                  placeholder: "Enter Gatepass",
+                  autofocus: ""
                 },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+                domProps: { value: _vm.pass },
+                on: {
+                  keyup: function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.submitPass($event)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.pass = $event.target.value
                   }
-                  _vm.pass = $event.target.value
                 }
-              }
-            })
+              }),
+              _vm._v(" "),
+              _vm.errors.pass
+                ? _c("div", { staticClass: "text-danger mt-1" }, [
+                    _vm._v(
+                      "\n          " + _vm._s(_vm.errors.pass[0]) + "\n        "
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.details === []
+                ? _c("div", { staticClass: "text-danger mt-1" }, [
+                    _c("span", [_vm._v(" No Data Found ")])
+                  ])
+                : _vm._e()
+            ])
           ]),
           _vm._v(" "),
           _vm.details
@@ -1012,7 +1084,7 @@ var render = function() {
                   : _vm._e(),
                 _vm._v(" "),
                 _vm.details.totalQuantity
-                  ? _c("div", { staticClass: "mt-4 border border-40" }, [
+                  ? _c("div", { staticClass: "my-4 border border-40" }, [
                       _c("div", { staticClass: "flex border-b border-40" }, [
                         _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
                           _c("h5", { staticClass: "font-normal text-80" }, [
@@ -1021,9 +1093,88 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
-                          _c("h5", { staticClass: "text-80" }, [
+                          _c("h5", { staticClass: "text-80 text-primary" }, [
                             _vm._v(_vm._s(_vm.details.readableId))
                           ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex border-b border-40" }, [
+                        _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
+                          _c("h5", { staticClass: "font-normal text-80" }, [
+                            _vm._v("Items")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "overflow-hidden relative rounded-lg bg-white shadow border border-60"
+                            },
+                            [
+                              _c(
+                                "table",
+                                {
+                                  staticClass:
+                                    "table w-full table-default nova-resource-table"
+                                },
+                                [
+                                  _c("thead", [
+                                    _c("tr", { staticClass: "font-normal" }, [
+                                      _c("th", [_vm._v("DESCRIPTION")]),
+                                      _vm._v(" "),
+                                      _c("th", [_vm._v("QUANTITY")])
+                                    ])
+                                  ]),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.details.items, function(item) {
+                                    return _c("tbody", { key: item.index }, [
+                                      _c(
+                                        "tr",
+                                        {
+                                          staticClass: "nova-resource-table-row"
+                                        },
+                                        [
+                                          _c(
+                                            "td",
+                                            {
+                                              staticClass: "text-sm",
+                                              staticStyle: { height: "2rem" }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                      " +
+                                                  _vm._s(item.description) +
+                                                  "\n                    "
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "td",
+                                            {
+                                              staticClass: "text-sm",
+                                              staticStyle: { height: "2rem" }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                      " +
+                                                  _vm._s(item.quantity) +
+                                                  "\n                    "
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ])
+                                  })
+                                ],
+                                2
+                              )
+                            ]
+                          )
                         ])
                       ]),
                       _vm._v(" "),
