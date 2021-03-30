@@ -16,7 +16,7 @@
           <div class="text-danger mt-1" v-if="errors.pass">
             {{ errors.pass[0] }}
           </div>
-          <div class="text-danger mt-1" v-if="details === []">
+          <div class="text-danger mt-1" v-if="details && !details.length">
             <span> No Data Found </span>
           </div>
         </div>

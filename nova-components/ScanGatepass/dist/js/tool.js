@@ -935,7 +935,7 @@ var render = function() {
                   ])
                 : _vm._e(),
               _vm._v(" "),
-              _vm.details === []
+              _vm.details && !_vm.details.length
                 ? _c("div", { staticClass: "text-danger mt-1" }, [
                     _c("span", [_vm._v(" No Data Found ")])
                   ])
