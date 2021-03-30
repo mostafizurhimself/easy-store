@@ -49,6 +49,14 @@ class VisitorGatePass extends Model
     protected $dates = ['in', 'out'];
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['employee'];
+
+
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

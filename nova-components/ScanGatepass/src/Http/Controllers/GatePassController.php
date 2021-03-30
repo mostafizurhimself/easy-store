@@ -3,6 +3,7 @@
 namespace Easystore\ScanGatepass\Http\Controllers;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Enums\GatePassStatus;
 use App\Models\GoodsGatePass;
@@ -40,15 +41,21 @@ class GatePassController extends Controller
         ]);
 
         $model = $this->getGatePass($request->pass);
-        $model->passedAt = Carbon::now();
-        $model->passedBy = Auth::user()->id;
-        $model->status   = GatePassStatus::PASSED();
-        $model->save();
+        if ($model->status == GatePassStatus::CONFIRMED()) {
+            $model->passedAt = Carbon::now();
+            $model->passedBy = Auth::user()->id;
+            $model->status   = GatePassStatus::PASSED();
+            $model->save();
+
+            return response()->json([
+                'message' => "Gatepass passed successfully",
+                'data'    => $model
+            ]);
+        }
 
         return response()->json([
-            'message' => "Gatepass passed successfully",
-            'data'    => $model
-        ]);
+            'message' => "No data found",
+        ], 404);
     }
 
     /**
@@ -58,22 +65,41 @@ class GatePassController extends Controller
      */
     public function getGatePass($pass)
     {
+        $result = [];
         // Check manual gate pass
-        $result = ManualGatePass::where('readable_id', $pass)->first();
+        if (Str::startsWith($pass, ManualGatePass::readableIdPrefix())) {
+            if (request()->user()->isSuperAdmin()) {
+                $result = ManualGatePass::where('readable_id', $pass)->first();
+            } else {
+                $result = ManualGatePass::where('readable_id', $pass)->where('location_id', request()->user()->locationId)->first();
+            }
+        }
 
         // Check goods gate pass
-        if (empty($result)) {
-            $result = GoodsGatePass::where('readable_id', $pass)->first();
+        if (Str::startsWith($pass, GoodsGatePass::readableIdPrefix())) {
+            if (request()->user()->isSuperAdmin()) {
+                $result = GoodsGatePass::where('readable_id', $pass)->first();
+            } else {
+                $result = GoodsGatePass::where('readable_id', $pass)->where('location_id', request()->user()->locationId)->first();
+            }
         }
 
         // Check visitior pass
-        if (empty($result)) {
-            $result = VisitorGatePass::where('readable_id', $pass)->first();
+        if (Str::startsWith($pass, VisitorGatePass::readableIdPrefix())) {
+            if (request()->user()->isSuperAdmin()) {
+                $result = VisitorGatePass::where('readable_id', $pass)->first();
+            }else{
+                $result = VisitorGatePass::where('readable_id', $pass)->where('location_id', request()->user()->locationId)->first();
+            }
         }
 
         // Check employee gate pass
-        if (empty($result)) {
-            $result = EmployeeGatePass::where('readable_id', $pass)->first();
+        if (Str::startsWith($pass, EmployeeGatePass::readableIdPrefix())) {
+            if (request()->user()->isSuperAdmin()) {
+                $result = EmployeeGatePass::where('readable_id', $pass)->first();
+            }else{
+                $result = EmployeeGatePass::where('readable_id', $pass)->where('location_id', request()->user()->locationId)->first();
+            }
         }
 
         return $result;
