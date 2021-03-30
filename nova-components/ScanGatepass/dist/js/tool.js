@@ -169,7 +169,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Scoped Styles */\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* Scoped Styles */\r\n", ""]);
 
 // exports
 
@@ -640,23 +640,86 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    metaInfo: function metaInfo() {
-        return {
-            title: "ScanGatepass"
-        };
+  metaInfo: function metaInfo() {
+    return {
+      title: "ScanGatepass"
+    };
+  },
+  data: function data() {
+    return {
+      pass: "",
+      details: null
+    };
+  },
+
+  methods: {
+    submitPass: function submitPass() {
+      this.getDetailsData(this.pass);
     },
-    data: function data() {
-        return {
-            pass: "GGP201200001"
-        };
-    },
-    mounted: function mounted() {
-        Nova.request().get("/nova-vendor/scan-gatepass/passes?pass=" + this.pass).then(function (response) {
-            console.log(response.data);
-        });
+    getDetailsData: function getDetailsData(pass) {
+      var _this = this;
+
+      Nova.request().get("/nova-vendor/scan-gatepass/passes?pass=" + pass).then(function (response) {
+        console.log("res data", response.data);
+        _this.details = response.data;
+      });
     }
+  }
 });
 
 /***/ }),
@@ -672,10 +735,130 @@ var render = function() {
     [
       _c("heading", { staticClass: "mb-6" }, [_vm._v("Scan Gatepass")]),
       _vm._v(" "),
-      _c("card", {
-        staticClass: "bg-white flex flex-col items-center justify-center",
-        staticStyle: { "min-height": "300px" }
-      })
+      _c(
+        "card",
+        {
+          staticClass: "bg-white mb-6 py-4 px-6",
+          staticStyle: { "min-height": "300px" }
+        },
+        [
+          _c("div", { staticClass: "flex justify-center pb-2" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.pass,
+                  expression: "pass"
+                }
+              ],
+              staticClass:
+                "rounded-full py-3 px-4 border border-40 focus:border-primary outline-none shadow mt-8",
+              attrs: { type: "text", placeholder: "Enter Gatepass" },
+              domProps: { value: _vm.pass },
+              on: {
+                keyup: function($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
+                  return _vm.submitPass($event)
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.pass = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _vm.details
+            ? _c("div", { staticClass: "ggp" }, [
+                _vm.details.details && _vm.details.details.total_bag
+                  ? _c("div", { staticClass: "mt-4 border border-40" }, [
+                      _c("div", { staticClass: "flex border-b border-40" }, [
+                        _c("div", { staticClass: "w-1/4 p-4" }, [
+                          _c("h5", { staticClass: "font-normal text-80" }, [
+                            _vm._v("Total Bag")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "w-3/4 p-4 break-words bg-30" },
+                          [
+                            _c("h5", { staticClass: "text-80" }, [
+                              _vm._v(_vm._s(_vm.details.details.total_bag))
+                            ])
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex border-b border-40" }, [
+                        _c("div", { staticClass: "w-1/4 p-4" }, [
+                          _c("h5", { staticClass: "font-normal text-80" }, [
+                            _vm._v("Total Cartoon")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "w-3/4 p-4 break-words bg-30" },
+                          [
+                            _c("h5", { staticClass: "text-80" }, [
+                              _vm._v(_vm._s(_vm.details.details.total_ctn))
+                            ])
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex border-b border-40" }, [
+                        _c("div", { staticClass: "w-1/4 p-4" }, [
+                          _c("h5", { staticClass: "font-normal text-80" }, [
+                            _vm._v("Total Poly")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "w-3/4 p-4 break-words bg-30" },
+                          [
+                            _c("h5", { staticClass: "text-80" }, [
+                              _vm._v(_vm._s(_vm.details.details.total_poly))
+                            ])
+                          ]
+                        )
+                      ])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.details.mobile
+                  ? _c("div", { staticClass: "flex border border-40" }, [
+                      _c("div", { staticClass: "w-1/4 p-4" }, [
+                        _c("h5", { staticClass: "font-normal text-80" }, [
+                          _vm._v("Mobile")
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "w-3/4 p-4 break-words bg-30" },
+                        [
+                          _c("h5", { staticClass: "text-80" }, [
+                            _vm._v(_vm._s(_vm.details.mobile))
+                          ])
+                        ]
+                      )
+                    ])
+                  : _vm._e()
+              ])
+            : _vm._e()
+        ]
+      )
     ],
     1
   )
