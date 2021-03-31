@@ -114,15 +114,6 @@
             </div>
           </div>
 
-          <div class="flex border-b border-40">
-            <div class="w-1/4 p-4 bg-30">
-              <h5 class="font-normal text-80">Name</h5>
-            </div>
-            <div class="w-3/4 p-4 break-words">
-              <h5 class="text-80">{{ details.visitorName }}</h5>
-            </div>
-          </div>
-
           <div class="flex border border-40">
             <div class="w-1/4 p-4 bg-30">
               <h5 class="font-normal text-80">Purpose</h5>
