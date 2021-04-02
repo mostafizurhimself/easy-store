@@ -60,6 +60,13 @@ class GoodsGatePass extends Model
     protected static $readableIdLength = 5;
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['approve', 'invoice'];
+
+    /**
      * Get the model approve
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne

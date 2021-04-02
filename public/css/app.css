@@ -11060,6 +11060,8 @@ ul {
 }
 
 #gate-pass {
+  max-width: 400px;
+  margin: auto;
   font-size: 14px;
 }
 

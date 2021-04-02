@@ -56,6 +56,7 @@
         "myclabs/php-enum": "^1.7",
         "niklasravnsborg/laravel-pdf": "^4.0",
         "optimistdigital/nova-multiselect-field": "^1.10",
+        "optimistdigital/nova-simple-repeatable": "^1.2",
         "orlyapps/nova-belongsto-depend": "^2.0",
         "pusher/pusher-php-server": "^4.1",
         "richardkeep/nova-timenow": "^1.0",
@@ -63,7 +64,8 @@
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/opening-hours": "^2.10",
         "titasgailius/search-relations": "^1.0",
-        "treestoneit/text-wrap": "^1.1"
+        "treestoneit/text-wrap": "^1.1",
+        "easystore/scan-gatepass": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
@@ -140,6 +142,10 @@
         {
             "type": "path",
             "url": "./nova-components/ProfileTool"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/ScanGatepass"
         }
     ]
 }

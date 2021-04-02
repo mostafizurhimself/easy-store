@@ -13,7 +13,7 @@ use App\Nova\Filters\CategoryFilter;
 use AwesomeNova\Filters\DependentFilter;
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use App\Nova\Filters\MaterialLocationFilter;
+use App\Nova\Filters\Lens\MaterialLocationFilter;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use App\Nova\Actions\Materials\StockSummary\DownloadPdf;
 use App\Nova\Filters\Lens\MaterialSummaryDateRangeFilter;

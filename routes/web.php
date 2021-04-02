@@ -51,6 +51,7 @@ Route::group(['middleware' => 'nova'], function () {
 
     // Abstract Routes
     Route::get('generate-schedule/{shift}', 'AbstractController@generateSchedule')->name('generate.schedule');
+    Route::get('attendance-report/{date}/{location}', 'AbstractController@attendanceReport')->name('attendance.report');
 
     // Invoice Routes
     Route::group(['prefix' => 'invoices'], function () {
@@ -88,6 +89,7 @@ Route::group(['middleware' => 'nova'], function () {
     Route::group(['prefix' => 'gate-passes'], function () {
         Route::get('goods/{pass}', "GatePassController@goods")->name('gate-passes.goods');
         Route::get('employee/{pass}', "GatePassController@employee")->name('gate-passes.employee');
+        Route::get('manual/{pass}', "GatePassController@manual")->name('gate-passes.manual');
         Route::get('visitor/{pass}', "GatePassController@visitor")->name('gate-passes.visitor');
     });
 

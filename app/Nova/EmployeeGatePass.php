@@ -15,6 +15,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Textarea;
+use App\Nova\Actions\ScanGatePass;
 use Laravel\Nova\Fields\BelongsTo;
 use Easystore\RouterLink\RouterLink;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -314,6 +315,16 @@ class EmployeeGatePass extends Resource
                 })
                 ->withoutConfirmation()
                 ->onlyOnDetail(),
+
+            (new ScanGatePass)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can pass employee gate passes') || $request->user()->isSuperAdmin();
+            })
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can pass employee gate passes') || $request->user()->isSuperAdmin();
+                })
+                ->withoutConfirmation()
+                ->onlyOnIndex()
+                ->standalone(),
         ];
     }
 }

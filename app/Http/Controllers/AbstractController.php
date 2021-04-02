@@ -7,7 +7,10 @@ use App\Models\Shift;
 use App\Facades\Helper;
 use App\Models\Holiday;
 use App\Models\License;
+use App\Models\Employee;
+use App\Models\Location;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Spatie\OpeningHours\OpeningHours;
 
@@ -73,5 +76,39 @@ class AbstractController extends Controller
         $dates = Helper::getAllDates($start, $end);
 
         return view('others.schedule', compact('dates', 'openingHours'));
+    }
+
+    /**
+     * Generate attendance report for day
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function attendanceReport($date, $location)
+    {
+        $date = Carbon::parse($date)->format('Y-m-d');
+        $location = Location::find($location);
+        $result = DB::table('attendances')
+            ->where('date', $date)
+            ->where('attendances.location_id', $location->id)
+            ->select('departments.name as department', DB::raw("count(attendances.employee_id) as total"))
+            ->join('employees', 'attendances.employee_id', 'employees.id')
+            ->join('departments', 'employees.department_id', 'departments.id')
+            ->groupBy('departments.name')
+            ->get();
+
+        $totalEmployee = Employee::where('location_id', $location->id)->count();
+        $totalPresent  = $result->sum('total');
+        $totalAbsent   = $totalEmployee - $totalPresent;
+
+
+        // dd($result);
+
+        if(empty($result)){
+            return "No data found";
+        }
+        return view('others.attendance-report', compact('result', 'totalEmployee', 'totalAbsent', 'totalPresent', 'date', 'location'));
+
+
+
     }
 }
