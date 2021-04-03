@@ -17,7 +17,7 @@ use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
 use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\DistributionStatusFilter;
@@ -191,7 +191,7 @@ class AssetDistributionReceiveItem extends Resource
     public function filters(Request $request)
     {
         return [
-            new DateRangeFilter('date'),
+            new DateRangeFilter('Date Between', 'date'),
             new DistributionStatusFilter,
         ];
     }

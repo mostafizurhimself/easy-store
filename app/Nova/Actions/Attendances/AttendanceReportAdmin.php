@@ -21,6 +21,13 @@ class AttendanceReportAdmin extends Action
     use InteractsWithQueue, Queueable;
 
     /**
+     * The displayable name of the action.
+     *
+     * @var string
+     */
+    public $name = "Attendance Report";
+
+    /**
      * The number of models that should be included in each chunk.
      *
      * @var int
@@ -61,7 +68,7 @@ class AttendanceReportAdmin extends Action
             Select::make('Location', 'location')
                 ->searchable()
                 ->required()
-                ->options(function(){
+                ->options(function () {
                     return Location::pluck('name', 'id')->toArray();
                 }),
 

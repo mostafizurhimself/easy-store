@@ -21,7 +21,7 @@ use App\Nova\Filters\StyleFilter;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Filters\OutputStatusFilter;
 use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Filters\ProductCategoryFilter;
@@ -278,7 +278,7 @@ class ProductOutput extends Resource
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
-            new DateRangeFilter('date'),
+            new DateRangeFilter('Date Between', 'date'),
 
             new OutputStatusFilter,
 

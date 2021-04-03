@@ -20,7 +20,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\MaterialFilter;
 use Easystore\RouterLink\RouterLink;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Rules\DistributionQuantityRule;
 use AwesomeNova\Filters\DependentFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;

@@ -23,7 +23,7 @@ use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
 use Easystore\RouterLink\RouterLink;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
@@ -264,7 +264,7 @@ class AssetReceiveItem extends Resource
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
             new BelongsToSupplierFilter('purchaseOrder'),
-            new DateRangeFilter('date'),
+            new DateRangeFilter('Date Between', 'date'),
             new PurchaseStatusFilter,
         ];
     }

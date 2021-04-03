@@ -10,7 +10,7 @@ use App\Traits\WithOutLocation;
 use App\Nova\Filters\UserFilter;
 use Laravel\Nova\Fields\MorphTo;
 use Laravel\Nova\Fields\DateTime;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\ActivityLog\LogDescription;
 use ChrisWare\NovaBreadcrumbs\Traits\Breadcrumbs;

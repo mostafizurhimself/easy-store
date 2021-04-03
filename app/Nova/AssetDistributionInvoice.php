@@ -27,7 +27,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\ReceiverFilter;
 use Easystore\RouterLink\RouterLink;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Lenses\DistributionItems;
 use App\Nova\Actions\CreateGoodsGatePass;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -391,7 +391,7 @@ class AssetDistributionInvoice extends Resource
 
             new ReceiverFilter,
 
-            new DateRangeFilter('date'),
+            new DateRangeFilter('Date Between', 'date'),
 
             new DistributionStatusFilter,
         ];

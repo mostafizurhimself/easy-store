@@ -18,7 +18,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\ServiceFilter;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use AwesomeNova\Filters\DependentFilter;
 use App\Rules\ServiceReceiveQuantityRule;
 use App\Nova\Filters\DispatchStatusFilter;
@@ -230,7 +230,7 @@ class ServiceReceive extends Resource
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
             new BelongsToProviderFilter('invoice'),
-            new DateRangeFilter('date'),
+            new DateRangeFilter('Date Between', 'date'),
             new DispatchStatusFilter,
         ];
     }
