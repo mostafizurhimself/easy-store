@@ -6,6 +6,7 @@ building:
   script:
     - echo "Build Stage"
     - whoami
+    - git stash
     - git pull
     - composer install
     - php artisan migrate
