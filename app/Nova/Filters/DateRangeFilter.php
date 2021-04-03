@@ -42,6 +42,7 @@ class DateRangeFilter extends Base
      */
     public function apply(Request $request, $query, $value)
     {
+        // dd($value);
         $from = Carbon::parse($value[0])->startOfDay();
         $to = Carbon::parse($value[1])->endOfDay();
 

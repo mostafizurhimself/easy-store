@@ -17,16 +17,17 @@ use App\Enums\AttendanceStatus;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
-use App\Nova\Filters\DateRangeFilter;
 use Laraning\NovaTimeField\TimeField;
 use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Actions\Attendances\Confirm;
 use App\Nova\Actions\Attendances\CheckOut;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\AttendanceStatusFilter;
+use PosLifestyle\DateRangeFilter\Enums\Config;
 use App\Nova\Lenses\Attendance\DailyAttendance;
 use App\Nova\Actions\Attendances\BulkAttendance;
 use App\Nova\Filters\DepartmentFilterViaEmployee;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Actions\Attendances\AttendanceReport;
 use App\Nova\Actions\Attendances\BulkAttendanceAdmin;
 use App\Nova\Filters\AdminDepartmentFilterViaEmployee;
@@ -261,7 +262,7 @@ class Attendance extends Resource
                     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
                 }),
 
-            new DateRangeFilter('date'),
+            new DateRangeFilter('Date Between', 'date'),
 
             (new DepartmentFilterViaEmployee)->canSee(function ($request) {
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');

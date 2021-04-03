@@ -22,7 +22,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\ReceiverFilter;
 use Easystore\RouterLink\RouterLink;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Lenses\TransferReceiveItems;
 use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -239,7 +239,7 @@ class ServiceTransferInvoice extends Resource
 
             new ReceiverFilter,
 
-            new DateRangeFilter('date'),
+            new DateRangeFilter('Date Between', 'date'),
 
             new TransferStatusFilter,
         ];

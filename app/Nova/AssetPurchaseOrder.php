@@ -22,7 +22,7 @@ use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
 use App\Nova\Actions\GenerateGoodsGatePass;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -258,7 +258,7 @@ class AssetPurchaseOrder extends Resource
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
-            new DateRangeFilter('date'),
+            new DateRangeFilter('Date Between', 'date'),
 
             new PurchaseStatusFilter,
         ];

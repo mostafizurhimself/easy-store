@@ -23,7 +23,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\ReceiverFilter;
 use Easystore\RouterLink\RouterLink;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
@@ -232,7 +232,7 @@ class MaterialTransferInvoice extends Resource
 
             new ReceiverFilter,
 
-            new DateRangeFilter('date'),
+            new DateRangeFilter('Date Between', 'date'),
 
             new TransferStatusFilter,
         ];

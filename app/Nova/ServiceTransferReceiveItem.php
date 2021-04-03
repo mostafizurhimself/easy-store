@@ -16,7 +16,7 @@ use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Filters\DateRangeFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Rules\ServiceReceiveQuantityRule;
 use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -198,7 +198,7 @@ class ServiceTransferReceiveItem extends Resource
     public function filters(Request $request)
     {
         return [
-            new DateRangeFilter('date'),
+            new DateRangeFilter('Date Between', 'date'),
 
             new TransferStatusFilter,
         ];
