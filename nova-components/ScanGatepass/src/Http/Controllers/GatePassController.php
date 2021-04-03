@@ -51,11 +51,11 @@ class GatePassController extends Controller
                 'message' => "Gatepass passed successfully",
                 'data'    => $model
             ]);
+        }else{
+            return response()->json([
+                'message' => "This can not be passed!",
+            ], 404);
         }
-
-        return response()->json([
-            'message' => "No data found",
-        ], 404);
     }
 
     /**
@@ -65,7 +65,7 @@ class GatePassController extends Controller
      */
     public function getGatePass($pass)
     {
-        $result = [];
+        $result = collect();
         // Check manual gate pass
         if (Str::startsWith($pass, ManualGatePass::readableIdPrefix())) {
             if (request()->user()->isSuperAdmin()) {
@@ -102,6 +102,14 @@ class GatePassController extends Controller
             }
         }
 
-        return $result;
+
+        if($result->count()){
+            return $result;
+        }
+
+
+        return response()->json([
+            'message' => "No data found",
+        ], 404);
     }
 }
