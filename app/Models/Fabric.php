@@ -49,7 +49,7 @@ class Fabric extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('fabric-images')->singleFile();
+        $this->addMediaCollection('fabric-images')->singleFile();
     }
 
     /**
@@ -59,7 +59,7 @@ class Fabric extends Model implements HasMedia
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class)->withTrashed();
+        return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -69,7 +69,7 @@ class Fabric extends Model implements HasMedia
      */
     public function category()
     {
-       return $this->belongsTo(FabricCategory::class, 'category_id')->withTrashed();
+        return $this->belongsTo(FabricCategory::class, 'category_id')->withTrashed();
     }
 
     /**
@@ -87,9 +87,19 @@ class Fabric extends Model implements HasMedia
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function receiveItems()
+    {
+        return $this->hasMany(FabricReceiveItem::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function distributions()
     {
-       return $this->hasMany(FabricDistribution::class);
+        return $this->hasMany(FabricDistribution::class);
     }
 
     /**
@@ -99,7 +109,7 @@ class Fabric extends Model implements HasMedia
      */
     public function returnItems()
     {
-       return $this->hasMany(FabricReturnItem::class);
+        return $this->hasMany(FabricReturnItem::class);
     }
 
     /**
@@ -109,7 +119,7 @@ class Fabric extends Model implements HasMedia
      */
     public function transferItems()
     {
-       return $this->hasMany(FabricTransferItem::class);
+        return $this->hasMany(FabricTransferItem::class);
     }
 
     /**
@@ -130,9 +140,9 @@ class Fabric extends Model implements HasMedia
     public function getStockAttribute()
     {
         return $this->quantity -
-                $this->distributions()->draft()->sum('quantity') -
-                $this->returnItems()->draft()->sum('quantity') -
-                $this->transferItems()->draft()->sum('transfer_quantity') ;
+            $this->distributions()->draft()->sum('quantity') -
+            $this->returnItems()->draft()->sum('quantity') -
+            $this->transferItems()->draft()->sum('transfer_quantity');
     }
 
     /**
@@ -150,5 +160,4 @@ class Fabric extends Model implements HasMedia
             })->toArray();
         });
     }
-
 }
