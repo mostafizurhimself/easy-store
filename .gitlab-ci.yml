@@ -12,4 +12,6 @@ building:
     - php artisan generate:permissions
     - php artisan cache:clear
     - php artisan config:clear
+  only:
+    - master
 

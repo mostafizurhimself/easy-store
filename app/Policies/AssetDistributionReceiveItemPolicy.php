@@ -55,7 +55,8 @@ class AssetDistributionReceiveItemPolicy
      */
     public function update(User $user, AssetDistributionReceiveItem $assetDistributionReceiveItem)
     {
-        return ($user->isSuperAdmin() || ($user->hasPermissionTo('update asset distribution receive items') && $user->locationId == $assetDistributionReceiveItem->invoice->receiverId) ||
+        return ($user->isSuperAdmin() ||
+            ($user->hasPermissionTo('update asset distribution receive items') && $user->locationId == $assetDistributionReceiveItem->invoice->receiverId) ||
             $user->hasPermissionTo('update all locations data')) &&
             $assetDistributionReceiveItem->status == DistributionStatus::DRAFT();
     }
