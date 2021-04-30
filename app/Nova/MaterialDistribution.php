@@ -20,13 +20,15 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\MaterialFilter;
 use Easystore\RouterLink\RouterLink;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Rules\DistributionQuantityRule;
 use AwesomeNova\Filters\DependentFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\DistributionStatusFilter;
 use App\Rules\DistributionQuantityRuleForUpdate;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\MaterialDistributions\DownloadPdf;
+use App\Nova\Actions\MaterialDistributions\DownloadExcel;
 use App\Nova\Actions\MaterialDistributions\ConfirmDistribution;
 
 class MaterialDistribution extends Resource
@@ -304,9 +306,25 @@ class MaterialDistribution extends Resource
     public function actions(Request $request)
     {
         return [
+
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download material distributions') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download material distributions') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download material distributions') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download material distributions') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
+
             (new ConfirmDistribution)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm material distributions') || $request->user()->isSuperAdmin();
             }),
+
         ];
     }
 }
