@@ -148,7 +148,7 @@ class Attendance extends Resource
                 }),
 
             BelongsTo::make('Shift', 'shift', \App\Nova\Shift::class)
-                ->exceptOnForms()
+                ->onlyOnDetail()
                 ->sortable(),
 
             BelongsTo::make('Shift', 'shift', \App\Nova\Shift::class)
@@ -211,24 +211,63 @@ class Attendance extends Resource
                 ->displayUsing(function ($earlyLeave) {
                     return gmdate("H:i:s", $earlyLeave);
                 })
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
             Text::make('Overtime')
                 ->sortable()
                 ->displayUsing(function ($overtime) {
                     return gmdate("H:i:s", $overtime);
                 })
-                ->onlyOnDetail(),
+                ->exceptOnForms(),
 
-            Badge::make('Status')->map([
-                ConfirmStatus::DRAFT()->getValue()       => 'warning',
-                ConfirmStatus::CONFIRMED()->getValue()   => 'info',
-            ])
-                ->sortable()
-                ->onlyOnDetail()
-                ->label(function () {
-                    return Str::title(Str::of($this->status)->replace('_', " "));
-                }),
+            Text::make("Attendance Status", function () {
+                $status = "";
+                if ($this->late) {
+                    $status .= "
+                        <span class='inline-block m-1 whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-danger-light text-danger-dark'>
+                            Late
+                        </span>
+                    ";
+                }
+                 if ($this->earlyLeave) {
+                    $status .= '
+                    <span class="inline-block m-1 whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-warning-light text-warning-dark">
+                        Early
+                    </span>
+                  ';
+                }
+                if ($this->overtime) {
+                    $status .= '
+                        <span class="inline-block m-1 whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-info-light text-info-dark">
+                            Overtime
+                        </span>
+                  ';
+                }
+
+                if(!$this->overtime && !$this->earlyLeave && !$this->late) {
+                    $status .= '
+                        <span class="blok whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-success-light text-success-dark">
+                            Regular
+                        </span>
+                    ';
+                }
+
+                return $status;
+            })
+                ->asHtml()
+                ->exceptOnForms()
+
+
+
+            // Badge::make('Status')->map([
+            //     ConfirmStatus::DRAFT()->getValue()       => 'warning',
+            //     ConfirmStatus::CONFIRMED()->getValue()   => 'info',
+            // ])
+            //     ->sortable()
+            //     ->onlyOnDetail()
+            //     ->label(function () {
+            //         return Str::title(Str::of($this->status)->replace('_', " "));
+            //     }),
 
         ];
     }

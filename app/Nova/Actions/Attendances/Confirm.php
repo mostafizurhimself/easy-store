@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions\Attendances;
 
+use App\Enums\AttendanceStatus;
 use App\Enums\ConfirmStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;

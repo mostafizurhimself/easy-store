@@ -32,7 +32,21 @@ class AttendanceStatusFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->where('status', $value);
+        if ($value == AttendanceStatus::LATE()) {
+            return $query->late();
+        }
+
+        if ($value == AttendanceStatus::EARLY_LEAVE()) {
+            return $query->earlyLeave();
+        }
+
+        if ($value == AttendanceStatus::OVERTIME()) {
+            return $query->overtime();
+        }
+
+        if($value == AttendanceStatus::REGULAR()){
+            return $query->regular();
+        }
     }
 
     /**

@@ -22,10 +22,10 @@ class CreateAttendancesTable extends Migration
             $table->date('date');
             $table->time('in');
             $table->time('out')->nullable();
-            $table->double('late')->nullable()->comment('In Seconds');
-            $table->double('total_work')->nullable()->comment('In Seconds');
-            $table->double('early_leave')->nullable()->comment('In Seconds');
-            $table->double('overtime')->nullable()->comment('In Seconds');
+            $table->double('late')->default(0)->comment('In Seconds');
+            $table->double('total_work')->default(0)->comment('In Seconds');
+            $table->double('early_leave')->default(0)->comment('In Seconds');
+            $table->double('overtime')->default(0)->comment('In Seconds');
             $table->string('status')->default('draft');
             $table->timestamps();
             $table->softDeletes();
