@@ -80,6 +80,16 @@ class Attendance extends Resource
     ];
 
     /**
+     * Searchable columns of the table
+     *
+     * @var array
+     */
+    public $searchRelations = [
+        'employee' => ['first_name', 'last_name', 'readable_id'],
+
+    ];
+
+    /**
      * Indicates if the resource should be globally searchable.
      *
      * @var bool

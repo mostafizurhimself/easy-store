@@ -34,6 +34,7 @@ class AbstractController extends Controller
         $license->invoice_no = $request->get('invoice_no');
         $license->amount = $request->get('amount');
         $license->expiration_date = $license->expiration_date->addDays(30);
+        $license->status = 'inactive';
         $license->save();
 
         return redirect()->back()->with('license', $license);
