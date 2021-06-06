@@ -22,5 +22,6 @@ class VerifyLicense
         }
 
         return abort(403, 'License Expired');
+        // return redirect('/license');
     }
 }

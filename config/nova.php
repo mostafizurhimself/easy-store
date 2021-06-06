@@ -101,7 +101,7 @@ return [
 
     'middleware' => [
         'web',
-        // VerifyLicense::class,
+        VerifyLicense::class,
         ActiveUser::class,
         Authenticate::class,
         DispatchServingNovaEvent::class,

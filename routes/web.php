@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/license', function () {
     $license = License::first();
     return view('license')->with('license', $license);
-})->middleware('license');
+});
 
 Route::post('/license', 'AbstractController@createLicense');
 
