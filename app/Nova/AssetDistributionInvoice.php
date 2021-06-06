@@ -35,6 +35,7 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetDistributionInvoices\AutoReceive;
+use App\Nova\Actions\AssetDistributionInvoices\AutoReceiveItems;
 use App\Nova\Actions\AssetDistributionInvoices\ConfirmInvoice;
 use App\Nova\Actions\AssetDistributionInvoices\GenerateInvoice;
 use App\Nova\Lenses\AssetDistributionInvoice\DistributionInvoices;
@@ -62,7 +63,7 @@ class AssetDistributionInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate', 'can auto receive', 'can create gate pass of'];
+    public static $permissions = ['can confirm', 'can generate', 'can create gate pass of'];
 
     /**
      * The group associated with the resource.
@@ -420,13 +421,13 @@ class AssetDistributionInvoice extends Resource
     public function actions(Request $request)
     {
         return [
-            (new AutoReceive)
-                ->canRun(function ($request) {
-                    return $request->user()->hasPermissionTo('can auto receive asset distribution invoices') || $request->user()->isSuperAdmin();
-                })
-                ->confirmButtonText('Auto Receive')
-                ->confirmText("Are you sure want to auto receive this invoice?")
-                ->onlyOnDetail(),
+            // (new AutoReceive)
+            //     ->canRun(function ($request) {
+            //         return $request->user()->hasPermissionTo('can auto receive asset distribution invoices') || $request->user()->isSuperAdmin();
+            //     })
+            //     ->confirmButtonText('Auto Receive')
+            //     ->confirmText("Are you sure want to auto receive this invoice?")
+            //     ->onlyOnDetail(),
 
             (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm asset distribution invoices') || $request->user()->isSuperAdmin();

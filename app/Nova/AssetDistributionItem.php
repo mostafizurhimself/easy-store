@@ -29,6 +29,7 @@ use App\Nova\Filters\DistributionStatusFilter;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use App\Rules\DistributionQuantityRuleOnRequisition;
 use App\Nova\Filters\BelongsToDependentLocationFilter;
+use App\Nova\Actions\AssetDistributionItems\AutoReceive;
 use App\Nova\Actions\AssetDistributionItems\DownloadPdf;
 use App\Nova\Actions\AssetDistributionItems\DownloadExcel;
 use App\Rules\DistributionQuantityRuleOnRequisitionForUpdate;
@@ -62,7 +63,7 @@ class AssetDistributionItem extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download'];
+    public static $permissions = ['can download', 'can auto receive' ];
 
     /**
      * The group associated with the resource.
@@ -284,6 +285,14 @@ class AssetDistributionItem extends Resource
     public function actions(Request $request)
     {
         return [
+            (new AutoReceive)->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can auto receive asset distribution items') || $request->user()->isSuperAdmin();
+            })->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can auto receive asset distribution items') || $request->user()->isSuperAdmin();
+            })
+                ->confirmText('Are you sure want to auto receive?')
+                ->confirmButtonText('Auto Receive'),
+
             (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download asset distribution items') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {

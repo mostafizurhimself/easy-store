@@ -9,10 +9,14 @@ building:
     - git stash
     - git pull
     - composer install
-    - php artisan migrate
-    - php artisan generate:permissions
-    - php artisan cache:clear
+    # - php artisan migrate
+    # - php artisan generate:permissions
+    - php artisan route:clear
+    - php artisan route:cache
     - php artisan config:clear
+    - php artisan config:cache
+    - php artisan view:clear
+    - php artisan view:cache
   only:
     - master
 

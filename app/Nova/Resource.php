@@ -43,6 +43,19 @@ abstract class Resource extends NovaResource
     public static $permissions = [];
 
     /**
+     * Prepare search column value.
+     *
+     * @param  string  $column
+     * @param  string  $search
+     * @return string
+     */
+    protected static function searchableKeyword($column, $search)
+    {
+        return $search . '%';
+    }
+
+
+    /**
      * Show the resources related permissions or not
      *
      * @return bool
