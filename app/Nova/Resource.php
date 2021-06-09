@@ -42,17 +42,17 @@ abstract class Resource extends NovaResource
      */
     public static $permissions = [];
 
-    /**
-     * Prepare search column value.
-     *
-     * @param  string  $column
-     * @param  string  $search
-     * @return string
-     */
-    protected static function searchableKeyword($column, $search)
-    {
-        return $search . '%';
-    }
+    // /**
+    //  * Prepare search column value.
+    //  *
+    //  * @param  string  $column
+    //  * @param  string  $search
+    //  * @return string
+    //  */
+    // protected static function searchableKeyword($column, $search)
+    // {
+    //     return $search . '%';
+    // }
 
 
     /**
