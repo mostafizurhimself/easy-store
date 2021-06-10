@@ -18,7 +18,6 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\ServiceFilter;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use AwesomeNova\Filters\DependentFilter;
 use App\Rules\ServiceReceiveQuantityRule;
 use App\Nova\Filters\DispatchStatusFilter;
@@ -26,6 +25,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\BelongsToProviderFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use App\Nova\Actions\ServiceReceives\DownloadPdf;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Rules\ServiceReceiveQuantityRuleForUpdate;
 use App\Nova\Actions\ServiceReceives\DownloadExcel;
 use App\Nova\Actions\ServiceReceives\ConfirmReceive;
@@ -125,6 +125,10 @@ class ServiceReceive extends Resource
                 ->exceptOnForms()
                 ->sortable(),
 
+            Text::make('Reference')
+                ->exceptOnForms()
+                ->sortable(),
+
             Hidden::make('Date')
                 ->default(Carbon::now())
                 ->sortable()
@@ -165,9 +169,8 @@ class ServiceReceive extends Resource
                 ->exceptOnForms(),
 
             Text::make("Reference")
-                ->hideFromIndex()
+                ->onlyOnForms()
                 ->rules('required', 'string', 'max:200')
-                ->sortable()
                 ->help("You can input the provider invoice no here."),
 
             Files::make('Attachments', 'receive-service-attachments')

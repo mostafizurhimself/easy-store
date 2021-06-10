@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Facades\Settings;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,8 +34,8 @@ class Employee extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('employee-attachments');
-       $this->addMediaCollection('employee-images')->singleFile();
+        $this->addMediaCollection('employee-attachments');
+        $this->addMediaCollection('employee-images')->singleFile();
     }
 
     /**
@@ -61,7 +62,7 @@ class Employee extends Model implements HasMedia
      */
     public function user()
     {
-       return $this->hasMany(User::class);
+        return $this->hasMany(User::class);
     }
 
     /**
@@ -71,7 +72,7 @@ class Employee extends Model implements HasMedia
      */
     public function department()
     {
-       return $this->belongsTo(Department::class)->withTrashed();
+        return $this->belongsTo(Department::class)->withTrashed();
     }
 
     /**
@@ -81,7 +82,7 @@ class Employee extends Model implements HasMedia
      */
     public function section()
     {
-       return $this->belongsTo(Section::class)->withTrashed();
+        return $this->belongsTo(Section::class)->withTrashed();
     }
 
     /**
@@ -91,7 +92,7 @@ class Employee extends Model implements HasMedia
      */
     public function designation()
     {
-       return $this->belongsTo(Designation::class)->withTrashed();
+        return $this->belongsTo(Designation::class)->withTrashed();
     }
 
     /**
@@ -101,7 +102,7 @@ class Employee extends Model implements HasMedia
      */
     public function shift()
     {
-       return $this->belongsTo(Shift::class)->withTrashed();
+        return $this->belongsTo(Shift::class)->withTrashed();
     }
 
     /**
@@ -111,7 +112,7 @@ class Employee extends Model implements HasMedia
      */
     public function getNameAttribute()
     {
-        return $this->firstName." ".$this->lastName;
+        return $this->firstName . " " . $this->lastName;
     }
 
 
@@ -133,7 +134,7 @@ class Employee extends Model implements HasMedia
      */
     public static function toSelectOptions()
     {
-        return static::all()->map(function($employee){
+        return static::all()->map(function ($employee) {
             return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
         });
     }
@@ -146,8 +147,8 @@ class Employee extends Model implements HasMedia
      */
     public static function approvers()
     {
-        if(Settings::approvers()){
-            return static::whereIn('id', Settings::approvers())->get()->map(function($employee){
+        if (Settings::approvers()) {
+            return static::whereIn('id', Settings::approvers())->get()->map(function ($employee) {
                 return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
             });
         }
@@ -162,8 +163,8 @@ class Employee extends Model implements HasMedia
      */
     public static function gatePassApprovers()
     {
-        if(Settings::gatePassApprovers()){
-            return static::whereIn('id', Settings::gatePassApprovers())->get()->map(function($employee){
+        if (Settings::gatePassApprovers()) {
+            return static::whereIn('id', Settings::gatePassApprovers())->get()->map(function ($employee) {
                 return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
             });
         }
@@ -171,5 +172,19 @@ class Employee extends Model implements HasMedia
         return null;
     }
 
+    /**
+     * Get the filter options of employees
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        return Cache::remember('nova-employee-filter-options', 3600, function () {
+            $employees = self::setEagerLoads([])->orderBy('first_name')->get(['id', 'first_name', 'last_name']);
 
+            return $employees->mapWithKeys(function ($employee) {
+                return [$employee->first_name. " " .$employee->last_name => $employee->id];
+            })->toArray();
+        });
+    }
 }

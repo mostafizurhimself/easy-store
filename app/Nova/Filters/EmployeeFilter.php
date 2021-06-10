@@ -2,11 +2,11 @@
 
 namespace App\Nova\Filters;
 
-use App\Models\Floor;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 
-class FloorFilter extends Filter
+class EmployeeFilter extends Filter
 {
     /**
      * The filter's component.
@@ -20,7 +20,7 @@ class FloorFilter extends Filter
      *
      * @var string
      */
-    public $name = "Floor";
+    public $name = "Reveiver";
 
     /**
      * Apply the filter to the given query.
@@ -32,7 +32,7 @@ class FloorFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->where('floor_id', $value);
+        return $query->where('receiver_id', $value);
     }
 
     /**
@@ -43,7 +43,6 @@ class FloorFilter extends Filter
      */
     public function options(Request $request)
     {
-        // return Floor::orderBy('name')->pluck('id', 'name');
-        return Floor::filterOptions();
+        return Employee::filterOptions();
     }
 }

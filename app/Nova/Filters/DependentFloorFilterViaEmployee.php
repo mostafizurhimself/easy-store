@@ -5,22 +5,19 @@ namespace App\Nova\Filters;
 use App\Models\Floor;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
+use AwesomeNova\Filters\DependentFilter;
 
-class FloorFilter extends Filter
+class DependentFloorFilterViaEmployee extends DependentFilter
 {
-    /**
-     * The filter's component.
-     *
-     * @var string
-     */
-    public $component = 'select-filter';
 
     /**
      * The displayable name of the filter.
      *
      * @var string
      */
-    public $name = "Floor";
+    public $name = "Floor Filter";
+
+    public $dependentOf = ['location_id'];
 
     /**
      * Apply the filter to the given query.
@@ -32,7 +29,9 @@ class FloorFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->where('floor_id', $value);
+        return $query->whereHas('receiver', function($query)use($value){
+            return $query->where('floor_id', $value);
+        });
     }
 
     /**
@@ -41,9 +40,10 @@ class FloorFilter extends Filter
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function options(Request $request)
+    public function options(Request $request, $filters = [])
     {
-        // return Floor::orderBy('name')->pluck('id', 'name');
-        return Floor::filterOptions();
+        return Floor::where('location_id', $filters['location_id'])
+            ->orderBy('name')
+            ->pluck('name', 'id');
     }
 }

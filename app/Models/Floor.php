@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Floor extends Model
 {
     use LogsActivity, SoftDeletes;
@@ -30,7 +32,7 @@ class Floor extends Model
      */
     public function sections()
     {
-       return $this->hasMany(Section::class);
+        return $this->hasMany(Section::class);
     }
 
     /**
@@ -40,7 +42,22 @@ class Floor extends Model
      */
     public function subSections()
     {
-      return $this->hasManyThrough(SubSection::class, Section::class);
+        return $this->hasManyThrough(SubSection::class, Section::class);
     }
 
+    /**
+     * Get the filter options of floor
+     *
+     * @return array
+     */
+    public static function filterOptions()
+    {
+        return Cache::remember('nova-floor-filter-options', 3600, function () {
+            $floors = self::setEagerLoads([])->orderBy('name')->get(['id', 'name']);
+
+            return $floors->mapWithKeys(function ($floor) {
+                return [$floor->name => $floor->id];
+            })->toArray();
+        });
+    }
 }

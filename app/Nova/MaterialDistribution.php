@@ -2,6 +2,8 @@
 
 namespace App\Nova;
 
+use App\Models\Floor;
+use App\Models\Employee;
 use App\Models\Material;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -23,13 +25,16 @@ use Easystore\RouterLink\RouterLink;
 use App\Rules\DistributionQuantityRule;
 use AwesomeNova\Filters\DependentFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\FloorFilterViaEmployee;
 use App\Nova\Filters\DistributionStatusFilter;
 use App\Rules\DistributionQuantityRuleForUpdate;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Filters\DependentFloorFilterViaEmployee;
 use App\Nova\Actions\MaterialDistributions\DownloadPdf;
 use App\Nova\Actions\MaterialDistributions\DownloadExcel;
 use App\Nova\Actions\MaterialDistributions\ConfirmDistribution;
+use App\Nova\Filters\EmployeeFilter;
 
 class MaterialDistribution extends Resource
 {
@@ -279,6 +284,31 @@ class MaterialDistribution extends Resource
             (new MaterialFilter)->canSee(function ($request) {
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
+
+            DependentFilter::make('Receiver', 'receiver_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Employee::where('location_id', $filters['location_id'])
+                        ->orderBy('first_name')
+                        ->get()
+                        ->map(function ($employee) {
+                            return ['id' => $employee->id, 'name' => "{$employee->name}({$employee->employeeId})"];
+                        });
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new EmployeeFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            // (new DependentFloorFilterViaEmployee())->canSee(function ($request) {
+            //     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            // }),
+
+            // (new FloorFilterViaEmployee)->canSee(function ($request) {
+            //     return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            // }),
 
             new DateRangeFilter,
 
