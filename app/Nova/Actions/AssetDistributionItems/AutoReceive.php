@@ -32,30 +32,28 @@ class AutoReceive extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        // Abandoned
 
+        foreach ($models as $model) {
+            if ($model->invoice->receiverId == Auth::user()->locationId || Auth::user()->isSuperAdmin()) {
+                // Check already received or not
+                if (!$model->receiveItems()->exists() && $model->status != DistributionStatus::DRAFT()) {
+                    $model->receiveItems()->create([
+                        "date"                 => Carbon::now(),
+                        'invoice_id'           => $model->invoiceId,
+                        'distribution_item_id' => $model->id,
+                        'asset_id'             => $model->assetId,
+                        'quantity'             => $model->distributionQuantity,
+                        'rate'                 => $model->distributionRate,
+                        'amount'               => $model->distributionQuantity * $model->distributionRate,
+                        'unit_id'              => $model->unitId,
+                    ]);
+                }
+            } else {
+                return Action::danger("Sorry you are unauthorized!");
+            }
+        }
 
-        // foreach ($models as $model) {
-        //     if ($model->invoice->receiverId == Auth::user()->locationId || Auth::user()->isSuperAdmin()) {
-        //         // Check already received or not
-        //         if (!$model->receiveItems()->exists() && $model->status != DistributionStatus::DRAFT()) {
-        //             $model->receiveItems()->create([
-        //                 "date"                 => Carbon::now(),
-        //                 'invoice_id'           => $model->invoiceId,
-        //                 'distribution_item_id' => $model->id,
-        //                 'asset_id'             => $model->assetId,
-        //                 'quantity'             => $model->distributionQuantity,
-        //                 'rate'                 => $model->distributionRate,
-        //                 'amount'               => $model->distributionQuantity * $model->distributionRate,
-        //                 'unit_id'              => $model->unitId,
-        //             ]);
-        //         }
-        //     } else {
-        //         return Action::danger("Sorry you are unauthorized!");
-        //     }
-        // }
-
-        // return Action::message("Auto receive items are generated.");
+        return Action::message("Auto receive items are generated.");
     }
 
     /**

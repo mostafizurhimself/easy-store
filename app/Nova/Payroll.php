@@ -23,6 +23,13 @@ class Payroll extends Resource
     public static $title = 'id';
 
     /**
+     * Hide resource from Nova's standard menu.
+     *
+     * @var bool
+     */
+    public static $displayInNavigation = false;
+
+    /**
      * The columns that should be searched.
      *
      * @var array
@@ -42,7 +49,7 @@ class Payroll extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
 
-            
+
         ];
     }
 
