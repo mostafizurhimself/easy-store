@@ -56,8 +56,7 @@ class PassGatePass extends Action
     {
         return [
             DateTime::make('Out')
-                ->rules('required')
-                ->default(Carbon::now()),
+                ->rules('required'),
         ];
     }
 }

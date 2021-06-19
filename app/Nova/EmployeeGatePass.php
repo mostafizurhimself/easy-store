@@ -177,8 +177,7 @@ class EmployeeGatePass extends Resource
             DateTime::make('Approved Out')
                 ->sortable()
                 ->rules('required')
-                ->hideFromIndex()
-                ->default(Carbon::now()),
+                ->hideFromIndex(),
 
             DateTime::make('Out')
                 ->sortable()
@@ -192,7 +191,6 @@ class EmployeeGatePass extends Resource
                     ->sortable()
                     ->hideFromIndex()
                     ->rules('nullable')
-                    ->default(Carbon::now()),
             ])->dependsOn('early_leave', 0),
 
             DateTime::make('In')

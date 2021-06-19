@@ -46,8 +46,7 @@ class CheckIn extends Action
     {
         return [
             DateTime::make('In')
-                ->rules('required')
-                ->default(Carbon::now()),
+                ->rules('required'),
         ];
     }
 }

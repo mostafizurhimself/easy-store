@@ -29,12 +29,15 @@ use App\Nova\Actions\Attendances\BulkAttendance;
 use App\Nova\Filters\DepartmentFilterViaEmployee;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Actions\Attendances\AttendanceReport;
+use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\Attendances\BulkAttendanceAdmin;
 use App\Nova\Filters\AdminDepartmentFilterViaEmployee;
 use App\Nova\Actions\Attendances\AttendanceReportAdmin;
 
 class Attendance extends Resource
 {
+    use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
@@ -86,7 +89,6 @@ class Attendance extends Resource
      */
     public $searchRelations = [
         'employee' => ['first_name', 'last_name', 'readable_id'],
-
     ];
 
     /**
