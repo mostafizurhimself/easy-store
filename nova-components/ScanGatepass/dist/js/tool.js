@@ -169,7 +169,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Scoped Styles */\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Scoped Styles */\n", ""]);
 
 // exports
 
@@ -997,8 +997,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     metaInfo: function metaInfo() {
@@ -1045,7 +1043,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 pass: this.pass
             }).then(function (response) {
                 //   console.log("res data", response.data);
-                _this2.$toasted.show("Passed Successfully", {
+                _this2.$toasted.show(response.data.message, {
                     type: "success"
                 });
                 _this2.details = null;
@@ -1053,7 +1051,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.$refs.pass.focus();
             }).catch(function (err) {
                 if (err.response.status == 422) {
-                    console.log(_this2.errors);
+                    // console.log(this.errors);
                     _this2.errors = err.response.data.errors.pass[0];
                     _this2.$toasted.show(err.response.data.errors.pass[0], {
                         type: "error"
@@ -1066,7 +1064,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     console.log(err.response.data);
                 }
             });
+        },
+        addShotcuts: function addShotcuts(e) {
+            if (e.key == "Enter") {
+                this.passDetailData();
+            }
         }
+    },
+    mounted: function mounted() {
+        // Listening for window Keyboard press
+        window.addEventListener("keyup", this.addShotcuts);
     }
 });
 
@@ -1096,9 +1103,10 @@ var render = function() {
                 directives: [
                   {
                     name: "model",
-                    rawName: "v-model",
+                    rawName: "v-model.trim",
                     value: _vm.pass,
-                    expression: "pass"
+                    expression: "pass",
+                    modifiers: { trim: true }
                   }
                 ],
                 ref: "pass",
@@ -1111,20 +1119,15 @@ var render = function() {
                 },
                 domProps: { value: _vm.pass },
                 on: {
-                  keyup: function($event) {
-                    if (
-                      !$event.type.indexOf("key") &&
-                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                    ) {
-                      return null
-                    }
-                    return _vm.submitPass($event)
-                  },
+                  keyup: _vm.submitPass,
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.pass = $event.target.value
+                    _vm.pass = $event.target.value.trim()
+                  },
+                  blur: function($event) {
+                    return _vm.$forceUpdate()
                   }
                 }
               }),
@@ -1139,7 +1142,7 @@ var render = function() {
           _vm._v(" "),
           _vm.details
             ? _c("div", [
-                _vm.details.details && _vm.details.details.total_bag
+                _vm.details.type == "goods"
                   ? _c("div", { staticClass: "my-4 border border-40" }, [
                       _c("div", { staticClass: "flex border-b border-40" }, [
                         _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
@@ -1215,7 +1218,7 @@ var render = function() {
                     ])
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.details.visitorName
+                _vm.details.type == "visitor"
                   ? _c("div", { staticClass: "my-4 border border-40" }, [
                       _c("div", { staticClass: "flex border-b border-40" }, [
                         _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
@@ -1305,7 +1308,7 @@ var render = function() {
                     ])
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.details.employeeId
+                _vm.details.type == "employee"
                   ? _c("div", { staticClass: "my-4 border border-40" }, [
                       _c("div", { staticClass: "flex border-b border-40" }, [
                         _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
@@ -1370,62 +1373,6 @@ var render = function() {
                       _c("div", { staticClass: "flex border-b border-40" }, [
                         _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
                           _c("h5", { staticClass: "font-normal text-80" }, [
-                            _vm._v("Father's Name")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
-                          _c("h5", { staticClass: "text-80" }, [
-                            _vm._v(_vm._s(_vm.details.employee.fatherName))
-                          ])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "flex border-b border-40" }, [
-                        _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
-                          _c("h5", { staticClass: "font-normal text-80" }, [
-                            _vm._v("Mother's Name")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
-                          _c("h5", { staticClass: "text-80" }, [
-                            _vm._v(_vm._s(_vm.details.employee.motherName))
-                          ])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "flex border-b border-40" }, [
-                        _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
-                          _c("h5", { staticClass: "font-normal text-80" }, [
-                            _vm._v("Nationality")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
-                          _c("h5", { staticClass: "text-80" }, [
-                            _vm._v(_vm._s(_vm.details.employee.nationality))
-                          ])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "flex border-b border-40" }, [
-                        _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
-                          _c("h5", { staticClass: "font-normal text-80" }, [
-                            _vm._v("Marital Status")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
-                          _c("h5", { staticClass: "text-80 capitalize" }, [
-                            _vm._v(_vm._s(_vm.details.employee.maritalStatus))
-                          ])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "flex border-b border-40" }, [
-                        _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
-                          _c("h5", { staticClass: "font-normal text-80" }, [
                             _vm._v("Mobile")
                           ])
                         ]),
@@ -1433,6 +1380,62 @@ var render = function() {
                         _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
                           _c("h5", { staticClass: "text-80" }, [
                             _vm._v(_vm._s(_vm.details.employee.mobile))
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex border-b border-40" }, [
+                        _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
+                          _c("h5", { staticClass: "font-normal text-80" }, [
+                            _vm._v("Approved In")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
+                          _c("h5", { staticClass: "text-80" }, [
+                            _vm._v(_vm._s(_vm.details.approvedInReadable))
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex border-b border-40" }, [
+                        _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
+                          _c("h5", { staticClass: "font-normal text-80" }, [
+                            _vm._v("Approved Out")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
+                          _c("h5", { staticClass: "text-80" }, [
+                            _vm._v(_vm._s(_vm.details.approvedOutReadable))
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex border-b border-40" }, [
+                        _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
+                          _c("h5", { staticClass: "font-normal text-80" }, [
+                            _vm._v("Out")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
+                          _c("h5", { staticClass: "text-80" }, [
+                            _vm._v(_vm._s(_vm.details.outTimeReadable))
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex border-b border-40" }, [
+                        _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
+                          _c("h5", { staticClass: "font-normal text-80" }, [
+                            _vm._v("In")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
+                          _c("h5", { staticClass: "text-80" }, [
+                            _vm._v(_vm._s(_vm.details.inTimeReadable))
                           ])
                         ])
                       ]),
@@ -1452,20 +1455,6 @@ var render = function() {
                                   (_vm.details.earlyLeave == 0 ? "No" : "Yes")
                               )
                             )
-                          ])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "flex border-b border-40" }, [
-                        _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
-                          _c("h5", { staticClass: "font-normal text-80" }, [
-                            _vm._v("Salary")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
-                          _c("h5", { staticClass: "text-80" }, [
-                            _vm._v(_vm._s(_vm.details.employee.salary))
                           ])
                         ])
                       ]),
@@ -1502,7 +1491,7 @@ var render = function() {
                     ])
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.details.totalQuantity
+                _vm.details.type == "manual"
                   ? _c("div", { staticClass: "my-4 border border-40" }, [
                       _c("div", { staticClass: "flex border-b border-40" }, [
                         _c("div", { staticClass: "w-1/4 p-4 bg-30" }, [
@@ -1673,16 +1662,35 @@ var render = function() {
                     ])
                   : _vm._e(),
                 _vm._v(" "),
-                _c("div", { staticClass: "text-center" }, [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "btn btn-default btn-primary cursor-pointer",
-                      on: { click: _vm.passDetailData }
-                    },
-                    [_vm._v("Pass")]
-                  )
-                ])
+                _vm.details.type == "employee" &&
+                _vm.details.status == "passed" &&
+                _vm.details.in == null
+                  ? _c("div", { staticClass: "text-center" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass:
+                            "btn btn-default btn-primary cursor-pointer",
+                          on: { click: _vm.passDetailData }
+                        },
+                        [_vm._v("CheckIn")]
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.details.status == "confirmed"
+                  ? _c("div", { staticClass: "text-center" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass:
+                            "btn btn-default btn-primary cursor-pointer",
+                          on: { click: _vm.passDetailData }
+                        },
+                        [_vm._v("Pass")]
+                      )
+                    ])
+                  : _vm._e()
               ])
             : _vm._e()
         ]

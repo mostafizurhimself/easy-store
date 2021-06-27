@@ -9,7 +9,7 @@ namespace App\Enums;
  */
 class GatePassStatus extends Enum
 {
-    private const DRAFT     = 'draft';
-    private const CONFIRMED = 'confirmed';
-    private const PASSED    = 'passed';
+    private const DRAFT      = 'draft';
+    private const CONFIRMED  = 'confirmed';
+    private const PASSED     = 'passed';
 }

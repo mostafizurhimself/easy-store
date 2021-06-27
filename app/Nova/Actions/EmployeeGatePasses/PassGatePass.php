@@ -35,8 +35,9 @@ class PassGatePass extends Action
     {
         foreach ($models as $model) {
             if ($model->status == GatePassStatus::CONFIRMED()) {
-                $model->out       = $fields->out;
+                $model->out      = $fields->out;
                 $model->passedBy = Auth::user()->id;
+                $model->passedAt = Carbon::now();
                 $model->status   = GatePassStatus::PASSED();
                 $model->save();
             } else {

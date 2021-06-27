@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\CamelCasing;
 use App\Enums\GatePassStatus;
+use App\Enums\GatepassType;
 use App\Traits\HasReadableIdWithDate;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,7 +34,7 @@ class GoodsGatePass extends Model
      */
     protected $dates = ['passed_at'];
 
-     /**
+    /**
      * The attributes that should be cast.
      *
      * @var array
@@ -41,6 +42,13 @@ class GoodsGatePass extends Model
     protected $casts = [
         'details' => 'array',
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['type'];
 
     /**
      * Set the model readable id prefix
@@ -91,7 +99,7 @@ class GoodsGatePass extends Model
      */
     public function passedBy()
     {
-       return $this->belongsTo(User::class, 'passed_by', 'id')->withTrashed();
+        return $this->belongsTo(User::class, 'passed_by', 'id')->withTrashed();
     }
 
     /**
@@ -104,7 +112,7 @@ class GoodsGatePass extends Model
         return $this->status == GatePassStatus::CONFIRMED();
     }
 
-     /**
+    /**
      * Check the model status is draft or not
      *
      * @return bool
@@ -112,5 +120,15 @@ class GoodsGatePass extends Model
     public function isDraft()
     {
         return $this->status == GatePassStatus::DRAFT();
+    }
+
+    /**
+     * Get the gate pass type attribute
+     *
+     * @return string
+     */
+    public function getTypeAttribute()
+    {
+        return GatepassType::GOODS();
     }
 }

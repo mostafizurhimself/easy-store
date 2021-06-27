@@ -43,7 +43,7 @@ class ScanGatePass extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        return Action::push('/scan-gatepass');
+        return Action::openInNewTab('/scan-gatepass');
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GatepassType;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableIdWithDate;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -31,6 +32,13 @@ class ManualGatePass extends Model
      * @var array
      */
     protected $dates = ['passed_at'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['type'];
 
     /**
      * The attributes that should be cast.
@@ -97,5 +105,15 @@ class ManualGatePass extends Model
     public function isDraft()
     {
         return $this->status == GatePassStatus::DRAFT();
+    }
+
+    /**
+     * Get the gate pass type attribute
+     *
+     * @return string
+     */
+    public function getTypeAttribute()
+    {
+        return GatepassType::MANUAL();
     }
 }

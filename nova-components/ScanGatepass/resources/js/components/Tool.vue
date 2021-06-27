@@ -10,8 +10,8 @@
                         type="text"
                         placeholder="Enter Gatepass"
                         autofocus
-                        v-model="pass"
-                        @keyup.enter="submitPass"
+                        v-model.trim="pass"
+                        @keyup="submitPass"
                         class="rounded-lg py-3 px-4 border border-70 outline-none mt-8"
                         ref="pass"
                     />
@@ -22,10 +22,7 @@
 
             <div v-if="details">
                 <!-- Goods pass -->
-                <div
-                    class="my-4 border border-40"
-                    v-if="details.details && details.details.total_bag"
-                >
+                <div class="my-4 border border-40" v-if="details.type == 'goods'">
                     <div class="flex border-b border-40">
                         <div class="w-1/4 p-4 bg-30">
                             <h5 class="font-normal text-80">Number</h5>
@@ -74,7 +71,7 @@
                 <!-- Goods pass Ends -->
 
                 <!-- Visitor pass -->
-                <div class="my-4 border border-40" v-if="details.visitorName">
+                <div class="my-4 border border-40" v-if="details.type == 'visitor'">
                     <div class="flex border-b border-40">
                         <div class="w-1/4 p-4 bg-30">
                             <h5 class="font-normal text-80">Number</h5>
@@ -132,7 +129,7 @@
                 <!-- Visitor pass Ends -->
 
                 <!-- Employee pass -->
-                <div class="my-4 border border-40" v-if="details.employeeId">
+                <div class="my-4 border border-40" v-if="details.type == 'employee'">
                     <div class="flex border-b border-40">
                         <div class="w-1/4 p-4 bg-30">
                             <h5 class="font-normal text-80">Number</h5>
@@ -173,42 +170,6 @@
 
                     <div class="flex border-b border-40">
                         <div class="w-1/4 p-4 bg-30">
-                            <h5 class="font-normal text-80">Father's Name</h5>
-                        </div>
-                        <div class="w-3/4 p-4 break-words">
-                            <h5 class="text-80">{{ details.employee.fatherName }}</h5>
-                        </div>
-                    </div>
-
-                    <div class="flex border-b border-40">
-                        <div class="w-1/4 p-4 bg-30">
-                            <h5 class="font-normal text-80">Mother's Name</h5>
-                        </div>
-                        <div class="w-3/4 p-4 break-words">
-                            <h5 class="text-80">{{ details.employee.motherName }}</h5>
-                        </div>
-                    </div>
-
-                    <div class="flex border-b border-40">
-                        <div class="w-1/4 p-4 bg-30">
-                            <h5 class="font-normal text-80">Nationality</h5>
-                        </div>
-                        <div class="w-3/4 p-4 break-words">
-                            <h5 class="text-80">{{ details.employee.nationality }}</h5>
-                        </div>
-                    </div>
-
-                    <div class="flex border-b border-40">
-                        <div class="w-1/4 p-4 bg-30">
-                            <h5 class="font-normal text-80">Marital Status</h5>
-                        </div>
-                        <div class="w-3/4 p-4 break-words">
-                            <h5 class="text-80 capitalize">{{ details.employee.maritalStatus }}</h5>
-                        </div>
-                    </div>
-
-                    <div class="flex border-b border-40">
-                        <div class="w-1/4 p-4 bg-30">
                             <h5 class="font-normal text-80">Mobile</h5>
                         </div>
                         <div class="w-3/4 p-4 break-words">
@@ -218,19 +179,46 @@
 
                     <div class="flex border-b border-40">
                         <div class="w-1/4 p-4 bg-30">
-                            <h5 class="font-normal text-80">Early Leave</h5>
+                            <h5 class="font-normal text-80">Approved In</h5>
                         </div>
                         <div class="w-3/4 p-4 break-words">
-                            <h5 class="text-80">{{ `${details.earlyLeave == 0 ? "No" : "Yes"}` }}</h5>
+                            <h5 class="text-80">{{ details.approvedInReadable }}</h5>
                         </div>
                     </div>
 
                     <div class="flex border-b border-40">
                         <div class="w-1/4 p-4 bg-30">
-                            <h5 class="font-normal text-80">Salary</h5>
+                            <h5 class="font-normal text-80">Approved Out</h5>
                         </div>
                         <div class="w-3/4 p-4 break-words">
-                            <h5 class="text-80">{{ details.employee.salary }}</h5>
+                            <h5 class="text-80">{{ details.approvedOutReadable }}</h5>
+                        </div>
+                    </div>
+
+                    <div class="flex border-b border-40">
+                        <div class="w-1/4 p-4 bg-30">
+                            <h5 class="font-normal text-80">Out</h5>
+                        </div>
+                        <div class="w-3/4 p-4 break-words">
+                            <h5 class="text-80">{{ details.outTimeReadable }}</h5>
+                        </div>
+                    </div>
+
+                    <div class="flex border-b border-40">
+                        <div class="w-1/4 p-4 bg-30">
+                            <h5 class="font-normal text-80">In</h5>
+                        </div>
+                        <div class="w-3/4 p-4 break-words">
+                            <h5 class="text-80">{{ details.inTimeReadable }}</h5>
+                        </div>
+                    </div>
+
+                    <div class="flex border-b border-40">
+                        <div class="w-1/4 p-4 bg-30">
+                            <h5 class="font-normal text-80">Early Leave</h5>
+                        </div>
+                        <div class="w-3/4 p-4 break-words">
+                            <h5 class="text-80">{{ `${details.earlyLeave == 0 ? "No" : "Yes"}` }}</h5>
                         </div>
                     </div>
 
@@ -255,7 +243,7 @@
                 <!-- Employee pass Ends -->
 
                 <!-- Manual pass -->
-                <div class="my-4 border border-40" v-if="details.totalQuantity">
+                <div class="my-4 border border-40" v-if="details.type == 'manual'">
                     <div class="flex border-b border-40">
                         <div class="w-1/4 p-4 bg-30">
                             <h5 class="font-normal text-80">Number</h5>
@@ -354,7 +342,17 @@
                 <!-- Manual pass Ends -->
 
                 <!-- Button -->
-                <div class="text-center">
+                <div
+                    class="text-center"
+                    v-if="details.type == 'employee' && details.status == 'passed' && details.in == null"
+                >
+                    <a
+                        @click="passDetailData"
+                        class="btn btn-default btn-primary cursor-pointer"
+                    >CheckIn</a>
+                </div>
+
+                <div class="text-center" v-if="details.status == 'confirmed'">
                     <a
                         @click="passDetailData"
                         class="btn btn-default btn-primary cursor-pointer"
@@ -411,16 +409,16 @@ export default {
                 })
                 .then((response) => {
                     //   console.log("res data", response.data);
-                    this.$toasted.show("Passed Successfully", {
+                    this.$toasted.show(response.data.message, {
                         type: "success",
                     });
-                    this.details = null
-                    this.pass = ""
+                    this.details = null;
+                    this.pass = "";
                     this.$refs.pass.focus();
                 })
                 .catch((err) => {
                     if (err.response.status == 422) {
-                        console.log(this.errors);
+                        // console.log(this.errors);
                         this.errors = err.response.data.errors.pass[0];
                         this.$toasted.show(err.response.data.errors.pass[0], {
                             type: "error",
@@ -434,6 +432,15 @@ export default {
                     }
                 });
         },
+        addShotcuts(e) {
+            if (e.key == "Enter") {
+                this.passDetailData();
+            }
+        },
+    },
+    mounted() {
+        // Listening for window Keyboard press
+        window.addEventListener("keyup", this.addShotcuts);
     },
 };
 </script>

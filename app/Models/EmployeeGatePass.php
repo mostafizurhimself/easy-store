@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GatepassType;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableIdWithDate;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -39,8 +40,15 @@ class EmployeeGatePass extends Model
      */
     protected $with = ['employee', 'approve'];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['type', 'approvedInReadable', 'approvedOutReadable', 'inTimeReadable', 'outTimeReadable'];
 
-     /**
+
+    /**
      * Set the model readable id prefix
      *
      * @var string
@@ -74,7 +82,7 @@ class EmployeeGatePass extends Model
      */
     public function employee()
     {
-       return $this->belongsTo(Employee::class)->withTrashed();
+        return $this->belongsTo(Employee::class)->withTrashed();
     }
 
     /**
@@ -84,8 +92,56 @@ class EmployeeGatePass extends Model
      */
     public function passedBy()
     {
-       return $this->belongsTo(User::class, 'passed_by')->withTrashed();
+        return $this->belongsTo(User::class, 'passed_by')->withTrashed();
     }
 
+    /**
+     * Get the gate pass type attribute
+     *
+     * @return string
+     */
+    public function getTypeAttribute()
+    {
+        return GatepassType::EMPLOYEE();
+    }
 
+    /**
+     * Get the approved in human reabable format
+     *
+     * @return string
+     */
+    public function getApprovedInReadableAttribute()
+    {
+        return $this->approvedIn ? $this->approvedIn->format("Y-m-d h:i:s A") : null;
+    }
+
+    /**
+     * Get the approved out human reabable format
+     *
+     * @return string
+     */
+    public function getApprovedOutReadableAttribute()
+    {
+        return $this->approvedOut ? $this->approvedOut->format("Y-m-d h:i:s A") : null;
+    }
+
+    /**
+     * Get the in time human reabable format
+     *
+     * @return string
+     */
+    public function getInTimeReadableAttribute()
+    {
+        return $this->in ? $this->in->format("Y-m-d h:i:s A") : null;
+    }
+
+    /**
+     * Get the out time human reabable format
+     *
+     * @return string
+     */
+    public function getOutTimeReadableAttribute()
+    {
+        return $this->out ? $this->out->format("Y-m-d h:i:s A") : null;
+    }
 }

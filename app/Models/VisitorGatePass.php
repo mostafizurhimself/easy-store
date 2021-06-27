@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GatepassType;
 use App\Traits\HasReadableIdWithDate;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -55,6 +56,12 @@ class VisitorGatePass extends Model
      */
     protected $with = ['employee'];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['type'];
 
     /**
      * Determines one-to-many relation
@@ -64,5 +71,15 @@ class VisitorGatePass extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'visit_to')->withTrashed();
+    }
+
+    /**
+     * Get the gate pass type attribute
+     *
+     * @return string
+     */
+    public function getTypeAttribute()
+    {
+        return GatepassType::VISITOR();
     }
 }
