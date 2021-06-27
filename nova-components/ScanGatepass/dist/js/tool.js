@@ -169,7 +169,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* Scoped Styles */\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Scoped Styles */\n", ""]);
 
 // exports
 
@@ -999,80 +999,75 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  metaInfo: function metaInfo() {
-    return {
-      title: "ScanGatepass"
-    };
-  },
-  data: function data() {
-    return {
-      errors: null,
-      pass: "",
-      details: null
-    };
-  },
-
-  methods: {
-    submitPass: function submitPass() {
-      this.errors = null;
-      this.details = null;
-      this.getDetailsData(this.pass);
+    metaInfo: function metaInfo() {
+        return {
+            title: "ScanGatepass"
+        };
     },
-    getDetailsData: function getDetailsData(pass) {
-      var _this = this;
-
-      Nova.request().get("/nova-vendor/scan-gatepass/passes?pass=" + pass).then(function (response) {
-        console.log("res data", response.data);
-        _this.details = response.data;
-      }).catch(function (err) {
-        if (err.response.status == 422) {
-          _this.details = null;
-          console.log(_this.errors);
-          _this.errors = err.response.data.errors.pass[0];
-        } else if (err.response.status == 404) {
-          _this.errors = err.response.data.message;
-        } else {
-          console.log(err.response.data);
-        }
-      });
+    data: function data() {
+        return {
+            errors: null,
+            pass: "",
+            details: null
+        };
     },
-    passDetailData: function passDetailData() {
-      var _this2 = this;
 
-      Nova.request().post("/nova-vendor/scan-gatepass/passes", {
-        pass: this.pass
-      }).then(function (response) {
-        console.log("res data", response.data);
-      }).catch(function (err) {
-        if (err.response.status == 422) {
-          console.log(_this2.errors);
-          _this2.errors = err.response.data.errors.pass[0];
-          _this2.$toasted.show(err.response.data.errors.pass[0], {
-            type: "error"
-          });
-        } else if (err.response.status == 404) {
-          _this2.$toasted.show(err.response.data.message, { type: "error" });
-        } else {
-          console.log(err.response.data);
+    methods: {
+        submitPass: function submitPass() {
+            this.errors = null;
+            this.details = null;
+            this.getDetailsData(this.pass);
+        },
+        getDetailsData: function getDetailsData(pass) {
+            var _this = this;
+
+            Nova.request().get("/nova-vendor/scan-gatepass/passes?pass=" + pass).then(function (response) {
+                console.log("res data", response.data);
+                _this.details = response.data;
+            }).catch(function (err) {
+                if (err.response.status == 422) {
+                    _this.details = null;
+                    console.log(_this.errors);
+                    _this.errors = err.response.data.errors.pass[0];
+                } else if (err.response.status == 404) {
+                    _this.errors = err.response.data.message;
+                } else {
+                    console.log(err.response.data);
+                }
+            });
+        },
+        passDetailData: function passDetailData() {
+            var _this2 = this;
+
+            Nova.request().post("/nova-vendor/scan-gatepass/passes", {
+                pass: this.pass
+            }).then(function (response) {
+                //   console.log("res data", response.data);
+                _this2.$toasted.show("Passed Successfully", {
+                    type: "success"
+                });
+                _this2.details = null;
+                _this2.pass = "";
+                _this2.$refs.pass.focus();
+            }).catch(function (err) {
+                if (err.response.status == 422) {
+                    console.log(_this2.errors);
+                    _this2.errors = err.response.data.errors.pass[0];
+                    _this2.$toasted.show(err.response.data.errors.pass[0], {
+                        type: "error"
+                    });
+                } else if (err.response.status == 404) {
+                    _this2.$toasted.show(err.response.data.message, {
+                        type: "error"
+                    });
+                } else {
+                    console.log(err.response.data);
+                }
+            });
         }
-      });
     }
-  }
 });
 
 /***/ }),
@@ -1106,6 +1101,7 @@ var render = function() {
                     expression: "pass"
                   }
                 ],
+                ref: "pass",
                 staticClass:
                   "rounded-lg py-3 px-4 border border-70 outline-none mt-8",
                 attrs: {
@@ -1135,7 +1131,7 @@ var render = function() {
               _vm._v(" "),
               _vm.errors
                 ? _c("div", { staticClass: "text-danger mt-1" }, [
-                    _vm._v("\n          " + _vm._s(_vm.errors) + "\n        ")
+                    _vm._v(_vm._s(_vm.errors))
                   ])
                 : _vm._e()
             ])
@@ -1212,13 +1208,7 @@ var render = function() {
                           _c(
                             "h5",
                             { staticClass: "text-80 text-primary capitalize" },
-                            [
-                              _vm._v(
-                                "\n              " +
-                                  _vm._s(_vm.details.status) +
-                                  "\n            "
-                              )
-                            ]
+                            [_vm._v(_vm._s(_vm.details.status))]
                           )
                         ])
                       ])
@@ -1308,13 +1298,7 @@ var render = function() {
                           _c(
                             "h5",
                             { staticClass: "text-80 text-primary capitalize" },
-                            [
-                              _vm._v(
-                                "\n              " +
-                                  _vm._s(_vm.details.status) +
-                                  "\n            "
-                              )
-                            ]
+                            [_vm._v(_vm._s(_vm.details.status))]
                           )
                         ])
                       ])
@@ -1375,11 +1359,9 @@ var render = function() {
                         _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
                           _c("h5", { staticClass: "text-80" }, [
                             _vm._v(
-                              "\n              " +
-                                _vm._s(_vm.details.employee.firstName) +
+                              _vm._s(_vm.details.employee.firstName) +
                                 " " +
-                                _vm._s(_vm.details.employee.lastName) +
-                                "\n            "
+                                _vm._s(_vm.details.employee.lastName)
                             )
                           ])
                         ])
@@ -1436,11 +1418,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
                           _c("h5", { staticClass: "text-80 capitalize" }, [
-                            _vm._v(
-                              "\n              " +
-                                _vm._s(_vm.details.employee.maritalStatus) +
-                                "\n            "
-                            )
+                            _vm._v(_vm._s(_vm.details.employee.maritalStatus))
                           ])
                         ])
                       ]),
@@ -1469,12 +1447,10 @@ var render = function() {
                         _c("div", { staticClass: "w-3/4 p-4 break-words" }, [
                           _c("h5", { staticClass: "text-80" }, [
                             _vm._v(
-                              "\n              " +
-                                _vm._s(
-                                  "" +
-                                    (_vm.details.earlyLeave == 0 ? "No" : "Yes")
-                                ) +
-                                "\n            "
+                              _vm._s(
+                                "" +
+                                  (_vm.details.earlyLeave == 0 ? "No" : "Yes")
+                              )
                             )
                           ])
                         ])
@@ -1519,13 +1495,7 @@ var render = function() {
                           _c(
                             "h5",
                             { staticClass: "text-80 text-primary capitalize" },
-                            [
-                              _vm._v(
-                                "\n              " +
-                                  _vm._s(_vm.details.status) +
-                                  "\n            "
-                              )
-                            ]
+                            [_vm._v(_vm._s(_vm.details.status))]
                           )
                         ])
                       ])
@@ -1592,13 +1562,7 @@ var render = function() {
                                               staticClass: "text-sm",
                                               staticStyle: { height: "2rem" }
                                             },
-                                            [
-                                              _vm._v(
-                                                "\n                      " +
-                                                  _vm._s(item.description) +
-                                                  "\n                    "
-                                              )
-                                            ]
+                                            [_vm._v(_vm._s(item.description))]
                                           ),
                                           _vm._v(" "),
                                           _c(
@@ -1607,13 +1571,7 @@ var render = function() {
                                               staticClass: "text-sm",
                                               staticStyle: { height: "2rem" }
                                             },
-                                            [
-                                              _vm._v(
-                                                "\n                      " +
-                                                  _vm._s(item.quantity) +
-                                                  "\n                    "
-                                              )
-                                            ]
+                                            [_vm._v(_vm._s(item.quantity))]
                                           )
                                         ]
                                       )
@@ -1708,13 +1666,7 @@ var render = function() {
                           _c(
                             "h5",
                             { staticClass: "text-80 text-primary capitalize" },
-                            [
-                              _vm._v(
-                                "\n              " +
-                                  _vm._s(_vm.details.status) +
-                                  "\n            "
-                              )
-                            ]
+                            [_vm._v(_vm._s(_vm.details.status))]
                           )
                         ])
                       ])
@@ -1728,7 +1680,7 @@ var render = function() {
                       staticClass: "btn btn-default btn-primary cursor-pointer",
                       on: { click: _vm.passDetailData }
                     },
-                    [_vm._v("\n          Pass\n        ")]
+                    [_vm._v("Pass")]
                   )
                 ])
               ])
