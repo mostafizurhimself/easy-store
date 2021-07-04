@@ -35,6 +35,13 @@ class FabricPurchaseOrder extends Model implements HasMedia
     protected $dates = ['date'];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    // protected $append = ['totalPurchaseItems'];
+
+    /**
      * Add all attributes that are not listed in $guarded for log
      *
      * @var boolean
@@ -222,6 +229,16 @@ class FabricPurchaseOrder extends Model implements HasMedia
     public function getApproverAttribute()
     {
         return $this->approve->employee;
+    }
+
+    /**
+     * Get total purchase items attribute
+     *
+     * @return int
+     */
+    public function getTotalPurchaseItem()
+    {
+        return $this->purchaseItems()->count();
     }
 
 }

@@ -29,7 +29,7 @@ class FabricPurchaseItemObserver
         if(empty($fabricPurchaseItem->unitId)){
             $fabricPurchaseItem->unitId = $fabric->unitId;
         }
-        $fabricPurchaseItem->purchaseAmount = $fabric->rate * $fabricPurchaseItem->purchaseQuantity;
+        $fabricPurchaseItem->purchaseAmount = $fabricPurchaseItem->purchaseRate * $fabricPurchaseItem->purchaseQuantity;
     }
 
     /**

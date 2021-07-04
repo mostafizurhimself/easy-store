@@ -50,7 +50,7 @@ class MaterialTransferReceiveItemObserver
             $materialTransferReceiveItem->unitId = $material->unitId;
         }
         //Set Amount
-        $materialTransferReceiveItem->amount = $material->rate * $materialTransferReceiveItem->quantity;
+        $materialTransferReceiveItem->amount = $materialTransferReceiveItem->rate * $materialTransferReceiveItem->quantity;
     }
 
     /**

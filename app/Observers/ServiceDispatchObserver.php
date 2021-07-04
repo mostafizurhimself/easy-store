@@ -30,7 +30,7 @@ class ServiceDispatchObserver
         if(empty($serviceDispatch->unitId)){
             $serviceDispatch->unitId = $service->unitId;
         }
-        $serviceDispatch->dispatchAmount = $service->rate * $serviceDispatch->dispatchQuantity;
+        $serviceDispatch->dispatchAmount = $serviceDispatch->rate * $serviceDispatch->dispatchQuantity;
     }
 
     /**

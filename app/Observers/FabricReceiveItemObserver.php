@@ -32,7 +32,7 @@ class FabricReceiveItemObserver
             $fabricReceiveItem->unitId = $purchaseItem->fabric->unitId;
         }
         //Set Amount
-        $fabricReceiveItem->amount = $purchaseItem->purchaseRate * $fabricReceiveItem->quantity;
+        $fabricReceiveItem->amount = $fabricReceiveItem->rate * $fabricReceiveItem->quantity;
     }
 
     /**

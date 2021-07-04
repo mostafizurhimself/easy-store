@@ -22,9 +22,9 @@ use App\Nova\Lenses\PurchaseItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricPurchaseOrders\MarkAsDraft;
 use App\Nova\Actions\FabricPurchaseOrders\Recalculate;
@@ -189,6 +189,11 @@ class FabricPurchaseOrder extends Resource
                     BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")
                         ->searchable()
                         ->sortable(),
+
+                    // Text::make('Items', function(){
+                    //     return $this->resource->purchaseItems()->count();
+                    // })
+                    //     ->exceptOnForms(),
 
                     Currency::make('Purchase Amount', 'total_purchase_amount')
                         ->currency('BDT')

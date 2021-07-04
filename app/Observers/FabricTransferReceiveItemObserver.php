@@ -50,7 +50,7 @@ class FabricTransferReceiveItemObserver
             $fabricTransferReceiveItem->unitId = $fabric->unitId;
         }
         //Set Amount
-        $fabricTransferReceiveItem->amount = $fabric->rate * $fabricTransferReceiveItem->quantity;
+        $fabricTransferReceiveItem->amount = $fabricTransferReceiveItem->rate * $fabricTransferReceiveItem->quantity;
     }
 
     /**

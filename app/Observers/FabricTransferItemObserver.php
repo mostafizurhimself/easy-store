@@ -28,7 +28,7 @@ class FabricTransferItemObserver
          if(empty($fabricTransferItem->unitId)){
              $fabricTransferItem->unitId = $fabric->unitId;
          }
-         $fabricTransferItem->transferAmount = $fabric->rate * $fabricTransferItem->transferQuantity;
+         $fabricTransferItem->transferAmount = $fabricTransferItem->transferRate * $fabricTransferItem->transferQuantity;
     }
 
     /**

@@ -29,7 +29,7 @@ class MaterialTransferItemObserver
         if(empty($materialTransferItem->unitId)){
             $materialTransferItem->unitId = $material->unitId;
         }
-        $materialTransferItem->transferAmount = $material->rate * $materialTransferItem->transferQuantity;
+        $materialTransferItem->transferAmount = $materialTransferItem->transferRate * $materialTransferItem->transferQuantity;
     }
 
     /**

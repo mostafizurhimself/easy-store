@@ -29,7 +29,7 @@ class ServiceTransferItemObserver
         if(empty($serviceTransferItem->unitId)){
             $serviceTransferItem->unitId = $service->unitId;
         }
-        $serviceTransferItem->transferAmount = $service->rate * $serviceTransferItem->transferQuantity;
+        $serviceTransferItem->transferAmount = $serviceTransferItem->rate * $serviceTransferItem->transferQuantity;
     }
 
     /**

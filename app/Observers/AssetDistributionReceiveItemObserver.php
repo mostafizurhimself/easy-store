@@ -50,7 +50,7 @@ class AssetDistributionReceiveItemObserver
             $assetDistributionReceiveItem->unitId = $asset->unitId;
         }
         //Set Amount
-        $assetDistributionReceiveItem->amount = $asset->rate * $assetDistributionReceiveItem->quantity;
+        $assetDistributionReceiveItem->amount = $assetDistributionReceiveItem->rate * $assetDistributionReceiveItem->quantity;
     }
 
     /**

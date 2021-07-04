@@ -28,9 +28,15 @@ class Recalculate extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
+        foreach ($models as $model) {
 
-            foreach($model->purchaseItems as $purchaseItem){
+            // Update reveive items
+            foreach ($model->receiveItems as $receiveItem) {
+                $receiveItem->amount = $receiveItem->rate * $receiveItem->quantity;
+                $receiveItem->save();
+            }
+
+            foreach ($model->purchaseItems as $purchaseItem) {
                 //Update purchase item receive quantity
                 $purchaseItem->updateReceiveQuantity();
 
@@ -50,6 +56,8 @@ class Recalculate extends Action
             //Update the purchase status
             $model->updateStatus();
         }
+
+        return Action::message('Recalculated successfully');
     }
 
     /**

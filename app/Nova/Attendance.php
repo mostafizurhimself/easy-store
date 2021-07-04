@@ -88,6 +88,7 @@ class Attendance extends Resource
      * @var array
      */
     public $searchRelations = [
+        'location' => ['name'],
         'employee' => ['first_name', 'last_name', 'readable_id'],
     ];
 

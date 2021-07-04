@@ -31,7 +31,7 @@ class MaterialReceiveItemObserver
             $materialReceiveItem->unitId = $purchaseItem->material->unitId;
         }
         //Set Amount
-        $materialReceiveItem->amount = $purchaseItem->purchaseRate * $materialReceiveItem->quantity;
+        $materialReceiveItem->amount = $materialReceiveItem->rate * $materialReceiveItem->quantity;
     }
 
     /**

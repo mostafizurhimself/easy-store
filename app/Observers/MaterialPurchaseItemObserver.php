@@ -29,7 +29,7 @@ class MaterialPurchaseItemObserver
         if(empty($materialPurchaseItem->unitId)){
             $materialPurchaseItem->unitId = $material->unitId;
         }
-        $materialPurchaseItem->purchaseAmount = $material->rate * $materialPurchaseItem->purchaseQuantity;
+        $materialPurchaseItem->purchaseAmount =  $materialPurchaseItem->purchaseRate * $materialPurchaseItem->purchaseQuantity;
     }
 
     /**

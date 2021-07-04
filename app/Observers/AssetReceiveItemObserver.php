@@ -31,7 +31,7 @@ class AssetReceiveItemObserver
             $assetReceiveItem->unitId = $purchaseItem->asset->unitId;
         }
         //Set Amount
-        $assetReceiveItem->amount = $purchaseItem->purchaseRate * $assetReceiveItem->quantity;
+        $assetReceiveItem->amount = $assetReceiveItem->rate * $assetReceiveItem->quantity;
     }
 
     /**

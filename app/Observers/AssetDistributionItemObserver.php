@@ -38,7 +38,7 @@ class AssetDistributionItemObserver
         if(empty($assetDistributionItem->unitId)){
             $assetDistributionItem->unitId = $asset->unitId;
         }
-        $assetDistributionItem->distributionAmount = $asset->rate * $assetDistributionItem->distributionQuantity;
+        $assetDistributionItem->distributionAmount = $assetDistributionItem->distributionRate * $assetDistributionItem->distributionQuantity;
     }
 
     /**
