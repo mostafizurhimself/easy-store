@@ -19,6 +19,7 @@ use App\Nova\Actions\ScanGatePass;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\GatePassStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\EmployeeGatePasses\CheckIn;
@@ -26,7 +27,6 @@ use App\Nova\Actions\EmployeeGatePasses\MarkAsDraft;
 use App\Nova\Actions\EmployeeGatePasses\PassGatePass;
 use App\Nova\Actions\EmployeeGatePasses\ConfirmGatePass;
 use App\Nova\Actions\EmployeeGatePasses\GenerateGatePass;
-use App\Nova\Filters\DateRangeFilter;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 
 class EmployeeGatePass extends Resource

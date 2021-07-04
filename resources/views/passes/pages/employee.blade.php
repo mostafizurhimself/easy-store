@@ -15,10 +15,12 @@
         <div class="col">
             <div class="font-weight-bold">Approved At</div>
             <div>{{ $pass->approve->createdAt->format('Y-m-d h:i a') }}</div>
+        <div><span class="font-weight-bold">For: </span>{{ $pass->approvedFor }} hrs</div>
         </div>
         <div class="col text-right">
             <div class="font-weight-bold">Approved By</div>
             <div>{{ $pass->approve->employee->name }}</div>
+            <div>{{ $pass->approve->employee->designation->name }}</div>
         </div>
     </div>
     <table class="table mt-2 table-bordered">
@@ -32,12 +34,16 @@
                 <td class="text-right">{{ $pass->approvedOut ? $pass->approvedOut->format('Y-m-d h:i a') : 'N/A' }}</td>
             </tr>
             <tr>
+                <td class="font-weight-bold">Out Time</td>
+                <td class="text-right">{{ $pass->out ? $pass->out->format('Y-m-d h:i a') : 'N/A' }}</td>
+            </tr>
+            <tr>
                 <td class="font-weight-bold">Approved In</td>
                 <td class="text-right">{{ $pass->approvedIn ? $pass->approvedIn->format('Y-m-d h:i a') : 'N/A' }}</td>
             </tr>
 
             <tr>
-                <td class="font-weight-bold">Approved In</td>
+                <td class="font-weight-bold">In Time</td>
                 <td class="text-right">{{ $pass->in ? $pass->in->format('Y-m-d h:i a') : 'N/A' }}</td>
             </tr>
 

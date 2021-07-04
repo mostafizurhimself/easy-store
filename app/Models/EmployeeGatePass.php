@@ -45,7 +45,7 @@ class EmployeeGatePass extends Model
      *
      * @var array
      */
-    protected $appends = ['type', 'approvedInReadable', 'approvedOutReadable', 'inTimeReadable', 'outTimeReadable'];
+    protected $appends = ['type', 'approvedInReadable', 'approvedOutReadable', 'inTimeReadable', 'outTimeReadable', 'approvedFor'];
 
 
     /**
@@ -143,5 +143,16 @@ class EmployeeGatePass extends Model
     public function getOutTimeReadableAttribute()
     {
         return $this->out ? $this->out->format("Y-m-d h:i:s A") : null;
+    }
+
+    /**
+     * Get the approved for attribute
+     *
+     * @return string
+     */
+    public function getApprovedForAttribute()
+    {
+        $duration = $this->approvedIn->diffInSeconds($this->approvedOut);
+        return gmdate('H:i', $duration);
     }
 }
