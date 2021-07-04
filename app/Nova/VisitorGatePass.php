@@ -15,8 +15,11 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Textarea;
 use App\Nova\Actions\ScanGatePass;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use Bissolli\NovaPhoneField\PhoneNumber;
+use App\Nova\Filters\GatePassStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\VisitorGatePasses\PassGatePass;
 use App\Nova\Actions\VisitorGatePasses\ConfirmGatePass;
@@ -229,7 +232,15 @@ class VisitorGatePass extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            new GatePassStatusFilter,
+
+            new DateRangeFilter(),
+        ];
     }
 
     /**

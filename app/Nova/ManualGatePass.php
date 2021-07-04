@@ -17,6 +17,7 @@ use App\Nova\Actions\ScanGatePass;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\GatePassStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\ManualGatePasses\MarkAsDraft;
@@ -232,6 +233,8 @@ class ManualGatePass extends Resource
             }),
 
             new GatePassStatusFilter,
+
+            new DateRangeFilter(),
         ];
     }
 

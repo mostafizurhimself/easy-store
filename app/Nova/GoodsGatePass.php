@@ -21,9 +21,11 @@ use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Textarea;
 use App\Nova\Actions\PassGatePass;
+use App\Nova\Actions\ScanGatePass;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
+use App\Nova\Filters\DateRangeFilter;
 use App\Nova\AssetDistributionInvoice;
 use App\Nova\Filters\GatePassStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -31,7 +33,6 @@ use App\Nova\Actions\GoodsGatePasses\MarkAsDraft;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\GoodsGatePasses\ConfirmGatePass;
 use App\Nova\Actions\GoodsGatePasses\GenerateGatePass;
-use App\Nova\Actions\ScanGatePass;
 
 class GoodsGatePass extends Resource
 {
@@ -265,6 +266,8 @@ class GoodsGatePass extends Resource
             }),
 
             new GatePassStatusFilter,
+
+            new DateRangeFilter(),
         ];
     }
 
