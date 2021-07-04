@@ -152,7 +152,9 @@ class EmployeeGatePass extends Model
      */
     public function getApprovedForAttribute()
     {
-        $duration = $this->approvedIn->diffInSeconds($this->approvedOut);
-        return gmdate('H:i', $duration);
+        if ($this->approvedIn && $this->approvedOut) {
+            $duration = $this->approvedIn->diffInSeconds($this->approvedOut);
+            return gmdate('H:i', $duration);
+        }
     }
 }
