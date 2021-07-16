@@ -195,8 +195,11 @@ class Attendance extends Resource
                 ->exceptOnForms(),
 
             Text::make('Opening Hour', function () {
-                $range = json_decode($this->openingHour);
-                return "{$range[0]} to {$range[1]}";
+                if ($this->openingHour) {
+                    $range = json_decode($this->openingHour);
+                    return "{$range[0]} to {$range[1]}";
+                }
+                return "N/A";
             })
                 ->onlyOnDetail(),
 
