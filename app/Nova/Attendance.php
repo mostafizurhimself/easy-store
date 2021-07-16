@@ -186,11 +186,6 @@ class Attendance extends Resource
                     return false;
                 }),
 
-            // Time::make('In', 'in')
-            //     ->sortable()
-            //     ->format('HH:mm')
-            //     ->required(),
-
             TimeField::make('In')
                 ->sortable()
                 ->required(),
@@ -242,7 +237,7 @@ class Attendance extends Resource
                         </span>
                     ";
                 }
-                 if ($this->earlyLeave) {
+                if ($this->earlyLeave) {
                     $status .= '
                     <span class="inline-block m-1 whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-warning-light text-warning-dark">
                         Early
@@ -257,7 +252,7 @@ class Attendance extends Resource
                   ';
                 }
 
-                if(!$this->overtime && !$this->earlyLeave && !$this->late) {
+                if (!$this->overtime && !$this->earlyLeave && !$this->late) {
                     $status .= '
                         <span class="blok whitespace-no-wrap px-2 py-1 rounded-full uppercase text-xs font-bold bg-success-light text-success-dark">
                             Regular

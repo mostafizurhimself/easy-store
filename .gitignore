@@ -6,6 +6,7 @@
 /vendor
 /nova
 .env
+composer.lock
 .env.backup
 .phpunit.result.cache
 Homestead.json
