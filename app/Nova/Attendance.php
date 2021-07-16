@@ -196,8 +196,8 @@ class Attendance extends Resource
 
             Text::make('Opening Hour', function () {
                 if ($this->openingHour) {
-                    $range = json_decode($this->openingHour);
-                    return "{$range[0]} to {$range[1]}";
+                    // $range = json_decode($this->openingHour);
+                    return "{$this->openingHour[0]} to {$this->openingHour[1]}";
                 }
                 return "N/A";
             })
