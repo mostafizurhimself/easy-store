@@ -16,10 +16,10 @@ use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Laraning\NovaTimeField\TimeField;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Laraning\NovaTimeField\TimeField;
 
 class BulkAttendance extends Action
 {

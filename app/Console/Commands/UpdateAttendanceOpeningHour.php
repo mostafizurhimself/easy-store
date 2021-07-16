@@ -39,7 +39,8 @@ class UpdateAttendanceOpeningHour extends Command
      */
     public function handle()
     {
-        $attendances = Attendance::where('opening_hour', 'null')->get();
+        $attendances = Attendance::get();
+        // $attendances = Attendance::where('opening_hour', 'null')->get();
 
         foreach ($attendances as $attendance) {
             // Set the opening hour
