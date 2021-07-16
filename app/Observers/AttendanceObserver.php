@@ -42,7 +42,7 @@ class AttendanceObserver
         $workingHour = Timesheet::getWorkingHours($attendance->shiftId, $attendance->date);
 
         // Set the opening hour
-        $attendance->openingHour = json_encode(Timesheet::getWorkingRange($attendance->shiftId, $attendance->date));
+        $attendance->openingHour = Timesheet::getWorkingRange($attendance->shiftId, $attendance->date);
 
         // Set total late in seconds
         $attendance->late = Timesheet::getLate($attendance->shiftId, $attendance->date, $attendance->in) ?? null;
@@ -88,7 +88,7 @@ class AttendanceObserver
         $workingHour = Timesheet::getWorkingHours($attendance->shiftId, $attendance->date);
 
         // Set the opening hour
-        $attendance->openingHour = json_encode(Timesheet::getWorkingRange($attendance->shiftId, $attendance->date));
+        $attendance->openingHour = Timesheet::getWorkingRange($attendance->shiftId, $attendance->date);
 
         // Set total late in seconds
         $attendance->late = Timesheet::getLate($attendance->shiftId, $attendance->date, $attendance->in) ?? null;

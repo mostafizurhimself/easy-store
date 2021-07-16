@@ -44,7 +44,7 @@ class UpdateAttendanceOpeningHour extends Command
 
         foreach ($attendances as $attendance) {
             // Set the opening hour
-            $attendance->openingHour = json_encode(Timesheet::getWorkingRange($attendance->shiftId, $attendance->date));
+            $attendance->openingHour = Timesheet::getWorkingRange($attendance->shiftId, $attendance->date);
             $attendance->save();
             $this->info("{$attendance->id} opening hour updated.");
         }

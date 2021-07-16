@@ -100,6 +100,6 @@ class Attendance extends Model
     public function scopeRegular($query)
     {
         return $query->where('late', '=', 0)
-                    ->where('early_leave', '=', 0);
+            ->where('early_leave', '=', 0);
     }
 }
