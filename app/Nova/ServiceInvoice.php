@@ -24,15 +24,16 @@ use App\Nova\Lenses\DispatchItems;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Actions\CreateGoodsGatePass;
 use App\Nova\Filters\DispatchStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\ServiceInvoices\MarkAsDraft;
 use App\Nova\Actions\ServiceInvoices\Recalculate;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceInvoices\ConfirmInvoice;
 use App\Nova\Actions\ServiceInvoices\GenerateInvoice;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class ServiceInvoice extends Resource
 {
@@ -195,15 +196,30 @@ class ServiceInvoice extends Resource
                     Trix::make('Description')
                         ->rules('nullable', 'max:500'),
 
+                    Number::make('Total Dispatch', function () {
+                        return $this->totalDispatchQuantity;
+                    })
+                        ->exceptOnForms(),
+
+                    Number::make('Total Receive', function () {
+                        return $this->totalReceiveQuantity;
+                    })
+                        ->exceptOnForms(),
+
+                    Number::make('Total Remaining', function () {
+                        return $this->totalRemainingQuantity;
+                    })
+                        ->exceptOnForms(),
+
                     Currency::make('Total Dispatch Amount')
                         ->currency('BDT')
                         ->sortable()
-                        ->exceptOnForms(),
+                        ->onlyOnDetail(),
 
                     Currency::make('Total Receive Amount')
                         ->currency('BDT')
                         ->sortable()
-                        ->exceptOnForms(),
+                        ->onlyOnDetail(),
 
                     BelongsTo::make('Provider', 'provider', 'App\Nova\Provider')->searchable(),
 
@@ -426,6 +442,10 @@ class ServiceInvoice extends Resource
                 })
                 ->onlyOnDetail()
                 ->confirmButtonText('Create Or Update'),
+
+            (new DownloadExcel)
+                ->withHeadings()
+                ->confirmButtonText('Download'),
         ];
     }
 }

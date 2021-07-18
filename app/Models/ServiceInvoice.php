@@ -51,6 +51,13 @@ class ServiceInvoice extends Model
     protected static $readableIdLength = 4;
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['totalDispatchQuantity', 'totalReceiveQuantity', 'totalRemainingQuantity'];
+
+    /**
      * Get the model goodsGatePass
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
@@ -193,5 +200,35 @@ class ServiceInvoice extends Model
             $this->status = DispatchStatus::DRAFT();
             $this->save();
         }
+    }
+
+    /**
+     * Get total dispatch quantity
+     * 
+     * @return double
+     */
+    public function getTotalDispatchQuantityAttribute()
+    {
+        return $this->dispatches()->sum('dispatch_quantity');
+    }
+
+    /**
+     * Get total receive quantity
+     * 
+     * @return double
+     */
+    public function getTotalReceiveQuantityAttribute()
+    {
+        return $this->receives()->sum('quantity');
+    }
+
+    /**
+     * Get total remaining quantity
+     * 
+     * @return double
+     */
+    public function getTotalRemainingQuantityAttribute()
+    {
+        return $this->totalDispatchQuantity - $this->totalReceiveQuantity;
     }
 }
