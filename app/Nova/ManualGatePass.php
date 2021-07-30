@@ -177,7 +177,7 @@ class ManualGatePass extends Resource
                 ->canSee(function () {
                     return $this->approve()->exists();
                 })
-                ->onlyOnDetail()
+                ->exceptOnForms()
                 ->sortable(),
 
             DateTime::make('Approved At', function () {

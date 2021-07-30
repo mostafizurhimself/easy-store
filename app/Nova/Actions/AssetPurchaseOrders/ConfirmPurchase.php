@@ -35,18 +35,17 @@ class ConfirmPurchase extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
+        foreach ($models as $model) {
 
-            if($model->purchaseItems()->count() == 0)
-            {
+            if ($model->purchaseItems()->count() == 0) {
                 return Action::danger("No purchase item added.");
             }
 
-            if($model->status == PurchaseStatus::DRAFT()){
+            if ($model->status == PurchaseStatus::DRAFT()) {
 
                 //Update the relate purchase items statusr
-                foreach($model->purchaseItems as $purchaseItem){
-                    if($purchaseItem->status == PurchaseStatus::DRAFT()){
+                foreach ($model->purchaseItems as $purchaseItem) {
+                    if ($purchaseItem->status == PurchaseStatus::DRAFT()) {
                         $purchaseItem->status =  PurchaseStatus::CONFIRMED();
                         $purchaseItem->save();
                     }
@@ -62,12 +61,11 @@ class ConfirmPurchase extends Action
                 Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\AssetPurchaseOrder::uriKey(), $model));
 
                 //Notify super admins
-                if(Settings::superAdminNotification())
-                {
+                if (Settings::superAdminNotification()) {
                     $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
                     Notification::send($users, new PurchaseOrderConfirmed(\App\Nova\AssetPurchaseOrder::uriKey(), $model));
                 }
-            }else{
+            } else {
                 return Action::danger('Already confirmed.');
             }
         }
