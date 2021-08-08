@@ -23,6 +23,7 @@ use App\Nova\Filters\DateRangeFilter;
 use App\Nova\Filters\GatePassStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\EmployeeGatePasses\CheckIn;
+use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\EmployeeGatePasses\MarkAsDraft;
 use App\Nova\Actions\EmployeeGatePasses\PassGatePass;
 use App\Nova\Actions\EmployeeGatePasses\ConfirmGatePass;
@@ -31,6 +32,7 @@ use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 
 class EmployeeGatePass extends Resource
 {
+    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
@@ -77,6 +79,26 @@ class EmployeeGatePass extends Resource
     public static $title = 'readable_id';
 
     /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'readable_id',
+    ];
+
+    /**
+     * Searchable columns of the table
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'location' => ['name'],
+        'employee' => ['first_name', 'last_name', 'readable_id'],
+    ];
+
+
+    /**
      * Get the displayable label of the resource.
      *
      * @return string
@@ -115,16 +137,6 @@ class EmployeeGatePass extends Resource
     {
         return __('Update Pass');
     }
-
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
-    public static $search = [
-        'readable_id',
-    ];
 
     /**
      * Get the fields displayed by the resource.

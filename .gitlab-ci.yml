@@ -8,7 +8,7 @@ building:
     - whoami
     - git stash
     - git pull
-    - composer install
+    - composer install --no-scripts --no-interaction
     - php artisan migrate
     - php artisan generate:permissions
     - php artisan route:clear
