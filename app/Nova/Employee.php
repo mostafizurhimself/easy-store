@@ -22,9 +22,11 @@ use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\MorphMany;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\DepartmentFilter;
+use App\Nova\Actions\Employees\EisForm;
 use AwesomeNova\Filters\DependentFilter;
 use Bissolli\NovaPhoneField\PhoneNumber;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -34,6 +36,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use Orlyapps\NovaBelongsToDepend\NovaBelongsToDepend;
 use Hubertnnn\LaravelNova\Fields\DynamicSelect\DynamicSelect;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
+use Laravel\Nova\Fields\HasMany;
 
 class Employee extends Resource
 {
@@ -340,8 +343,17 @@ class Employee extends Resource
                             return Str::title(Str::of($this->status)->replace('_', " "));
                         }),
                 ]
-
             ]))->withToolbar(),
+
+            (new Tabs('Other Details', [
+                "Addresses" => [
+                    MorphMany::make('Address'),
+                ],
+                "Educations" => [
+                    HasMany::make('Educations')
+                ]
+
+            ])),
         ];
     }
 
@@ -404,6 +416,8 @@ class Employee extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new EisForm)->onlyOnDetail()->withoutConfirmation(),
+        ];
     }
 }

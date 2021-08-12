@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Facades\Settings;
+use App\Enums\AddressType;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -53,7 +54,18 @@ class Employee extends Model implements HasMedia
      *
      * @var array
      */
-    protected $append = ['name', 'employeeId'];
+    protected $append = ['name', 'employeeId', 'presentAddress', 'permanentAddress'];
+
+    /**
+     * Determines a morph one relationship
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function address()
+    {
+        return $this->morphMany(Address::class, 'addressable');
+    }
+
 
     /**
      * Determines one-to-one relation
@@ -106,6 +118,16 @@ class Employee extends Model implements HasMedia
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function educations()
+    {
+        return $this->hasMany(Education::class);
+    }
+
+    /**
      * Get the employee full name attribute
      *
      * @return string
@@ -124,6 +146,30 @@ class Employee extends Model implements HasMedia
     public function getEmployeeIdAttribute()
     {
         return $this->readableId;
+    }
+
+    /**
+     * Get billing address attribute
+     *
+     * @return mixed
+     */
+    public function getBillingAddressAttribute()
+    {
+        if ($this->address()->exists()) {
+            return $this->address()->where('type', AddressType::PRESENT_ADDRESS())->first();
+        }
+    }
+
+    /**
+     * Get shipping address attribute
+     *
+     * @return mixed
+     */
+    public function getShippingAddressAttribute()
+    {
+        if ($this->address()->exists()) {
+            return $this->address()->where('type', AddressType::PERMANENT_ADDRESS())->first();
+        }
     }
 
 
@@ -183,7 +229,7 @@ class Employee extends Model implements HasMedia
             $employees = self::setEagerLoads([])->orderBy('first_name')->get(['id', 'first_name', 'last_name']);
 
             return $employees->mapWithKeys(function ($employee) {
-                return [$employee->first_name. " " .$employee->last_name => $employee->id];
+                return [$employee->first_name . " " . $employee->last_name => $employee->id];
             })->toArray();
         });
     }

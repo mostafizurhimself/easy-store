@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EisFormController;
 use App\Models\License;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +53,7 @@ Route::group(['middleware' => 'nova'], function () {
     // Abstract Routes
     Route::get('generate-schedule/{shift}', 'AbstractController@generateSchedule')->name('generate.schedule');
     Route::get('attendance-report/{date}/{location}', 'AbstractController@attendanceReport')->name('attendance.report');
+    Route::get('employees/{employee}/eis-form', 'EisFormController@index')->name('employees.eis-form');
 
     // Invoice Routes
     Route::group(['prefix' => 'invoices'], function () {

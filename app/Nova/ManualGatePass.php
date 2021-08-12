@@ -140,6 +140,11 @@ class ManualGatePass extends Resource
                 ])
                 ->sortable(),
 
+
+            Text::make('Receiver Name')
+                ->sortable()
+                ->rules('required', 'string', 'max:250'),
+
             SimpleRepeatable::make('Items', 'items', [
                 Text::make('Description')
                     ->rules('required', 'string', 'max:250'),
@@ -183,7 +188,7 @@ class ManualGatePass extends Resource
             DateTime::make('Approved At', function () {
                 return $this->approve()->exists() ? $this->approve->createdAt : null;
             })
-                ->exceptOnForms()
+                ->onlyOnDetail()
                 ->sortable(),
 
             BelongsTo::make('Passed By', 'passedBy', \App\Nova\User::class)
@@ -193,7 +198,7 @@ class ManualGatePass extends Resource
                 }),
 
             DateTime::make('Passed At')
-                ->exceptOnForms()
+                ->onlyOnDetail()
                 ->sortable(),
 
             Badge::make('Status')->map([
