@@ -1,10 +1,11 @@
 <?php
 
+use App\Enums\ConfirmStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateManualGatePassesTable extends Migration
+class CreateGiftGatePassesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +14,23 @@ class CreateManualGatePassesTable extends Migration
      */
     public function up()
     {
-        Schema::create('manual_gate_passes', function (Blueprint $table) {
+        Schema::create('gift_gate_passes', function (Blueprint $table) {
             $table->id();
             $table->string('readable_id')->nullable();
             $table->bigInteger('location_id')->unsigned()->nullable();
-            $table->json('items')->nullable();
-            $table->json('summary')->nullable();
-            $table->double('total_quantity')->default(0);
+            $table->string('receiver_name');
+            $table->integer('tshirt')->default(0);
+            $table->integer('polo_tshirt')->default(0);
+            $table->integer('shirt')->default(0);
+            $table->integer('gaberdine_pant')->default(0);
+            $table->integer('panjabi')->default(0);
+            $table->integer('pajama')->default(0);
+            $table->integer('kabli')->default(0);
+            $table->integer('total')->default(0);
             $table->text('note')->nullable();
-            $table->string('status')->default('draft');
+            $table->string('status')->default(ConfirmStatus::DRAFT());
             $table->bigInteger('passed_by')->unsigned()->nullable();
-            $table->dateTime('passed_at')->nullable()->index('manual_gate_passes_passed_at_index');
+            $table->dateTime('passed_at')->nullable()->index('gift_gate_passes_passed_at_index');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations');
@@ -38,6 +45,6 @@ class CreateManualGatePassesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manual_gate_passes');
+        Schema::dropIfExists('gift_gate_passes');
     }
 }

@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use App\Enums\GatepassType;
 use App\Traits\CamelCasing;
 use App\Enums\GatePassStatus;
 use App\Traits\HasReadableIdWithDate;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ManualGatePass extends Model
+class GiftGatePass extends Model
 {
     use LogsActivity, SoftDeletes, HasReadableIdWithDate, CamelCasing;
 
@@ -35,30 +34,13 @@ class ManualGatePass extends Model
     protected $dates = ['passed_at'];
 
     /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = ['type'];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'items'   => 'array',
-        'summary' => 'array',
-    ];
-
-    /**
      * Set the model readable id prefix
      *
      * @var string
      */
     public static function readableIdPrefix()
     {
-        return "MGP";
+        return "GFT";
     }
 
     /**
@@ -106,15 +88,5 @@ class ManualGatePass extends Model
     public function isDraft()
     {
         return $this->status == GatePassStatus::DRAFT();
-    }
-
-    /**
-     * Get the gate pass type attribute
-     *
-     * @return string
-     */
-    public function getTypeAttribute()
-    {
-        return GatepassType::MANUAL();
     }
 }

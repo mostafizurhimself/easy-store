@@ -63,7 +63,7 @@ class VisitorGatePass extends Resource
      *
      * @var int
      */
-    public static $priority = 2;
+    public static $priority = 3;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

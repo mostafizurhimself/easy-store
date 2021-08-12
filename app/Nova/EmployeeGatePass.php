@@ -69,7 +69,7 @@ class EmployeeGatePass extends Resource
      *
      * @var int
      */
-    public static $priority = 3;
+    public static $priority = 5;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
