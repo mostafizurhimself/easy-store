@@ -65,6 +65,13 @@ class Employee extends Resource
     public static $priority = 6;
 
     /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
+
+    /**
      * The icon of the resource.
      *
      * @return string
@@ -422,16 +429,16 @@ class Employee extends Resource
             (new EisForm)->onlyOnDetail()->withoutConfirmation(),
 
             (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
-                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+                return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
-                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+                return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?"),
 
             (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
-                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+                return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
-                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+                return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
 
