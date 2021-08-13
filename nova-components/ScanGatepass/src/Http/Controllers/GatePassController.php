@@ -3,16 +3,16 @@
 namespace Easystore\ScanGatepass\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Enums\GatepassType;
 use Illuminate\Support\Str;
+use App\Models\GiftGatePass;
 use Illuminate\Http\Request;
 use App\Enums\GatePassStatus;
-use App\Enums\GatepassType;
 use App\Models\GoodsGatePass;
 use App\Models\ManualGatePass;
 use App\Models\VisitorGatePass;
 use App\Models\EmployeeGatePass;
 use App\Http\Controllers\Controller;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Auth;
 
 class GatePassController extends Controller
@@ -43,39 +43,41 @@ class GatePassController extends Controller
         ]);
 
         $model = $this->getGatePass($request->pass);
-        if ($model->type != GatepassType::EMPLOYEE() && $model->status == GatePassStatus::CONFIRMED()) {
-            $model->passedAt = Carbon::now();
-            $model->passedBy = Auth::user()->id;
-            $model->status   = GatePassStatus::PASSED();
-            $model->save();
+        if ($model) {
+            if ($model->type != GatepassType::EMPLOYEE() && $model->status == GatePassStatus::CONFIRMED()) {
+                $model->passedAt = Carbon::now();
+                $model->passedBy = Auth::user()->id;
+                $model->status   = GatePassStatus::PASSED();
+                $model->save();
 
-            return response()->json([
-                'message' => "Gatepass passed successfully",
-                'data'    => $model
-            ]);
-        } elseif ($model->type == GatepassType::EMPLOYEE() && $model->status == GatePassStatus::CONFIRMED()) {
-            $model->passedAt = Carbon::now();
-            $model->out      = Carbon::now();
-            $model->passedBy = Auth::user()->id;
-            $model->status   = GatePassStatus::PASSED();
-            $model->save();
+                return response()->json([
+                    'message' => "Gatepass passed successfully",
+                    'data'    => $model
+                ]);
+            } elseif ($model->type == GatepassType::EMPLOYEE() && $model->status == GatePassStatus::CONFIRMED()) {
+                $model->passedAt = Carbon::now();
+                $model->out      = Carbon::now();
+                $model->passedBy = Auth::user()->id;
+                $model->status   = GatePassStatus::PASSED();
+                $model->save();
 
-            return response()->json([
-                'message' => "Gatepass passed successfully",
-                'data'    => $model
-            ]);
-        } elseif ($model->type == GatepassType::EMPLOYEE() && $model->status == GatePassStatus::PASSED() && empty($model->in)) {
-            $model->in     = Carbon::now();
-            $model->save();
+                return response()->json([
+                    'message' => "Gatepass passed successfully",
+                    'data'    => $model
+                ]);
+            } elseif ($model->type == GatepassType::EMPLOYEE() && $model->status == GatePassStatus::PASSED() && empty($model->in)) {
+                $model->in     = Carbon::now();
+                $model->save();
 
-            return response()->json([
-                'message' => "Checked in successfully",
-                'data'    => $model
-            ]);
-        } else {
-            return response()->json([
-                'message' => "Not permitted now",
-            ], 404);
+                return response()->json([
+                    'message' => "Checked in successfully",
+                    'data'    => $model
+                ]);
+            } else {
+                return response()->json([
+                    'message' => "Not permitted now",
+                ], 404);
+            }
         }
     }
 
@@ -120,6 +122,15 @@ class GatePassController extends Controller
                 $result = EmployeeGatePass::where('readable_id', $pass)->first();
             } else {
                 $result = EmployeeGatePass::where('readable_id', $pass)->where('location_id', request()->user()->locationId)->first();
+            }
+        }
+
+        // Check gift gate pass
+        if (Str::startsWith($pass, GiftGatePass::readableIdPrefix())) {
+            if (request()->user()->isSuperAdmin()) {
+                $result = GiftGatePass::where('readable_id', $pass)->first();
+            } else {
+                $result = GiftGatePass::where('readable_id', $pass)->where('location_id', request()->user()->locationId)->first();
             }
         }
 
