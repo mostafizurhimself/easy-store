@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Fabric Purchase Item</title>
+    <title>@yield('title') | Easy Store</title>
 
     <style>
         body {
-            font-family: sans-serif;
+            font-family: "DejaVu Sans", sans-serif;
             font-size: 11px;
         }
 

@@ -40,7 +40,7 @@ class ServiceDispatch extends Model
      *
      * @var array
      */
-    protected $append = ['date', 'location'];
+    protected $appends = ['date', 'location'];
     /**
      * Set the model readable id prefix
      *
@@ -65,7 +65,7 @@ class ServiceDispatch extends Model
      */
     public function service()
     {
-       return $this->belongsTo(Service::class)->withTrashed();
+        return $this->belongsTo(Service::class)->withTrashed();
     }
 
     /**
@@ -75,7 +75,7 @@ class ServiceDispatch extends Model
      */
     public function invoice()
     {
-       return $this->belongsTo(ServiceInvoice::class, 'invoice_id')->withTrashed();
+        return $this->belongsTo(ServiceInvoice::class, 'invoice_id')->withTrashed();
     }
 
     /**
@@ -85,7 +85,7 @@ class ServiceDispatch extends Model
      */
     public function receives()
     {
-       return $this->hasMany(ServiceReceive::class, 'dispatch_id');
+        return $this->hasMany(ServiceReceive::class, 'dispatch_id');
     }
 
     /**
@@ -95,7 +95,7 @@ class ServiceDispatch extends Model
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class)->withTrashed();
+        return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -178,20 +178,18 @@ class ServiceDispatch extends Model
      */
     public function updateStatus()
     {
-        if($this->receives()->exists() && ($this->dispatchQuantity == $this->receiveQuantity)){
+        if ($this->receives()->exists() && ($this->dispatchQuantity == $this->receiveQuantity)) {
             $this->status = Dispatchstatus::RECEIVED();
         }
 
-        if($this->receives()->exists() && ($this->dispatchQuantity != $this->receiveQuantity)){
+        if ($this->receives()->exists() && ($this->dispatchQuantity != $this->receiveQuantity)) {
             $this->status = Dispatchstatus::PARTIAL();
         }
 
-        if(!$this->receives()->exists()){
+        if (!$this->receives()->exists()) {
             $this->status = Dispatchstatus::CONFIRMED();
         }
 
         $this->save();
-
     }
-
 }

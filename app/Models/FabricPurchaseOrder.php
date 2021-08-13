@@ -39,7 +39,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
      *
      * @var array
      */
-    // protected $append = ['totalPurchaseItems'];
+    // protected $appends = ['totalPurchaseItems'];
 
     /**
      * Add all attributes that are not listed in $guarded for log
@@ -55,7 +55,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('purchase-order-attachments');
+        $this->addMediaCollection('purchase-order-attachments');
     }
 
     /**
@@ -92,7 +92,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
      */
     public function supplier()
     {
-       return $this->belongsTo(Supplier::class)->withTrashed();
+        return $this->belongsTo(Supplier::class)->withTrashed();
     }
 
     /**
@@ -102,7 +102,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
      */
     public function purchaseItems()
     {
-       return $this->hasMany(FabricPurchaseItem::class, 'purchase_order_id', 'id');
+        return $this->hasMany(FabricPurchaseItem::class, 'purchase_order_id', 'id');
     }
 
     /**
@@ -112,7 +112,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
      */
     public function receiveItems()
     {
-       return $this->hasMany(FabricReceiveItem::class, 'purchase_order_id');
+        return $this->hasMany(FabricReceiveItem::class, 'purchase_order_id');
     }
 
     /**
@@ -155,7 +155,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
     public function isConfirmed()
     {
         $status = $this->purchaseItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == PurchaseStatus::CONFIRMED()){
+        if ($status->count() == 1  && $status->first() == PurchaseStatus::CONFIRMED()) {
             return true;
         }
         return false;
@@ -169,7 +169,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
     public function isReceived()
     {
         $status = $this->purchaseItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == PurchaseStatus::RECEIVED()){
+        if ($status->count() == 1  && $status->first() == PurchaseStatus::RECEIVED()) {
             return true;
         }
         return false;
@@ -182,7 +182,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
      */
     public function isPartial()
     {
-        if($this->receiveItems()->exists()){
+        if ($this->receiveItems()->exists()) {
             return true;
         }
         return false;
@@ -195,33 +195,32 @@ class FabricPurchaseOrder extends Model implements HasMedia
      */
     public function updateStatus()
     {
-        if($this->purchaseItems()->exists()){
+        if ($this->purchaseItems()->exists()) {
 
-            if($this->isConfirmed()){
+            if ($this->isConfirmed()) {
                 $this->status = PurchaseStatus::CONFIRMED();
                 $this->save();
                 return;
             }
 
-            if($this->isReceived()){
+            if ($this->isReceived()) {
                 $this->status = PurchaseStatus::RECEIVED();
                 $this->save();
                 return;
             }
 
-            if($this->isPartial()){
+            if ($this->isPartial()) {
                 $this->status = PurchaseStatus::PARTIAL();
                 $this->save();
                 return;
             }
-
-        }else{
+        } else {
             $this->status = PurchaseStatus::DRAFT();
             $this->save();
         }
     }
 
-     /**
+    /**
      * Get the approver details of the purchase order
      *
      * @return \App\Models\Employee
@@ -240,5 +239,4 @@ class FabricPurchaseOrder extends Model implements HasMedia
     {
         return $this->purchaseItems()->count();
     }
-
 }

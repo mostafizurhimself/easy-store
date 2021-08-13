@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>    Employee List
+ | Easy Store</title>
+
+    <style>
+        body {
+            font-family: "DejaVu Sans", sans-serif;
+            font-size: 11px;
+        }
+
+        h1,
+        p {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #2e2e2e;
+        }
+
+        table thead {
+            text-align: left;
+        }
+
+        tr:nth-child(2n + 1) {
+            background: #dadada;
+        }
+
+        tr:first-child {
+            font-weight: bold
+        }
+
+        th,
+        td {
+            padding: 1rem;
+        }
+
+        .tfoot {
+            font-weight: bold;
+
+        }
+
+    </style>
+</head>
+
+<body>
+        <table class="table">
+        <tbody>
+            <tr>
+                <td>#</td>
+                <td>Location</td>
+                <td>Name</td>
+                <td>Employee Id</td>
+                <td width="200px">Mobile</td>
+                <td>Department</td>
+                <td>Section</td>
+                <td>Designation</td>
+                <td>Salary</td>
+                <td>Joining Date</td>
+                <td>Status</td>
+            </tr>
+                            <tr>
+                    <td>1</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md. Khirul Islam</td>
+                    <td>CO000186</td>
+                    <td>+88 018 9346 1648</td>
+                    <td>Audit Department</td>
+                    <td>N/A</td>
+                    <td>Computer Operator</td>
+                    <td>14000</td>
+                    <td>2021-02-24</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>2</td>
+                    <td>Chowdhurypara</td>
+                    <td>Mahfuza Begum</td>
+                    <td>BUA00185</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Bua</td>
+                    <td>8300</td>
+                    <td>2021-03-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>3</td>
+                    <td>Chowdhurypara</td>
+                    <td>Rina Begum</td>
+                    <td>BUA00184</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Bua</td>
+                    <td>8300</td>
+                    <td>2018-03-13</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>4</td>
+                    <td>Chowdhurypara</td>
+                    <td>Nazma Akter</td>
+                    <td>CKR00183</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Cooker</td>
+                    <td>9000</td>
+                    <td>2012-01-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>5</td>
+                    <td>Chowdhurypara</td>
+                    <td>Sobura bewa</td>
+                    <td>BUA00182</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Bua</td>
+                    <td>8300</td>
+                    <td>2015-05-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>6</td>
+                    <td>Chowdhurypara</td>
+                    <td>Monoara Begum</td>
+                    <td>BUA00181</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Bua</td>
+                    <td>8300</td>
+                    <td>2014-06-05</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>7</td>
+                    <td>Chowdhurypara</td>
+                    <td>Shahanaj Begum</td>
+                    <td>BUA00180</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Bua</td>
+                    <td>8300</td>
+                    <td>2016-10-09</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>8</td>
+                    <td>Chowdhurypara</td>
+                    <td>Ambia Khatun</td>
+                    <td>BUA00179</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Bua</td>
+                    <td>10000</td>
+                    <td>2010-04-25</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>9</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md Mridul Islam</td>
+                    <td>FTO00178</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>Fit Of The Operator</td>
+                    <td>15000</td>
+                    <td>2020-09-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>10</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md. Ripon Ahmed Rony</td>
+                    <td>FTO00177</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Fit Of The Operator</td>
+                    <td>16000</td>
+                    <td>2020-09-15</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>11</td>
+                    <td>Chowdhurypara</td>
+                    <td>Al- Amin</td>
+                    <td>MSG00176</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Messenger</td>
+                    <td>11500</td>
+                    <td>2017-04-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>12</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md. Saiful Islam</td>
+                    <td>OA000175</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Office Assistant</td>
+                    <td>11500</td>
+                    <td>2015-04-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>13</td>
+                    <td>Chowdhurypara</td>
+                    <td>Ashikul Sheikh Ashik</td>
+                    <td>OA000174</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Office Assistant</td>
+                    <td>13000</td>
+                    <td>2009-09-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>14</td>
+                    <td>Chowdhurypara</td>
+                    <td>Roni Mia</td>
+                    <td>STA00173</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Store Assistant</td>
+                    <td>11500</td>
+                    <td>2018-07-07</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>15</td>
+                    <td>Chowdhurypara</td>
+                    <td>Torikul Islam</td>
+                    <td>STM00172</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>Sutter Man</td>
+                    <td>14500</td>
+                    <td>2012-03-03</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>16</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md abdur Razzak</td>
+                    <td>STM00171</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Sutter Man</td>
+                    <td>14000</td>
+                    <td>2011-06-08</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>17</td>
+                    <td>Chowdhurypara</td>
+                    <td>Sabuj Hossain</td>
+                    <td>STM00170</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Sutter Man</td>
+                    <td>14500</td>
+                    <td>2011-06-08</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>18</td>
+                    <td>Chowdhurypara</td>
+                    <td>Shahidul Islam</td>
+                    <td>SV000169</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>18000</td>
+                    <td>2017-08-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>19</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md Shahin Mia</td>
+                    <td>SV000168</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>18000</td>
+                    <td>2016-05-04</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>20</td>
+                    <td>Chowdhurypara</td>
+                    <td>Alomgir Hossain</td>
+                    <td>SV000167</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>18000</td>
+                    <td>2017-08-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>21</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md Milon Mia</td>
+                    <td>MKM00166</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Marker Man</td>
+                    <td>20000</td>
+                    <td>2019-09-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>22</td>
+                    <td>Chowdhurypara</td>
+                    <td>Abdul Hamid Bablu</td>
+                    <td>CTM00165</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Cutter Man</td>
+                    <td>18500</td>
+                    <td>2011-02-10</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>23</td>
+                    <td>Chowdhurypara</td>
+                    <td>Showkot Hossain</td>
+                    <td>ELC00164</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Electrichian</td>
+                    <td>11500</td>
+                    <td>2017-08-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>24</td>
+                    <td>Chowdhurypara</td>
+                    <td>Kamrul Islam</td>
+                    <td>ELC00163</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Electrichian</td>
+                    <td>15500</td>
+                    <td>2014-06-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>25</td>
+                    <td>Chowdhurypara</td>
+                    <td>Biplob Kumar</td>
+                    <td>AAC00162</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Asst Ac Mechanics</td>
+                    <td>13000</td>
+                    <td>2021-03-27</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>26</td>
+                    <td>Chowdhurypara</td>
+                    <td>Aiunb Ali</td>
+                    <td>AAC00161</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Asst Ac Mechanics</td>
+                    <td>16000</td>
+                    <td>2018-01-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>27</td>
+                    <td>Chowdhurypara</td>
+                    <td>Billal Hossain</td>
+                    <td>ACM00160</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Ac Mechanics</td>
+                    <td>17000</td>
+                    <td>2017-11-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>28</td>
+                    <td>Chowdhurypara</td>
+                    <td>Al-Amin Jahid</td>
+                    <td>MCS00159</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Mechanics</td>
+                    <td>21000</td>
+                    <td>2019-05-12</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>29</td>
+                    <td>Chowdhurypara</td>
+                    <td>Imtiaz Ahmed</td>
+                    <td>JRO00158</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Junior Officer</td>
+                    <td>17000</td>
+                    <td>2018-01-10</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>30</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md Jahir Uddin Tuhin</td>
+                    <td>FM000157</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Factory Manager</td>
+                    <td>27000</td>
+                    <td>2011-06-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>31</td>
+                    <td>Hazipara</td>
+                    <td>Abul Khair</td>
+                    <td>AO000156</td>
+                    <td>+88 015 7230 8081</td>
+                    <td>Admin Department</td>
+                    <td>N/A</td>
+                    <td>Accounts Officer</td>
+                    <td>17000</td>
+                    <td>2017-06-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>32</td>
+                    <td>Hazipara</td>
+                    <td>Md Ashikur Rahman</td>
+                    <td>STA00155</td>
+                    <td>+88 019 8887 9924</td>
+                    <td>Admin Department</td>
+                    <td>N/A</td>
+                    <td>Store Assistant</td>
+                    <td>13000</td>
+                    <td>2010-06-11</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>33</td>
+                    <td>Hazipara</td>
+                    <td>Md Sohel Rana</td>
+                    <td>AO000154</td>
+                    <td>+88 017 1050 2531</td>
+                    <td>Admin Department</td>
+                    <td>N/A</td>
+                    <td>Accounts Officer</td>
+                    <td>17000</td>
+                    <td>2017-06-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>34</td>
+                    <td>Hazipara</td>
+                    <td>Muhammad Saifur Rahman</td>
+                    <td>DM000153</td>
+                    <td>+88 017 1757 1758</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Distribution Manager</td>
+                    <td>25000</td>
+                    <td>2020-09-03</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>35</td>
+                    <td>Hazipara</td>
+                    <td>Md Imran Khan</td>
+                    <td>REV00152</td>
+                    <td>+88 019 3536 6315</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Receving</td>
+                    <td>12000</td>
+                    <td>2019-03-17</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>36</td>
+                    <td>Hazipara</td>
+                    <td>Rashedul Alam</td>
+                    <td>STO00150</td>
+                    <td>+88 019 6534 7059</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Store Officer</td>
+                    <td>15000</td>
+                    <td>2021-08-19</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>37</td>
+                    <td>Hazipara</td>
+                    <td>Ruhul Amin</td>
+                    <td>DRV00149</td>
+                    <td>+88 017 3877 3240</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Driver</td>
+                    <td>19000</td>
+                    <td>2020-09-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>38</td>
+                    <td>Hazipara</td>
+                    <td>Roman Khan</td>
+                    <td>DRV00148</td>
+                    <td>+88 016 3206 4588</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Driver</td>
+                    <td>19000</td>
+                    <td>2018-03-03</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>39</td>
+                    <td>Hazipara</td>
+                    <td>Moninul Islam Sapon</td>
+                    <td>DRV00147</td>
+                    <td>+88 018 1383 7352</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Driver</td>
+                    <td>19000</td>
+                    <td>2017-02-15</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>40</td>
+                    <td>Hazipara</td>
+                    <td>Md Oarejkarani</td>
+                    <td>DRV00146</td>
+                    <td>+88 017 2557 9913</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Driver</td>
+                    <td>18500</td>
+                    <td>2018-07-20</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>41</td>
+                    <td>Hazipara</td>
+                    <td>Md Masud Rana</td>
+                    <td>DRV00145</td>
+                    <td>+88 017 1216 2383</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Driver</td>
+                    <td>19000</td>
+                    <td>2018-03-03</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>42</td>
+                    <td>Hazipara</td>
+                    <td>Md Tajal Islam</td>
+                    <td>DRV00144</td>
+                    <td>+88 017 7814 8177</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Driver</td>
+                    <td>23000</td>
+                    <td>2012-04-15</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>43</td>
+                    <td>Hazipara</td>
+                    <td>mamun ALI</td>
+                    <td>DRV00143</td>
+                    <td>+88 019 5001 6361</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Driver</td>
+                    <td>19000</td>
+                    <td>2017-10-16</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>44</td>
+                    <td>Hazipara</td>
+                    <td>Raju Shikder</td>
+                    <td>DVM00142</td>
+                    <td>+88 107 0978 1584</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Delivery Man</td>
+                    <td>11000</td>
+                    <td>2018-05-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>45</td>
+                    <td>Hazipara</td>
+                    <td>Asraful Islam</td>
+                    <td>DVM00141</td>
+                    <td>+88 017 5651 4845</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Delivery Man</td>
+                    <td>13000</td>
+                    <td>2017-02-13</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>46</td>
+                    <td>Hazipara</td>
+                    <td>Md Babul Pramanik</td>
+                    <td>DVM00140</td>
+                    <td>+88 017 3493 5843</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Delivery Man</td>
+                    <td>13000</td>
+                    <td>2014-06-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>47</td>
+                    <td>Hazipara</td>
+                    <td>Md Raihan Mia</td>
+                    <td>DVM00139</td>
+                    <td>+88 017 0749 3850</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Delivery Man</td>
+                    <td>13000</td>
+                    <td>2013-12-29</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>48</td>
+                    <td>Hazipara</td>
+                    <td>Md Rasel</td>
+                    <td>SMP00138</td>
+                    <td>+88 017 5938 1529</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Sample Man</td>
+                    <td>18000</td>
+                    <td>2019-01-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>49</td>
+                    <td>Hazipara</td>
+                    <td>Md Rony Hawlader</td>
+                    <td>CTM00137</td>
+                    <td>+88 019 4850 1021</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>19500</td>
+                    <td>2021-01-04</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>50</td>
+                    <td>Hazipara</td>
+                    <td>Md Anowar Hossai</td>
+                    <td>CTM00136</td>
+                    <td>+88 017 5911 3567</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>19500</td>
+                    <td>2021-03-14</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>51</td>
+                    <td>Hazipara</td>
+                    <td>Md Mithu Shakh</td>
+                    <td>CTM00135</td>
+                    <td>+88 017 0697 0805</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>14000</td>
+                    <td>2018-01-21</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>52</td>
+                    <td>Hazipara</td>
+                    <td>Md Hannan MIa</td>
+                    <td>SMP00134</td>
+                    <td>+88 019 1673 2943</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Sample Man</td>
+                    <td>19000</td>
+                    <td>2020-08-27</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>53</td>
+                    <td>Hazipara</td>
+                    <td>Alamin Hawlader</td>
+                    <td>SMP00133</td>
+                    <td>+88 016 8341 2852</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Sample Man</td>
+                    <td>18000</td>
+                    <td>2018-03-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>54</td>
+                    <td>Hazipara</td>
+                    <td>Md Jahangir Alam</td>
+                    <td>SMP00132</td>
+                    <td>+88 017 3508 3621</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Sample Man</td>
+                    <td>19000</td>
+                    <td>2015-03-23</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>55</td>
+                    <td>Hazipara</td>
+                    <td>Jabed Hossain</td>
+                    <td>SMP00131</td>
+                    <td>+88 017 5719 7066</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Sample Man</td>
+                    <td>19000</td>
+                    <td>2020-12-05</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>56</td>
+                    <td>Hazipara</td>
+                    <td>Md Anwarul Islam</td>
+                    <td>SMP00130</td>
+                    <td>+88 019 4465 3869</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Sample Man</td>
+                    <td>20000</td>
+                    <td>2020-12-05</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>57</td>
+                    <td>Hazipara</td>
+                    <td>Mithu Bardhan</td>
+                    <td>ASM00129</td>
+                    <td>+88 017 6484 8679</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Asst Marchandiser</td>
+                    <td>12000</td>
+                    <td>2021-02-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>58</td>
+                    <td>Hazipara</td>
+                    <td>Salma Begum</td>
+                    <td>SMP00122</td>
+                    <td>+88 017 5903 8884</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Sample Man</td>
+                    <td>22000</td>
+                    <td>2021-02-09</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>59</td>
+                    <td>Hazipara</td>
+                    <td>Mozammal Haque</td>
+                    <td>SVR00120</td>
+                    <td>+88 019 1785 3599</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>18000</td>
+                    <td>2021-02-08</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>60</td>
+                    <td>Hazipara</td>
+                    <td>Md Rubel Hawlader</td>
+                    <td>QCL00119</td>
+                    <td>+88 017 6418 7113</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Quality Controlar</td>
+                    <td>22000</td>
+                    <td>2021-02-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>61</td>
+                    <td>Hazipara</td>
+                    <td>Md Abdus Salam</td>
+                    <td>FIS00118</td>
+                    <td>+88 017 6255 1844</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Floor Inchage Six</td>
+                    <td>24000</td>
+                    <td>2021-02-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>62</td>
+                    <td>Hazipara</td>
+                    <td>MIST Laily</td>
+                    <td>BUA00117</td>
+                    <td>+88 019 4032 1058</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2021-01-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>63</td>
+                    <td>Hazipara</td>
+                    <td>Md Rony Howlader</td>
+                    <td>CTM00116</td>
+                    <td>+88 019 4850 1021</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>19500</td>
+                    <td>2021-01-04</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>64</td>
+                    <td>Hazipara</td>
+                    <td>Md Tanvir Hasan</td>
+                    <td>CTM00115</td>
+                    <td>+88 017 0775 7500</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>19500</td>
+                    <td>2021-01-05</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>65</td>
+                    <td>Hazipara</td>
+                    <td>Md Abdur Rahman</td>
+                    <td>SVR00114</td>
+                    <td>+88 017 1847 5218</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>19500</td>
+                    <td>2021-01-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>66</td>
+                    <td>Hazipara</td>
+                    <td>Md Riaz Uddin</td>
+                    <td>SVR00113</td>
+                    <td>+88 017 8265 7787</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>19500</td>
+                    <td>2021-01-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>67</td>
+                    <td>Hazipara</td>
+                    <td>Abu Bakkar Siddik Sumon</td>
+                    <td>SVR00112</td>
+                    <td>+88 019 7834 1171</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>19500</td>
+                    <td>2020-10-07</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>68</td>
+                    <td>Hazipara</td>
+                    <td>Md Pavel</td>
+                    <td>DIA00111</td>
+                    <td>+88 018 5127 6308</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Distribution Asst</td>
+                    <td>13500</td>
+                    <td>2015-04-06</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>69</td>
+                    <td>Hazipara</td>
+                    <td>Masum Pervez Masum</td>
+                    <td>PSM00110</td>
+                    <td>+88 017 3225 6539</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>P S To Md Sir</td>
+                    <td>14500</td>
+                    <td>2016-05-29</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>70</td>
+                    <td>Hazipara</td>
+                    <td>Jiton Routh</td>
+                    <td>CLN00109</td>
+                    <td>+88 018 8654 3456</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Clenar</td>
+                    <td>8300</td>
+                    <td>2019-08-03</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>71</td>
+                    <td>Hazipara</td>
+                    <td>Sujan Routh</td>
+                    <td>CLN00108</td>
+                    <td>+88 016 7554 4414</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Clenar</td>
+                    <td>10300</td>
+                    <td>2020-04-19</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>72</td>
+                    <td>Hazipara</td>
+                    <td>Bishojit Rauth</td>
+                    <td>CLN00107</td>
+                    <td>+88 019 2340 9784</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Clenar</td>
+                    <td>9300</td>
+                    <td>2018-06-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>73</td>
+                    <td>Hazipara</td>
+                    <td>Rushia Begum</td>
+                    <td>BUA00106</td>
+                    <td>+88 019 8967 7649</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2018-07-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>74</td>
+                    <td>Hazipara</td>
+                    <td>Sanda Rani</td>
+                    <td>BUA00105</td>
+                    <td>+88 019 6937 4775</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2018-07-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>75</td>
+                    <td>Hazipara</td>
+                    <td>Hena Khatun</td>
+                    <td>BUA00104</td>
+                    <td>+88 017 7943 5229</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2018-11-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>76</td>
+                    <td>Hazipara</td>
+                    <td>Salma Begum</td>
+                    <td>BUA00103</td>
+                    <td>+88 019 1834 2977</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2019-02-17</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>77</td>
+                    <td>Hazipara</td>
+                    <td>Dulu Begum</td>
+                    <td>BUA00102</td>
+                    <td>+88 017 2187 2764</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2017-07-19</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>78</td>
+                    <td>Hazipara</td>
+                    <td>Rahana Begum</td>
+                    <td>BUA00101</td>
+                    <td>+88 016 2791 0771</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2017-03-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>79</td>
+                    <td>Hazipara</td>
+                    <td>Ferdoshi Begum</td>
+                    <td>BUA00100</td>
+                    <td>+88 016 1100 1559</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2016-10-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>80</td>
+                    <td>Hazipara</td>
+                    <td>Mukta Akter</td>
+                    <td>BUA00099</td>
+                    <td>+88 018 5988 7422</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2018-07-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>81</td>
+                    <td>Hazipara</td>
+                    <td>Saheda Begum</td>
+                    <td>BUA00098</td>
+                    <td>+88 017 7472 6666</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2016-06-04</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>82</td>
+                    <td>Hazipara</td>
+                    <td>Sajeda Begum</td>
+                    <td>BUA00097</td>
+                    <td>+88 019 9603 4527</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2016-05-11</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>83</td>
+                    <td>Hazipara</td>
+                    <td>Morjina Begum</td>
+                    <td>BUA00096</td>
+                    <td>+88 017 2441 1714</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2016-11-22</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>84</td>
+                    <td>Hazipara</td>
+                    <td>Rubi Bejum</td>
+                    <td>BUA00095</td>
+                    <td>+88 017 8706 4504</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2017-02-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>85</td>
+                    <td>Hazipara</td>
+                    <td>Anowara Begum</td>
+                    <td>BUA00094</td>
+                    <td>+88 017 5790 5873</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2017-11-06</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>86</td>
+                    <td>Hazipara</td>
+                    <td>Afroza Begum</td>
+                    <td>BUA00093</td>
+                    <td>+88 019 2220 6558</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2015-11-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>87</td>
+                    <td>Hazipara</td>
+                    <td>Tahamina Begum</td>
+                    <td>BUA00092</td>
+                    <td>+88 017 6589 9081</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Buya</td>
+                    <td>8300</td>
+                    <td>2018-11-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>88</td>
+                    <td>Hazipara</td>
+                    <td>Md Ruhul Amin</td>
+                    <td>DRV00091</td>
+                    <td>+88 017 3877 3240</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Driver</td>
+                    <td>19000</td>
+                    <td>2020-09-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>89</td>
+                    <td>Hazipara</td>
+                    <td>Md Rabul</td>
+                    <td>CCO00090</td>
+                    <td>+88 018 6313 9410</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cct Operator</td>
+                    <td>15000</td>
+                    <td>2020-09-23</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>90</td>
+                    <td>Hazipara</td>
+                    <td>Md Shohag</td>
+                    <td>FUO00089</td>
+                    <td>+88 017 5541 1332</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Fujing Operator</td>
+                    <td>15500</td>
+                    <td>2016-12-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>91</td>
+                    <td>Hazipara</td>
+                    <td>Md Ariful Islam</td>
+                    <td>CUS00087</td>
+                    <td>+88 017 9938 0403</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cutting Suppervisor</td>
+                    <td>13000</td>
+                    <td>2015-12-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>92</td>
+                    <td>Hazipara</td>
+                    <td>Md Rubel Ahmed</td>
+                    <td>CTM00086</td>
+                    <td>+88 016 3470 2068</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>18500</td>
+                    <td>2018-12-12</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>93</td>
+                    <td>Hazipara</td>
+                    <td>Sanower Hossen</td>
+                    <td>CTM00085</td>
+                    <td>+88 017 9939 9322</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>19500</td>
+                    <td>2088-03-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>94</td>
+                    <td>Hazipara</td>
+                    <td>Md Ataur Rahman</td>
+                    <td>CTM00084</td>
+                    <td>+88 018 6813 9522</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>19500</td>
+                    <td>2094-06-05</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>95</td>
+                    <td>Hazipara</td>
+                    <td>Md Mitu Shakh</td>
+                    <td>CTM00083</td>
+                    <td>+88 017 0697 0805</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>15000</td>
+                    <td>2020-08-16</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>96</td>
+                    <td>Hazipara</td>
+                    <td>Md Mazbahuddin Akash</td>
+                    <td>CTM00082</td>
+                    <td>+88 016 2360 0156</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>17000</td>
+                    <td>2020-08-16</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>97</td>
+                    <td>Hazipara</td>
+                    <td>Md Khursed Alam</td>
+                    <td>CTM00081</td>
+                    <td>+88 016 7403 7663</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cuttarman</td>
+                    <td>14500</td>
+                    <td>2012-09-04</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>98</td>
+                    <td>Hazipara</td>
+                    <td>Thowhid Chowdhury</td>
+                    <td>DIC00080</td>
+                    <td>+88 017 1573 2800</td>
+                    <td>Admin Department</td>
+                    <td>N/A</td>
+                    <td>Director</td>
+                    <td>300000</td>
+                    <td>2009-02-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>99</td>
+                    <td>Hazipara</td>
+                    <td>Monir Mia</td>
+                    <td>SGI00079</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Security Incharge</td>
+                    <td>18000</td>
+                    <td>2015-10-14</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>100</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md Nur Islam</td>
+                    <td>PTM00078</td>
+                    <td>+88 017 3252 5438</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Pattern Manter</td>
+                    <td>37000</td>
+                    <td>2011-10-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>101</td>
+                    <td>Chowdhurypara</td>
+                    <td>Mohidul Islam</td>
+                    <td>SVR00077</td>
+                    <td>+88 017 4040 0891</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Cutting Supervisor</td>
+                    <td>19000</td>
+                    <td>2020-10-22</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>102</td>
+                    <td>Chowdhurypara</td>
+                    <td>Washim Talukder</td>
+                    <td>STA00076</td>
+                    <td>+88 017 1342 9325</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    <td>Store Assistant</td>
+                    <td>15000</td>
+                    <td>2019-10-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>103</td>
+                    <td>Hazipara</td>
+                    <td>Md Shohag</td>
+                    <td>CMO00075</td>
+                    <td>+88 017 5541 1332</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Computer Operator</td>
+                    <td>15500</td>
+                    <td>2016-12-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>104</td>
+                    <td>Hazipara</td>
+                    <td>Md Raihan</td>
+                    <td>MRT00074</td>
+                    <td>+88 017 5822 8922</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Marketing</td>
+                    <td>18500</td>
+                    <td>2019-09-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>105</td>
+                    <td>Hazipara</td>
+                    <td>S M Ruhul Islam</td>
+                    <td>MRT00073</td>
+                    <td>+88 016 2791 6274</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Marketing</td>
+                    <td>14500</td>
+                    <td>2020-08-04</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>106</td>
+                    <td>Hazipara</td>
+                    <td>Md Julhas Ali</td>
+                    <td>MRT00072</td>
+                    <td>+88 018 6383 4662</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Marketing</td>
+                    <td>17500</td>
+                    <td>2013-06-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>107</td>
+                    <td>Hazipara</td>
+                    <td>Md Abdul Alim</td>
+                    <td>GTC00071</td>
+                    <td>+88 018 1705 4075</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Generator Technician</td>
+                    <td>25500</td>
+                    <td>2019-09-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>108</td>
+                    <td>Hazipara</td>
+                    <td>Md Tutul Sikder</td>
+                    <td>MCS00070</td>
+                    <td>+88 017 1299 7480</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Mechanics</td>
+                    <td>24500</td>
+                    <td>2019-09-07</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>109</td>
+                    <td>Hazipara</td>
+                    <td>Md Shofiqul Islam Boshir</td>
+                    <td>MCS00069</td>
+                    <td>+88 016 8718 1286</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Mechanics</td>
+                    <td>21500</td>
+                    <td>2020-05-21</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>110</td>
+                    <td>Hazipara</td>
+                    <td>Md Saiful Islam</td>
+                    <td>STO00068</td>
+                    <td>+88 019 8859 8051</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Store Officer</td>
+                    <td>15000</td>
+                    <td>2020-05-12</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>111</td>
+                    <td>Hazipara</td>
+                    <td>Md Musa</td>
+                    <td>MCS00067</td>
+                    <td>+88 017 2328 4852</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Mechanics</td>
+                    <td>27000</td>
+                    <td>2016-02-05</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>112</td>
+                    <td>Hazipara</td>
+                    <td>Md Nazmul Hosen</td>
+                    <td>AES00066</td>
+                    <td>+88 016 4335 0124</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Asstant Eletrician</td>
+                    <td>12000</td>
+                    <td>2019-11-02</td>
+                    <td>Resigned</td>
+                </tr>
+                            <tr>
+                    <td>113</td>
+                    <td>Hazipara</td>
+                    <td>Md Nosib ullah Khan</td>
+                    <td>AES00065</td>
+                    <td>+88 017 5796 0630</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Asstant Eletrician</td>
+                    <td>17000</td>
+                    <td>2019-11-02</td>
+                    <td>Resigned</td>
+                </tr>
+                            <tr>
+                    <td>114</td>
+                    <td>Hazipara</td>
+                    <td>Md Prince</td>
+                    <td>AES00064</td>
+                    <td>+88 013 1777 1642</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Asstant Eletrician</td>
+                    <td>16000</td>
+                    <td>2019-07-03</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>115</td>
+                    <td>Hazipara</td>
+                    <td>Md Kawsar Hawlader</td>
+                    <td>AES00063</td>
+                    <td>+88 019 2163 1812</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Asstant Eletrician</td>
+                    <td>15500</td>
+                    <td>2018-10-11</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>116</td>
+                    <td>Hazipara</td>
+                    <td>Md Limon Khan</td>
+                    <td>AES00062</td>
+                    <td>+88 017 2288 9465</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Asstant Eletrician</td>
+                    <td>20000</td>
+                    <td>2018-04-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>117</td>
+                    <td>Hazipara</td>
+                    <td>Towhid Chowdhury</td>
+                    <td>AO000061</td>
+                    <td>+88 017 1573 2800</td>
+                    <td>Admin Department</td>
+                    <td>N/A</td>
+                    <td>Director</td>
+                    <td>300000</td>
+                    <td>2009-02-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>118</td>
+                    <td>Hazipara</td>
+                    <td>Md Asad Chowdhury</td>
+                    <td>CHM00059</td>
+                    <td>+88 017 2059 6949</td>
+                    <td>Admin Department</td>
+                    <td>N/A</td>
+                    <td>Chairman</td>
+                    <td>300000</td>
+                    <td>2009-02-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>119</td>
+                    <td>Hazipara</td>
+                    <td>Md Ashequr Rahman</td>
+                    <td>AES00058</td>
+                    <td>+88 017 1409 2877</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Asstant Eletrician</td>
+                    <td>19500</td>
+                    <td>2017-04-30</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>120</td>
+                    <td>Hazipara</td>
+                    <td>Esad Chowdhury</td>
+                    <td>MD000057</td>
+                    <td>+88 017 2059 6929</td>
+                    <td>Admin Department</td>
+                    <td>N/A</td>
+                    <td>Managing Director</td>
+                    <td>300000</td>
+                    <td>2009-02-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>121</td>
+                    <td>Hazipara</td>
+                    <td>Md Azijur Rahman Rajib</td>
+                    <td>AES00055</td>
+                    <td>+88 017 9093 8401</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Asstant Eletrician</td>
+                    <td>18500</td>
+                    <td>2015-05-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>122</td>
+                    <td>Hazipara</td>
+                    <td>Md Roni Molah</td>
+                    <td>AES00054</td>
+                    <td>+88 019 1404 7906</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Asstant Eletrician</td>
+                    <td>19000</td>
+                    <td>2017-08-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>123</td>
+                    <td>Hazipara</td>
+                    <td>Md Romat Ali</td>
+                    <td>AES00053</td>
+                    <td>+88 019 3782 7251</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Asstant Eletrician</td>
+                    <td>28500</td>
+                    <td>2012-11-05</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>124</td>
+                    <td>Hazipara</td>
+                    <td>Sefat Hasan</td>
+                    <td>JOD00052</td>
+                    <td>+88 016 7607 6972</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Junior Officer Distribution</td>
+                    <td>15500</td>
+                    <td>2017-02-19</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>125</td>
+                    <td>Hazipara</td>
+                    <td>Md Majnu Mia</td>
+                    <td>STA00051</td>
+                    <td>+88 016 3193 3612</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Store Assistant</td>
+                    <td>16500</td>
+                    <td>2019-04-13</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>126</td>
+                    <td>Hazipara</td>
+                    <td>Md Liton Mia</td>
+                    <td>STA00050</td>
+                    <td>+88 019 1182 1171</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Store Assistant</td>
+                    <td>15000</td>
+                    <td>2017-07-13</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>127</td>
+                    <td>Hazipara</td>
+                    <td>Md Mehedi Hasan</td>
+                    <td>STA00049</td>
+                    <td>+88 017 5768 5634</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Store Assistant</td>
+                    <td>12000</td>
+                    <td>2020-03-09</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>128</td>
+                    <td>Hazipara</td>
+                    <td>Nazmul Haque</td>
+                    <td>DIS00048</td>
+                    <td>+88 019 1415 6557</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Distribution Incharge Shirt Section</td>
+                    <td>18500</td>
+                    <td>2015-09-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>129</td>
+                    <td>Hazipara</td>
+                    <td>Md Imran Ali</td>
+                    <td>STA00045</td>
+                    <td>+88 019 8806 5450</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Store Assistant</td>
+                    <td>13500</td>
+                    <td>2020-08-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>130</td>
+                    <td>Hazipara</td>
+                    <td>Bidhan Mondal</td>
+                    <td>DBI00041</td>
+                    <td>+88 017 2680 3112</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Distribution Incharge</td>
+                    <td>22500</td>
+                    <td>2020-03-11</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>131</td>
+                    <td>Hazipara</td>
+                    <td>Md Abdul Majid</td>
+                    <td>QCL00040</td>
+                    <td>+88 018 5552 0472</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Quality Controlar</td>
+                    <td>22000</td>
+                    <td>2020-03-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>132</td>
+                    <td>Hazipara</td>
+                    <td>Md Fayz Hossain</td>
+                    <td>PSI00038</td>
+                    <td>+88 013 0370 9953</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Pant Section Incharge</td>
+                    <td>16500</td>
+                    <td>2020-04-09</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>133</td>
+                    <td>Hazipara</td>
+                    <td>Md Monir Hossen</td>
+                    <td>FHI00036</td>
+                    <td>+88 016 2847 5671</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Finishing Incharge</td>
+                    <td>21500</td>
+                    <td>2009-10-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>134</td>
+                    <td>Hazipara</td>
+                    <td>Asaduzzaman Hasan</td>
+                    <td>FIS00034</td>
+                    <td>+88 017 7701 6757</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Floor Inchage Six</td>
+                    <td>26000</td>
+                    <td>2016-04-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>135</td>
+                    <td>Hazipara</td>
+                    <td>Md Waliul Haque Haque</td>
+                    <td>AFM00033</td>
+                    <td>+88 017 7819 7744</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Assistant Factory Manager</td>
+                    <td>25000</td>
+                    <td>2016-04-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>136</td>
+                    <td>Hazipara</td>
+                    <td>Md Ibrahim</td>
+                    <td>SVR00032</td>
+                    <td>+88 017 3368 1304</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>15000</td>
+                    <td>2020-08-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>137</td>
+                    <td>Hazipara</td>
+                    <td>Md Milon Khan</td>
+                    <td>SVR00031</td>
+                    <td>+88 019 4490 1624</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>18500</td>
+                    <td>2020-08-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>138</td>
+                    <td>Hazipara</td>
+                    <td>Md Sanaullah Khan Uzzal</td>
+                    <td>SVR00030</td>
+                    <td>+88 016 7159 6178</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>19500</td>
+                    <td>2020-08-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>139</td>
+                    <td>Hazipara</td>
+                    <td>Md Jahid Mia</td>
+                    <td>CMS00029</td>
+                    <td>+88 019 1816 4971</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cutting Master</td>
+                    <td>19500</td>
+                    <td>2016-10-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>140</td>
+                    <td>Hazipara</td>
+                    <td>Md Mannan</td>
+                    <td>CMS00028</td>
+                    <td>+88 019 2323 3682</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cutting Master</td>
+                    <td>23500</td>
+                    <td>2016-11-15</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>141</td>
+                    <td>Hazipara</td>
+                    <td>Md Biplob Mia</td>
+                    <td>CMS00027</td>
+                    <td>+88 017 3676 6047</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cutting Master</td>
+                    <td>23500</td>
+                    <td>2014-03-05</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>142</td>
+                    <td>Hazipara</td>
+                    <td>Md Abdur Rahim</td>
+                    <td>STA00026</td>
+                    <td>+88 017 6294 2909</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Store Assistant</td>
+                    <td>14000</td>
+                    <td>2016-04-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>143</td>
+                    <td>Hazipara</td>
+                    <td>Md Saiful Islam</td>
+                    <td>CMS00025</td>
+                    <td>+88 019 2565 6745</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Cutter Man Shart</td>
+                    <td>23500</td>
+                    <td>2013-04-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>144</td>
+                    <td>Hazipara</td>
+                    <td>Md Riaz Rahman</td>
+                    <td>TKP00024</td>
+                    <td>+88 019 8009 3411</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Time Keeper</td>
+                    <td>16500</td>
+                    <td>2016-03-06</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>145</td>
+                    <td>Hazipara</td>
+                    <td>Abdul Baten</td>
+                    <td>TKP00023</td>
+                    <td>+88 017 8566 4023</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Time Keeper</td>
+                    <td>16000</td>
+                    <td>2017-03-29</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>146</td>
+                    <td>Hazipara</td>
+                    <td>Md Ziaur Rahman</td>
+                    <td>PM000022</td>
+                    <td>+88 017 1851 9208</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Production Manazar</td>
+                    <td>40000</td>
+                    <td>2019-11-11</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>147</td>
+                    <td>Hazipara</td>
+                    <td>Md Nazmul Talab</td>
+                    <td>PM000021</td>
+                    <td>+88 016 2023 2483</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Production Manazar</td>
+                    <td>43000</td>
+                    <td>2009-10-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>148</td>
+                    <td>Hazipara</td>
+                    <td>Md Abdul Karim</td>
+                    <td>HRM00020</td>
+                    <td>+88 017 1226 6725</td>
+                    <td>H R Department</td>
+                    <td>N/A</td>
+                    <td>Human Recourse Manager</td>
+                    <td>24000</td>
+                    <td>2019-09-10</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>149</td>
+                    <td>Hazipara</td>
+                    <td>Md Anowar Mia Sohel</td>
+                    <td>SVR00019</td>
+                    <td>+88 017 4216 3449</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>19500</td>
+                    <td>2015-03-15</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>150</td>
+                    <td>Hazipara</td>
+                    <td>Altaf Hossen Sumon</td>
+                    <td>SVR00018</td>
+                    <td>+88 017 8118 2213</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>18500</td>
+                    <td>2017-01-28</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>151</td>
+                    <td>Hazipara</td>
+                    <td>Md Hasan Ali</td>
+                    <td>SVR00017</td>
+                    <td>+88 017 2271 6123</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>19500</td>
+                    <td>2012-06-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>152</td>
+                    <td>Hazipara</td>
+                    <td>Md Arif Hossen</td>
+                    <td>SVR00016</td>
+                    <td>+88 019 1978 4382</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>18500</td>
+                    <td>2017-01-05</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>153</td>
+                    <td>Hazipara</td>
+                    <td>Md Kamruzzman( Jolil )</td>
+                    <td>SVR00015</td>
+                    <td>+88 017 4824 6794</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>19500</td>
+                    <td>2013-05-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>154</td>
+                    <td>Hazipara</td>
+                    <td>Fakir Soiful</td>
+                    <td>SVR00014</td>
+                    <td>+88 019 3722 2574</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>19500</td>
+                    <td>2016-01-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>155</td>
+                    <td>Hazipara</td>
+                    <td>M A Hashem</td>
+                    <td>SVR00013</td>
+                    <td>+88 016 7425 7629</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>17000</td>
+                    <td>2019-02-18</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>156</td>
+                    <td>Hazipara</td>
+                    <td>Ruhul Amin Heron</td>
+                    <td>SVR00012</td>
+                    <td>+88 017 3820 5443</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>19500</td>
+                    <td>2009-10-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>157</td>
+                    <td>Hazipara</td>
+                    <td>Sager Ahmed</td>
+                    <td>SVR00011</td>
+                    <td>+88 017 2489 4548</td>
+                    <td>Sewing Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>17000</td>
+                    <td>2019-10-13</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>158</td>
+                    <td>Hazipara</td>
+                    <td>Md Lemon</td>
+                    <td>PCI00010</td>
+                    <td>+88 016 4492 9657</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Pant Cutting Incharge</td>
+                    <td>16000</td>
+                    <td>2017-09-17</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>159</td>
+                    <td>Hazipara</td>
+                    <td>Faruk Hossain Emon</td>
+                    <td>SVR00009</td>
+                    <td>+88 017 1234 4267</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>16000</td>
+                    <td>2019-07-17</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>160</td>
+                    <td>Hazipara</td>
+                    <td>Akter Hossain</td>
+                    <td>SVR00008</td>
+                    <td>+88 016 2754 0764</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Supervisor</td>
+                    <td>15000</td>
+                    <td>2017-10-03</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>161</td>
+                    <td>Hazipara</td>
+                    <td>Yasin Yasin</td>
+                    <td>STA00007</td>
+                    <td>+88 014 0169 2756</td>
+                    <td>Staff Department</td>
+                    <td>Office Staff Section</td>
+                    <td>Store Assistant</td>
+                    <td>12300</td>
+                    <td>2020-10-12</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>162</td>
+                    <td>Hazipara</td>
+                    <td>Arif Hossain</td>
+                    <td>FM000006</td>
+                    <td>+88 018 8437 2799</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Factory Manager</td>
+                    <td>32000</td>
+                    <td>2020-03-11</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>163</td>
+                    <td>Hazipara</td>
+                    <td>Amjad Chowdhury</td>
+                    <td>GM000004</td>
+                    <td>+88 017 4779 4862</td>
+                    <td>Admin Department</td>
+                    <td>N/A</td>
+                    <td>General Manager</td>
+                    <td>100000</td>
+                    <td>2020-10-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>164</td>
+                    <td>Hazipara</td>
+                    <td>Oshim Molla</td>
+                    <td>CMO00001</td>
+                    <td>+88 017 0578 5259</td>
+                    <td>Staff Department</td>
+                    <td>N/A</td>
+                    <td>Computer Operator</td>
+                    <td>14500</td>
+                    <td>2019-12-01</td>
+                    <td>Active</td>
+                </tr>
+                    </tbody>
+    </table>
+</body>
+
+</html>

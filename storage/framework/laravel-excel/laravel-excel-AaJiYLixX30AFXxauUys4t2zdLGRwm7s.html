@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>    Employee List
+ | Easy Store</title>
+
+    <style>
+        body {
+            font-family: "DejaVu Sans", sans-serif;
+            font-size: 11px;
+        }
+
+        h1,
+        p {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #2e2e2e;
+        }
+
+        table thead {
+            text-align: left;
+        }
+
+        tr:nth-child(2n + 1) {
+            background: #dadada;
+        }
+
+        tr:first-child {
+            font-weight: bold
+        }
+
+        th,
+        td {
+            padding: 1rem;
+        }
+
+        .tfoot {
+            font-weight: bold;
+
+        }
+
+    </style>
+</head>
+
+<body>
+        <table class="table">
+        <tbody>
+            <tr>
+                <td>#</td>
+                <td>Location</td>
+                <td>Name</td>
+                <td>Employee Id</td>
+                <td width="200px">Mobile</td>
+                <td>Department</td>
+                <td>Section</td>
+                <td>Designation</td>
+                <td>Salary</td>
+                <td>Joining Date</td>
+                <td>Status</td>
+            </tr>
+                            <tr>
+                    <td>1</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md. Khirul Islam</td>
+                    <td>CO000186</td>
+                    <td>+88 018 9346 1648</td>
+                    <td>Audit Department</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Computer Operator</td>
+                    <td>14000</td>
+                    <td>2021-02-24</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>2</td>
+                    <td>Chowdhurypara</td>
+                    <td>Mahfuza Begum</td>
+                    <td>BUA00185</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Bua</td>
+                    <td>8300</td>
+                    <td>2021-03-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>3</td>
+                    <td>Chowdhurypara</td>
+                    <td>Rina Begum</td>
+                    <td>BUA00184</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Bua</td>
+                    <td>8300</td>
+                    <td>2018-03-13</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>4</td>
+                    <td>Chowdhurypara</td>
+                    <td>Nazma Akter</td>
+                    <td>CKR00183</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Cooker</td>
+                    <td>9000</td>
+                    <td>2012-01-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>5</td>
+                    <td>Chowdhurypara</td>
+                    <td>Sobura bewa</td>
+                    <td>BUA00182</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Bua</td>
+                    <td>8300</td>
+                    <td>2015-05-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>6</td>
+                    <td>Chowdhurypara</td>
+                    <td>Monoara Begum</td>
+                    <td>BUA00181</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Bua</td>
+                    <td>8300</td>
+                    <td>2014-06-05</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>7</td>
+                    <td>Chowdhurypara</td>
+                    <td>Shahanaj Begum</td>
+                    <td>BUA00180</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Bua</td>
+                    <td>8300</td>
+                    <td>2016-10-09</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>8</td>
+                    <td>Chowdhurypara</td>
+                    <td>Ambia Khatun</td>
+                    <td>BUA00179</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Bua</td>
+                    <td>10000</td>
+                    <td>2010-04-25</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>9</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md Mridul Islam</td>
+                    <td>FTO00178</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Fit Of The Operator</td>
+                    <td>15000</td>
+                    <td>2020-09-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>10</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md. Ripon Ahmed Rony</td>
+                    <td>FTO00177</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Fit Of The Operator</td>
+                    <td>16000</td>
+                    <td>2020-09-15</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>11</td>
+                    <td>Chowdhurypara</td>
+                    <td>Al- Amin</td>
+                    <td>MSG00176</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Messenger</td>
+                    <td>11500</td>
+                    <td>2017-04-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>12</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md. Saiful Islam</td>
+                    <td>OA000175</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Office Assistant</td>
+                    <td>11500</td>
+                    <td>2015-04-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>13</td>
+                    <td>Chowdhurypara</td>
+                    <td>Ashikul Sheikh Ashik</td>
+                    <td>OA000174</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Office Assistant</td>
+                    <td>13000</td>
+                    <td>2009-09-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>14</td>
+                    <td>Chowdhurypara</td>
+                    <td>Roni Mia</td>
+                    <td>STA00173</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Store Assistant</td>
+                    <td>11500</td>
+                    <td>2018-07-07</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>15</td>
+                    <td>Chowdhurypara</td>
+                    <td>Torikul Islam</td>
+                    <td>STM00172</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Sutter Man</td>
+                    <td>14500</td>
+                    <td>2012-03-03</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>16</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md abdur Razzak</td>
+                    <td>STM00171</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Sutter Man</td>
+                    <td>14000</td>
+                    <td>2011-06-08</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>17</td>
+                    <td>Chowdhurypara</td>
+                    <td>Sabuj Hossain</td>
+                    <td>STM00170</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Sutter Man</td>
+                    <td>14500</td>
+                    <td>2011-06-08</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>18</td>
+                    <td>Chowdhurypara</td>
+                    <td>Shahidul Islam</td>
+                    <td>SV000169</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Supervisor</td>
+                    <td>18000</td>
+                    <td>2017-08-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>19</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md Shahin Mia</td>
+                    <td>SV000168</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Supervisor</td>
+                    <td>18000</td>
+                    <td>2016-05-04</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>20</td>
+                    <td>Chowdhurypara</td>
+                    <td>Alomgir Hossain</td>
+                    <td>SV000167</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Supervisor</td>
+                    <td>18000</td>
+                    <td>2017-08-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>21</td>
+                    <td>Chowdhurypara</td>
+                    <td>Md Milon Mia</td>
+                    <td>MKM00166</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Marker Man</td>
+                    <td>20000</td>
+                    <td>2019-09-01</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>22</td>
+                    <td>Chowdhurypara</td>
+                    <td>Abdul Hamid Bablu</td>
+                    <td>CTM00165</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Cutter Man</td>
+                    <td>18500</td>
+                    <td>2011-02-10</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>23</td>
+                    <td>Chowdhurypara</td>
+                    <td>Showkot Hossain</td>
+                    <td>ELC00164</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Electrichian</td>
+                    <td>11500</td>
+                    <td>2017-08-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>24</td>
+                    <td>Chowdhurypara</td>
+                    <td>Kamrul Islam</td>
+                    <td>ELC00163</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Electrichian</td>
+                    <td>15500</td>
+                    <td>2014-06-02</td>
+                    <td>Active</td>
+                </tr>
+                            <tr>
+                    <td>25</td>
+                    <td>Chowdhurypara</td>
+                    <td>Biplob Kumar</td>
+                    <td>AAC00162</td>
+                    <td>+88 000 0000 0000</td>
+                    <td>Garments Staff</td>
+                    <td>N/A</td>
+                    
+                    
+                    <td>Asst Ac Mechanics</td>
+                    <td>13000</td>
+                    <td>2021-03-27</td>
+                    <td>Active</td>
+                </tr>
+                    </tbody>
+    </table>
+</body>
+
+</html>

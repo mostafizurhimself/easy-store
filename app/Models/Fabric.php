@@ -33,7 +33,7 @@ class Fabric extends Model implements HasMedia
      *
      * @var array
      */
-    protected $append = ['stock'];
+    protected $appends = ['stock'];
 
     /**
      * Add all attributes that are not listed in $guarded for log

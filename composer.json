@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2.5",
         "64robots/nova-fields": "^0.16.0",
+        "akaunting/laravel-money": "^1.2",
         "akaunting/money": "^1.2",
         "ampeco/nova-date-range-filter": "^0.1.2",
         "armincms/json": "^0.5.1",

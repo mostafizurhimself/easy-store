@@ -50,11 +50,21 @@ class Employee extends Model implements HasMedia
     ];
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['department', 'designation', 'section', 'shift'];
+
+    /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $append = ['name', 'employeeId', 'presentAddress', 'permanentAddress'];
+    protected $appends = [
+        'name', 'employeeId', 'presentAddress', 'permanentAddress', 'imageUrl',
+        'departmentName', 'sectionName', 'designationName', 'shiftName'
+    ];
 
     /**
      * Determines a morph one relationship
@@ -170,6 +180,57 @@ class Employee extends Model implements HasMedia
         if ($this->address()->exists()) {
             return $this->address()->where('type', AddressType::PERMANENT_ADDRESS())->first();
         }
+    }
+
+    /**
+     * Get employee image url
+     * 
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        return !empty($this->getFirstMediaUrl('employee-images')) ?
+            $this->getFirstMediaUrl('employee-images') : asset('images/logo.png');
+    }
+
+    /**
+     * Get department name attribute
+     * 
+     * @return string
+     */
+    public function getDepartmentNameAttribute()
+    {
+        return $this->department ? $this->department->name : "N/A";
+    }
+
+    /**
+     * Get section name attribute
+     * 
+     * @return string
+     */
+    public function getSectionNameAttribute()
+    {
+        return $this->section ? $this->section->name : "N/A";
+    }
+
+    /**
+     * Get designation name attribute
+     * 
+     * @return string
+     */
+    public function getDesignationNameAttribute()
+    {
+        return $this->designation ? $this->designation->name : "N/A";
+    }
+
+    /**
+     * Get shift name attribute
+     * 
+     * @return string
+     */
+    public function getShiftNameAttribute()
+    {
+        return $this->shift ? $this->shift->name : "N/A";
     }
 
 

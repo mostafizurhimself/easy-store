@@ -20,6 +20,7 @@ use Eminiarts\Tabs\TabsOnEdit;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\MorphMany;
@@ -29,14 +30,15 @@ use App\Nova\Filters\DepartmentFilter;
 use App\Nova\Actions\Employees\EisForm;
 use AwesomeNova\Filters\DependentFilter;
 use Bissolli\NovaPhoneField\PhoneNumber;
+use App\Nova\Actions\Employees\DownloadPdf;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\Employees\DownloadExcel;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Orlyapps\NovaBelongsToDepend\NovaBelongsToDepend;
 use Hubertnnn\LaravelNova\Fields\DynamicSelect\DynamicSelect;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
-use Laravel\Nova\Fields\HasMany;
 
 class Employee extends Resource
 {
@@ -418,6 +420,21 @@ class Employee extends Resource
     {
         return [
             (new EisForm)->onlyOnDetail()->withoutConfirmation(),
+
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
+
         ];
     }
 }

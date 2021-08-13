@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Traits;
 
 use App\Models\Location;
 use Illuminate\Support\Facades\Auth;
+
 trait Locationable
 {
     /**
@@ -12,7 +14,7 @@ trait Locationable
      */
     public function location()
     {
-       return $this->belongsTo(Location::class)->withTrashed();
+        return $this->belongsTo(Location::class)->withTrashed();
     }
 
     /**
@@ -20,11 +22,10 @@ trait Locationable
      */
     public static function bootLocationable()
     {
-        static::creating(function($model){
-            if(Auth::check() && empty($model->locationId)){
+        static::creating(function ($model) {
+            if (Auth::check() && empty($model->locationId)) {
                 $model->locationId = Auth::user()->locationId;
             }
         });
     }
-
 }

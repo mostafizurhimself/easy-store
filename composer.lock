@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "715312fb48741ca4236b611e4a8cd9c5",
+    "content-hash": "0941949027fd562da9e3cb2fab327d0b",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -50,6 +50,71 @@
                 "source": "https://github.com/64robots/nova-fields/tree/0.16.0"
             },
             "time": "2020-03-19T17:28:32+00:00"
+        },
+        {
+            "name": "akaunting/laravel-money",
+            "version": "1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/akaunting/laravel-money.git",
+                "reference": "a60cd786ac85e290ff1fa62b104ae04df2dcbd30"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/akaunting/laravel-money/zipball/a60cd786ac85e290ff1fa62b104ae04df2dcbd30",
+                "reference": "a60cd786ac85e290ff1fa62b104ae04df2dcbd30",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=5.4",
+                "illuminate/view": ">=5.4",
+                "php": ">=5.6.4"
+            },
+            "require-dev": {
+                "mockery/mockery": ">=1.0",
+                "phpunit/phpunit": ">=5.7"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Akaunting\\Money\\Provider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Akaunting\\Money\\": "./src"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Denis Duliçi",
+                    "email": "info@akaunting.com",
+                    "homepage": "https://akaunting.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Currency formatting and conversion package for Laravel",
+            "keywords": [
+                "convert",
+                "currency",
+                "format",
+                "laravel",
+                "money"
+            ],
+            "support": {
+                "issues": "https://github.com/akaunting/laravel-money/issues",
+                "source": "https://github.com/akaunting/laravel-money/tree/1.2.2"
+            },
+            "time": "2021-05-19T19:42:05+00:00"
         },
         {
             "name": "akaunting/money",
@@ -1769,7 +1834,7 @@
         },
         {
             "name": "easystore/nova-theme",
-            "version": "dev-master",
+            "version": "dev-feature",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/NovaTheme",
@@ -1805,7 +1870,7 @@
         },
         {
             "name": "easystore/permission-checkbox",
-            "version": "dev-master",
+            "version": "dev-feature",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/PermissionCheckbox",
@@ -1841,7 +1906,7 @@
         },
         {
             "name": "easystore/prevent-direct-create",
-            "version": "dev-master",
+            "version": "dev-feature",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/PreventDirectCreate",
@@ -1877,7 +1942,7 @@
         },
         {
             "name": "easystore/profile-tool",
-            "version": "dev-master",
+            "version": "dev-feature",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/ProfileTool",
@@ -1913,7 +1978,7 @@
         },
         {
             "name": "easystore/redirect",
-            "version": "dev-master",
+            "version": "dev-feature",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Redirect",
@@ -1949,7 +2014,7 @@
         },
         {
             "name": "easystore/router-link",
-            "version": "dev-master",
+            "version": "dev-feature",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/RouterLink",
@@ -1985,7 +2050,7 @@
         },
         {
             "name": "easystore/scan-gatepass",
-            "version": "dev-master",
+            "version": "dev-feature",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/ScanGatepass",
@@ -2021,7 +2086,7 @@
         },
         {
             "name": "easystore/text-uppercase",
-            "version": "dev-master",
+            "version": "dev-feature",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/TextUppercase",

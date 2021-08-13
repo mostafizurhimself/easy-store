@@ -39,7 +39,7 @@ class ProductRequisitionItem extends Model
      *
      * @var array
      */
-    protected $append = ['unit'];
+    protected $appends = ['unit'];
 
 
     /**
@@ -66,7 +66,7 @@ class ProductRequisitionItem extends Model
      */
     public function requisition()
     {
-       return $this->belongsTo(ProductRequisition::class, 'requisition_id')->withTrashed();
+        return $this->belongsTo(ProductRequisition::class, 'requisition_id')->withTrashed();
     }
 
     /**
@@ -76,7 +76,7 @@ class ProductRequisitionItem extends Model
      */
     public function product()
     {
-       return $this->belongsTo(Product::class)->withTrashed();
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 
     /**
@@ -96,7 +96,7 @@ class ProductRequisitionItem extends Model
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class)->withTrashed();
+        return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
