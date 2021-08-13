@@ -1,18 +1,27 @@
 <?php
 
-namespace App\Nova\Actions\ManualGatePasses;
+namespace App\Nova\Actions\GiftGatePasses;
 
+use Carbon\Carbon;
 use App\Enums\GatePassStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class GenerateGatePass extends Action
+class PassGatePass extends Action
 {
     use InteractsWithQueue, Queueable;
+
+    /**
+     * The displayable name of the action.
+     *
+     * @var string
+     */
+    public $name = "Pass";
 
     /**
      * Perform the action on the given models.
@@ -24,12 +33,18 @@ class GenerateGatePass extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            if ($model->status != GatePassStatus::DRAFT()) {
-                return Action::openInNewTab(route('gate-passes.manual', $model->id));
+            if ($model->status == GatePassStatus::CONFIRMED()) {
+                //Update the model status
+                $model->passedAt = Carbon::now();
+                $model->passedBy = Auth::user()->id;
+                $model->status   = GatePassStatus::PASSED();
+                $model->save();
             } else {
-                return Action::danger('Can not generate gate pass now.');
+                return Action::danger('Can not pass the gate pass.');
             }
         }
+
+        return Action::message('Gate pass passed successfully.');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\ConfirmStatus;
+use App\Enums\GatePassStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -28,7 +28,7 @@ class CreateGiftGatePassesTable extends Migration
             $table->integer('kabli')->default(0);
             $table->integer('total')->default(0);
             $table->text('note')->nullable();
-            $table->string('status')->default(ConfirmStatus::DRAFT());
+            $table->string('status')->default(GatePassStatus::DRAFT());
             $table->bigInteger('passed_by')->unsigned()->nullable();
             $table->dateTime('passed_at')->nullable()->index('gift_gate_passes_passed_at_index');
             $table->timestamps();

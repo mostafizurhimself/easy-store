@@ -23,8 +23,8 @@ class AssetExport implements FromView
     }
 
     /**
-    * @return \Illuminate\Contracts\View\View;
-    */
+     * @return \Illuminate\Contracts\View\View;
+     */
     public function view(): View
     {
         return view('excel.pages.assets')->with('models', $this->models);

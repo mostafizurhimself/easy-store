@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Nova\Actions\ManualGatePasses;
+namespace App\Nova\Actions\GiftGatePasses;
 
 use App\Enums\GatePassStatus;
 use Illuminate\Bus\Queueable;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MarkAsDraft extends Action
+class ConfirmGatePass extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -24,18 +25,23 @@ class MarkAsDraft extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            if ($model->status == GatePassStatus::CONFIRMED()) {
-                // Remove approver
-                $model->approve()->forceDelete();
+            if ($model->status == GatePassStatus::DRAFT()) {
+                // Add approver
+                $model->approve()->create(['employee_id' => $fields->approved_by]);
                 //Update the model status
-                $model->status = GatePassStatus::DRAFT();
+                $model->status = GatePassStatus::CONFIRMED();
                 $model->save();
-
-                return Action::message('Mark as draft successfully.');
             } else {
-                return Action::danger('Can not mark as draft.');
+                return Action::danger('Already Confirmed.');
             }
         }
+
+
+        if ($models->count() > 1) {
+            return Action::message('Gate passes confirmed successfully.');
+        }
+
+        return Action::message('Gate pass confirmed successfully.');
     }
 
     /**
@@ -45,6 +51,10 @@ class MarkAsDraft extends Action
      */
     public function fields()
     {
-        return [];
+        return [
+            Select::make('Approved By')
+                ->rules('required')
+                ->options(\App\Models\Employee::gatePassApprovers())
+        ];
     }
 }

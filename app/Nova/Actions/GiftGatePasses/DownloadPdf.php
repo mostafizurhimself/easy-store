@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Nova\Actions\Assets;
+namespace App\Nova\Actions\GiftGatePasses;
 
-use App\Exports\AssetExport;
 use Illuminate\Bus\Queueable;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Fields\ActionFields;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class DownloadExcel extends Action
+class DownloadPdf extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -29,7 +29,6 @@ class DownloadExcel extends Action
      */
     public $withoutActionEvents = true;
 
-
     /**
      * Perform the action on the given models.
      *
@@ -39,9 +38,15 @@ class DownloadExcel extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        // Store on default disk
-        $filename = "assets_" . time() . ".xlsx";
-        Excel::store(new AssetExport($models), $filename, 'local');
+        $filename = "gift_gate_passes_" . time() . ".pdf";
+        $subtitle = $fields->subtitle;
+
+        ini_set("pcre.backtrack_limit", "10000000000");
+        $pdf = \PDF::loadView('pdf.pages.gift-gate-passes', compact('models', 'subtitle'), [], [
+            'mode' => 'utf-8',
+            'orientation' => 'L'
+        ]);
+        $pdf->save(Storage::path($filename));
 
         return Action::redirect(route('dump-download', compact('filename')));
     }
@@ -53,6 +58,9 @@ class DownloadExcel extends Action
      */
     public function fields()
     {
-        return [];
+        return [
+            Text::make('Subtitle', 'subtitle')
+                ->rules('nullable', 'string', 'max:100')
+        ];
     }
 }

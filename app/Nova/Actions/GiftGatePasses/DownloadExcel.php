@@ -1,18 +1,33 @@
 <?php
 
-namespace App\Nova\Actions\ManualGatePasses;
+namespace App\Nova\Actions\GiftGatePasses;
 
-use App\Enums\GatePassStatus;
+use App\Exports\GiftGatePassExport;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class GenerateGatePass extends Action
+class DownloadExcel extends Action
 {
     use InteractsWithQueue, Queueable;
+
+    /**
+     * The number of models that should be included in each chunk.
+     *
+     * @var int
+     */
+    public static $chunkCount = 200000000;
+
+    /**
+     * Disables action log events for this action.
+     *
+     * @var bool
+     */
+    public $withoutActionEvents = true;
 
     /**
      * Perform the action on the given models.
@@ -23,13 +38,11 @@ class GenerateGatePass extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach ($models as $model) {
-            if ($model->status != GatePassStatus::DRAFT()) {
-                return Action::openInNewTab(route('gate-passes.manual', $model->id));
-            } else {
-                return Action::danger('Can not generate gate pass now.');
-            }
-        }
+        // Store on default disk
+        $filename = "assets_" . time() . ".xlsx";
+        Excel::store(new GiftGatePassExport($models), $filename, 'local');
+
+        return Action::redirect(route('dump-download', compact('filename')));
     }
 
     /**

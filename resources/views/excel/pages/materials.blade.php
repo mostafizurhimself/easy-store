@@ -1,4 +1,4 @@
-@extends('pdf.layout')
+@extends('excel.layout')
 
 @section('title')
     Materials Report
@@ -19,14 +19,14 @@
             </tr>
             @foreach ($models as $model)
                 <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td>{{$model->location->name}}</td>
-                    <td>{{$model->name}}</td>
-                    <td>{{$model->code}}</td>
-                    <td>{{$model->rate}}</td>
-                    <td>{{$model->category ? $model->category->name : "N/A"}}</td>
-                    <td>{{$model->quantity}} {{$model->unit->name}}</td>
-                    <td>{{Str::title($model->status)}}</td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $model->location->name }}</td>
+                    <td>{{ $model->name }}</td>
+                    <td>{{ $model->code }}</td>
+                    <td>{{ $model->rate }}</td>
+                    <td>{{ $model->category ? $model->category->name : 'N/A' }}</td>
+                    <td>{{ $model->quantity }} {{ $model->unit->name }}</td>
+                    <td>{{ Str::title($model->status) }}</td>
                 </tr>
             @endforeach
         </tbody>

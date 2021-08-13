@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Actions\ManualGatePasses;
+namespace App\Nova\Actions\GiftGatePasses;
 
 use App\Enums\GatePassStatus;
 use Illuminate\Bus\Queueable;
@@ -10,7 +10,7 @@ use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class GenerateGatePass extends Action
+class MarkAsDraft extends Action
 {
     use InteractsWithQueue, Queueable;
 
@@ -24,10 +24,16 @@ class GenerateGatePass extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            if ($model->status != GatePassStatus::DRAFT()) {
-                return Action::openInNewTab(route('gate-passes.manual', $model->id));
+            if ($model->status == GatePassStatus::CONFIRMED()) {
+                // Remove approver
+                $model->approve()->forceDelete();
+                //Update the model status
+                $model->status = GatePassStatus::DRAFT();
+                $model->save();
+
+                return Action::message('Mark as draft successfully.');
             } else {
-                return Action::danger('Can not generate gate pass now.');
+                return Action::danger('Can not mark as draft.');
             }
         }
     }

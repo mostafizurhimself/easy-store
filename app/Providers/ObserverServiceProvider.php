@@ -53,7 +53,6 @@ use App\Models\MaterialDistribution;
 use App\Models\MaterialPurchaseItem;
 use App\Models\MaterialTransferItem;
 use App\Observers\FinishingObserver;
-use Illuminate\Support\Facades\Auth;
 use App\Models\AssetDistributionItem;
 use App\Models\FabricTransferInvoice;
 use App\Models\MaterialPurchaseOrder;
@@ -79,6 +78,7 @@ use App\Observers\AssetRequisitionObserver;
 use App\Observers\FabricReturnItemObserver;
 use App\Observers\FinishingInvoiceObserver;
 use App\Models\AssetDistributionReceiveItem;
+use App\Models\GiftGatePass;
 use App\Observers\AssetPurchaseItemObserver;
 use App\Observers\FabricReceiveItemObserver;
 use App\Observers\AssetPurchaseOrderObserver;
@@ -108,6 +108,7 @@ use App\Observers\FabricTransferReceiveItemObserver;
 use App\Observers\ServiceTransferReceiveItemObserver;
 use App\Observers\MaterialTransferReceiveItemObserver;
 use App\Observers\AssetDistributionReceiveItemObserver;
+use App\Observers\GiftGatePassObserver;
 
 class ObserverServiceProvider extends ServiceProvider
 {
@@ -180,5 +181,6 @@ class ObserverServiceProvider extends ServiceProvider
         Expense::observe(ExpenseObserver::class);
         GoodsGatePass::observe(GoodsGatePassObserver::class);
         ManualGatePass::observe(ManualGatePassObserver::class);
+        GiftGatePass::observe(GiftGatePassObserver::class);
     }
 }

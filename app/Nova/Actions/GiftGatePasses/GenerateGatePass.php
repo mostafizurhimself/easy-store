@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Actions\ManualGatePasses;
+namespace App\Nova\Actions\GiftGatePasses;
 
 use App\Enums\GatePassStatus;
 use Illuminate\Bus\Queueable;
@@ -25,7 +25,7 @@ class GenerateGatePass extends Action
     {
         foreach ($models as $model) {
             if ($model->status != GatePassStatus::DRAFT()) {
-                return Action::openInNewTab(route('gate-passes.manual', $model->id));
+                return Action::openInNewTab(route('gate-passes.gift', $model->id));
             } else {
                 return Action::danger('Can not generate gate pass now.');
             }

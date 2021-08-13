@@ -7,9 +7,8 @@
 @section('content')
     <h1>Asset Stock Summary</h1>
     @if (!empty($subtitle))
-        <p>{{$subtitle}}</p>
-    @else
-        <p>Add your subtitle here</p>
+        <p>{{ $subtitle }}</p>
+
     @endif
     <table class="table">
 

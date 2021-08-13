@@ -5,13 +5,29 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Enums\GatePassStatus;
 use App\Models\GoodsGatePass;
+use App\Models\ManualGatePass;
 use App\Models\VisitorGatePass;
 use App\Models\EmployeeGatePass;
 use App\Http\Controllers\Controller;
-use App\Models\ManualGatePass;
+use App\Models\GiftGatePass;
 
 class GatePassController extends Controller
 {
+    /**
+     * Generate goods gate pass invoice
+     *
+     * @param  \App\Models\GiftGatePass  $pass
+     * @return \Illuminate\Http\Response
+     */
+    public function gifts(Request $request, GiftGatePass $pass)
+    {
+        if ($request->user()->hasPermissionTo('can generate gift gate passes') && $pass->status != GatePassStatus::DRAFT()) {
+            return view('passes.pages.gift', compact('pass'));
+        } else {
+            abort(403);
+        }
+    }
+
     /**
      * Generate goods gate pass invoice
      *

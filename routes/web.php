@@ -89,6 +89,7 @@ Route::group(['middleware' => 'nova'], function () {
 
     // Gate pass route
     Route::group(['prefix' => 'gate-passes'], function () {
+        Route::get('gift/{pass}', "GatePassController@gifts")->name('gate-passes.gift');
         Route::get('goods/{pass}', "GatePassController@goods")->name('gate-passes.goods');
         Route::get('employee/{pass}', "GatePassController@employee")->name('gate-passes.employee');
         Route::get('manual/{pass}', "GatePassController@manual")->name('gate-passes.manual');

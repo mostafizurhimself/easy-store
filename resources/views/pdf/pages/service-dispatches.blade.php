@@ -7,9 +7,8 @@
 @section('content')
     <h1>Service Dispatchs</h1>
     @if (!empty($subtitle))
-        <p>{{$subtitle}}</p>
-    @else
-        <p>Add your subtitle here</p>
+        <p>{{ $subtitle }}</p>
+
     @endif
     <table class="table">
 
@@ -27,19 +26,19 @@
             </tr>
             @foreach ($models as $model)
                 <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td>{{$model->date}}</td>
-                    <td>{{$model->invoice->readableId}}</td>
-                    <td>{{$model->service->name}} ({{$model->service->code}})</td>
-                    <td>{{$model->dispatchQuantity}} {{$model->unitName}}</td>
-                    <td>{{Helper::currencyShortPdf($model->rate)}}</td>
-                    <td>{{Helper::currencyPdf($model->dispatchAmount)}}</td>
-                    <td>{{Str::title($model->status)}}</td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $model->date }}</td>
+                    <td>{{ $model->invoice->readableId }}</td>
+                    <td>{{ $model->service->name }} ({{ $model->service->code }})</td>
+                    <td>{{ $model->dispatchQuantity }} {{ $model->unitName }}</td>
+                    <td>{{ Helper::currencyShortPdf($model->rate) }}</td>
+                    <td>{{ Helper::currencyPdf($model->dispatchAmount) }}</td>
+                    <td>{{ Str::title($model->status) }}</td>
                 </tr>
             @endforeach
             <tr class="tfoot">
                 <td colspan="6">Grand Total</td>
-                <td>{{Helper::currencyPdf($models->sum('dispatchAmount'))}}</td>
+                <td>{{ Helper::currencyPdf($models->sum('dispatchAmount')) }}</td>
                 <td></td>
             </tr>
         </tbody>

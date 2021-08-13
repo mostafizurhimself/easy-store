@@ -13,7 +13,7 @@ class DateRangeFilter extends Base
      *
      * @var string
      */
-    public $name = "Date Between";
+    public $name;
 
     /**
      * The date column name of the filter.
@@ -27,9 +27,10 @@ class DateRangeFilter extends Base
      *
      * @return void
      */
-    public function __construct($dateColumn = "created_at")
+    public function __construct($dateColumn = "created_at", $name = "Date Between")
     {
         $this->dateColumn = $dateColumn;
+        $this->name = $name;
     }
 
     /**
