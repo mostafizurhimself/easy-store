@@ -239,7 +239,7 @@ class VisitorGatePass extends Resource
 
             new GatePassStatusFilter,
 
-            new DateRangeFilter(),
+            new DateRangeFilter('in', "In Time"),
         ];
     }
 

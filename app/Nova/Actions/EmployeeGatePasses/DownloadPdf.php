@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Nova\Actions\Employees;
+namespace App\Nova\Actions\EmployeeGatePasses;
 
 use Illuminate\Bus\Queueable;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Laravel\Nova\Fields\Text;
 
 class DownloadPdf extends Action
 {
@@ -38,13 +38,13 @@ class DownloadPdf extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        $filename = "employees_" . time() . ".pdf";
+        $filename = "employee_gate_passes_" . time() . ".pdf";
         $subtitle = $fields->subtitle;
 
         ini_set("pcre.backtrack_limit", "10000000000");
-        $pdf = \PDF::loadView('pdf.pages.employees', compact('models', 'subtitle'), [], [
+        $pdf = \PDF::loadView('pdf.pages.employee-gate-passes', compact('models', 'subtitle'), [], [
             'mode' => 'utf-8',
-            'orientation' => "L"
+            'orientation' => 'L'
         ]);
         $pdf->save(Storage::path($filename));
 

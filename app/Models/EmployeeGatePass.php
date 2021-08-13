@@ -38,14 +38,14 @@ class EmployeeGatePass extends Model
      *
      * @var array
      */
-    protected $with = ['employee', 'approve'];
+    protected $with = ['employee'];
 
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $appends = ['type', 'approvedInReadable', 'approvedOutReadable', 'inTimeReadable', 'outTimeReadable', 'approvedFor'];
+    protected $appends = ['type', 'approvedInReadable', 'approvedOutReadable', 'inTimeReadable', 'outTimeReadable', 'approvedFor', 'approverName'];
 
 
     /**
@@ -112,7 +112,7 @@ class EmployeeGatePass extends Model
      */
     public function getApprovedInReadableAttribute()
     {
-        return $this->approvedIn ? $this->approvedIn->format("Y-m-d h:i:s A") : null;
+        return $this->approvedIn ? $this->approvedIn->format("Y-m-d h:i A") : null;
     }
 
     /**
@@ -122,7 +122,7 @@ class EmployeeGatePass extends Model
      */
     public function getApprovedOutReadableAttribute()
     {
-        return $this->approvedOut ? $this->approvedOut->format("Y-m-d h:i:s A") : null;
+        return $this->approvedOut ? $this->approvedOut->format("Y-m-d h:i A") : null;
     }
 
     /**
@@ -132,7 +132,7 @@ class EmployeeGatePass extends Model
      */
     public function getInTimeReadableAttribute()
     {
-        return $this->in ? $this->in->format("Y-m-d h:i:s A") : null;
+        return $this->in ? $this->in->format("Y-m-d h:i A") : null;
     }
 
     /**
@@ -142,7 +142,7 @@ class EmployeeGatePass extends Model
      */
     public function getOutTimeReadableAttribute()
     {
-        return $this->out ? $this->out->format("Y-m-d h:i:s A") : null;
+        return $this->out ? $this->out->format("Y-m-d h:i A") : null;
     }
 
     /**
@@ -156,5 +156,15 @@ class EmployeeGatePass extends Model
             $duration = $this->approvedIn->diffInSeconds($this->approvedOut);
             return gmdate('H:i', $duration);
         }
+    }
+
+    /**
+     * Get approver name
+     * 
+     * @return string
+     */
+    public function getApproverNameAttribute()
+    {
+        return $this->approve ? $this->approve->employee->name : null;
     }
 }

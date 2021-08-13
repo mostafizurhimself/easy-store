@@ -34,6 +34,13 @@ class GiftGatePass extends Model
     protected $dates = ['passed_at'];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['approverName'];
+
+    /**
      * Set the model readable id prefix
      *
      * @var string
@@ -88,5 +95,15 @@ class GiftGatePass extends Model
     public function isDraft()
     {
         return $this->status == GatePassStatus::DRAFT();
+    }
+
+    /**
+     * Get approver name
+     * 
+     * @return string
+     */
+    public function getApproverNameAttribute()
+    {
+        return $this->approve ? $this->approve->employee->name : null;
     }
 }

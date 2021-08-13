@@ -9,6 +9,7 @@
         <tbody>
             <tr>
                 <td>#</td>
+                <td>Location</td>
                 <td>Pass No</td>
                 <td>Receiver</td>
                 <td>Approved By</td>
@@ -26,9 +27,10 @@
             @foreach ($models as $model)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>{{ $model->location->name }}</td>
                     <td>{{ $model->readableId }}</td>
                     <td>{{ $model->receiverName }}</td>
-                    <td>{{ $model->approve->employee->name }}</td>
+                    <td>{{ $model->approverName }}</td>
                     <td>{{ $model->passedAt->format('Y-m-d h:i A') }}</td>
                     <td>{{ $model->tshirt }}</td>
                     <td>{{ $model->poloTshirt }}</td>
@@ -44,7 +46,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="5">Total</td>
+                <td colspan="6">Total</td>
                 <td>{{ $model->sum('tshirt') }}</td>
                 <td>{{ $model->sum('polo_tshirt') }}</td>
                 <td>{{ $model->sum('shirt') }}</td>

@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\License;
-use App\Models\Employee;
+use App\Models\EmployeeGatePass;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -107,8 +107,9 @@ Route::group(['middleware' => 'nova'], function () {
 
 
 // Test routes
-Route::get('/employee-list', function () {
-    return view('pdf.pages.employees', [
-        'models' => Employee::all()
+Route::get('/employee-gate-passes', function () {
+
+    return view('pdf.pages.employee-gate-passes', [
+        'models' => EmployeeGatePass::all()
     ]);
 });
