@@ -14,11 +14,11 @@
     <div class="row mt-2">
         <div class="col">
             <div class="font-weight-bold">Approved At</div>
-            <div>{{ $pass->approve->createdAt }}</div>
+            <div class="text-sm">{{ $pass->approve->createdAt->format('Y-m-d h:i A') }}</div>
         </div>
         <div class="col text-right">
             <div class="font-weight-bold">Approved By</div>
-            <div>{{ $pass->approve->employee->name }}</div>
+            <div class="text-sm">{{ $pass->approve->employee->name }}</div>
         </div>
     </div>
     <table class="table mt-2">
