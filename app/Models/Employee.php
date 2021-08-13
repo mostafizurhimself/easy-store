@@ -163,7 +163,7 @@ class Employee extends Model implements HasMedia
      *
      * @return mixed
      */
-    public function getBillingAddressAttribute()
+    public function getPresentAddressAttribute()
     {
         if ($this->address()->exists()) {
             return $this->address()->where('type', AddressType::PRESENT_ADDRESS())->first();
@@ -175,7 +175,7 @@ class Employee extends Model implements HasMedia
      *
      * @return mixed
      */
-    public function getShippingAddressAttribute()
+    public function getPermanentAddressAttribute()
     {
         if ($this->address()->exists()) {
             return $this->address()->where('type', AddressType::PERMANENT_ADDRESS())->first();
