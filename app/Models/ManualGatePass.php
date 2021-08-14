@@ -6,12 +6,11 @@ use App\Enums\GatepassType;
 use App\Traits\CamelCasing;
 use App\Enums\GatePassStatus;
 use App\Traits\HasReadableIdWithDate;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ManualGatePass extends Model
 {
-    use LogsActivity, SoftDeletes, HasReadableIdWithDate, CamelCasing;
+    use SoftDeletes, HasReadableIdWithDate, CamelCasing;
 
     /**
      * The attributes that are not mass assignable.
@@ -21,11 +20,12 @@ class ManualGatePass extends Model
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
+     * The relations to eager load on every query.
      *
-     * @var boolean
+     * @var array
      */
-    protected static $logUnguarded = true;
+    protected $with = ['location'];
+
 
     /**
      * The attributes that should be mutated to dates.

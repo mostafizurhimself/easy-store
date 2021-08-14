@@ -26,7 +26,7 @@ class AssetConsume extends Model
      */
     protected static $logUnguarded = true;
 
-        /**
+    /**
      * Set the model readable id prefix
      *
      * @var string
@@ -50,7 +50,7 @@ class AssetConsume extends Model
      */
     public function asset()
     {
-       return $this->belongsTo(Asset::class)->withTrashed();
+        return $this->belongsTo(Asset::class)->withTrashed();
     }
 
     /**
@@ -60,7 +60,7 @@ class AssetConsume extends Model
      */
     public function user()
     {
-       return $this->belongsTo(User::class)->withTrashed();
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     /**
@@ -72,6 +72,4 @@ class AssetConsume extends Model
     {
         return $this->asset->unit->name;
     }
-
-
 }

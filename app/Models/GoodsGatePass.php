@@ -6,12 +6,11 @@ use App\Traits\CamelCasing;
 use App\Enums\GatePassStatus;
 use App\Enums\GatepassType;
 use App\Traits\HasReadableIdWithDate;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class GoodsGatePass extends Model
 {
-    use LogsActivity, SoftDeletes, HasReadableIdWithDate, CamelCasing;
+    use SoftDeletes, HasReadableIdWithDate, CamelCasing;
 
     /**
      * The attributes that are not mass assignable.
@@ -19,13 +18,6 @@ class GoodsGatePass extends Model
      * @var array
      */
     protected $guarded = [];
-
-    /**
-     * Add all attributes that are not listed in $guarded for log
-     *
-     * @var boolean
-     */
-    protected static $logUnguarded = true;
 
     /**
      * The attributes that should be mutated to dates.
@@ -72,7 +64,7 @@ class GoodsGatePass extends Model
      *
      * @var array
      */
-    protected $with = ['approve', 'invoice'];
+    protected $with = ['approve', 'invoice', 'location'];
 
     /**
      * Get the model approve

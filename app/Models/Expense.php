@@ -27,6 +27,14 @@ class Expense extends Model implements HasMedia
     protected static $logUnguarded = true;
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['location'];
+
+
+    /**
      * Set the model readable id prefix
      *
      * @var string
@@ -57,7 +65,7 @@ class Expense extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('expense-attachments');
+        $this->addMediaCollection('expense-attachments');
     }
 
     /**
@@ -77,7 +85,7 @@ class Expense extends Model implements HasMedia
      */
     public function expenser()
     {
-       return $this->belongsTo(Expenser::class)->withTrashed();
+        return $this->belongsTo(Expenser::class)->withTrashed();
     }
 
     /**
@@ -87,7 +95,7 @@ class Expense extends Model implements HasMedia
      */
     public function category()
     {
-       return $this->belongsTo(ExpenseCategory::class)->withTrashed();
+        return $this->belongsTo(ExpenseCategory::class)->withTrashed();
     }
 
     /**
@@ -97,5 +105,4 @@ class Expense extends Model implements HasMedia
     {
         return $this->morphTo();
     }
-
 }

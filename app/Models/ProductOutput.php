@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use App\Models\Unit;
-use App\Facades\Settings;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductOutput extends Model
 {
-   use LogsActivity, SoftDeletes;
+   use SoftDeletes;
 
    /**
     * The attributes that are not mass assignable.
@@ -19,18 +17,11 @@ class ProductOutput extends Model
    protected $guarded = [];
 
    /**
-    * Add all attributes that are not listed in $guarded for log
-    *
-    * @var boolean
-    */
-   protected static $logUnguarded = true;
-
-   /**
     * The relations to eager load on every query.
     *
     * @var array
     */
-   protected $with = ['category'];
+   protected $with = ['category', 'location'];
 
    /**
     * The accessors to append to the model's array form.

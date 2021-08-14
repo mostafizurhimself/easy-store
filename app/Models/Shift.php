@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use App\Facades\Timesheet;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 class Shift extends Model
 {
-    use LogsActivity;
 
     /**
      * The attributes that are not mass assignable.
@@ -17,11 +15,12 @@ class Shift extends Model
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
+     * The relations to eager load on every query.
      *
-     * @var boolean
+     * @var array
      */
-    protected static $logUnguarded = true;
+    protected $with = ['location'];
+
 
     /**
      * The attributes that should be mutated to array.

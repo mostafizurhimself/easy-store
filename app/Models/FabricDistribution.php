@@ -25,6 +25,12 @@ class FabricDistribution extends Model
      */
     protected static $logUnguarded = true;
 
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['location'];
 
     /**
      * Set the model readable id prefix
@@ -50,7 +56,7 @@ class FabricDistribution extends Model
      */
     public function fabric()
     {
-       return $this->belongsTo(Fabric::class)->withTrashed();
+        return $this->belongsTo(Fabric::class)->withTrashed();
     }
 
     /**
@@ -60,7 +66,7 @@ class FabricDistribution extends Model
      */
     public function receiver()
     {
-       return $this->belongsTo(Employee::class, 'receiver_id')->withTrashed();
+        return $this->belongsTo(Employee::class, 'receiver_id')->withTrashed();
     }
 
     /**
@@ -70,7 +76,7 @@ class FabricDistribution extends Model
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class)->withTrashed();
+        return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -93,6 +99,4 @@ class FabricDistribution extends Model
     {
         return $query->where('status', DistributionStatus::DRAFT());
     }
-
-
 }

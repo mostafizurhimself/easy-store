@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Spatie\Activitylog\Traits\LogsActivity;
 
 class Holiday extends Model
 {
-    use LogsActivity;
 
     /**
      * The attributes that are not mass assignable.
@@ -16,16 +14,16 @@ class Holiday extends Model
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
-     *
-     * @var boolean
-     */
-    protected static $logUnguarded = true;
-
-    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
     protected $dates = ['start', 'end'];
+
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['location'];
 }

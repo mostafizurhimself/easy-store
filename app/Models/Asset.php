@@ -25,7 +25,7 @@ class Asset extends Model implements HasMedia
      *
      * @var array
      */
-    protected $with = ['unit'];
+    protected $with = ['unit', 'location'];
 
     /**
      * Add all attributes that are not listed in $guarded for log

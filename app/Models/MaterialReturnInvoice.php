@@ -32,7 +32,7 @@ class MaterialReturnInvoice extends Model implements HasMedia
      *
      * @var array
      */
-    protected $with = ['supplier'];
+    protected $with = ['supplier', 'location'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -41,14 +41,14 @@ class MaterialReturnInvoice extends Model implements HasMedia
      */
     protected $dates = ['date'];
 
-      /**
+    /**
      * Register the media collections
      *
      * @return void
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('return-invoice-attachments');
+        $this->addMediaCollection('return-invoice-attachments');
     }
 
     /**
@@ -68,7 +68,7 @@ class MaterialReturnInvoice extends Model implements HasMedia
      */
     protected static $readableIdLength = 4;
 
-     /**
+    /**
      * Get the model approve
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
@@ -85,7 +85,7 @@ class MaterialReturnInvoice extends Model implements HasMedia
      */
     public function supplier()
     {
-       return $this->belongsTo(Supplier::class)->withTrashed();
+        return $this->belongsTo(Supplier::class)->withTrashed();
     }
 
     /**
@@ -95,10 +95,10 @@ class MaterialReturnInvoice extends Model implements HasMedia
      */
     public function returnItems()
     {
-       return $this->hasMany(MaterialReturnItem::class, 'invoice_id');
+        return $this->hasMany(MaterialReturnItem::class, 'invoice_id');
     }
 
-     /**
+    /**
      * Get the purchase materials ids as an array
      *
      * @return array
@@ -127,7 +127,7 @@ class MaterialReturnInvoice extends Model implements HasMedia
     public function isConfirmed()
     {
         $status = $this->receiveItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == ReturnStatus::CONFIRMED()){
+        if ($status->count() == 1  && $status->first() == ReturnStatus::CONFIRMED()) {
             return true;
         }
         return false;
@@ -140,19 +140,16 @@ class MaterialReturnInvoice extends Model implements HasMedia
      */
     public function updateStatus()
     {
-        if($this->receiveItems()->exists()){
+        if ($this->receiveItems()->exists()) {
 
-            if($this->isConfirmed()){
+            if ($this->isConfirmed()) {
                 $this->status = ReturnStatus::CONFIRMED();
                 $this->save();
                 return;
             }
-
-        }else{
+        } else {
             $this->status = ReturnStatus::DRAFT();
             $this->save();
         }
     }
-
-
 }

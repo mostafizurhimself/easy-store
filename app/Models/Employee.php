@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Facades\Settings;
 use App\Enums\AddressType;
 use App\Enums\LeaveStatus;
 use App\Facades\Timesheet;
-use Carbon\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Cache;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model implements HasMedia
 {
-    use LogsActivity, SoftDeletes, InteractsWithMedia;
+    use SoftDeletes, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.
@@ -23,13 +22,6 @@ class Employee extends Model implements HasMedia
      * @var array
      */
     protected $guarded = [];
-
-    /**
-     * Add all attributes that are not listed in $guarded for log
-     *
-     * @var boolean
-     */
-    protected static $logUnguarded = true;
 
     /**
      * Register the media collections
@@ -57,7 +49,7 @@ class Employee extends Model implements HasMedia
      *
      * @var array
      */
-    protected $with = ['department', 'designation', 'section', 'shift'];
+    protected $with = ['department', 'designation', 'section', 'shift', 'location'];
 
     /**
      * The accessors to append to the model's array form.

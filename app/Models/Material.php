@@ -21,18 +21,18 @@ class Material extends Model implements HasMedia
     protected $guarded = [];
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['unit'];
-
-    /**
      * Add all attributes that are not listed in $guarded for log
      *
      * @var boolean
      */
     protected static $logUnguarded = true;
+
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['unit', 'location', 'category'];
 
     /**
      * Register the media collections
@@ -81,7 +81,7 @@ class Material extends Model implements HasMedia
      */
     public function receiveItems()
     {
-       return $this->hasMany(MaterialReceiveItem::class);
+        return $this->hasMany(MaterialReceiveItem::class);
     }
 
     /**
@@ -121,7 +121,7 @@ class Material extends Model implements HasMedia
      */
     public function transferReceiveItems()
     {
-       return $this->hasMany(MaterialTransferReceiveItem::class);
+        return $this->hasMany(MaterialTransferReceiveItem::class);
     }
 
     /**

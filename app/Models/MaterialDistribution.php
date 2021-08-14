@@ -25,6 +25,14 @@ class MaterialDistribution extends Model
      */
     protected static $logUnguarded = true;
 
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['location'];
+
+
 
     /**
      * Set the model readable id prefix
@@ -50,7 +58,7 @@ class MaterialDistribution extends Model
      */
     public function material()
     {
-       return $this->belongsTo(Material::class)->withTrashed();
+        return $this->belongsTo(Material::class)->withTrashed();
     }
 
     /**
@@ -60,17 +68,17 @@ class MaterialDistribution extends Model
      */
     public function receiver()
     {
-       return $this->belongsTo(Employee::class, 'receiver_id')->withTrashed();
+        return $this->belongsTo(Employee::class, 'receiver_id')->withTrashed();
     }
 
-        /**
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class)->withTrashed();
+        return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -93,6 +101,4 @@ class MaterialDistribution extends Model
     {
         return $query->where('status', DistributionStatus::DRAFT());
     }
-
-
 }

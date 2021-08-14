@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductCategory extends Model
 {
-    use LogsActivity, SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.
@@ -17,11 +16,11 @@ class ProductCategory extends Model
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
+     * The relations to eager load on every query.
      *
-     * @var boolean
+     * @var array
      */
-    protected static $logUnguarded = true;
+    protected $with = ['location'];
 
     /**
      * Determines one-to-many relation
@@ -30,7 +29,6 @@ class ProductCategory extends Model
      */
     public function products()
     {
-       return $this->hasMany(Product::class, 'category_id');
+        return $this->hasMany(Product::class, 'category_id');
     }
-
 }

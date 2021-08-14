@@ -25,7 +25,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
      *
      * @var array
      */
-    protected $with = ['supplier'];
+    protected $with = ['supplier', 'location'];
 
     /**
      * The attributes that should be mutated to dates.
