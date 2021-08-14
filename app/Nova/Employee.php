@@ -7,10 +7,8 @@ use App\Enums\Gender;
 use Eminiarts\Tabs\Tabs;
 use App\Enums\BloodGroup;
 use App\Models\Department;
-use App\Models\Designation;
 use Illuminate\Support\Str;
 use Inspheric\Fields\Email;
-use Laravel\Nova\Fields\ID;
 use App\Enums\MaritalStatus;
 use Illuminate\Http\Request;
 use App\Enums\EmployeeStatus;
@@ -19,6 +17,7 @@ use Laravel\Nova\Fields\Text;
 use Eminiarts\Tabs\TabsOnEdit;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
@@ -36,9 +35,6 @@ use App\Nova\Actions\Employees\DownloadExcel;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Titasgailius\SearchRelations\SearchesRelations;
-use Orlyapps\NovaBelongsToDepend\NovaBelongsToDepend;
-use Hubertnnn\LaravelNova\Fields\DynamicSelect\DynamicSelect;
-use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 
 class Employee extends Resource
 {
@@ -360,6 +356,49 @@ class Employee extends Resource
                 ],
                 "Educations" => [
                     HasMany::make('Educations')
+                ],
+                "Monthly History" => [
+                    Text::make("Working Days", function () {
+                        return $this->monthlyWorkingDays . " days";
+                    })
+                        ->onlyOnDetail(),
+
+                    Text::make("Present", function () {
+                        return $this->monthlyPresent . " days";
+                    })
+                        ->onlyOnDetail(),
+
+                    Text::make("Leave", function () {
+                        return $this->monthlyLeave . " days";
+                    })
+                        ->onlyOnDetail(),
+
+                    Text::make("Absent", function () {
+                        return $this->monthlyAbsent . " days";
+                    })
+                        ->onlyOnDetail(),
+
+
+                    Text::make("Late", function () {
+                        return $this->monthlyLate . " days";
+                    })
+                        ->onlyOnDetail(),
+
+                    Text::make("Early Leave", function () {
+                        return $this->monthlyEarlyLeave . " days";
+                    })
+                        ->onlyOnDetail(),
+
+                    Text::make("Gate Pass", function () {
+                        return $this->monthlyGatePasses;
+                    })
+                        ->onlyOnDetail(),
+
+
+                    Text::make("Outside Spent", function () {
+                        return $this->monthlyOutsideSpent . " hours";
+                    })
+                        ->onlyOnDetail(),
                 ]
 
             ])),

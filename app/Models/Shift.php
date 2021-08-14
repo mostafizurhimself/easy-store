@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Facades\Timesheet;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Shift extends Model
@@ -30,4 +31,14 @@ class Shift extends Model
     protected $casts = [
         'opening_hours' => 'array',
     ];
+
+    /**
+     * Get opening hours object
+     * 
+     * @return \Spatie\OpeningHours\OpeningHours
+     */
+    public function getSpatieOpeningHoursAttribute()
+    {
+        return Timesheet::getOpeningHours($this->locationId, $this->id);
+    }
 }
