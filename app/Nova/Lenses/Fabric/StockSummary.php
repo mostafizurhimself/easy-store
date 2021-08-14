@@ -249,7 +249,7 @@ class StockSummary extends Lens
                 })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download pdf?")
                 ->withWriterType(\Maatwebsite\Excel\Excel::MPDF)
-                ->withFilename('fabrics_stock_summary_' . time() . '.pdf'),
+                ->withFilename('fabrics_stock_summary.pdf'),
 
             (new DownloadExcel)->withHeadings('#', 'Location', 'Category', 'Name', 'Previous', 'Purchase', 'Distribution', 'Return', 'Transfer', 'Receive', 'Adjust', 'Remaining')
                 ->canSee(function ($request) {
