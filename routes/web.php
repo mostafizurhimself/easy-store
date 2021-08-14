@@ -107,9 +107,9 @@ Route::group(['middleware' => 'nova'], function () {
 
 
 // Test routes
-Route::get('/employee-gate-passes', function () {
+// Route::get('/employee-gate-passes', function () {
 
-    return view('pdf.pages.employee-gate-passes', [
-        'models' => EmployeeGatePass::all()
-    ]);
-});
+//     return view('pdf.pages.employee-gate-passes', [
+//         'models' => EmployeeGatePass::all()
+//     ]);
+// });
