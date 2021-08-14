@@ -7,6 +7,7 @@ use App\Models\Shift;
 use App\Facades\Helper;
 use App\Models\Holiday;
 use Illuminate\Support\Str;
+use PDO;
 use Spatie\OpeningHours\OpeningHours;
 
 class Timesheet
@@ -37,9 +38,11 @@ class Timesheet
         }
 
         // Creating an opening hour object
-        $openingHours = OpeningHours::create(array_merge($shift->openingHours, ['exceptions' => $exceptions]));
-
-        return $openingHours;
+        if ($shift) {
+            return OpeningHours::create(array_merge($shift->openingHours, ['exceptions' => $exceptions]));
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -55,11 +58,14 @@ class Timesheet
     {
         $workingDays = 0;
         $openingHours = $this->getOpeningHours($locationId, $shiftId);
-        $dates = Helper::getAllDates($start, $end);
+        if ($openingHours) {
 
-        foreach ($dates as $date) {
-            if ($openingHours->isOpenOn($date)) {
-                $workingDays++;
+            $dates = Helper::getAllDates($start, $end);
+
+            foreach ($dates as $date) {
+                if ($openingHours->isOpenOn($date)) {
+                    $workingDays++;
+                }
             }
         }
 

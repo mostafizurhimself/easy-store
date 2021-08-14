@@ -2,10 +2,14 @@
 
 namespace App\Nova\Lenses\Employee;
 
+use App\Facades\Timesheet;
+use App\Models\Attendance;
+use Carbon\Carbon;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Lenses\Lens;
+use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Http\Requests\LensRequest;
 
 class EmployeeHistory extends Lens
@@ -19,9 +23,41 @@ class EmployeeHistory extends Lens
      */
     public static function query(LensRequest $request, $query)
     {
-        return $request->withOrdering($request->withFilters(
-            $query
+        return $request->withoutTableOrderPrefix()->withOrdering($request->withFilters(
+            $query->select(self::columns())
+                ->leftJoin('locations', 'employees.location_id', '=', 'locations.id')
+                ->where('employees.deleted_at', "=", null)
+                ->groupBy('employees.id')
+                ->withoutGlobalScopes()
         ));
+    }
+
+    /**
+     * Get the columns that should be selected.
+     *
+     * @return array
+     */
+    protected static function columns()
+    {
+        return [
+            'employees.id',
+            'employees.first_name',
+            'employees.last_name',
+            'employees.readable_id',
+            'employees.location_id as location_id',
+            'employees.shift_id as shift_id',
+            'employees.joining_date as joining_date',
+
+            'locations.name as location_name',
+
+            DB::raw("CONCAT(employees.first_name,' ',employees.last_name) AS name"),
+
+            // Total Present
+            DB::raw("(COALESCE((select count(attendances.id) from attendances
+            where attendances.employee_id = employees.id
+            and attendances.deleted_at is null
+            and attendances.status = 'confirmed'), 0)) as total_present"),
+        ];
     }
 
     /**
@@ -34,6 +70,24 @@ class EmployeeHistory extends Lens
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
+
+            Text::make('Location', 'location_name')
+                ->sortable(),
+
+            Text::make('Employee Id', 'readable_id')
+                ->sortable(),
+
+            Text::make('Name', 'name')
+                ->sortable(),
+
+            Text::make('Working Days', function () {
+                $workingDays = Timesheet::getWorkingDays($this->location_id, $this->shift_id, Attendance::first()->date, Carbon::now()->format('Y-m-d'));
+                return $workingDays . " days";
+            }),
+
+            Text::make('Present', function () {
+                return $this->total_present . " days";
+            })
         ];
     }
 
@@ -77,6 +131,6 @@ class EmployeeHistory extends Lens
      */
     public function uriKey()
     {
-        return 'employee-employee-history';
+        return 'employee-history';
     }
 }

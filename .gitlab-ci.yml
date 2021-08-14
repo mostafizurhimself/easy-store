@@ -17,6 +17,8 @@ building:
     - php artisan config:cache
     - php artisan view:clear
     - php artisan view:cache
+    - php artisan calculate:spent
+    - php artisan add:shift
   only:
     - master
 

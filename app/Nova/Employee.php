@@ -229,7 +229,6 @@ class Employee extends Resource
 
                 "Official Information" => [
 
-
                     BelongsTo::make('Location')
                         ->searchable()
                         ->canSee(function ($request) {
