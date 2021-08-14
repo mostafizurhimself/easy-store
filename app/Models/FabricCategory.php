@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Cache;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FabricCategory extends Model
 {
-    use LogsActivity, SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.
@@ -18,11 +17,12 @@ class FabricCategory extends Model
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
+     * The relations to eager load on every query.
      *
-     * @var boolean
+     * @var array
      */
-    protected static $logUnguarded = true;
+    protected $with = ['location'];
+
 
     /**
      * Determines one-to-many relation
@@ -31,7 +31,7 @@ class FabricCategory extends Model
      */
     public function fabrics()
     {
-       return $this->hasMany(Fabric::class, 'category_id');
+        return $this->hasMany(Fabric::class, 'category_id');
     }
 
     /**

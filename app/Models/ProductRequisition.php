@@ -7,12 +7,11 @@ use App\Enums\RequisitionStatus;
 use Spatie\MediaLibrary\HasMedia;
 use App\Traits\HasReadableIdWithDate;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductRequisition extends Model implements HasMedia
 {
-    use LogsActivity, SoftDeletes, InteractsWithMedia, HasReadableIdWithDate, HasDate;
+    use SoftDeletes, InteractsWithMedia, HasReadableIdWithDate, HasDate;
 
     /**
      * The attributes that are not mass assignable.
@@ -22,13 +21,13 @@ class ProductRequisition extends Model implements HasMedia
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
+     * The relations to eager load on every query.
      *
-     * @var boolean
+     * @var array
      */
-    protected static $logUnguarded = true;
+    protected $with = ['location'];
 
-     /**
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -59,7 +58,7 @@ class ProductRequisition extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('requisition-attachments');
+        $this->addMediaCollection('requisition-attachments');
     }
 
     /**
@@ -69,7 +68,7 @@ class ProductRequisition extends Model implements HasMedia
      */
     public function requisitionItems()
     {
-       return $this->hasMany(ProductRequisitionItem::class, 'requisition_id');
+        return $this->hasMany(ProductRequisitionItem::class, 'requisition_id');
     }
 
     /**
@@ -89,7 +88,7 @@ class ProductRequisition extends Model implements HasMedia
      */
     public function receiver()
     {
-       return $this->belongsTo(Location::class, 'receiver_id')->withTrashed();
+        return $this->belongsTo(Location::class, 'receiver_id')->withTrashed();
     }
 
     /**
@@ -135,7 +134,7 @@ class ProductRequisition extends Model implements HasMedia
     //     $this->save();
     // }
 
-     /**
+    /**
      * Check all the requisition items status is confirmed or not
      *
      * @return bool
@@ -143,7 +142,7 @@ class ProductRequisition extends Model implements HasMedia
     public function isConfirmed()
     {
         $status = $this->requisitionItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == RequisitionStatus::CONFIRMED()){
+        if ($status->count() == 1  && $status->first() == RequisitionStatus::CONFIRMED()) {
             return true;
         }
         return false;
@@ -183,9 +182,9 @@ class ProductRequisition extends Model implements HasMedia
      */
     public function updateStatus()
     {
-        if($this->requisitionItems()->exists()){
+        if ($this->requisitionItems()->exists()) {
 
-            if($this->isConfirmed()){
+            if ($this->isConfirmed()) {
                 $this->status = RequisitionStatus::CONFIRMED();
                 $this->save();
                 return;
@@ -203,11 +202,9 @@ class ProductRequisition extends Model implements HasMedia
             //     return;
             // }
 
-        }else{
-        $this->status = RequisitionStatus::DRAFT();
+        } else {
+            $this->status = RequisitionStatus::DRAFT();
             $this->save();
         }
     }
-
-
 }

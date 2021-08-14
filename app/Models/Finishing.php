@@ -5,12 +5,10 @@ namespace App\Models;
 use App\Traits\CamelCasing;
 use App\Traits\HasReadableIdWithDate;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Finishing extends Model
 {
-   use LogsActivity, HasReadableIdWithDate, CamelCasing;
+   use HasReadableIdWithDate, CamelCasing;
 
    /**
     * The attributes that are not mass assignable.
@@ -20,18 +18,11 @@ class Finishing extends Model
    protected $guarded = [];
 
    /**
-    * Add all attributes that are not listed in $guarded for log
-    *
-    * @var boolean
-    */
-   protected static $logUnguarded = true;
-
-   /**
     * The relations to eager load on every query.
     *
     * @var array
     */
-   protected $with = ['product'];
+   protected $with = ['product', 'location'];
 
    /**
     * The accessors to append to the model's array form.

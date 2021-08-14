@@ -33,6 +33,14 @@ class ServiceTransferInvoice extends Model
     protected $dates = ['date'];
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['location'];
+
+
+    /**
      * Set teh models readable prefix
      *
      * @return string
@@ -56,7 +64,7 @@ class ServiceTransferInvoice extends Model
      */
     public function transferItems()
     {
-       return $this->hasMany(ServiceTransferItem::class, 'invoice_id');
+        return $this->hasMany(ServiceTransferItem::class, 'invoice_id');
     }
 
     /**
@@ -66,7 +74,7 @@ class ServiceTransferInvoice extends Model
      */
     public function receiveItems()
     {
-       return $this->hasMany(ServiceTransferReceiveItem::class, 'invoice_id');
+        return $this->hasMany(ServiceTransferReceiveItem::class, 'invoice_id');
     }
 
     /**
@@ -76,7 +84,7 @@ class ServiceTransferInvoice extends Model
      */
     public function receiver()
     {
-       return $this->belongsTo(Location::class)->withTrashed();
+        return $this->belongsTo(Location::class)->withTrashed();
     }
 
     /**
@@ -119,7 +127,7 @@ class ServiceTransferInvoice extends Model
     public function isConfirmed()
     {
         $status = $this->transferItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == TransferStatus::CONFIRMED()){
+        if ($status->count() == 1  && $status->first() == TransferStatus::CONFIRMED()) {
             return true;
         }
         return false;
@@ -133,7 +141,7 @@ class ServiceTransferInvoice extends Model
     public function isReceived()
     {
         $status = $this->transferItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == TransferStatus::RECEIVED()){
+        if ($status->count() == 1  && $status->first() == TransferStatus::RECEIVED()) {
             return true;
         }
         return false;
@@ -146,7 +154,7 @@ class ServiceTransferInvoice extends Model
      */
     public function isPartial()
     {
-        if($this->receiveItems()->exists()){
+        if ($this->receiveItems()->exists()) {
             return true;
         }
         return false;
@@ -159,30 +167,28 @@ class ServiceTransferInvoice extends Model
      */
     public function updateStatus()
     {
-        if($this->transferItems()->exists()){
+        if ($this->transferItems()->exists()) {
 
-            if($this->isConfirmed()){
+            if ($this->isConfirmed()) {
                 $this->status = TransferStatus::CONFIRMED();
                 $this->save();
                 return;
             }
 
-            if($this->isReceived()){
+            if ($this->isReceived()) {
                 $this->status = TransferStatus::RECEIVED();
                 $this->save();
                 return;
             }
 
-            if($this->isPartial()){
+            if ($this->isPartial()) {
                 $this->status = TransferStatus::PARTIAL();
                 $this->save();
                 return;
             }
-
-        }else{
+        } else {
             $this->status = TransferStatus::DRAFT();
             $this->save();
         }
     }
-
 }

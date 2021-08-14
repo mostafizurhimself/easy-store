@@ -22,11 +22,18 @@ class Fabric extends Model implements HasMedia
     protected $guarded = [];
 
     /**
+     * Add all attributes that are not listed in $guarded for log
+     *
+     * @var boolean
+     */
+    protected static $logUnguarded = true;
+
+    /**
      * The relations to eager load on every query.
      *
      * @var array
      */
-    protected $with = ['unit'];
+    protected $with = ['unit', 'location', 'category'];
 
     /**
      * The accessors to append to the model's array form.
@@ -34,13 +41,6 @@ class Fabric extends Model implements HasMedia
      * @var array
      */
     protected $appends = ['stock'];
-
-    /**
-     * Add all attributes that are not listed in $guarded for log
-     *
-     * @var boolean
-     */
-    protected static $logUnguarded = true;
 
     /**
      * Register the media collections

@@ -29,6 +29,14 @@ class FabricTransferInvoice extends Model implements HasMedia
     protected static $logUnguarded = true;
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['location'];
+
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -59,7 +67,7 @@ class FabricTransferInvoice extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('transfer-attachments');
+        $this->addMediaCollection('transfer-attachments');
     }
 
     /**
@@ -69,7 +77,7 @@ class FabricTransferInvoice extends Model implements HasMedia
      */
     public function transferItems()
     {
-       return $this->hasMany(FabricTransferItem::class, 'invoice_id');
+        return $this->hasMany(FabricTransferItem::class, 'invoice_id');
     }
 
     /**
@@ -79,7 +87,7 @@ class FabricTransferInvoice extends Model implements HasMedia
      */
     public function receiveItems()
     {
-       return $this->hasMany(FabricTransferReceiveItem::class, 'invoice_id');
+        return $this->hasMany(FabricTransferReceiveItem::class, 'invoice_id');
     }
 
     /**
@@ -89,7 +97,7 @@ class FabricTransferInvoice extends Model implements HasMedia
      */
     public function receiver()
     {
-       return $this->belongsTo(Location::class, 'receiver_id')->withTrashed();
+        return $this->belongsTo(Location::class, 'receiver_id')->withTrashed();
     }
 
     /**
@@ -143,7 +151,7 @@ class FabricTransferInvoice extends Model implements HasMedia
     public function isConfirmed()
     {
         $status = $this->transferItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == TransferStatus::CONFIRMED()){
+        if ($status->count() == 1  && $status->first() == TransferStatus::CONFIRMED()) {
             return true;
         }
         return false;
@@ -157,7 +165,7 @@ class FabricTransferInvoice extends Model implements HasMedia
     public function isReceived()
     {
         $status = $this->transferItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == TransferStatus::RECEIVED()){
+        if ($status->count() == 1  && $status->first() == TransferStatus::RECEIVED()) {
             return true;
         }
         return false;
@@ -170,7 +178,7 @@ class FabricTransferInvoice extends Model implements HasMedia
      */
     public function isPartial()
     {
-        if($this->receiveItems()->exists()){
+        if ($this->receiveItems()->exists()) {
             return true;
         }
         return false;
@@ -183,31 +191,28 @@ class FabricTransferInvoice extends Model implements HasMedia
      */
     public function updateStatus()
     {
-        if($this->transferItems()->exists()){
+        if ($this->transferItems()->exists()) {
 
-            if($this->isConfirmed()){
+            if ($this->isConfirmed()) {
                 $this->status = TransferStatus::CONFIRMED();
                 $this->save();
                 return;
             }
 
-            if($this->isReceived()){
+            if ($this->isReceived()) {
                 $this->status = TransferStatus::RECEIVED();
                 $this->save();
                 return;
             }
 
-            if($this->isPartial()){
+            if ($this->isPartial()) {
                 $this->status = TransferStatus::PARTIAL();
                 $this->save();
                 return;
             }
-
-        }else{
+        } else {
             $this->status = TransferStatus::DRAFT();
             $this->save();
         }
     }
-
-
 }

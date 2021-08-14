@@ -2,11 +2,8 @@
 
 namespace App\Models;
 
-use Spatie\Activitylog\Traits\LogsActivity;
-
 class Leave extends Model
 {
-    use LogsActivity;
 
     /**
      * The attributes that are not mass assignable.
@@ -16,11 +13,12 @@ class Leave extends Model
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
+     * The relations to eager load on every query.
      *
-     * @var boolean
+     * @var array
      */
-    protected static $logUnguarded = true;
+    protected $with = ['location'];
+
 
     /**
      * The attributes that should be mutated to dates.
@@ -36,7 +34,7 @@ class Leave extends Model
      */
     public function employee()
     {
-       return $this->belongsTo(Employee::class)->withTrashed();
+        return $this->belongsTo(Employee::class)->withTrashed();
     }
 
     /**

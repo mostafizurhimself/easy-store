@@ -2,45 +2,44 @@
 
 namespace App\Models;
 
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Account extends Model
 {
-    use LogsActivity, SoftDeletes;
+   use SoftDeletes;
 
-    /**
-     * The attributes that are not mass assignable.
-     *
-     * @var array
-     */
-    protected $guarded = [];
+   /**
+    * The attributes that are not mass assignable.
+    *
+    * @var array
+    */
+   protected $guarded = [];
 
-    /**
-     * Add all attributes that are not listed in $guarded for log
-     *
-     * @var boolean
-     */
-    protected static $logUnguarded = true;
+   /**
+    * The relations to eager load on every query.
+    *
+    * @var array
+    */
+   protected $with = ['location'];
 
-    /**
-     * Determines one-to-many relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactions()
-    {
-       return $this->hasMany(Transaction::class);
-    }
 
-    /**
-     * Determines one-to-many relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function balances()
-    {
-       return $this->hasMany(Balance::class);
-    }
+   /**
+    * Determines one-to-many relation
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    */
+   public function transactions()
+   {
+      return $this->hasMany(Transaction::class);
+   }
 
+   /**
+    * Determines one-to-many relation
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    */
+   public function balances()
+   {
+      return $this->hasMany(Balance::class);
+   }
 }

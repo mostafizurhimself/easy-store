@@ -267,19 +267,6 @@ class Attendance extends Resource
             })
                 ->asHtml()
                 ->exceptOnForms()
-
-
-
-            // Badge::make('Status')->map([
-            //     ConfirmStatus::DRAFT()->getValue()       => 'warning',
-            //     ConfirmStatus::CONFIRMED()->getValue()   => 'info',
-            // ])
-            //     ->sortable()
-            //     ->onlyOnDetail()
-            //     ->label(function () {
-            //         return Str::title(Str::of($this->status)->replace('_', " "));
-            //     }),
-
         ];
     }
 

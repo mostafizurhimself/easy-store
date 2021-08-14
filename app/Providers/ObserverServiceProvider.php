@@ -14,6 +14,7 @@ use App\Models\Provider;
 use App\Models\Supplier;
 use App\Models\Finishing;
 use App\Models\Attendance;
+use App\Models\GiftGatePass;
 use App\Models\GoodsGatePass;
 use App\Models\ProductOutput;
 use App\Models\ManualGatePass;
@@ -61,6 +62,7 @@ use App\Observers\AttendanceObserver;
 use App\Models\ProductRequisitionItem;
 use App\Models\ServiceTransferInvoice;
 use App\Models\MaterialTransferInvoice;
+use App\Observers\GiftGatePassObserver;
 use Illuminate\Support\ServiceProvider;
 use App\Models\AssetDistributionInvoice;
 use App\Observers\GoodsGatePassObserver;
@@ -78,7 +80,7 @@ use App\Observers\AssetRequisitionObserver;
 use App\Observers\FabricReturnItemObserver;
 use App\Observers\FinishingInvoiceObserver;
 use App\Models\AssetDistributionReceiveItem;
-use App\Models\GiftGatePass;
+use App\Models\EmployeeGatePass;
 use App\Observers\AssetPurchaseItemObserver;
 use App\Observers\FabricReceiveItemObserver;
 use App\Observers\AssetPurchaseOrderObserver;
@@ -108,7 +110,7 @@ use App\Observers\FabricTransferReceiveItemObserver;
 use App\Observers\ServiceTransferReceiveItemObserver;
 use App\Observers\MaterialTransferReceiveItemObserver;
 use App\Observers\AssetDistributionReceiveItemObserver;
-use App\Observers\GiftGatePassObserver;
+use App\Observers\EmployeeGatePassObserver;
 
 class ObserverServiceProvider extends ServiceProvider
 {
@@ -179,8 +181,9 @@ class ObserverServiceProvider extends ServiceProvider
         ProductRequisitionItem::observe(ProductRequisitionItemObserver::class);
         Expenser::observe(ExpenserObserver::class);
         Expense::observe(ExpenseObserver::class);
+        GiftGatePass::observe(GiftGatePassObserver::class);
         GoodsGatePass::observe(GoodsGatePassObserver::class);
         ManualGatePass::observe(ManualGatePassObserver::class);
-        GiftGatePass::observe(GiftGatePassObserver::class);
+        EmployeeGatePass::observe(EmployeeGatePassObserver::class);
     }
 }

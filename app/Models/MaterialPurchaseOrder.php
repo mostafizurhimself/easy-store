@@ -21,11 +21,18 @@ class MaterialPurchaseOrder extends Model implements HasMedia
     protected $guarded = [];
 
     /**
+     * Add all attributes that are not listed in $guarded for log
+     *
+     * @var boolean
+     */
+    protected static $logUnguarded = true;
+
+    /**
      * The relations to eager load on every query.
      *
      * @var array
      */
-    protected $with = ['supplier'];
+    protected $with = ['supplier', 'location'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -35,20 +42,13 @@ class MaterialPurchaseOrder extends Model implements HasMedia
     protected $dates = ['date'];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
-     *
-     * @var boolean
-     */
-    protected static $logUnguarded = true;
-
-    /**
      * Register the media collections
      *
      * @return void
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('purchase-order-attachments');
+        $this->addMediaCollection('purchase-order-attachments');
     }
 
     /**
@@ -85,7 +85,7 @@ class MaterialPurchaseOrder extends Model implements HasMedia
      */
     public function supplier()
     {
-       return $this->belongsTo(Supplier::class)->withTrashed();
+        return $this->belongsTo(Supplier::class)->withTrashed();
     }
 
     /**
@@ -95,7 +95,7 @@ class MaterialPurchaseOrder extends Model implements HasMedia
      */
     public function purchaseItems()
     {
-       return $this->hasMany(MaterialPurchaseItem::class, 'purchase_order_id', 'id');
+        return $this->hasMany(MaterialPurchaseItem::class, 'purchase_order_id', 'id');
     }
 
     /**
@@ -105,7 +105,7 @@ class MaterialPurchaseOrder extends Model implements HasMedia
      */
     public function receiveItems()
     {
-       return $this->hasMany(MaterialReceiveItem::class, 'purchase_order_id');
+        return $this->hasMany(MaterialReceiveItem::class, 'purchase_order_id');
     }
 
     /**
@@ -148,7 +148,7 @@ class MaterialPurchaseOrder extends Model implements HasMedia
     public function isConfirmed()
     {
         $status = $this->purchaseItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == PurchaseStatus::CONFIRMED()){
+        if ($status->count() == 1  && $status->first() == PurchaseStatus::CONFIRMED()) {
             return true;
         }
         return false;
@@ -162,7 +162,7 @@ class MaterialPurchaseOrder extends Model implements HasMedia
     public function isReceived()
     {
         $status = $this->purchaseItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == PurchaseStatus::RECEIVED()){
+        if ($status->count() == 1  && $status->first() == PurchaseStatus::RECEIVED()) {
             return true;
         }
         return false;
@@ -175,7 +175,7 @@ class MaterialPurchaseOrder extends Model implements HasMedia
      */
     public function isPartial()
     {
-        if($this->receiveItems()->exists()){
+        if ($this->receiveItems()->exists()) {
             return true;
         }
         return false;
@@ -188,27 +188,26 @@ class MaterialPurchaseOrder extends Model implements HasMedia
      */
     public function updateStatus()
     {
-        if($this->purchaseItems()->exists()){
+        if ($this->purchaseItems()->exists()) {
 
-            if($this->isConfirmed()){
+            if ($this->isConfirmed()) {
                 $this->status = PurchaseStatus::CONFIRMED();
                 $this->save();
                 return;
             }
 
-            if($this->isReceived()){
+            if ($this->isReceived()) {
                 $this->status = PurchaseStatus::RECEIVED();
                 $this->save();
                 return;
             }
 
-            if($this->isPartial()){
+            if ($this->isPartial()) {
                 $this->status = PurchaseStatus::PARTIAL();
                 $this->save();
                 return;
             }
-
-        }else{
+        } else {
             $this->status = PurchaseStatus::DRAFT();
             $this->save();
         }

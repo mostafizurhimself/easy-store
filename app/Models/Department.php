@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Cache;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Department extends Model
 {
-    use LogsActivity, SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.
@@ -18,11 +17,12 @@ class Department extends Model
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
+     * The relations to eager load on every query.
      *
-     * @var boolean
+     * @var array
      */
-    protected static $logUnguarded = true;
+    protected $with = ['location'];
+
 
     /**
      * Determines one-to-many relation
@@ -31,7 +31,7 @@ class Department extends Model
      */
     public function sections()
     {
-       return $this->hasMany(Section::class, 'department_id');
+        return $this->hasMany(Section::class, 'department_id');
     }
 
     /**
@@ -41,7 +41,7 @@ class Department extends Model
      */
     public function employee()
     {
-       return $this->belongsTo(Employee::class)->withTrashed();
+        return $this->belongsTo(Employee::class)->withTrashed();
     }
 
     /**
@@ -59,5 +59,4 @@ class Department extends Model
             })->toArray();
         });
     }
-
 }

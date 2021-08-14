@@ -43,9 +43,33 @@ class Timesheet
     }
 
     /**
+     * Get total working days between to days
+     * 
+     * @param  int    $locationId
+     * @param  int    $shiftId
+     * @param  string $start
+     * @param  string $end
+     * @return int
+     */
+    public function getWorkingDays($locationId, $shiftId, $start, $end)
+    {
+        $workingDays = 0;
+        $openingHours = $this->getOpeningHours($locationId, $shiftId);
+        $dates = Helper::getAllDates($start, $end);
+
+        foreach ($dates as $date) {
+            if ($openingHours->isOpenOn($date)) {
+                $workingDays++;
+            }
+        }
+
+        return $workingDays;
+    }
+
+    /**
      * Get the working hour range of a date
      *
-     * @param  $shiftId
+     * @param  int    $shiftId
      * @param  $date
      * @return array
      */
@@ -53,7 +77,7 @@ class Timesheet
     {
         $shift = Shift::find($shiftId);
         $range = $shift->openingHours[Str::lower($date->format('l'))];
-        if($range){
+        if ($range) {
             return explode('-', $range[0]);
         }
         return null;
@@ -69,7 +93,7 @@ class Timesheet
     public function getWorkingHours($shiftId, $date)
     {
         $range = $this->getWorkingRange($shiftId, $date);
-        if($range){
+        if ($range) {
             return Carbon::parse($range[1])->diffInSeconds(Carbon::parse($range[0]));
         }
 
@@ -87,10 +111,10 @@ class Timesheet
     public function getLate($shiftId, $date, $in)
     {
         $range = $this->getWorkingRange($shiftId, $date);
-        if($range){
+        if ($range) {
             $start = Carbon::parse($range[0]);
             $inTime = Carbon::parse($in);
-            if($inTime->greaterThan($start)){
+            if ($inTime->greaterThan($start)) {
                 return $inTime->diffInSeconds($start);
             }
         }
@@ -109,10 +133,10 @@ class Timesheet
     public function getEarlyLeave($shiftId, $date, $out)
     {
         $range = $this->getWorkingRange($shiftId, $date);
-        if($range){
+        if ($range) {
             $end = Carbon::parse($range[1]);
             $outTime = Carbon::parse($out);
-            if($outTime->lessThan($end)){
+            if ($outTime->lessThan($end)) {
                 return $outTime->diffInSeconds($end);
             }
         }

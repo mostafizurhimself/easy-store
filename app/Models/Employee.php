@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Facades\Settings;
 use App\Enums\AddressType;
+use App\Enums\LeaveStatus;
+use App\Facades\Timesheet;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Cache;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model implements HasMedia
 {
-    use LogsActivity, SoftDeletes, InteractsWithMedia;
+    use SoftDeletes, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.
@@ -20,13 +22,6 @@ class Employee extends Model implements HasMedia
      * @var array
      */
     protected $guarded = [];
-
-    /**
-     * Add all attributes that are not listed in $guarded for log
-     *
-     * @var boolean
-     */
-    protected static $logUnguarded = true;
 
     /**
      * Register the media collections
@@ -54,7 +49,7 @@ class Employee extends Model implements HasMedia
      *
      * @var array
      */
-    protected $with = ['department', 'designation', 'section', 'shift'];
+    protected $with = ['department', 'designation', 'section', 'shift', 'location'];
 
     /**
      * The accessors to append to the model's array form.
@@ -135,6 +130,36 @@ class Employee extends Model implements HasMedia
     public function educations()
     {
         return $this->hasMany(Education::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function leaves()
+    {
+        return $this->hasMany(Leave::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function gatePasses()
+    {
+        return $this->hasMany(EmployeeGatePass::class);
     }
 
     /**
@@ -233,6 +258,86 @@ class Employee extends Model implements HasMedia
         return $this->shift ? $this->shift->name : "N/A";
     }
 
+    /**
+     * Get currenct month working days
+     * 
+     * @return int
+     */
+    public function getMonthlyWorkingDaysAttribute()
+    {
+        return Timesheet::getWorkingDays($this->locationId, $this->shiftId, Carbon::now()->startOfMonth(), Carbon::now());
+    }
+
+    /**
+     * Get current month present attribut
+     * 
+     * @return int
+     */
+    public function getMonthlyPresentAttribute()
+    {
+        return $this->attendances()->whereMonth("date", Carbon::now()->format('m'))->count();
+    }
+
+    /**
+     * Get monthly leave attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyLeaveAttribute()
+    {
+        return $this->leaves()->where('status', LeaveStatus::APPROVED())->whereMonth('from', Carbon::now()->format('m'))->sum('total_days');
+    }
+
+    /**
+     * Get current month present attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyAbsentAttribute()
+    {
+        return $this->monthlyWorkingDays - $this->monthlyPresent - $this->monthlyLeave;
+    }
+
+    /**
+     * Get monthly late attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyLateAttribute()
+    {
+        return $this->attendances()->whereMonth("date", Carbon::now()->format('m'))->where('late', '>', 0)->count();
+    }
+
+    /**
+     * Get monthly early leave attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyEarlyLeaveAttribute()
+    {
+        return $this->gatePasses()->whereMonth("passed_at", Carbon::now()->format('m'))->where('early_leave', 1)->count();
+    }
+
+    /**
+     * Get monthly gate pass attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyGatePassesAttribute()
+    {
+        return $this->gatePasses()->whereMonth("passed_at", Carbon::now()->format('m'))->count();
+    }
+
+    /**
+     * Get monthly outside spent attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyOutsideSpentAttribute()
+    {
+        $seconds = $this->gatePasses()->whereMonth("passed_at", Carbon::now()->format('m'))->whereNotNull('in')->sum('spent');
+        return gmdate("H:i", $seconds);
+    }
 
     /**
      * Get the select options of the employee

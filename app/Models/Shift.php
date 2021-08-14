@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Spatie\Activitylog\Traits\LogsActivity;
+use App\Facades\Timesheet;
 
 class Shift extends Model
 {
-    use LogsActivity;
 
     /**
      * The attributes that are not mass assignable.
@@ -16,11 +15,12 @@ class Shift extends Model
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
+     * The relations to eager load on every query.
      *
-     * @var boolean
+     * @var array
      */
-    protected static $logUnguarded = true;
+    protected $with = ['location'];
+
 
     /**
      * The attributes that should be mutated to array.
@@ -30,4 +30,14 @@ class Shift extends Model
     protected $casts = [
         'opening_hours' => 'array',
     ];
+
+    /**
+     * Get opening hours object
+     * 
+     * @return \Spatie\OpeningHours\OpeningHours
+     */
+    public function getSpatieOpeningHoursAttribute()
+    {
+        return Timesheet::getOpeningHours($this->locationId, $this->id);
+    }
 }

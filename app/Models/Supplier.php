@@ -9,12 +9,11 @@ use App\Traits\CamelCasing;
 use App\Traits\HasReadableId;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Supplier extends Model
 {
-    use LogsActivity, SoftDeletes, HasReadableId, CamelCasing, ActiveScope;
+    use SoftDeletes, HasReadableId, CamelCasing, ActiveScope;
 
     /**
      * The attributes that are not mass assignable.
@@ -24,11 +23,11 @@ class Supplier extends Model
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
+     * The relations to eager load on every query.
      *
-     * @var boolean
+     * @var array
      */
-    protected static $logUnguarded = true;
+    protected $with = ['location'];
 
     /**
      * Set the model readable id prefix
@@ -104,7 +103,7 @@ class Supplier extends Model
      */
     public function getLocationAddressAttribute()
     {
-        if($this->address()->exists()){
+        if ($this->address()->exists()) {
 
             return $this->address->where('type', AddressType::LOCATION_ADDRESS())->first();
         }
