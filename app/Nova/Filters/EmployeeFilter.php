@@ -20,7 +20,25 @@ class EmployeeFilter extends Filter
      *
      * @var string
      */
-    public $name = "Reveiver";
+    public $name;
+
+    /**
+     * The filterable column property.
+     *
+     * @var string
+     */
+    public $column;
+
+    /**
+     * Set the column and name
+     *
+     * @return void
+     */
+    public function __construct($column = "employee_id", $name = "Employee")
+    {
+        $this->column = $column;
+        $this->name   = $name;
+    }
 
     /**
      * Apply the filter to the given query.
@@ -32,7 +50,7 @@ class EmployeeFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->where('receiver_id', $value);
+        return $query->where($this->column, $value);
     }
 
     /**

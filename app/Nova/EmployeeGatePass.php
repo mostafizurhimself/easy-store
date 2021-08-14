@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Models\Employee;
 use App\Facades\Settings;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -17,9 +18,11 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Textarea;
 use App\Nova\Actions\ScanGatePass;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\EmployeeFilter;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\DateRangeFilter;
+use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Filters\GatePassStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\EmployeeGatePasses\CheckIn;
@@ -271,9 +274,25 @@ class EmployeeGatePass extends Resource
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
+            DependentFilter::make('Employee', 'employee_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Employee::where('location_id', $filters['location_id'])
+                        ->orderBy('first_name')
+                        ->get()
+                        ->pluck('nameWithId', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new EmployeeFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
             new GatePassStatusFilter,
 
             new DateRangeFilter('approved_out', "Approve Out"),
+
         ];
     }
 

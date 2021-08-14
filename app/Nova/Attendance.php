@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Models\Employee;
 use Michielfb\Time\Time;
 use App\Models\Department;
 use Illuminate\Support\Str;
@@ -16,6 +17,7 @@ use NovaAjaxSelect\AjaxSelect;
 use App\Enums\AttendanceStatus;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\EmployeeFilter;
 use App\Nova\Filters\LocationFilter;
 use Laraning\NovaTimeField\TimeField;
 use AwesomeNova\Filters\DependentFilter;
@@ -299,11 +301,26 @@ class Attendance extends Resource
                     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
                 }),
 
-            new DateRangeFilter('Date Between', 'date'),
-
             (new DepartmentFilterViaEmployee)->canSee(function ($request) {
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
+
+            DependentFilter::make('Employee', 'employee_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Employee::where('location_id', $filters['location_id'])
+                        ->orderBy('first_name')
+                        ->get()
+                        ->pluck('nameWithId', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new EmployeeFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            new DateRangeFilter('Date Between', 'date'),
 
             new AttendanceStatusFilter,
         ];

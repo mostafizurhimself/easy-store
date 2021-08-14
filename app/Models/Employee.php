@@ -58,7 +58,7 @@ class Employee extends Model implements HasMedia
      */
     protected $appends = [
         'name', 'employeeId', 'presentAddress', 'permanentAddress', 'imageUrl',
-        'departmentName', 'sectionName', 'designationName', 'shiftName'
+        'departmentName', 'sectionName', 'designationName', 'shiftName', 'nameWithId'
     ];
 
     /**
@@ -170,6 +170,16 @@ class Employee extends Model implements HasMedia
     public function getNameAttribute()
     {
         return $this->firstName . " " . $this->lastName;
+    }
+
+    /**
+     * Get the employee full name attribute
+     *
+     * @return string
+     */
+    public function getNameWithIdAttribute()
+    {
+        return "{$this->firstName} {$this->lastName} ($this->readableId)";
     }
 
 
@@ -392,11 +402,7 @@ class Employee extends Model implements HasMedia
     public static function filterOptions()
     {
         return Cache::remember('nova-employee-filter-options', 3600, function () {
-            $employees = self::setEagerLoads([])->orderBy('first_name')->get(['id', 'first_name', 'last_name']);
-
-            return $employees->mapWithKeys(function ($employee) {
-                return [$employee->first_name . " " . $employee->last_name => $employee->id];
-            })->toArray();
+            return self::setEagerLoads([])->orderBy('first_name')->get()->pluck('id', 'nameWithId');
         });
     }
 }

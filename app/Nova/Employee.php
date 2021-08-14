@@ -32,6 +32,7 @@ use Bissolli\NovaPhoneField\PhoneNumber;
 use App\Nova\Actions\Employees\DownloadPdf;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Employees\DownloadExcel;
+use App\Nova\Lenses\Employee\EmployeeHistory;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Titasgailius\SearchRelations\SearchesRelations;
@@ -453,7 +454,9 @@ class Employee extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new EmployeeHistory()
+        ];
     }
 
     /**
