@@ -16,7 +16,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\Lens\AssetLocationFilter;
 use App\Nova\Actions\Assets\StockSummary\DownloadPdf;
 use App\Nova\Filters\Lens\AssetSummaryDateRangeFilter;
-use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
+use App\Nova\Actions\Assets\StockSummary\DownloadExcel;
 
 class StockSummary extends Lens
 {
@@ -239,6 +239,18 @@ class StockSummary extends Lens
     public function actions(Request $request)
     {
         return [
+
+            (new DownloadPdf)->withHeadings('#', 'Location', 'Category', 'Name', 'Previous', 'Purchase', 'Consume', 'Return', 'Distribution', 'Receive', 'Adjust', 'Remaining')
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+                })
+                ->canRun(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
+                })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?")
+                ->withWriterType(\Maatwebsite\Excel\Excel::MPDF)
+                ->withFilename('assets_stock_summary.pdf'),
+
             (new DownloadExcel)->withHeadings('#', 'Location', 'Category', 'Name', 'Previous', 'Purchase', 'Consume', 'Return', 'Distribution', 'Receive', 'Adjust', 'Remaining')
                 ->canSee(function ($request) {
                     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
@@ -246,7 +258,8 @@ class StockSummary extends Lens
                 ->canRun(function ($request) {
                     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
                 })->confirmButtonText('Download')
-                ->confirmText("Are you sure want to download excel?"),
+                ->confirmText("Are you sure want to download excel?")
+                ->withFilename('assets_stock_summary.xlsx'),
         ];
     }
 

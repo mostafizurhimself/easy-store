@@ -8,10 +8,17 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Exports\MaterialStockSummaryExport;
+use App\Exports\FabricStockSummaryExport;
+use Maatwebsite\Excel\Events\BeforeSheet;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel as Base;
 
-class DownloadExcel extends Action
+class DownloadExcel extends Base implements ShouldAutoSize, WithStyles, WithEvents
 {
     use InteractsWithQueue, Queueable;
 
@@ -22,7 +29,7 @@ class DownloadExcel extends Action
      */
     public static $chunkCount = 200000000;
 
-         /**
+    /**
      * Disables action log events for this action.
      *
      * @var bool
@@ -30,28 +37,33 @@ class DownloadExcel extends Action
     public $withoutActionEvents = true;
 
     /**
-     * Perform the action on the given models.
-     *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
-     * @return mixed
+     * Set styles of the excel file
      */
-    public function handle(ActionFields $fields, Collection $models)
+    public function styles(Worksheet $sheet)
     {
-        // Store on default disk
-        $filename = "material_stock_summary_".time().".xlsx";
-        Excel::store(new MaterialStockSummaryExport($models), $filename, 'local');
-
-        return Action::redirect( route('dump-download', compact('filename')) );
+        $sheet->getStyle('1')->getFont()->setBold(true);
+        $sheet->getStyle('1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:' . $sheet->getHighestDataColumn() . $sheet->getHighestDataRow())->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['argb' => '000000'],
+                ],
+            ],
+        ]);
     }
 
     /**
-     * Get the fields available on the action.
-     *
      * @return array
      */
-    public function fields()
+    public function registerEvents(): array
     {
-        return [];
+        return [
+            BeforeSheet::class => function (BeforeSheet $event) {
+                $event->sheet
+                    ->getPageSetup()
+                    ->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+            },
+        ];
     }
 }

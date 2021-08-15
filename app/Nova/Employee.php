@@ -7,10 +7,8 @@ use App\Enums\Gender;
 use Eminiarts\Tabs\Tabs;
 use App\Enums\BloodGroup;
 use App\Models\Department;
-use App\Models\Designation;
 use Illuminate\Support\Str;
 use Inspheric\Fields\Email;
-use Laravel\Nova\Fields\ID;
 use App\Enums\MaritalStatus;
 use Illuminate\Http\Request;
 use App\Enums\EmployeeStatus;
@@ -19,7 +17,9 @@ use Laravel\Nova\Fields\Text;
 use Eminiarts\Tabs\TabsOnEdit;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\MorphMany;
@@ -29,14 +29,13 @@ use App\Nova\Filters\DepartmentFilter;
 use App\Nova\Actions\Employees\EisForm;
 use AwesomeNova\Filters\DependentFilter;
 use Bissolli\NovaPhoneField\PhoneNumber;
+use App\Nova\Actions\Employees\DownloadPdf;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\Employees\DownloadExcel;
+use App\Nova\Lenses\Employee\EmployeeHistory;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Titasgailius\SearchRelations\SearchesRelations;
-use Orlyapps\NovaBelongsToDepend\NovaBelongsToDepend;
-use Hubertnnn\LaravelNova\Fields\DynamicSelect\DynamicSelect;
-use Epartment\NovaDependencyContainer\NovaDependencyContainer;
-use Laravel\Nova\Fields\HasMany;
 
 class Employee extends Resource
 {
@@ -61,6 +60,13 @@ class Employee extends Resource
      * @var int
      */
     public static $priority = 6;
+
+    /**
+     * Get the custom permissions name of the resource
+     *
+     * @var array
+     */
+    public static $permissions = ['can download'];
 
     /**
      * The icon of the resource.
@@ -162,6 +168,11 @@ class Employee extends Resource
                         ->onlyCustomFormats()
                         ->hideFromIndex(),
 
+                    PhoneNumber::make('Emergency Contact', 'emergency_mobile')
+                        ->withCustomFormats('+88 ### #### ####')
+                        ->onlyCustomFormats()
+                        ->hideFromIndex(),
+
                     Images::make('Image', 'employee-images')
                         ->croppable(true)
                         ->hideFromIndex()
@@ -183,6 +194,11 @@ class Employee extends Resource
 
                     Text::make('Mother Name')
                         ->rules('nullable', 'string', 'max:100')
+                        ->hideFromIndex(),
+
+                    Date::make('Date of Birth', 'dob')
+                        ->required()
+                        ->sortable()
                         ->hideFromIndex(),
 
                     Select::make('Gender')
@@ -211,8 +227,29 @@ class Employee extends Resource
                         ->options(BloodGroup::titleCaseOptions())
                         ->hideFromIndex(),
 
+                    Text::make('Highest Education')
+                        ->rules('nullable', 'string', 'max:50')
+                        ->hideFromIndex(),
+
+                    Text::make('Nominee Name')
+                        ->rules('nullable', 'string', 'max:50')
+                        ->hideFromIndex(),
+
+                    PhoneNumber::make('Nominee Contact', 'nominee_mobile')
+                        ->withCustomFormats('+88 ### #### ####')
+                        ->onlyCustomFormats()
+                        ->hideFromIndex(),
+
                     Text::make('Nationality')
                         ->default('Bangladeshi')
+                        ->rules('nullable', 'string', 'max:50')
+                        ->hideFromIndex(),
+
+                    Text::make('NID No', 'nid')
+                        ->rules('nullable', 'string', 'max:50')
+                        ->hideFromIndex(),
+
+                    Text::make('Passport No', 'passport')
                         ->rules('nullable', 'string', 'max:50')
                         ->hideFromIndex(),
 
@@ -222,7 +259,6 @@ class Employee extends Resource
                 ],
 
                 "Official Information" => [
-
 
                     BelongsTo::make('Location')
                         ->searchable()
@@ -351,6 +387,49 @@ class Employee extends Resource
                 ],
                 "Educations" => [
                     HasMany::make('Educations')
+                ],
+                "Monthly History" => [
+                    Text::make("Working Days", function () {
+                        return $this->monthlyWorkingDays . " days";
+                    })
+                        ->onlyOnDetail(),
+
+                    Text::make("Present", function () {
+                        return $this->monthlyPresent . " days";
+                    })
+                        ->onlyOnDetail(),
+
+                    Text::make("Leave", function () {
+                        return $this->monthlyLeave . " days";
+                    })
+                        ->onlyOnDetail(),
+
+                    Text::make("Absent", function () {
+                        return $this->monthlyAbsent . " days";
+                    })
+                        ->onlyOnDetail(),
+
+
+                    Text::make("Late", function () {
+                        return $this->monthlyLate . " days";
+                    })
+                        ->onlyOnDetail(),
+
+                    Text::make("Early Leave", function () {
+                        return $this->monthlyEarlyLeave . " days";
+                    })
+                        ->onlyOnDetail(),
+
+                    Text::make("Gate Pass", function () {
+                        return $this->monthlyGatePasses;
+                    })
+                        ->onlyOnDetail(),
+
+
+                    Text::make("Outside Spent", function () {
+                        return $this->monthlyOutsideSpent . " hours";
+                    })
+                        ->onlyOnDetail(),
                 ]
 
             ])),
@@ -405,7 +484,9 @@ class Employee extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+            new EmployeeHistory()
+        ];
     }
 
     /**
@@ -417,7 +498,28 @@ class Employee extends Resource
     public function actions(Request $request)
     {
         return [
-            (new EisForm)->onlyOnDetail()->withoutConfirmation(),
+            (new EisForm)->onlyOnDetail()
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+                })->canRun(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+                })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download?"),
+
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
+
         ];
     }
 }

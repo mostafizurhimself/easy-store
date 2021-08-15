@@ -1,4 +1,4 @@
-@extends('pdf.layout')
+@extends('excel.layout')
 
 @section('title')
     Material Distributions

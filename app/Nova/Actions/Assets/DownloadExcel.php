@@ -22,7 +22,7 @@ class DownloadExcel extends Action
      */
     public static $chunkCount = 200000000;
 
-        /**
+    /**
      * Disables action log events for this action.
      *
      * @var bool
@@ -40,10 +40,10 @@ class DownloadExcel extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         // Store on default disk
-        $filename = "assets_".time().".xlsx";
+        $filename = "assets.xlsx";
         Excel::store(new AssetExport($models), $filename, 'local');
 
-        return Action::redirect( route('dump-download', compact('filename')) );
+        return Action::redirect(route('dump-download', compact('filename')));
     }
 
     /**

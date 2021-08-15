@@ -1,54 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Fabric Purchase Item</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@yield('title') | Easy Store</title>
 
     <style>
-        body{
-            font-family: sans-serif;
+        body {
+            font-family: "DejaVu Sans", sans-serif;
             font-size: 11px;
         }
 
-        h1, p{
+        h1,
+        p {
             text-align: center;
         }
-        h1{
+
+        h1 {
             margin-bottom: 10px;
         }
-        p{
+
+        p {
             margin-top: 0;
         }
-        table{
+
+        table {
             width: 100%;
+            border-collapse: collapse;
         }
 
-        table thead{
+        table,
+        th,
+        td {
+            border: 1px solid #2e2e2e;
+        }
+
+        table thead {
             text-align: left;
         }
 
-        tr:nth-child(2n + 1){
+        tr:nth-child(2n + 1) {
             background: #dadada;
         }
 
-        tr:first-child{
+        tr:first-child {
             font-weight: bold
         }
 
-        th, td{
+        th,
+        td {
             padding: 1rem;
         }
 
-        .tfoot{
+        .tfoot {
             font-weight: bold;
 
         }
+
     </style>
 </head>
+
 <body>
     @yield('content')
 </body>
+
 </html>

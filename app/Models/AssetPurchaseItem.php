@@ -39,7 +39,7 @@ class AssetPurchaseItem extends Model
      *
      * @var array
      */
-    protected $append = ['date', 'location', 'unitName'];
+    protected $appends = ['date', 'location', 'unitName'];
 
     /**
      * Set the model readable id prefix
@@ -65,7 +65,7 @@ class AssetPurchaseItem extends Model
      */
     public function purchaseOrder()
     {
-       return $this->belongsTo(AssetPurchaseOrder::class, 'purchase_order_id')->withTrashed();
+        return $this->belongsTo(AssetPurchaseOrder::class, 'purchase_order_id')->withTrashed();
     }
 
     /**
@@ -75,17 +75,17 @@ class AssetPurchaseItem extends Model
      */
     public function asset()
     {
-       return $this->belongsTo(Asset::class)->withTrashed();
+        return $this->belongsTo(Asset::class)->withTrashed();
     }
 
-        /**
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class)->withTrashed();
+        return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -125,7 +125,7 @@ class AssetPurchaseItem extends Model
      */
     public function receiveItems()
     {
-       return $this->hasMany(AssetReceiveItem::class, 'purchase_item_id');
+        return $this->hasMany(AssetReceiveItem::class, 'purchase_item_id');
     }
 
     /**
@@ -149,7 +149,7 @@ class AssetPurchaseItem extends Model
         $this->save();
     }
 
-     /**
+    /**
      * Update total receive amount
      *
      * @return void
@@ -167,20 +167,18 @@ class AssetPurchaseItem extends Model
      */
     public function updateStatus()
     {
-        if($this->receiveItems()->exists() && ($this->purchaseQuantity == $this->receiveQuantity)){
+        if ($this->receiveItems()->exists() && ($this->purchaseQuantity == $this->receiveQuantity)) {
             $this->status = PurchaseStatus::RECEIVED();
         }
 
-        if($this->receiveItems()->exists() && ($this->purchaseQuantity != $this->receiveQuantity)){
+        if ($this->receiveItems()->exists() && ($this->purchaseQuantity != $this->receiveQuantity)) {
             $this->status = PurchaseStatus::PARTIAL();
         }
 
-        if(!$this->receiveItems()->exists()){
+        if (!$this->receiveItems()->exists()) {
             $this->status = PurchaseStatus::CONFIRMED();
         }
 
         $this->save();
-
     }
-
 }

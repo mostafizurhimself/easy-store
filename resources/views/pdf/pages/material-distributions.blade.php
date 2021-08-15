@@ -8,8 +8,7 @@
     <h1>Material Purchase Items</h1>
     @if (!empty($subtitle))
         <p>{{ $subtitle }}</p>
-    @else
-        <p>Add your subtitle here</p>
+
     @endif
     <table class="table">
         <tbody>

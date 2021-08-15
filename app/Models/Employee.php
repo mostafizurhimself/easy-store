@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Facades\Settings;
 use App\Enums\AddressType;
+use App\Enums\LeaveStatus;
+use App\Facades\Timesheet;
+use App\Enums\ConfirmStatus;
+use App\Enums\GatePassStatus;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Cache;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model implements HasMedia
 {
-    use LogsActivity, SoftDeletes, InteractsWithMedia;
+    use SoftDeletes, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.
@@ -20,13 +24,6 @@ class Employee extends Model implements HasMedia
      * @var array
      */
     protected $guarded = [];
-
-    /**
-     * Add all attributes that are not listed in $guarded for log
-     *
-     * @var boolean
-     */
-    protected static $logUnguarded = true;
 
     /**
      * Register the media collections
@@ -45,16 +42,27 @@ class Employee extends Model implements HasMedia
      * @var array
      */
     protected $dates = [
+        'dob',
         'joining_date',
-        'resign_date'
+        'resign_date',
     ];
+
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['department', 'designation', 'section', 'shift', 'location'];
 
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $append = ['name', 'employeeId', 'presentAddress', 'permanentAddress'];
+    protected $appends = [
+        'name', 'employeeId', 'presentAddress', 'permanentAddress', 'imageUrl',
+        'departmentName', 'sectionName', 'designationName', 'shiftName', 'nameWithId'
+    ];
 
     /**
      * Determines a morph one relationship
@@ -128,6 +136,46 @@ class Employee extends Model implements HasMedia
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function leaves()
+    {
+        return $this->hasMany(Leave::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function leaveDays()
+    {
+        return $this->hasMany(LeaveDays::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function gatePasses()
+    {
+        return $this->hasMany(EmployeeGatePass::class);
+    }
+
+    /**
      * Get the employee full name attribute
      *
      * @return string
@@ -135,6 +183,16 @@ class Employee extends Model implements HasMedia
     public function getNameAttribute()
     {
         return $this->firstName . " " . $this->lastName;
+    }
+
+    /**
+     * Get the employee full name attribute
+     *
+     * @return string
+     */
+    public function getNameWithIdAttribute()
+    {
+        return "{$this->firstName} {$this->lastName} ($this->readableId)";
     }
 
 
@@ -153,7 +211,7 @@ class Employee extends Model implements HasMedia
      *
      * @return mixed
      */
-    public function getBillingAddressAttribute()
+    public function getPresentAddressAttribute()
     {
         if ($this->address()->exists()) {
             return $this->address()->where('type', AddressType::PRESENT_ADDRESS())->first();
@@ -165,13 +223,163 @@ class Employee extends Model implements HasMedia
      *
      * @return mixed
      */
-    public function getShippingAddressAttribute()
+    public function getPermanentAddressAttribute()
     {
         if ($this->address()->exists()) {
             return $this->address()->where('type', AddressType::PERMANENT_ADDRESS())->first();
         }
     }
 
+    /**
+     * Get employee image url
+     * 
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        return !empty($this->getFirstMediaUrl('employee-images')) ?
+            $this->getFirstMediaUrl('employee-images') : asset('images/logo.png');
+    }
+
+    /**
+     * Get department name attribute
+     * 
+     * @return string
+     */
+    public function getDepartmentNameAttribute()
+    {
+        return $this->department ? $this->department->name : "N/A";
+    }
+
+    /**
+     * Get section name attribute
+     * 
+     * @return string
+     */
+    public function getSectionNameAttribute()
+    {
+        return $this->section ? $this->section->name : "N/A";
+    }
+
+    /**
+     * Get designation name attribute
+     * 
+     * @return string
+     */
+    public function getDesignationNameAttribute()
+    {
+        return $this->designation ? $this->designation->name : "N/A";
+    }
+
+    /**
+     * Get shift name attribute
+     * 
+     * @return string
+     */
+    public function getShiftNameAttribute()
+    {
+        return $this->shift ? $this->shift->name : "N/A";
+    }
+
+    /**
+     * Get currenct month working days
+     * 
+     * @return int
+     */
+    public function getMonthlyWorkingDaysAttribute()
+    {
+        return Timesheet::getWorkingDays($this->locationId, $this->shiftId, Carbon::now()->startOfMonth(), Carbon::now());
+    }
+
+    /**
+     * Get current month present attribut
+     * 
+     * @return int
+     */
+    public function getMonthlyPresentAttribute()
+    {
+        return $this->attendances()
+            ->whereMonth("date", Carbon::now()->format('m'))
+            ->whereStatus(ConfirmStatus::CONFIRMED())
+            ->count();
+    }
+
+    /**
+     * Get monthly leave attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyLeaveAttribute()
+    {
+        return $this->leaveDays()->whereHas('leave', function ($query) {
+            $query->where('status', LeaveStatus::APPROVED());
+        })->whereMonth('date', Carbon::now()->format('m'))->count();
+    }
+
+    /**
+     * Get current month present attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyAbsentAttribute()
+    {
+        return $this->monthlyWorkingDays - $this->monthlyPresent - $this->monthlyLeave;
+    }
+
+    /**
+     * Get monthly late attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyLateAttribute()
+    {
+        return $this->attendances()
+            ->whereMonth("date", Carbon::now()->format('m'))
+            ->where('late', '>', 0)
+            ->whereStatus(ConfirmStatus::CONFIRMED())
+            ->count();
+    }
+
+    /**
+     * Get monthly early leave attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyEarlyLeaveAttribute()
+    {
+        return $this->gatePasses()
+            ->whereMonth("passed_at", Carbon::now()->format('m'))
+            ->whereStatus(GatePassStatus::PASSED())
+            ->where('early_leave', 1)->count();
+    }
+
+    /**
+     * Get monthly gate pass attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyGatePassesAttribute()
+    {
+        return $this->gatePasses()
+            ->whereMonth("passed_at", Carbon::now()->format('m'))
+            ->whereStatus(GatePassStatus::PASSED())
+            ->count();
+    }
+
+    /**
+     * Get monthly outside spent attribute
+     * 
+     * @return int
+     */
+    public function getMonthlyOutsideSpentAttribute()
+    {
+        $seconds = $this->gatePasses()
+            ->whereMonth("passed_at", Carbon::now()->format('m'))
+            ->whereNotNull('in')
+            ->whereStatus(GatePassStatus::PASSED())
+            ->sum('spent');
+        return gmdate("H:i", $seconds);
+    }
 
     /**
      * Get the select options of the employee
@@ -226,11 +434,7 @@ class Employee extends Model implements HasMedia
     public static function filterOptions()
     {
         return Cache::remember('nova-employee-filter-options', 3600, function () {
-            $employees = self::setEagerLoads([])->orderBy('first_name')->get(['id', 'first_name', 'last_name']);
-
-            return $employees->mapWithKeys(function ($employee) {
-                return [$employee->first_name . " " . $employee->last_name => $employee->id];
-            })->toArray();
+            return self::setEagerLoads([])->orderBy('first_name')->get()->pluck('id', 'nameWithId');
         });
     }
 }

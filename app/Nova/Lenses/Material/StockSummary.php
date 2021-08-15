@@ -14,9 +14,9 @@ use AwesomeNova\Filters\DependentFilter;
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\Lens\MaterialLocationFilter;
-use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use App\Nova\Actions\Materials\StockSummary\DownloadPdf;
 use App\Nova\Filters\Lens\MaterialSummaryDateRangeFilter;
+use App\Nova\Actions\Materials\StockSummary\DownloadExcel;
 
 class StockSummary extends Lens
 {
@@ -241,6 +241,17 @@ class StockSummary extends Lens
     public function actions(Request $request)
     {
         return [
+            (new DownloadPdf)->withHeadings('#', 'Location', 'Category', 'Name', 'Previous', 'Purchase', 'Distribution', 'Return', 'Transfer', 'Receive', 'Adjust', 'Remaining')
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+                })
+                ->canRun(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
+                })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?")
+                ->withWriterType(\Maatwebsite\Excel\Excel::MPDF)
+                ->withFilename('materials_stock_summary.pdf'),
+
             (new DownloadExcel)->withHeadings('#', 'Location', 'Category', 'Name', 'Previous', 'Purchase', 'Distribution', 'Return', 'Transfer', 'Receive', 'Adjust', 'Remaining')
                 ->canSee(function ($request) {
                     return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
@@ -248,7 +259,8 @@ class StockSummary extends Lens
                 ->canRun(function ($request) {
                     return ($request->user()->hasPermissionTo('can download materials') || $request->user()->isSuperAdmin());
                 })->confirmButtonText('Download')
-                ->confirmText("Are you sure want to download excel?"),
+                ->confirmText("Are you sure want to download excel?")
+                ->withFilename('materials_stock_summary.xlsx'),
         ];
     }
 

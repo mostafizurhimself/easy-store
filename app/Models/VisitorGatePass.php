@@ -4,12 +4,11 @@ namespace App\Models;
 
 use App\Enums\GatepassType;
 use App\Traits\HasReadableIdWithDate;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class VisitorGatePass extends Model
 {
-    use LogsActivity, HasReadableIdWithDate, SoftDeletes;
+    use HasReadableIdWithDate, SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.
@@ -17,13 +16,6 @@ class VisitorGatePass extends Model
      * @var array
      */
     protected $guarded = [];
-
-    /**
-     * Add all attributes that are not listed in $guarded for log
-     *
-     * @var boolean
-     */
-    protected static $logUnguarded = true;
 
     /**
      * Set the model readable id prefix
@@ -54,7 +46,7 @@ class VisitorGatePass extends Model
      *
      * @var array
      */
-    protected $with = ['employee'];
+    protected $with = ['employee', 'location'];
 
     /**
      * The accessors to append to the model's array form.

@@ -14,8 +14,11 @@ class EisFormController extends Controller
      * @param \App\Models\Employee $employee
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Employee $employee)
+    public function index(Request $request, Employee $employee)
     {
-        return view('others.eis-form')->with('employee', $employee);
+        if ($request->user()->hasPermissionTo('can download employees')) {
+            return view('others.eis-form')->with('employee', $employee);
+        }
+        return abort(403);
     }
 }

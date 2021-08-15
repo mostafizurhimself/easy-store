@@ -16,7 +16,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\Lens\FabricLocationFilter;
 use App\Nova\Actions\Fabrics\StockSummary\DownloadPdf;
 use App\Nova\Filters\Lens\FabricSummaryDateRangeFilter;
-use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
+use App\Nova\Actions\Fabrics\StockSummary\DownloadExcel;
 
 class StockSummary extends Lens
 {
@@ -240,6 +240,17 @@ class StockSummary extends Lens
     public function actions(Request $request)
     {
         return [
+            (new DownloadPdf)->withHeadings('#', 'Location', 'Category', 'Name', 'Previous', 'Purchase', 'Distribution', 'Return', 'Transfer', 'Receive', 'Adjust', 'Remaining')
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+                })
+                ->canRun(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
+                })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?")
+                ->withWriterType(\Maatwebsite\Excel\Excel::MPDF)
+                ->withFilename('fabrics_stock_summary.pdf'),
+
             (new DownloadExcel)->withHeadings('#', 'Location', 'Category', 'Name', 'Previous', 'Purchase', 'Distribution', 'Return', 'Transfer', 'Receive', 'Adjust', 'Remaining')
                 ->canSee(function ($request) {
                     return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
@@ -247,7 +258,8 @@ class StockSummary extends Lens
                 ->canRun(function ($request) {
                     return ($request->user()->hasPermissionTo('can download fabrics') || $request->user()->isSuperAdmin());
                 })->confirmButtonText('Download')
-                ->confirmText("Are you sure want to download excel?"),
+                ->confirmText("Are you sure want to download excel?")
+                ->withFilename('fabrics_stock_summary.xlsx'),
         ];
     }
 

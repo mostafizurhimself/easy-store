@@ -115,6 +115,7 @@ class RolesAndPermissionsSeeder extends Seeder
             \App\Nova\VisitorGatePass::class,
             \App\Nova\EmployeeGatePass::class,
             \App\Nova\ManualGatePass::class,
+            \App\Nova\GiftGatePass::class,
 
         ];
 

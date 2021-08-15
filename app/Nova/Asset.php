@@ -223,8 +223,8 @@ class Asset extends Resource
                     Text::make('Quantity')
                         ->sortable()
                         ->displayUsing(function () {
-                            if($this->alertQuantity > $this->quantity){
-                                return "<span class='text-danger'>".$this->quantity . " " . $this->unit->name."</span>";
+                            if ($this->alertQuantity > $this->quantity) {
+                                return "<span class='text-danger'>" . $this->quantity . " " . $this->unit->name . "</span>";
                             }
                             return $this->quantity . " " . $this->unit->name;
                         })

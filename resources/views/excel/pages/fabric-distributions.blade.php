@@ -1,4 +1,4 @@
-@extends('pdf.layout')
+@extends('excel.layout')
 
 @section('title')
     Fabric Distributions
@@ -23,22 +23,22 @@
             </tr>
             @foreach ($models as $model)
                 <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td>{{$model->location->name}}</td>
-                    <td>{{$model->createdAt->format('Y-m-d h:i A')}}</td>
-                    <td>{{$model->fabric->name}} ({{$model->fabric->code}})</td>
-                    <td>{{$model->readableId}}</td>
-                    <td>{{Helper::currencyShortPdf($model->rate)}}</td>
-                    <td>{{$model->quantity}} {{$model->unit->name}}</td>
-                    <td>{{Helper::currencyPdf($model->amount)}}</td>
-                    <td>{{$model->receiver->name}}</td>
-                    <td>{{Str::title($model->status)}}</td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $model->location->name }}</td>
+                    <td>{{ $model->createdAt->format('Y-m-d h:i A') }}</td>
+                    <td>{{ $model->fabric->name }} ({{ $model->fabric->code }})</td>
+                    <td>{{ $model->readableId }}</td>
+                    <td>{{ Helper::currencyShortPdf($model->rate) }}</td>
+                    <td>{{ $model->quantity }} {{ $model->unit->name }}</td>
+                    <td>{{ Helper::currencyPdf($model->amount) }}</td>
+                    <td>{{ $model->receiver->name }}</td>
+                    <td>{{ Str::title($model->status) }}</td>
                 </tr>
             @endforeach
             <tr class="tfoot">
                 <td colspan="6">Grand Total</td>
-                <td>{{$model->sum('quantity')}}</td>
-                <td>{{Helper::currencyPdf($models->sum('amount'))}}</td>
+                <td>{{ $model->sum('quantity') }}</td>
+                <td>{{ Helper::currencyPdf($models->sum('amount')) }}</td>
                 <td></td>
                 <td></td>
             </tr>

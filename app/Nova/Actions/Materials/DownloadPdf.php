@@ -38,7 +38,7 @@ class DownloadPdf extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        $filename = "materials_".time().".pdf";
+        $filename = "materials.pdf";
         $subtitle = $fields->subtitle;
 
         ini_set("pcre.backtrack_limit", "10000000000");
@@ -47,7 +47,7 @@ class DownloadPdf extends Action
         ]);
         $pdf->save(Storage::path($filename));
 
-        return Action::redirect( route('dump-download', compact('filename')) );
+        return Action::redirect(route('dump-download', compact('filename')));
     }
 
     /**

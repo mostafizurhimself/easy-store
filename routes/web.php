@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\EisFormController;
 use App\Models\License;
+use App\Models\EmployeeGatePass;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -89,6 +89,7 @@ Route::group(['middleware' => 'nova'], function () {
 
     // Gate pass route
     Route::group(['prefix' => 'gate-passes'], function () {
+        Route::get('gift/{pass}', "GatePassController@gifts")->name('gate-passes.gift');
         Route::get('goods/{pass}', "GatePassController@goods")->name('gate-passes.goods');
         Route::get('employee/{pass}', "GatePassController@employee")->name('gate-passes.employee');
         Route::get('manual/{pass}', "GatePassController@manual")->name('gate-passes.manual');
@@ -103,3 +104,12 @@ Route::group(['middleware' => 'nova'], function () {
         return view('invoices.pages.finishing-invoice', compact('invoice'));
     });
 });
+
+
+// Test routes
+// Route::get('/employee-gate-passes', function () {
+
+//     return view('pdf.pages.employee-gate-passes', [
+//         'models' => EmployeeGatePass::all()
+//     ]);
+// });

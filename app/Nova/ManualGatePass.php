@@ -239,7 +239,7 @@ class ManualGatePass extends Resource
 
             new GatePassStatusFilter,
 
-            new DateRangeFilter(),
+            new DateRangeFilter('passed_at', 'Passed Between'),
         ];
     }
 

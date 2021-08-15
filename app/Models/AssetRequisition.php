@@ -29,6 +29,13 @@ class AssetRequisition extends Model implements HasMedia
     protected static $logUnguarded = true;
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['location'];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -59,7 +66,7 @@ class AssetRequisition extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('requisition-attachments');
+        $this->addMediaCollection('requisition-attachments');
     }
 
     /**
@@ -69,7 +76,7 @@ class AssetRequisition extends Model implements HasMedia
      */
     public function requisitionItems()
     {
-       return $this->hasMany(AssetRequisitionItem::class, 'requisition_id');
+        return $this->hasMany(AssetRequisitionItem::class, 'requisition_id');
     }
 
     /**
@@ -79,7 +86,7 @@ class AssetRequisition extends Model implements HasMedia
      */
     public function distributionItems()
     {
-       return $this->hasMany(AssetDistributionItem::class, 'requisition_id');
+        return $this->hasMany(AssetDistributionItem::class, 'requisition_id');
     }
 
     /**
@@ -89,7 +96,7 @@ class AssetRequisition extends Model implements HasMedia
      */
     public function receiver()
     {
-       return $this->belongsTo(Location::class, 'receiver_id')->withTrashed();
+        return $this->belongsTo(Location::class, 'receiver_id')->withTrashed();
     }
 
     /**
@@ -99,7 +106,7 @@ class AssetRequisition extends Model implements HasMedia
      */
     public function distributions()
     {
-       return $this->hasMany(AssetDistributionInvoice::class, 'requisition_id');
+        return $this->hasMany(AssetDistributionInvoice::class, 'requisition_id');
     }
 
     /**
@@ -135,7 +142,7 @@ class AssetRequisition extends Model implements HasMedia
         $this->save();
     }
 
-     /**
+    /**
      * Check all the requisition items status is confirmed or not
      *
      * @return bool
@@ -143,7 +150,7 @@ class AssetRequisition extends Model implements HasMedia
     public function isConfirmed()
     {
         $status = $this->requisitionItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == RequisitionStatus::CONFIRMED()){
+        if ($status->count() == 1  && $status->first() == RequisitionStatus::CONFIRMED()) {
             return true;
         }
         return false;
@@ -157,7 +164,7 @@ class AssetRequisition extends Model implements HasMedia
     public function isDistributed()
     {
         $status = $this->requisitionItems()->pluck('status')->unique();
-        if($status->count() == 1  && $status->first() == RequisitionStatus::DISTRIBUTED()){
+        if ($status->count() == 1  && $status->first() == RequisitionStatus::DISTRIBUTED()) {
             return true;
         }
         return false;
@@ -170,7 +177,7 @@ class AssetRequisition extends Model implements HasMedia
      */
     public function isPartial()
     {
-        if($this->requisitionItems()->exists()){
+        if ($this->requisitionItems()->exists()) {
             return true;
         }
         return false;
@@ -183,31 +190,28 @@ class AssetRequisition extends Model implements HasMedia
      */
     public function updateStatus()
     {
-        if($this->requisitionItems()->exists()){
+        if ($this->requisitionItems()->exists()) {
 
-            if($this->isConfirmed()){
+            if ($this->isConfirmed()) {
                 $this->status = RequisitionStatus::CONFIRMED();
                 $this->save();
                 return;
             }
 
-            if($this->isDistributed()){
+            if ($this->isDistributed()) {
                 $this->status = RequisitionStatus::DISTRIBUTED();
                 $this->save();
                 return;
             }
 
-            if($this->isPartial()){
+            if ($this->isPartial()) {
                 $this->status = RequisitionStatus::PARTIAL();
                 $this->save();
                 return;
             }
-
-        }else{
+        } else {
             $this->status = RequisitionStatus::DRAFT();
             $this->save();
         }
     }
-
-
 }

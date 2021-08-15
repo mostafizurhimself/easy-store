@@ -31,7 +31,15 @@ class FinishingInvoice extends Model
      */
     protected static $logUnguarded = true;
 
-     /**
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['location'];
+
+
+    /**
      * Set the model readable id prefix
      *
      * @var string
@@ -55,7 +63,7 @@ class FinishingInvoice extends Model
      */
     public function finishings()
     {
-       return $this->hasMany(Finishing::class, 'invoice_id');
+        return $this->hasMany(Finishing::class, 'invoice_id');
     }
 
     /**
@@ -65,7 +73,7 @@ class FinishingInvoice extends Model
      */
     public function floor()
     {
-       return $this->belongsTo(Floor::class)->withTrashed();
+        return $this->belongsTo(Floor::class)->withTrashed();
     }
 
     /**
@@ -75,7 +83,7 @@ class FinishingInvoice extends Model
      */
     public function section()
     {
-       return $this->belongsTo(Section::class)->withTrashed();
+        return $this->belongsTo(Section::class)->withTrashed();
     }
 
     /**
@@ -119,5 +127,4 @@ class FinishingInvoice extends Model
         $this->totalQuantity = $this->finishings->sum('quantity');
         $this->save();
     }
-
 }

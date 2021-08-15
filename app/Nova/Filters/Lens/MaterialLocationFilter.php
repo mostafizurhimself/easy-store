@@ -16,7 +16,7 @@ class MaterialLocationFilter extends DependentFilter
      */
     public $name = "Location";
 
-   /**
+    /**
      * Apply the filter to the given query.
      *
      * @param  \Illuminate\Http\Request $request

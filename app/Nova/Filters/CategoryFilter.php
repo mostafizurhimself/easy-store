@@ -47,28 +47,23 @@ class CategoryFilter extends Filter
      */
     public function options(Request $request)
     {
-        if($request->resource == \App\Nova\Fabric::uriKey())
-        {
+        if ($request->resource == \App\Nova\Fabric::uriKey()) {
             return FabricCategory::pluck('id', 'name');
         }
 
-        if($request->resource == \App\Nova\Material::uriKey())
-        {
+        if ($request->resource == \App\Nova\Material::uriKey()) {
             return MaterialCategory::pluck('id', 'name');
         }
 
-        if($request->resource == \App\Nova\Asset::uriKey())
-        {
+        if ($request->resource == \App\Nova\Asset::uriKey()) {
             return AssetCategory::pluck('id', 'name');
         }
 
-        if($request->resource == \App\Nova\Product::uriKey())
-        {
+        if ($request->resource == \App\Nova\Product::uriKey()) {
             return ProductCategory::pluck('id', 'name');
         }
 
-        if($request->resource == \App\Nova\Service::uriKey())
-        {
+        if ($request->resource == \App\Nova\Service::uriKey()) {
             return ServiceCategory::pluck('id', 'name');
         }
 

@@ -57,7 +57,7 @@ class GoodsGatePass extends Resource
      *
      * @var int
      */
-    public static $priority = 1;
+    public static $priority = 2;
 
     /**
      * Get the custom permissions name of the resource
@@ -267,7 +267,7 @@ class GoodsGatePass extends Resource
 
             new GatePassStatusFilter,
 
-            new DateRangeFilter(),
+            new DateRangeFilter('passed_at', 'Passed Between'),
         ];
     }
 

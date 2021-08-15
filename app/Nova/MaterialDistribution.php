@@ -19,6 +19,7 @@ use App\Enums\DistributionStatus;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\EmployeeFilter;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\MaterialFilter;
 use Easystore\RouterLink\RouterLink;
@@ -34,7 +35,6 @@ use App\Nova\Filters\DependentFloorFilterViaEmployee;
 use App\Nova\Actions\MaterialDistributions\DownloadPdf;
 use App\Nova\Actions\MaterialDistributions\DownloadExcel;
 use App\Nova\Actions\MaterialDistributions\ConfirmDistribution;
-use App\Nova\Filters\EmployeeFilter;
 
 class MaterialDistribution extends Resource
 {
@@ -291,24 +291,14 @@ class MaterialDistribution extends Resource
                     return Employee::where('location_id', $filters['location_id'])
                         ->orderBy('first_name')
                         ->get()
-                        ->map(function ($employee) {
-                            return ['id' => $employee->id, 'name' => "{$employee->name}({$employee->employeeId})"];
-                        });
+                        ->pluck('nameWithId', 'id');
                 })->canSee(function ($request) {
                     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
                 }),
 
-            (new EmployeeFilter)->canSee(function ($request) {
+            (new EmployeeFilter('receiver_id', "Receiver"))->canSee(function ($request) {
                 return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
             }),
-
-            // (new DependentFloorFilterViaEmployee())->canSee(function ($request) {
-            //     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
-            // }),
-
-            // (new FloorFilterViaEmployee)->canSee(function ($request) {
-            //     return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
-            // }),
 
             new DateRangeFilter,
 

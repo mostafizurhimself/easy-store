@@ -16,7 +16,7 @@ class ManualGatePassObserver
     {
         $manualGatePass->totalQuantity = 0;
         // Set total quantity
-        foreach($manualGatePass->items as $item){
+        foreach ($manualGatePass->items as $item) {
             $manualGatePass->totalQuantity += $item['quantity'];
         }
     }

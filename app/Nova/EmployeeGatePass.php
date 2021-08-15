@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Carbon\Carbon;
+use App\Models\Employee;
 use App\Facades\Settings;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
@@ -17,15 +18,19 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Textarea;
 use App\Nova\Actions\ScanGatePass;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\EmployeeFilter;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
 use App\Nova\Filters\DateRangeFilter;
+use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Filters\GatePassStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\EmployeeGatePasses\CheckIn;
 use Titasgailius\SearchRelations\SearchesRelations;
+use App\Nova\Actions\EmployeeGatePasses\DownloadPdf;
 use App\Nova\Actions\EmployeeGatePasses\MarkAsDraft;
 use App\Nova\Actions\EmployeeGatePasses\PassGatePass;
+use App\Nova\Actions\EmployeeGatePasses\DownloadExcel;
 use App\Nova\Actions\EmployeeGatePasses\ConfirmGatePass;
 use App\Nova\Actions\EmployeeGatePasses\GenerateGatePass;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
@@ -52,7 +57,7 @@ class EmployeeGatePass extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can pass', 'can confirm', 'can generate', 'can mark as draft'];
+    public static $permissions = ['can pass', 'can confirm', 'can download', 'can generate', 'can mark as draft'];
 
     /**
      * Show the resources related permissions or not
@@ -69,7 +74,7 @@ class EmployeeGatePass extends Resource
      *
      * @var int
      */
-    public static $priority = 3;
+    public static $priority = 5;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -269,9 +274,25 @@ class EmployeeGatePass extends Resource
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
+            DependentFilter::make('Employee', 'employee_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Employee::where('location_id', $filters['location_id'])
+                        ->orderBy('first_name')
+                        ->get()
+                        ->pluck('nameWithId', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new EmployeeFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
             new GatePassStatusFilter,
 
-            new DateRangeFilter(),
+            new DateRangeFilter('approved_out', "Approve Out"),
+
         ];
     }
 
@@ -312,6 +333,20 @@ class EmployeeGatePass extends Resource
                 })
                 ->confirmButtonText('Check In')
                 ->onlyOnTableRow(),
+
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download employee gate passes') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download employee gate passes') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download pdf?"),
+
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download employee gate passes') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download employee gate passes') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
 
             (new MarkAsDraft)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can mark as draft employee gate passes') || $request->user()->isSuperAdmin();

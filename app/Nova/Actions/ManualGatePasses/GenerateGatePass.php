@@ -14,7 +14,7 @@ class GenerateGatePass extends Action
 {
     use InteractsWithQueue, Queueable;
 
-     /**
+    /**
      * Perform the action on the given models.
      *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
@@ -23,10 +23,10 @@ class GenerateGatePass extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
-            if($model->status != GatePassStatus::DRAFT()){
+        foreach ($models as $model) {
+            if ($model->status != GatePassStatus::DRAFT()) {
                 return Action::openInNewTab(route('gate-passes.manual', $model->id));
-            }else{
+            } else {
                 return Action::danger('Can not generate gate pass now.');
             }
         }

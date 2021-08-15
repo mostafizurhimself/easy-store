@@ -2,12 +2,8 @@
 
 namespace App\Models;
 
-use Spatie\Activitylog\Traits\LogsActivity;
-
 class Education extends Model
 {
-    use LogsActivity;
-
     /**
      * The attributes that are not mass assignable.
      *
@@ -16,11 +12,12 @@ class Education extends Model
     protected $guarded = [];
 
     /**
-     * Add all attributes that are not listed in $guarded for log
+     * The relations to eager load on every query.
      *
-     * @var boolean
+     * @var array
      */
-    protected static $logUnguarded = true;
+    protected $with = ['location'];
+
 
     /**
      * Determines one-to-many relation

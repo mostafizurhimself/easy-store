@@ -15,14 +15,14 @@ class DownloadExcel extends Action
 {
     use InteractsWithQueue, Queueable;
 
-        /**
+    /**
      * The number of models that should be included in each chunk.
      *
      * @var int
      */
     public static $chunkCount = 200000000;
 
-        /**
+    /**
      * Disables action log events for this action.
      *
      * @var bool
@@ -40,10 +40,10 @@ class DownloadExcel extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         // Store on default disk
-        $filename = "product_outputs_".time().".xlsx";
+        $filename = "product_outputs.xlsx";
         Excel::store(new ProductOutputExport($models), $filename, 'local');
 
-        return Action::redirect( route('dump-download', compact('filename')) );
+        return Action::redirect(route('dump-download', compact('filename')));
     }
 
     /**
