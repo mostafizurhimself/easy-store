@@ -157,6 +157,16 @@ class Employee extends Model implements HasMedia
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function leaveDays()
+    {
+        return $this->hasMany(LeaveDays::class);
+    }
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function gatePasses()
     {
         return $this->hasMany(EmployeeGatePass::class);
@@ -295,7 +305,9 @@ class Employee extends Model implements HasMedia
      */
     public function getMonthlyLeaveAttribute()
     {
-        return $this->leaves()->where('status', LeaveStatus::APPROVED())->whereMonth('from', Carbon::now()->format('m'))->sum('total_days');
+        return $this->leaveDays()->whereHas('leave', function ($query) {
+            $query->where('status', LeaveStatus::APPROVED());
+        })->whereMonth('date', Carbon::now()->format('m'))->count();
     }
 
     /**

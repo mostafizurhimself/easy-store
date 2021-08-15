@@ -19,6 +19,7 @@ building:
     - php artisan view:cache
     - php artisan calculate:spent
     - php artisan add:shift
+    - php artisan generate:leave-days
   only:
     - master
 

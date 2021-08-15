@@ -24,6 +24,7 @@ use App\Models\AssetReturnItem;
 use App\Models\ServiceDispatch;
 use App\Models\AssetReceiveItem;
 use App\Models\AssetRequisition;
+use App\Models\EmployeeGatePass;
 use App\Models\FabricReturnItem;
 use App\Models\FinishingInvoice;
 use App\Observers\AssetObserver;
@@ -77,10 +78,11 @@ use App\Observers\ServiceDispatchObserver;
 use App\Models\MaterialTransferReceiveItem;
 use App\Observers\AssetReceiveItemObserver;
 use App\Observers\AssetRequisitionObserver;
+use App\Observers\EmployeeGatePassObserver;
 use App\Observers\FabricReturnItemObserver;
 use App\Observers\FinishingInvoiceObserver;
 use App\Models\AssetDistributionReceiveItem;
-use App\Models\EmployeeGatePass;
+use App\Models\Leave;
 use App\Observers\AssetPurchaseItemObserver;
 use App\Observers\FabricReceiveItemObserver;
 use App\Observers\AssetPurchaseOrderObserver;
@@ -110,7 +112,7 @@ use App\Observers\FabricTransferReceiveItemObserver;
 use App\Observers\ServiceTransferReceiveItemObserver;
 use App\Observers\MaterialTransferReceiveItemObserver;
 use App\Observers\AssetDistributionReceiveItemObserver;
-use App\Observers\EmployeeGatePassObserver;
+use App\Observers\LeaveObserver;
 
 class ObserverServiceProvider extends ServiceProvider
 {
@@ -133,6 +135,7 @@ class ObserverServiceProvider extends ServiceProvider
     {
         Employee::observe(EmployeeObserver::class);
         Attendance::observe(AttendanceObserver::class);
+        Leave::observe(LeaveObserver::class);
         Fabric::observe(FabricObserver::class);
         Material::observe(MaterialObserver::class);
         Asset::observe(AssetObserver::class);

@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-class Leave extends Model
-{
+use Illuminate\Database\Eloquent\Model;
 
+class LeaveDays extends Model
+{
     /**
      * The attributes that are not mass assignable.
      *
@@ -19,13 +20,22 @@ class Leave extends Model
      */
     protected $with = ['location'];
 
-
     /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
-    protected $dates = ['from', 'to'];
+    protected $dates = ['date'];
+
+    /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function leave()
+    {
+        return $this->belongsTo(Leave::class);
+    }
 
     /**
      * Determines one-to-many relation
@@ -34,26 +44,6 @@ class Leave extends Model
      */
     public function employee()
     {
-        return $this->belongsTo(Employee::class)->withTrashed();
-    }
-
-    /**
-     * Determines one-to-many relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function leaveDays()
-    {
-        return $this->hasMany(LeaveDays::class);
-    }
-
-    /**
-     * Get the model approve
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
-     */
-    public function approve()
-    {
-        return $this->morphOne(Approve::class, 'approvable');
+        return $this->belongsTo(Employee::class);
     }
 }

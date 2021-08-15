@@ -28,6 +28,7 @@ class EmployeeHistory extends Lens
                 ->leftJoin('locations', 'employees.location_id', '=', 'locations.id')
                 ->where('employees.deleted_at', "=", null)
                 ->groupBy('employees.id')
+                ->orderBy('employees.id', 'desc')
                 ->withoutGlobalScopes()
         ));
     }
@@ -39,6 +40,8 @@ class EmployeeHistory extends Lens
      */
     protected static function columns()
     {
+        $start = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $end   = Carbon::now()->format('Y-m-d');
         return [
             'employees.id',
             'employees.first_name',
@@ -52,11 +55,28 @@ class EmployeeHistory extends Lens
 
             DB::raw("CONCAT(employees.first_name,' ',employees.last_name) AS name"),
 
-            // Total Present
+            // Present
             DB::raw("(COALESCE((select count(attendances.id) from attendances
-            where attendances.employee_id = employees.id
+            where attendances.date between '$start' and '$end'
+            and attendances.employee_id = employees.id
             and attendances.deleted_at is null
             and attendances.status = 'confirmed'), 0)) as total_present"),
+
+            // Leave
+            DB::raw("(COALESCE((select count(leave_days.id) from leave_days
+            left join leaves on leave_days.leave_id = leaves.id
+            where leave_days.date between '$start' and '$end'
+            and leave_days.employee_id = employees.id
+            and leave_days.deleted_at is null
+            and leaves.status = 'approved'), 0)) as total_leave"),
+
+            // Late
+            DB::raw("(COALESCE((select count(attendances.id) from attendances
+            where attendances.date between '$start' and '$end'
+            and attendances.late > 0
+            and attendances.employee_id = employees.id
+            and attendances.deleted_at is null
+            and attendances.status = 'confirmed'), 0)) as total_late"),
         ];
     }
 
@@ -68,6 +88,7 @@ class EmployeeHistory extends Lens
      */
     public function fields(Request $request)
     {
+
         return [
             ID::make(__('ID'), 'id')->sortable(),
 
@@ -81,13 +102,28 @@ class EmployeeHistory extends Lens
                 ->sortable(),
 
             Text::make('Working Days', function () {
-                $workingDays = Timesheet::getWorkingDays($this->location_id, $this->shift_id, Attendance::first()->date, Carbon::now()->format('Y-m-d'));
+                $workingDays = Timesheet::getWorkingDays($this->location_id, $this->shift_id, Carbon::now()->startOfMonth()->format("Y-m-d"), Carbon::now()->format('Y-m-d'));
+
                 return $workingDays . " days";
             }),
 
             Text::make('Present', function () {
                 return $this->total_present . " days";
-            })
+            }),
+
+            Text::make('Leave', function () {
+                return $this->total_leave . " days";
+            }),
+
+            Text::make('Absent', function () {
+                $workingDays = Timesheet::getWorkingDays($this->location_id, $this->shift_id, Carbon::now()->startOfMonth()->format("Y-m-d"), Carbon::now()->format('Y-m-d'));
+
+                return ($workingDays - $this->total_present - $this->total_leave) . " days";
+            }),
+
+            Text::make('Leave', function () {
+                return $this->total_late . " days";
+            }),
         ];
     }
 
