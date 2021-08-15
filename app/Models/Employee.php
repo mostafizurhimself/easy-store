@@ -7,6 +7,8 @@ use App\Facades\Settings;
 use App\Enums\AddressType;
 use App\Enums\LeaveStatus;
 use App\Facades\Timesheet;
+use App\Enums\ConfirmStatus;
+use App\Enums\GatePassStatus;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Cache;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -295,7 +297,10 @@ class Employee extends Model implements HasMedia
      */
     public function getMonthlyPresentAttribute()
     {
-        return $this->attendances()->whereMonth("date", Carbon::now()->format('m'))->count();
+        return $this->attendances()
+            ->whereMonth("date", Carbon::now()->format('m'))
+            ->whereStatus(ConfirmStatus::CONFIRMED())
+            ->count();
     }
 
     /**
@@ -327,7 +332,11 @@ class Employee extends Model implements HasMedia
      */
     public function getMonthlyLateAttribute()
     {
-        return $this->attendances()->whereMonth("date", Carbon::now()->format('m'))->where('late', '>', 0)->count();
+        return $this->attendances()
+            ->whereMonth("date", Carbon::now()->format('m'))
+            ->where('late', '>', 0)
+            ->whereStatus(ConfirmStatus::CONFIRMED())
+            ->count();
     }
 
     /**
@@ -337,7 +346,10 @@ class Employee extends Model implements HasMedia
      */
     public function getMonthlyEarlyLeaveAttribute()
     {
-        return $this->gatePasses()->whereMonth("passed_at", Carbon::now()->format('m'))->where('early_leave', 1)->count();
+        return $this->gatePasses()
+            ->whereMonth("passed_at", Carbon::now()->format('m'))
+            ->whereStatus(GatePassStatus::PASSED())
+            ->where('early_leave', 1)->count();
     }
 
     /**
@@ -347,7 +359,10 @@ class Employee extends Model implements HasMedia
      */
     public function getMonthlyGatePassesAttribute()
     {
-        return $this->gatePasses()->whereMonth("passed_at", Carbon::now()->format('m'))->count();
+        return $this->gatePasses()
+            ->whereMonth("passed_at", Carbon::now()->format('m'))
+            ->whereStatus(GatePassStatus::PASSED())
+            ->count();
     }
 
     /**
@@ -357,7 +372,11 @@ class Employee extends Model implements HasMedia
      */
     public function getMonthlyOutsideSpentAttribute()
     {
-        $seconds = $this->gatePasses()->whereMonth("passed_at", Carbon::now()->format('m'))->whereNotNull('in')->sum('spent');
+        $seconds = $this->gatePasses()
+            ->whereMonth("passed_at", Carbon::now()->format('m'))
+            ->whereNotNull('in')
+            ->whereStatus(GatePassStatus::PASSED())
+            ->sum('spent');
         return gmdate("H:i", $seconds);
     }
 

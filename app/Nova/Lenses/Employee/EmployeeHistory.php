@@ -77,6 +77,29 @@ class EmployeeHistory extends Lens
             and attendances.employee_id = employees.id
             and attendances.deleted_at is null
             and attendances.status = 'confirmed'), 0)) as total_late"),
+
+            // Early Leave
+            DB::raw("(COALESCE((select count(employee_gate_passes.id) from employee_gate_passes
+            where date(employee_gate_passes.passed_at) between '$start' and '$end'
+            and employee_gate_passes.early_leave = 1
+            and employee_gate_passes.employee_id = employees.id
+            and employee_gate_passes.deleted_at is null
+            and employee_gate_passes.status = 'passed'), 0)) as total_early_leave"),
+
+            // Gate pass
+            DB::raw("(COALESCE((select count(employee_gate_passes.id) from employee_gate_passes
+            where date(employee_gate_passes.passed_at) between '$start' and '$end'
+            and employee_gate_passes.employee_id = employees.id
+            and employee_gate_passes.deleted_at is null
+            and employee_gate_passes.status = 'passed'), 0)) as total_gate_pass"),
+
+            // Outside spent
+            DB::raw("(COALESCE((select sum(employee_gate_passes.spent) from employee_gate_passes
+            where date(employee_gate_passes.passed_at) between '$start' and '$end'
+            and employee_gate_passes.employee_id = employees.id
+            and employee_gate_passes.in is not null
+            and employee_gate_passes.deleted_at is null
+            and employee_gate_passes.status = 'passed'), 0)) as total_outside_spent"),
         ];
     }
 
@@ -121,8 +144,16 @@ class EmployeeHistory extends Lens
                 return ($workingDays - $this->total_present - $this->total_leave) . " days";
             }),
 
-            Text::make('Leave', function () {
+            Text::make('Early Leave', function () {
                 return $this->total_late . " days";
+            }),
+
+            Text::make('Gate Pass', function () {
+                return $this->total_gate_pass;
+            }),
+
+            Text::make('Outside Spent', function () {
+                return gmdate("H:i", $this->total_outside_spent) . " hrs";
             }),
         ];
     }
