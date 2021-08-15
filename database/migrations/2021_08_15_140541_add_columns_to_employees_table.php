@@ -14,6 +14,7 @@ class AddColumnsToEmployeesTable extends Migration
     public function up()
     {
         Schema::table('employees', function (Blueprint $table) {
+            $table->date('dob')->nullable()->after('salary');
             $table->string('emergency_mobile')->nullable()->after('mobile');
             $table->string('highest_education')->nullable()->after('blood_group');
             $table->string('nid')->nullable()->after('nationality');
@@ -31,7 +32,13 @@ class AddColumnsToEmployeesTable extends Migration
     public function down()
     {
         Schema::table('employees', function (Blueprint $table) {
-            //
+            $table->dropColumn('dob');
+            $table->dropColumn('emergency_mobile');
+            $table->dropColumn('highest_education');
+            $table->dropColumn('nid');
+            $table->dropColumn('passport');
+            $table->dropColumn('nominee_name');
+            $table->dropColumn('nominee_mobile');
         });
     }
 }

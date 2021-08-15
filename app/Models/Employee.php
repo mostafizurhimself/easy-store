@@ -42,8 +42,9 @@ class Employee extends Model implements HasMedia
      * @var array
      */
     protected $dates = [
+        'dob',
         'joining_date',
-        'resign_date'
+        'resign_date',
     ];
 
     /**

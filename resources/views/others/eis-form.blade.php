@@ -83,13 +83,13 @@
 
     /* footer */
     .footer {
-        margin-top: 1.5rem;
+        margin-top: 4rem;
         padding: 0 1rem;
     }
 
-    .content-right{
+    .content-right {
         float: right;
-}
+    }
 
 
     /* Write Styles here */
@@ -100,8 +100,9 @@
     <div class="container">
 
         {{-- Image --}}
-        <img src="https://cdn3.vectorstock.com/i/1000x1000/26/87/user-icon-man-profile-human-person-avatar-vector-10552687.jpg"
-            class="float-right" style="height: 100px; margin-left:-50px" alt="profile-photo">
+        <img src="{{ $employee->imageUrl }}" class="float-right"
+            style="height: 100px; width:80px; object-fit:contain; margin-left:-50px; border: 0.5px solid black"
+            alt="profile-photo">
 
         {{-- Form heading --}}
 
@@ -114,30 +115,31 @@
         {{-- Information section --}}
         <div class="row" style="margin-top: 2rem">
             <div class="w-50">
-                <p><span class="font-bold">Name :</span> </p>
-                <p> <span class="font-bold">Father's Name :</span> </p>
-                <p> <span class="font-bold">Mother's Name :</span> </p>
-                <p> <span class="font-bold">Date of Birth :</span> </p>
-                <p> <span class="font-bold">Blood Group :</span> </p>
-                <p> <span class="font-bold">Marital Status :</span> </p>
-                <p> <span class="font-bold">Contact Number :</span> </p>
-                <p> <span class="font-bold"> Emergency Number :</span> </p>
-                <p> <span class="font-bold">Highest Education :</span> </p>
-                <p> <span class="font-bold"> Nationality : </span></p>
-                <p> <span class="font-bold"> National Id No. :</span> </p>
-                <p> <span class="font-bold"> Passport No. <span>(if any)</span> : </span></p>
-
+                <p><span class="font-bold">Name :</span> {{ $employee->name }} </p>
+                <p> <span class="font-bold">Father's Name :</span> {{ $employee->fatherName }}</p>
+                <p> <span class="font-bold">Mother's Name :</span> {{ $employee->motherName }}</p>
+                <p> <span class="font-bold">Date of Birth :</span> {{ $employee->dob }}</p>
+                <p> <span class="font-bold">Blood Group :</span> {{ $employee->bloodGroup }}</p>
+                <p> <span class="font-bold">Marital Status :</span> {{ $employee->maritalStatus }}</p>
+                <p> <span class="font-bold"> Mobile :</span> {{ $employee->mobile }}</p>
+                <p> <span class="font-bold"> Telephone :</span> {{ $employee->telephone }}</p>
+                <p> <span class="font-bold"> Emergency Contact :</span> {{ $employee->emergencyMobile }}</p>
+                <p> <span class="font-bold">Highest Education :</span> {{ $employee->highestEducation }}</p>
+                <p> <span class="font-bold"> Nationality : </span> {{ $employee->nationality }}</p>
             </div>
 
             <div class="w-50">
-                <p> <span class="font-bold">Employee Id No :</span> </p>
-                <p> <span class="font-bold">Designation : </span> </p>
-                <p> <span class="font-bold"> Shift :</span> </p>
-                <p> <span class="font-bold">Dept./Sec./Branch :</span> </p>
-                <p> <span class="font-bold">Nominee Name : </span> </p>
-                <p> <span class="font-bold">Nominee Contact No :</span> </p>
-                <p> <span class="font-bold">Joining Date : </span> </p>
-                <p> <span class="font-bold">Present Salary :</span> </p>
+                <p> <span class="font-bold">Employee Id No :</span> {{ $employee->readableId }}</p>
+                <p> <span class="font-bold">Designation : </span> {{ $employee->designationName }}</p>
+                <p> <span class="font-bold"> Work At :</span> {{ $employee->location->name }}</p>
+                <p> <span class="font-bold">Dept./Sec./Branch :</span> {{ $employee->departmentName }}</p>
+                <p> <span class="font-bold">Nominee Name : </span> {{ $employee->nomineeName }}</p>
+                <p> <span class="font-bold">Nominee Contact No :</span> {{ $employee->nomineeMobile }}</p>
+                <p> <span class="font-bold">Joining Date : </span> {{ $employee->joiningDate }}</p>
+                <p> <span class="font-bold">Present Salary :</span> {{ $employee->salary }}</p>
+                <p> <span class="font-bold"> National Id No. :</span> {{ $employee->nid }}</p>
+                <p> <span class="font-bold"> Passport No. <span>(if any)</span> : </span> {{ $employee->passport }}
+                </p>
 
             </div>
             <div class="clearfix"></div>
@@ -152,11 +154,26 @@
                     <h3 style="text-align: center">
                         <span style="border-bottom: 2px solid black;">Parmanent Address</span>
                     </h3>
-                    <p> <span class="font-bold">Vill : </span></p>
-                    <p> <span class="font-bold">P O :</span></p>
-                    <p> <span class="font-bold">P S :</span></p>
-                    <p> <span class="font-bold">Dist :</span> </p>
-                    <p> <span class="font-bold">Country: </span></p>
+                    <p>
+                        <span class="font-bold">Vill : </span>
+                        {{ $employee->permanentAddress ? $employee->permanentAddress->street : null }}
+                    </p>
+                    <p>
+                        <span class="font-bold">P O :</span>
+                        {{ $employee->permanentAddress ? $employee->permanentAddress->po : null }}
+                    </p>
+                    <p>
+                        <span class="font-bold">P S :</span>
+                        {{ $employee->permanentAddress ? $employee->permanentAddress->ps : null }}
+                    </p>
+                    <p>
+                        <span class="font-bold">Dist :</span>
+                        {{ $employee->permanentAddress ? $employee->permanentAddress->city : null }}
+                    </p>
+                    <p>
+                        <span class="font-bold">Country: </span>
+                        {{ $employee->permanentAddress ? Config::get("country.{$employee->permanentAddress->country}", '') : null }}
+                    </p>
 
                 </div>
 
@@ -164,11 +181,26 @@
                     <h3 style="text-align: center">
                         <span style="border-bottom: 2px solid black;">Present Address</span>
                     </h3>
-                    <p> <span class="font-bold">Vill/Street :</span> </p>
-                    <p> <span class="font-bold">P O :</span> </p>
-                    <p> <span class="font-bold"> P S :</span> </p>
-                    <p> <span class="font-bold">Dist :</span> </p>
-                    <p> <span class="font-bold">Country :</span> </p>
+                    <p>
+                        <span class="font-bold">Vill : </span>
+                        {{ $employee->presentAddress ? $employee->presentAddress->street : null }}
+                    </p>
+                    <p>
+                        <span class="font-bold">P O :</span>
+                        {{ $employee->presentAddress ? $employee->presentAddress->po : null }}
+                    </p>
+                    <p>
+                        <span class="font-bold">P S :</span>
+                        {{ $employee->presentAddress ? $employee->presentAddress->ps : null }}
+                    </p>
+                    <p>
+                        <span class="font-bold">Dist :</span>
+                        {{ $employee->presentAddress ? $employee->presentAddress->city : null }}
+                    </p>
+                    <p>
+                        <span class="font-bold">Country: </span>
+                        {{ $employee->presentAddress ? Config::get("country.{$employee->presentAddress->country}", '') : null }}
+                    </p>
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -182,7 +214,7 @@
             <table class="education">
                 <thead>
                     <tr>
-                        <th style="width: 15%">Name of Exam</th>
+                        <th style="width: 15%">Exam Name</th>
                         <th style="width: 35%">Institute Name </th>
                         <th style="width: 20%">Board/University</th>
                         <th style="width: 10%">Result</th>
@@ -191,36 +223,21 @@
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td>SSC/DAKHIL</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>HSC/ALIM</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-
-                    <tr>
-                        <td>BA/HONR'S</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-
-                    <tr>
-                        <td>MA</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    @if (count($employee->educations))
+                        @foreach ($employee->educations as $education)
+                            <tr>
+                                <td>{{ $education->examName }}</td>
+                                <td>{{ $education->instituteName }}</td>
+                                <td>{{ $education->board }}</td>
+                                <td>{{ $education->result }}</td>
+                                <td>{{ $education->passingYear }}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="5" class="text-center"> No Data Found</td>
+                        </tr>
+                    @endif
 
                 </tbody>
             </table>
@@ -229,9 +246,7 @@
 
         {{-- footer --}}
         <div class="footer">
-
-
-            <div class="row">
+            <div class="row" style="margin-top: 2rem">
                 <div class="w-50">
                     <h3>
                         <span style="border-top: 2px solid black;">Employee
@@ -250,27 +265,6 @@
                 </div>
                 <div class="clearfix"></div>
             </div>
-
-            {{-- <div class="row">
-                <div class="w-50">
-                    <span class="w-50 text-left">
-                        <span class="font-bold" style="border-top: 2px solid black; padding-top: 1rem">Employee
-                            Signature</span>
-                    </span>
-
-                </div>
-
-                <div class="w-50 ">
-                    <span class="w-50">
-                        <span class="font-bold" style="border-top: 2px solid black; padding-top: 1rem">Authorized
-                            Signature</span>
-                    </span>
-                </div>
-                <div class="clearfix"></div>
-            </div> --}}
-
-
-
         </div>
     </div>
 

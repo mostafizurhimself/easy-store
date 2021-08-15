@@ -168,6 +168,11 @@ class Employee extends Resource
                         ->onlyCustomFormats()
                         ->hideFromIndex(),
 
+                    PhoneNumber::make('Emergency Contact', 'emergency_mobile')
+                        ->withCustomFormats('+88 ### #### ####')
+                        ->onlyCustomFormats()
+                        ->hideFromIndex(),
+
                     Images::make('Image', 'employee-images')
                         ->croppable(true)
                         ->hideFromIndex()
@@ -189,6 +194,11 @@ class Employee extends Resource
 
                     Text::make('Mother Name')
                         ->rules('nullable', 'string', 'max:100')
+                        ->hideFromIndex(),
+
+                    Date::make('Date of Birth', 'dob')
+                        ->required()
+                        ->sortable()
                         ->hideFromIndex(),
 
                     Select::make('Gender')
@@ -217,8 +227,29 @@ class Employee extends Resource
                         ->options(BloodGroup::titleCaseOptions())
                         ->hideFromIndex(),
 
+                    Text::make('Highest Education')
+                        ->rules('nullable', 'string', 'max:50')
+                        ->hideFromIndex(),
+
+                    Text::make('Nominee Name')
+                        ->rules('nullable', 'string', 'max:50')
+                        ->hideFromIndex(),
+
+                    PhoneNumber::make('Nominee Contact', 'nominee_mobile')
+                        ->withCustomFormats('+88 ### #### ####')
+                        ->onlyCustomFormats()
+                        ->hideFromIndex(),
+
                     Text::make('Nationality')
                         ->default('Bangladeshi')
+                        ->rules('nullable', 'string', 'max:50')
+                        ->hideFromIndex(),
+
+                    Text::make('NID No', 'nid')
+                        ->rules('nullable', 'string', 'max:50')
+                        ->hideFromIndex(),
+
+                    Text::make('Passport No', 'passport')
                         ->rules('nullable', 'string', 'max:50')
                         ->hideFromIndex(),
 
