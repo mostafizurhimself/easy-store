@@ -6,16 +6,21 @@ use Carbon\Carbon;
 use App\Facades\Timesheet;
 use App\Models\Attendance;
 use App\Models\Department;
-use App\Nova\Filters\DepartmentFilter;
-use App\Nova\Filters\Lens\EmployeeHistoryDateRangeFilter;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use App\Enums\EmployeeStatus;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Lenses\Lens;
+use Laravel\Nova\Fields\Badge;
 use Illuminate\Support\Facades\DB;
+use App\Nova\Filters\DepartmentFilter;
 use AwesomeNova\Filters\DependentFilter;
 use Laravel\Nova\Http\Requests\LensRequest;
 use App\Nova\Filters\Lens\EmployeeLocationFilter;
+use App\Nova\Filters\Lens\EmployeeHistoryDateRangeFilter;
+use App\Nova\Actions\Employees\EmployeeHistory\DownloadPdf;
+use App\Nova\Actions\Employees\EmployeeHistory\DownloadExcel;
 
 class EmployeeHistory extends Lens
 {
@@ -56,6 +61,7 @@ class EmployeeHistory extends Lens
             'departments.name as employee_department',
             'employees.location_id as location_id',
             'employees.shift_id as shift_id',
+            'employees.status as status',
             DB::raw("'$start' as start_date"),
             DB::raw("'$end' as end_date"),
 
@@ -165,6 +171,22 @@ class EmployeeHistory extends Lens
             Text::make('Outside Spent', function () {
                 return gmdate("H:i", $this->total_outside_spent) . " hrs";
             }),
+
+            Badge::make('Status', 'status')->map([
+                EmployeeStatus::ACTIVE()->getValue()   => 'success',
+                EmployeeStatus::VACATION()->getValue() => 'warning',
+                EmployeeStatus::INACTIVE()->getValue() => 'danger',
+                EmployeeStatus::RESIGNED()->getValue() => 'danger',
+            ])
+                ->sortable()
+                ->label(function () {
+                    return Str::title(Str::of($this->status)->replace('_', " "));
+                }),
+
+            Text::make(__('Date Range'), function () {
+                return "{$this->start_date} - {$this->end_date}";
+            })
+                ->onlyOnExport(),
         ];
     }
 
@@ -218,7 +240,28 @@ class EmployeeHistory extends Lens
      */
     public function actions(Request $request)
     {
-        return parent::actions($request);
+        return [
+            (new DownloadPdf)->withHeadings('#', 'Employee Id', 'Name', 'Location', 'Department', 'Working Days', 'Present', 'Leave', 'Absent', 'Early Leave', 'Gate Pass', 'Outside Spent', 'Status', 'Date Range')
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+                })
+                ->canRun(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+                })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?")
+                ->withWriterType(\Maatwebsite\Excel\Excel::MPDF)
+                ->withFilename('employee_history.pdf'),
+
+            (new DownloadExcel)->withHeadings('#', 'Employee Id', 'Name', 'Location', 'Department', 'Working Days', 'Present', 'Leave', 'Absent', 'Early Leave', 'Gate Pass', 'Outside Spent', 'Status', 'Date Range')
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+                })
+                ->canRun(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+                })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?")
+                ->withFilename('employee_history.xlsx'),
+        ];
     }
 
     /**

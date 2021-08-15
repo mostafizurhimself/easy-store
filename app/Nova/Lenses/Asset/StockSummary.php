@@ -258,7 +258,8 @@ class StockSummary extends Lens
                 ->canRun(function ($request) {
                     return ($request->user()->hasPermissionTo('can download assets') || $request->user()->isSuperAdmin());
                 })->confirmButtonText('Download')
-                ->confirmText("Are you sure want to download excel?"),
+                ->confirmText("Are you sure want to download excel?")
+                ->withFilename('assets_stock_summary.xlsx'),
         ];
     }
 
