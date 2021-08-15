@@ -1,26 +1,20 @@
 <?php
 
-namespace App\Nova\Filters;
+namespace App\Nova\Filters\Lens;
 
-use App\Models\Department;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
+use AwesomeNova\Filters\DependentFilter;
 
-class DepartmentFilter extends Filter
+class EmployeeLocationFilter extends DependentFilter
 {
-    /**
-     * The filter's component.
-     *
-     * @var string
-     */
-    public $component = 'select-filter';
-
     /**
      * The displayable name of the filter.
      *
      * @var string
      */
-    public $name = "Department";
+    public $name = "Location";
 
     /**
      * Apply the filter to the given query.
@@ -32,7 +26,7 @@ class DepartmentFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->where('department_id', $value);
+        return $query->where('employees.location_id', $value);
     }
 
     /**
@@ -41,8 +35,8 @@ class DepartmentFilter extends Filter
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function options(Request $request)
+    public function options(Request $request, array $filters = [])
     {
-        return Department::filterOptions();
+        return Location::filterOptions();
     }
 }

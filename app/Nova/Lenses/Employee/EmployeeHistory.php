@@ -2,15 +2,20 @@
 
 namespace App\Nova\Lenses\Employee;
 
+use Carbon\Carbon;
 use App\Facades\Timesheet;
 use App\Models\Attendance;
-use Carbon\Carbon;
+use App\Models\Department;
+use App\Nova\Filters\DepartmentFilter;
+use App\Nova\Filters\Lens\EmployeeHistoryDateRangeFilter;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Lenses\Lens;
 use Illuminate\Support\Facades\DB;
+use AwesomeNova\Filters\DependentFilter;
 use Laravel\Nova\Http\Requests\LensRequest;
+use App\Nova\Filters\Lens\EmployeeLocationFilter;
 
 class EmployeeHistory extends Lens
 {
@@ -26,6 +31,7 @@ class EmployeeHistory extends Lens
         return $request->withoutTableOrderPrefix()->withOrdering($request->withFilters(
             $query->select(self::columns())
                 ->leftJoin('locations', 'employees.location_id', '=', 'locations.id')
+                ->leftJoin('departments', 'employees.department_id', '=', 'departments.id')
                 ->where('employees.deleted_at', "=", null)
                 ->groupBy('employees.id')
                 ->orderBy('employees.id', 'desc')
@@ -47,9 +53,11 @@ class EmployeeHistory extends Lens
             'employees.first_name',
             'employees.last_name',
             'employees.readable_id',
+            'departments.name as employee_department',
             'employees.location_id as location_id',
             'employees.shift_id as shift_id',
-            'employees.joining_date as joining_date',
+            DB::raw("'$start' as start_date"),
+            DB::raw("'$end' as end_date"),
 
             'locations.name as location_name',
 
@@ -111,12 +119,8 @@ class EmployeeHistory extends Lens
      */
     public function fields(Request $request)
     {
-
         return [
             ID::make(__('ID'), 'id')->sortable(),
-
-            Text::make('Location', 'location_name')
-                ->sortable(),
 
             Text::make('Employee Id', 'readable_id')
                 ->sortable(),
@@ -124,8 +128,14 @@ class EmployeeHistory extends Lens
             Text::make('Name', 'name')
                 ->sortable(),
 
+            Text::make('Location', 'location_name')
+                ->sortable(),
+
+            Text::make('Department', 'employee_department')
+                ->sortable(),
+
             Text::make('Working Days', function () {
-                $workingDays = Timesheet::getWorkingDays($this->location_id, $this->shift_id, Carbon::now()->startOfMonth()->format("Y-m-d"), Carbon::now()->format('Y-m-d'));
+                $workingDays = Timesheet::getWorkingDays($this->location_id, $this->shift_id, $this->start_date, $this->end_date);
 
                 return $workingDays . " days";
             }),
@@ -139,7 +149,7 @@ class EmployeeHistory extends Lens
             }),
 
             Text::make('Absent', function () {
-                $workingDays = Timesheet::getWorkingDays($this->location_id, $this->shift_id, Carbon::now()->startOfMonth()->format("Y-m-d"), Carbon::now()->format('Y-m-d'));
+                $workingDays = Timesheet::getWorkingDays($this->location_id, $this->shift_id, $this->start_date, $this->end_date);
 
                 return ($workingDays - $this->total_present - $this->total_leave) . " days";
             }),
@@ -177,7 +187,27 @@ class EmployeeHistory extends Lens
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            EmployeeLocationFilter::make('Location', 'location_id')->canSee(function ($request) {
+                return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            DependentFilter::make('Department', 'department_id')
+                ->dependentOf('location_id')
+                ->withOptions(function (Request $request, $filters) {
+                    return Department::where('location_id', $filters['location_id'])
+                        ->orderBy('name')
+                        ->pluck('name', 'id');
+                })->canSee(function ($request) {
+                    return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
+                }),
+
+            (new DepartmentFilter)->canSee(function ($request) {
+                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            }),
+
+            new EmployeeHistoryDateRangeFilter(),
+        ];
     }
 
     /**
