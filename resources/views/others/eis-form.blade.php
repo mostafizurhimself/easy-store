@@ -10,50 +10,56 @@
 <style>
     body {
         font-family: "DejaVu Sans", sans-serif;
+        font-size: 14px;
+    }
+
+    @media print {
+        body {
+            font-size: 11px;
+        }
     }
 
     .container {
-        width: 90%;
+        max-width: 800px;
         margin: auto;
-        padding: 2rem;
+        position: relative;
+    }
+
+    .float-left {
+        float: left;
+    }
+
+    .float-right {
+        float: right;
+    }
+
+    .clearfix {
+        clear: both;
+    }
+
+    .w-50 {
+        width: 50%;
+        float: left;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-left {
+        text-align: left;
+    }
+
+    .font-bold {
+        font-weight: bold;
     }
 
     .title {
-        margin-top: 4rem;
-        justify-content: center;
-    }
-
-
-    .title h2 {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-
-    .title h4 {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-
-
-    .img {
-        position: absolute;
-        right: 0;
-        top: 0;
-        margin-right: 6rem;
-        margin-top: 3rem;
-
-    }
-
-    /* Info section */
-    .flex-container {
-        display: flex;
-        flex-wrap: nowrap;
-        font: bold;
-    }
-
-    .flex-container>div {
-        width: 50%;
-        margin: 10px;
+        text-align: center;
     }
 
     /* educational section */
@@ -75,19 +81,9 @@
     }
 
     /* footer */
-    .footer{
-        margin-top: 4rem;
-        display: flex;
-        justify-content: space-between;
+    .footer {
+        margin-top: 5rem;
         padding: 0 3rem;
-    }
-
-    .signature-line{
-        display: inline-block;
-        height: 2px;
-        background: black;
-        border-radius: 5px;
-
     }
 
     /* Write Styles here */
@@ -97,71 +93,78 @@
 <body>
     <div class="container">
 
+        {{-- Image --}}
+        <img src="https://cdn3.vectorstock.com/i/1000x1000/26/87/user-icon-man-profile-human-person-avatar-vector-10552687.jpg"
+            class="float-right" style="height: 100px; margin-left:-50px" alt="profile-photo">
+
         {{-- Form heading --}}
 
         <div class="title">
-            <h2 style="text-align: center">EIS FORM</h2>
-            <h4 style="text-align: center">Employe Information Summary</h4>
-        </div>
-        {{-- Image --}}
-        <div class="img">
-            <img src="https://cdn3.vectorstock.com/i/1000x1000/26/87/user-icon-man-profile-human-person-avatar-vector-10552687.jpg"
-                style="height: 200px; margin-left:2rem" alt="">
+            <h2>EIS FORM</h2>
+            <h3>Employe Information Summary</h3>
         </div>
 
+
         {{-- Information section --}}
-        <div class="flex-container" style="margin-top: 2rem">
-            <div class="left-section">
-                <p>Name : </p>
+        <div class="row" style="margin-top: 2rem">
+            <div class="w-50">
+                <p><span class="font-bold">Name :</span> </p>
                 <p>Father's Name : </p>
                 <p>Mother's Name : </p>
                 <p>Date of Birth : </p>
                 <p>Blood Group : </p>
-                <p>Nerital Status : </p>
+                <p>Marital Status : </p>
                 <p>Contact Number : </p>
                 <p>Emergency Number : </p>
                 <p>Highest Education : </p>
+                <p>Nationality : </p>
                 <p>National Id No. : </p>
                 <p>Passport No. <span>(if any)</span> : </p>
+
             </div>
 
-            <div class="right-section">
+            <div class="w-50">
                 <p>Employee Id No : </p>
                 <p>Designation : </p>
-                <p>Work At : </p>
+                <p>Shift : </p>
                 <p>Dept./Sec./Branch : </p>
                 <p>Nominee Name : </p>
                 <p>Nominee Contact No : </p>
                 <p>Joining Date : </p>
                 <p>Present Salary : </p>
+
             </div>
+            <div class="clearfix"></div>
         </div>
 
         {{-- Address Section --}}
         <div class="address">
-            <h3 style="text-align: center">Address Information</h3>
+            <h2 style="text-align: center">Address Information</h2>
 
-            <div class="flex-container">
-                <div class="left-section">
-                    <h4 style="text-align: center; ">Parmanent Address</h4>
+            <div class="row">
+                <div class="w-50">
+                    <h3 style="text-align: center">
+                        <span style="border-bottom: 2px solid black;">Parmanent Address</span>
+                    </h3>
                     <p>Vill : </p>
                     <p>P O : </p>
                     <p>PS : </p>
                     <p>Dist : </p>
-                    <p>Contact No : </p>
+                    <p>Country: </p>
 
                 </div>
 
-                <div class="right-section">
-                    <h4 style="text-align: center; ">Present Address</h4>
-                    <p>Vill/House No : </p>
-                    <p>Road No : </p>
+                <div class="w-50">
+                    <h3 style="text-align: center">
+                        <span style="border-bottom: 2px solid black;">Present Address</span>
+                    </h3>
+                    <p>Vill/Street : </p>
                     <p>P O : </p>
                     <p>P S : </p>
                     <p>Dist : </p>
-                    <p>Contact No : </p>
+                    <p>Country : </p>
                 </div>
-
+                <div class="clearfix"></div>
             </div>
 
 
@@ -169,7 +172,7 @@
 
         {{-- Education Section --}}
         <div class="education">
-            <h3 style="text-align: center">Educational Qualifications</h3>
+            <h2 style="text-align: center">Educational Qualifications</h2>
             <table class="education">
                 <thead>
                     <tr>
@@ -220,8 +223,14 @@
 
         {{-- footer --}}
         <div class="footer">
-            <span class="signature-line"><p>Employee Signature</p></span>
-            <span class="signature-line"><p>Authorized Signature</p></span>
+            <span class="w-50 text-left">
+                <span class="font-bold" style="border-top: 2px solid black; padding-top: 1rem">Employee Signature</span>
+            </span>
+            <span class="w-50 text-right">
+                <span class="font-bold" style="border-top: 2px solid black; padding-top: 1rem">Authorized
+                    Signature</span>
+            </span>
+            <div class="clearfix"></div>
         </div>
 
     </div>

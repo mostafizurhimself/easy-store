@@ -467,7 +467,13 @@ class Employee extends Resource
     public function actions(Request $request)
     {
         return [
-            (new EisForm)->onlyOnDetail()->withoutConfirmation(),
+            (new EisForm)->onlyOnDetail()
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+                })->canRun(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+                })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download?"),
 
             (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());

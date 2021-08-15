@@ -61,16 +61,28 @@ class Address extends Resource
                 ->onlyOnForms()
                 ->sortable(),
 
-            Text::make('Type', function(){
+            Text::make('Type', function () {
                 return Str::title(Str::of($this->type)->replace('_', " "));
             })
-            ->sortable(),
+                ->sortable(),
 
-            Place::make('Street')
+            Place::make('Street/Village', 'street')
                 ->hideFromIndex()
                 ->rules('required', 'max:500'),
 
-            Place::make('City')
+            Text::make('P.O', 'po')
+                ->rules('nullable', 'max:100')
+                ->canSee(function ($request) {
+                    return $request->viaResource ==  \App\Nova\Employee::uriKey();
+                }),
+
+            Text::make('P.S', 'ps')
+                ->rules('nullable', 'max:100')
+                ->canSee(function ($request) {
+                    return $request->viaResource ==  \App\Nova\Employee::uriKey();
+                }),
+
+            Place::make('City/District', 'city')
                 ->rules('required', 'max:500')
                 ->onlyCities(),
 
@@ -137,7 +149,7 @@ class Address extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -149,6 +161,6 @@ class Address extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 }
