@@ -106,7 +106,7 @@ class Asset extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'code', 'readable_id'
+        'name', 'code', 'readable_id', 'id'
     ];
 
     /**

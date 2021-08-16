@@ -107,7 +107,7 @@ class Material extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'code', 'readable_id'
+        'name', 'code', 'readable_id', 'id'
     ];
 
     /**
@@ -213,8 +213,8 @@ class Material extends Resource
 
                     Text::make('Quantity')
                         ->displayUsing(function () {
-                            if($this->alertQuantity > $this->quantity){
-                                return "<span class='text-danger'>".$this->quantity . " " . $this->unit->name."</span>";
+                            if ($this->alertQuantity > $this->quantity) {
+                                return "<span class='text-danger'>" . $this->quantity . " " . $this->unit->name . "</span>";
                             }
                             return $this->quantity . " " . $this->unit->name;
                         })
