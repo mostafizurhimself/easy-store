@@ -22,13 +22,6 @@ class Provider extends Model
     protected $guarded = [];
 
     /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['location'];
-
-    /**
      * Set the model readable id prefix
      *
      * @var string
