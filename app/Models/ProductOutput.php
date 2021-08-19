@@ -28,7 +28,7 @@ class ProductOutput extends Model
     *
     * @var array
     */
-   protected $appends = ['unit'];
+   protected $appends = ['unitName'];
 
 
    /**
@@ -73,18 +73,18 @@ class ProductOutput extends Model
     *
     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
     */
-   public function unit()
+   public function unitName()
    {
       return $this->belongsTo(Unit::class)->withTrashed();
    }
 
    /**
-    * Get the unit for the model
+    * Get the unitName for the model
     *
     * @return string
     */
    public function getUnitNameAttribute()
    {
-      return $this->unit->name;
+      return $this->unitName->name;
    }
 }

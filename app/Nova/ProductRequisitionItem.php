@@ -111,7 +111,7 @@ class ProductRequisitionItem extends Resource
                 ->sortable()
                 ->exceptOnForms(),
 
-            Select::make('product', 'product_id')
+            Select::make('Product', 'product_id')
                 ->options(function () {
                     //Get the requisition from request on create
                     $requisition = \App\Models\ProductRequisition::find(request()->viaResourceId);

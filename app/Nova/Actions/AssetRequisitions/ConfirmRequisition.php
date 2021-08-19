@@ -34,19 +34,18 @@ class ConfirmRequisition extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
+        foreach ($models as $model) {
 
             //Check model has relation items
-            if($model->requisitionItems()->count() == 0)
-            {
+            if ($model->requisitionItems()->count() == 0) {
                 return Action::danger("No requisition item added.");
             }
 
-            if($model->status == RequisitionStatus::DRAFT()){
+            if ($model->status == RequisitionStatus::DRAFT()) {
 
                 //Update the relate requisition items status
-                foreach($model->requisitionItems as $requisitionItem){
-                    if($requisitionItem->status == RequisitionStatus::DRAFT()){
+                foreach ($model->requisitionItems as $requisitionItem) {
+                    if ($requisitionItem->status == RequisitionStatus::DRAFT()) {
                         $requisitionItem->status =  RequisitionStatus::CONFIRMED();
                         $requisitionItem->save();
                     }
@@ -60,13 +59,14 @@ class ConfirmRequisition extends Action
                 Notification::send($users, new RequisitionConfirmed(\App\Nova\AssetRequisition::uriKey(), $model));
 
                 //Notify super admins
-                if(Settings::superAdminNotification())
-                {
+                if (Settings::superAdminNotification()) {
                     $users = \App\Models\User::role(Role::SUPER_ADMIN)->get();
                     Notification::send($users, new RequisitionConfirmed(\App\Nova\AssetRequisition::uriKey(), $model));
                 }
             }
         }
+
+        return Action::message('Confirmed Successfully');
     }
 
     /**
