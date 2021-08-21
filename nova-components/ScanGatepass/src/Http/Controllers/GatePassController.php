@@ -88,7 +88,7 @@ class GatePassController extends Controller
      */
     public function getGatePass($pass)
     {
-        $result = collect();
+        $result = null;
         // Check manual gate pass
         if (Str::startsWith($pass, ManualGatePass::readableIdPrefix())) {
             if (request()->user()->isSuperAdmin()) {
@@ -135,13 +135,12 @@ class GatePassController extends Controller
         }
 
 
-        if ($result->count()) {
+        if ($result) {
             return $result;
+        } else {
+            return response()->json([
+                'message' => "No data found",
+            ], 404);
         }
-
-
-        return response()->json([
-            'message' => "No data found",
-        ], 404);
     }
 }
