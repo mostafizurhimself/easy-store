@@ -21,6 +21,7 @@ use App\Nova\Filters\GatePassStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\GiftGatePasses\DownloadPdf;
 use App\Nova\Actions\GiftGatePasses\MarkAsDraft;
+use App\Nova\Actions\GiftGatePasses\Recalculate;
 use App\Nova\Actions\GiftGatePasses\PassGatePass;
 use App\Nova\Actions\GiftGatePasses\DownloadExcel;
 use App\Nova\Actions\GiftGatePasses\ConfirmGatePass;
@@ -54,7 +55,7 @@ class GiftGatePass extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can pass', 'can confirm', 'can download',  'can generate',  'can mark as draft'];
+    public static $permissions = ['can pass', 'can confirm', 'can download', 'can recalculate',  'can generate',  'can mark as draft'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -274,11 +275,17 @@ class GiftGatePass extends Resource
     public function actions(Request $request)
     {
         return [
+            (new Recalculate)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can recalculate gift gate passes') ||  $request->user()->isSuperAdmin();
+            })->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can recalculate gift gate passes') ||  $request->user()->isSuperAdmin();
+            }),
+
             (new PassGatePass)->canSee(function ($request) {
-                return $request->user()->hasPermissionTo('can pass manual gate passes') || $request->user()->isSuperAdmin();
+                return $request->user()->hasPermissionTo('can pass gift gate passes') || $request->user()->isSuperAdmin();
             })
                 ->canRun(function ($request) {
-                    return $request->user()->hasPermissionTo('can pass manual gate passes') || $request->user()->isSuperAdmin();
+                    return $request->user()->hasPermissionTo('can pass gift gate passes') || $request->user()->isSuperAdmin();
                 })
                 ->withoutConfirmation()
                 ->onlyOnTableRow(),

@@ -14,7 +14,12 @@ class GiftGatePassObserver
      */
     public function saving(GiftGatePass $giftGatePass)
     {
-        $giftGatePass->total = $giftGatePass->tshirt + $giftGatePass->poloTshirt + $giftGatePass->shirt + $giftGatePass->gabardinePant + $giftGatePass->panjabi + $giftGatePass->kabli;
+        $giftGatePass->total = $giftGatePass->tshirt +
+            $giftGatePass->poloTshirt +
+            $giftGatePass->shirt +
+            $giftGatePass->gaberdinePant +
+            $giftGatePass->panjabi +
+            $giftGatePass->kabli;
     }
 
     /**
