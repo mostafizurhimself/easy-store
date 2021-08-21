@@ -13,6 +13,7 @@
                 <td>Name</td>
                 <td>Employee Id</td>
                 <td>Mobile</td>
+                <td>Blood</td>
                 <td>Department</td>
                 <td>Section</td>
                 <td>Designation</td>
@@ -27,6 +28,7 @@
                     <td>{{ $model->name }}</td>
                     <td>{{ $model->readableId }}</td>
                     <td>{{ $model->mobile }}</td>
+                    <td>{{ $model->bloodGroup }}</td>
                     <td>{{ $model->departmentName }}</td>
                     <td>{{ $model->sectionName }}</td>
                     <td>{{ $model->designationName }}</td>
