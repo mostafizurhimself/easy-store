@@ -48,6 +48,7 @@ class EmployeeHistoryDateRangeFilter extends DateRangeFilter
             'departments.name as employee_department',
             'employees.location_id as location_id',
             'employees.shift_id as shift_id',
+            'employees.status as status',
             DB::raw("'$start' as start_date"),
             DB::raw("'$end' as end_date"),
 
