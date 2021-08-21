@@ -31,7 +31,7 @@
                     <td>{{ $model->readableId }}</td>
                     <td>{{ $model->receiverName }}</td>
                     <td>{{ $model->approverName }}</td>
-                    <td>{{ $model->passedAt->format('Y-m-d h:i A') }}</td>
+                    <td>{{ $model->passedAt ? $model->passedAt->format('Y-m-d h:i A') : null }}</td>
                     <td>{{ $model->tshirt }}</td>
                     <td>{{ $model->poloTshirt }}</td>
                     <td>{{ $model->shirt }}</td>
