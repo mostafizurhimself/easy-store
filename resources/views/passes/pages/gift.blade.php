@@ -89,7 +89,7 @@
     @if ($pass->note)
         <div class="row">
             <div class="col approve-time">
-                <p style="text-align: justify;"><span class="font-weight-bold mr-2">Note:</span> {{ $pass->note }}</p>
+                <p style="text-align: justify;"><span class="font-weight-bold mr-2">Note:</span> {!! $pass->note !!}</p>
             </div>
         </div>
     @endif
