@@ -21,6 +21,12 @@
             <div class="text-sm">{{ $pass->approve->employee->name }}</div>
         </div>
     </div>
+    <div class="row mt-2">
+        <div>
+            <span class="font-weight-bold">Receiver Name:</span>
+            <span style="border-bottom: 1px dashed black;">{{ $pass->receiverName }}</span>
+        </div>
+    </div>
     <table class="table mt-2">
         <thead>
             <th>Name</th>
