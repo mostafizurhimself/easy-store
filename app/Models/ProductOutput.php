@@ -73,7 +73,7 @@ class ProductOutput extends Model
     *
     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
     */
-   public function unitName()
+   public function unit()
    {
       return $this->belongsTo(Unit::class)->withTrashed();
    }
@@ -85,6 +85,6 @@ class ProductOutput extends Model
     */
    public function getUnitNameAttribute()
    {
-      return $this->unitName->name;
+      return $this->unit->name;
    }
 }
