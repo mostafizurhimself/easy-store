@@ -43,7 +43,7 @@ class GatePassController extends Controller
         ]);
 
         $model = $this->getGatePass($request->pass);
-        if ($model) {
+        if (!empty($model)) {
             if ($model->type != GatepassType::EMPLOYEE() && $model->status == GatePassStatus::CONFIRMED()) {
                 $model->passedAt = Carbon::now();
                 $model->passedBy = Auth::user()->id;
