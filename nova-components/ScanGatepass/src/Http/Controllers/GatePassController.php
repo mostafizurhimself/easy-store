@@ -28,7 +28,9 @@ class GatePassController extends Controller
             'pass' => 'required|string'
         ]);
 
-        return $this->getGatePass($request->pass);
+        return $this->getGatePass($request->pass) ?? response()->json([
+            'message' => "No data found",
+        ], 404);
     }
 
     /**
