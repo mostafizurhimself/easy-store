@@ -135,12 +135,6 @@ class GatePassController extends Controller
         }
 
 
-        if ($result) {
-            return $result;
-        } else {
-            return response()->json([
-                'message' => "No data found",
-            ], 404);
-        }
+        return $result;
     }
 }
