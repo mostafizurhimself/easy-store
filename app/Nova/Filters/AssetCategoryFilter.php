@@ -2,12 +2,11 @@
 
 namespace App\Nova\Filters;
 
+use App\Models\AssetCategory;
 use Illuminate\Http\Request;
-use App\Models\FabricCategory;
 use Laravel\Nova\Filters\Filter;
-use AwesomeNova\Filters\DependentFilter;
 
-class FabricCategoryFilter extends Filter
+class AssetCategoryFilter extends Filter
 {
     /**
      * The filter's component.
@@ -44,6 +43,6 @@ class FabricCategoryFilter extends Filter
      */
     public function options(Request $request)
     {
-        return FabricCategory::filterOptions();
+        return AssetCategory::filterOptions();
     }
 }

@@ -32,6 +32,7 @@ use Easystore\TextUppercase\TextUppercase;
 use App\Nova\Actions\Materials\DownloadPdf;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Materials\DownloadExcel;
+use App\Nova\Filters\MaterialCategoryFilter;
 use App\Nova\Lenses\Material\AlertQuantities;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Benjacho\BelongsToManyField\BelongsToManyField;
@@ -334,7 +335,7 @@ class Material extends Resource
                     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
                 }),
 
-            (new CategoryFilter)->canSee(function ($request) {
+            (new MaterialCategoryFilter)->canSee(function ($request) {
                 return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 

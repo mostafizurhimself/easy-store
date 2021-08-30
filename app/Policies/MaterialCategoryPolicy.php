@@ -31,8 +31,8 @@ class MaterialCategoryPolicy
     public function view(User $user, MaterialCategory $materialCategory)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view material categories') && $user->locationId == $materialCategory->locationId ) ||
-                $user->hasPermissionTo('view all locations data');
+            ($user->hasPermissionTo('view material categories') && $user->locationId == $materialCategory->locationId) ||
+            $user->hasPermissionTo('view all locations data');
     }
 
     /**
@@ -56,8 +56,8 @@ class MaterialCategoryPolicy
     public function update(User $user, MaterialCategory $materialCategory)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update material categories') && $user->locationId == $materialCategory->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+            ($user->hasPermissionTo('update material categories') && $user->locationId == $materialCategory->locationId) ||
+            $user->hasPermissionTo('update all locations data');
     }
 
     /**
@@ -70,8 +70,8 @@ class MaterialCategoryPolicy
     public function delete(User $user, MaterialCategory $materialCategory)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete material categories') && $user->locationId == $materialCategory->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+            ($user->hasPermissionTo('delete material categories') && $user->locationId == $materialCategory->locationId) ||
+            $user->hasPermissionTo('delete all locations data');
     }
 
     /**
@@ -84,8 +84,8 @@ class MaterialCategoryPolicy
     public function restore(User $user, MaterialCategory $materialCategory)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore material categories') && $user->locationId == $materialCategory->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+            ($user->hasPermissionTo('restore material categories') && $user->locationId == $materialCategory->locationId) ||
+            $user->hasPermissionTo('restore all locations data');
     }
 
     /**
@@ -98,7 +98,7 @@ class MaterialCategoryPolicy
     public function forceDelete(User $user, MaterialCategory $materialCategory)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete material categories') && $user->locationId == $materialCategory->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+            ($user->hasPermissionTo('force delete material categories') && $user->locationId == $materialCategory->locationId) ||
+            $user->hasPermissionTo('force delete all locations data');
     }
 }

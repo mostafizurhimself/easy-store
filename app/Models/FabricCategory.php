@@ -41,12 +41,9 @@ class FabricCategory extends Model
      */
     public static function filterOptions()
     {
+        // Cache::forget('nova-fabric-category-filter-options');
         return Cache::remember('nova-fabric-category-filter-options', 3600, function () {
-            $models = self::setEagerLoads([])->orderBy('name')->get(['id', 'name']);
-
-            return $models->mapWithKeys(function ($model) {
-                return [$model->name => $model->id];
-            })->toArray();
+            return self::orderBy('name')->where('location_id', auth()->user()->locationId)->pluck('id', 'name');
         });
     }
 }

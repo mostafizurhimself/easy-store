@@ -36,6 +36,7 @@ use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Assets\MassUpdateQuantity;
 use App\Nova\Actions\Assets\GenerateStockSummary;
+use App\Nova\Filters\AssetCategoryFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
@@ -331,7 +332,11 @@ class Asset extends Resource
                     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
                 }),
 
-            (new CategoryFilter)->canSee(function ($request) {
+            // (new CategoryFilter)->canSee(function ($request) {
+            //     return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
+            // }),
+
+            (new AssetCategoryFilter)->canSee(function ($request) {
                 return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 

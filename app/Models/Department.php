@@ -45,7 +45,7 @@ class Department extends Model
     }
 
     /**
-     * Get the filter options of locations
+     * Get the filter options
      *
      * @return array
      */
