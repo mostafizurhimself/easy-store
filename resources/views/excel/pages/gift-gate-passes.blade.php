@@ -47,14 +47,14 @@
         <tfoot>
             <tr>
                 <td colspan="6">Total</td>
-                <td>{{ $model->sum('tshirt') }}</td>
-                <td>{{ $model->sum('polo_tshirt') }}</td>
-                <td>{{ $model->sum('shirt') }}</td>
-                <td>{{ $model->sum('gaberdine_pant') }}</td>
-                <td>{{ $model->sum('panjabi') }}</td>
-                <td>{{ $model->sum('pajama') }}</td>
-                <td>{{ $model->sum('kabli') }}</td>
-                <td>{{ $model->sum('total') }}</td>
+                <td>{{ $models->sum('tshirt') }}</td>
+                <td>{{ $models->sum('polo_tshirt') }}</td>
+                <td>{{ $models->sum('shirt') }}</td>
+                <td>{{ $models->sum('gaberdine_pant') }}</td>
+                <td>{{ $models->sum('panjabi') }}</td>
+                <td>{{ $models->sum('pajama') }}</td>
+                <td>{{ $models->sum('kabli') }}</td>
+                <td>{{ $models->sum('total') }}</td>
                 <td></td>
             </tr>
         </tfoot>

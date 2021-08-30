@@ -40,7 +40,7 @@
             @endforeach
             <tr class="tfoot">
                 <td colspan="6">Grand Total</td>
-                <td>{{ $model->sum('purchase_quantity') }}</td>
+                <td>{{ $models->sum('purchase_quantity') }}</td>
                 <td>{{ Helper::currencyPdf($models->sum('purchase_amount')) }}</td>
                 <td></td>
             </tr>
