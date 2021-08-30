@@ -9,6 +9,7 @@ use App\Enums\LeaveStatus;
 use App\Facades\Timesheet;
 use App\Enums\ConfirmStatus;
 use App\Enums\GatePassStatus;
+use App\Scopes\ResignedScope;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Cache;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -24,6 +25,16 @@ class Employee extends Model implements HasMedia
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new ResignedScope);
+    }
 
     /**
      * Register the media collections
