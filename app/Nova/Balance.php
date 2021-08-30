@@ -161,7 +161,7 @@ class Balance extends Resource
                 ->searchable()
                 ->onlyOnForms()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin() && !$request->user()->isExpenser()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data')) && !$request->user()->isExpenser()) {
                         return true;
                     }
                     return false;

@@ -141,7 +141,7 @@ class FabricDistribution extends Resource
                 ->searchable()
                 ->onlyOnForms()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                         return true;
                     }
                     return false;
@@ -207,7 +207,7 @@ class FabricDistribution extends Resource
             BelongsTo::make('Receiver', 'receiver', "App\Nova\Employee")->searchable()
                 ->onlyOnForms()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                         return true;
                     }
                     return false;

@@ -287,7 +287,7 @@ class Employee extends Resource
                         ->nullable()
                         ->onlyOnForms()
                         ->canSee(function ($request) {
-                            if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                            if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                                 return true;
                             }
                             return false;
@@ -322,7 +322,7 @@ class Employee extends Resource
                         ->onlyOnForms()
                         ->nullable()
                         ->canSee(function ($request) {
-                            if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                            if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                                 return true;
                             }
                             return false;
@@ -349,7 +349,7 @@ class Employee extends Resource
                         ->onlyOnForms()
                         ->nullable()
                         ->canSee(function ($request) {
-                            if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                            if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                                 return true;
                             }
                             return false;
@@ -461,7 +461,7 @@ class Employee extends Resource
             }),
 
             (new DepartmentFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             DependentFilter::make('Department', 'department_id')

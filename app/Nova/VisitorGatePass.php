@@ -174,7 +174,7 @@ class VisitorGatePass extends Resource
                 ->sortable()
                 ->searchable()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                         return true;
                     }
                     return false;

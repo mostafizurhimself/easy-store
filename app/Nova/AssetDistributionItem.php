@@ -63,7 +63,7 @@ class AssetDistributionItem extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can auto receive' ];
+    public static $permissions = ['can download', 'can auto receive'];
 
     /**
      * The group associated with the resource.
@@ -254,7 +254,7 @@ class AssetDistributionItem extends Resource
                 }),
 
             (new AssetFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             new BelongsToDateFilter('invoice'),

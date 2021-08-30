@@ -252,7 +252,7 @@ class MaterialReceiveItem extends Resource
                 }),
 
             (new MaterialFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
             new BelongsToSupplierFilter('purchaseOrder'),
             new DateRangeFilter('Date Between', 'date'),

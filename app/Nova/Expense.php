@@ -170,7 +170,7 @@ class Expense extends Resource
                 ->searchable()
                 ->onlyOnForms()
                 ->canSee(function ($request) {
-                    if ((!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) && !$request->user()->isExpenser()) {
+                    if (!($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) && !$request->user()->isExpenser()) {
                         return true;
                     }
                     return false;
@@ -196,7 +196,7 @@ class Expense extends Resource
             BelongsTo::make('Category', 'category', 'App\Nova\ExpenseCategory')
                 ->onlyOnForms()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                         return true;
                     }
                     return false;

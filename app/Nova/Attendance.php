@@ -144,7 +144,7 @@ class Attendance extends Resource
                 ->sortable()
                 ->searchable()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                         return true;
                     }
                     return false;
@@ -170,7 +170,7 @@ class Attendance extends Resource
                 ->sortable()
                 ->searchable()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                         return true;
                     }
                     return false;
@@ -302,7 +302,7 @@ class Attendance extends Resource
                 }),
 
             (new DepartmentFilterViaEmployee)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             DependentFilter::make('Employee', 'employee_id')
@@ -317,7 +317,7 @@ class Attendance extends Resource
                 }),
 
             (new EmployeeFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             new DateRangeFilter('Date Between', 'date'),
@@ -382,7 +382,7 @@ class Attendance extends Resource
 
             (new AttendanceReport)
                 ->canSee(function ($request) {
-                    return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                    return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
                 })
                 ->confirmButtonText('Generate')
                 ->confirmText('Are you sure want to generate attendance report?')

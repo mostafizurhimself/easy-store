@@ -171,7 +171,7 @@ class Expenser extends Resource
                 ->onlyOnForms()
                 ->nullable()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                         return true;
                     }
                     return false;

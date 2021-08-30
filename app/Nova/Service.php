@@ -39,7 +39,7 @@ class Service extends Resource
      */
     public static $model = \App\Models\Service::class;
 
-     /**
+    /**
      * Get the custom permissions name of the resource
      *
      * @var array
@@ -183,7 +183,7 @@ class Service extends Resource
                 })
                 ->sortable()
                 ->exceptOnForms()
-                ->canSee(function($request){
+                ->canSee(function ($request) {
                     return empty($request->viaResource);
                 }),
 
@@ -193,7 +193,7 @@ class Service extends Resource
                 })
                 ->sortable()
                 ->exceptOnForms()
-                ->canSee(function($request){
+                ->canSee(function ($request) {
                     return empty($request->viaResource);
                 }),
 
@@ -203,7 +203,7 @@ class Service extends Resource
                 })
                 ->sortable()
                 ->exceptOnForms()
-                ->canSee(function($request){
+                ->canSee(function ($request) {
                     return empty($request->viaResource);
                 }),
 
@@ -291,7 +291,7 @@ class Service extends Resource
                 }),
 
             (new CategoryFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             new ActiveStatusFilter,
@@ -318,7 +318,7 @@ class Service extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConvertUnit)->canSee(function($request){
+            (new ConvertUnit)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can convert unit of services') || $request->user()->isSuperAdmin();
             })->confirmButtonText('Confirm'),
         ];

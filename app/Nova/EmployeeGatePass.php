@@ -176,7 +176,7 @@ class EmployeeGatePass extends Resource
                 ->sortable()
                 ->searchable()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                         return true;
                     }
                     return false;
@@ -286,7 +286,7 @@ class EmployeeGatePass extends Resource
                 }),
 
             (new EmployeeFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             new GatePassStatusFilter,

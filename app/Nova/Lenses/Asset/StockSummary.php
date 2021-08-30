@@ -222,7 +222,7 @@ class StockSummary extends Lens
 
 
             (new CategoryFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             new AssetSummaryDateRangeFilter(),

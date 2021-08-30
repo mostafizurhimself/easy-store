@@ -261,7 +261,7 @@ class AssetReceiveItem extends Resource
                 }),
 
             (new AssetFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
             new BelongsToSupplierFilter('purchaseOrder'),
             new DateRangeFilter('Date Between', 'date'),

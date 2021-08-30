@@ -230,7 +230,7 @@ class ServiceReceive extends Resource
                     return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
                 }),
             (new ServiceFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
             new BelongsToProviderFilter('invoice'),
             new DateRangeFilter('Date Between', 'date'),

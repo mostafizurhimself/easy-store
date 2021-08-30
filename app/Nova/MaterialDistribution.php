@@ -143,7 +143,7 @@ class MaterialDistribution extends Resource
                 ->searchable()
                 ->onlyOnForms()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                         return true;
                     }
                     return false;
@@ -213,7 +213,7 @@ class MaterialDistribution extends Resource
                 ->onlyOnForms()
                 ->sortable()
                 ->canSee(function ($request) {
-                    if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                         return true;
                     }
                     return false;
@@ -282,7 +282,7 @@ class MaterialDistribution extends Resource
                 }),
 
             (new MaterialFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             DependentFilter::make('Receiver', 'receiver_id')
@@ -297,7 +297,7 @@ class MaterialDistribution extends Resource
                 }),
 
             (new EmployeeFilter('receiver_id', "Receiver"))->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             new DateRangeFilter,

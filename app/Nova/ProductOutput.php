@@ -283,7 +283,7 @@ class ProductOutput extends Resource
             new OutputStatusFilter,
 
             (new ProductCategoryFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             DependentFilter::make('Category', 'category_id')
@@ -298,7 +298,7 @@ class ProductOutput extends Resource
 
 
             (new StyleFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             DependentFilter::make('Style', 'style_id')
@@ -312,7 +312,7 @@ class ProductOutput extends Resource
                 }),
 
             (new FloorFilter)->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             DependentFilter::make('Floor', 'floor_id')

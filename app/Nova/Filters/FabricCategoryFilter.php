@@ -7,8 +7,15 @@ use App\Models\FabricCategory;
 use Laravel\Nova\Filters\Filter;
 use AwesomeNova\Filters\DependentFilter;
 
-class FabricCategoryFilter extends DependentFilter
+class FabricCategoryFilter extends Filter
 {
+    /**
+     * The filter's component.
+     *
+     * @var string
+     */
+    public $component = 'select-filter';
+
     /**
      * The displayable name of the filter.
      *
@@ -17,11 +24,17 @@ class FabricCategoryFilter extends DependentFilter
     public $name = "Category";
 
     /**
-     * Attribute name of filter. Also it is key of filter.
+     * Apply the filter to the given query.
      *
-     * @var string
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $value
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public $attribute = 'category_id';
+    public function apply(Request $request, $query, $value)
+    {
+        return $query->where('category_id', $value);
+    }
 
     /**
      * Get the filter's available options.
@@ -29,8 +42,8 @@ class FabricCategoryFilter extends DependentFilter
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function options(Request $request, array $filters = [])
+    public function options(Request $request)
     {
-        return FabricCategory::orderBy('name')->where('location_id', auth()->user()->locationId)->pluck('name', 'id');
+        return FabricCategory::pluck('id', 'name');
     }
 }

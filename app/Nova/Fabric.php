@@ -247,7 +247,7 @@ class Fabric extends Resource
                     BelongsTo::make('Category', 'category', 'App\Nova\FabricCategory')
                         ->onlyOnForms()
                         ->canSee(function ($request) {
-                            if (!$request->user()->hasPermissionTo('view any locations data') || !$request->user()->isSuperAdmin()) {
+                            if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
                                 return true;
                             }
                             return false;
@@ -332,8 +332,8 @@ class Fabric extends Resource
                 }),
 
 
-            FabricCategoryFilter::make()->canSee(function ($request) {
-                return !$request->user()->isSuperAdmin() || !$request->user()->hasPermissionTo('view any locations data');
+            (new FabricCategoryFilter)->canSee(function ($request) {
+                return !($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'));
             }),
 
             new ActiveStatusFilter,
