@@ -123,6 +123,16 @@ class Fabric extends Model implements HasMedia
     }
 
     /**
+     * Determines one-to-many relation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transferReceiveItems()
+    {
+        return $this->hasMany(FabricTransferReceiveItem::class);
+    }
+
+    /**
      * Get the model adjust quantities
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany

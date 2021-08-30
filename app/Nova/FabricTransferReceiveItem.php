@@ -42,7 +42,7 @@ class FabricTransferReceiveItem extends Resource
      */
     public static $perPageViaRelationship = 10;
 
-     /**
+    /**
      * Get the custom permissions name of the resource
      *
      * @var array
@@ -75,7 +75,7 @@ class FabricTransferReceiveItem extends Resource
         'readable_id',
     ];
 
-       /**
+    /**
      * Hide resource from Nova's standard menu.
      *
      * @var bool
@@ -217,10 +217,10 @@ class FabricTransferReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmReceiveItem)->canSee(function($request){
+            (new ConfirmReceiveItem)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm fabric transfer receive items');
             })
-            ->confirmButtonText('Confirm'),
+                ->confirmButtonText('Confirm'),
         ];
     }
 
@@ -233,7 +233,7 @@ class FabricTransferReceiveItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -245,10 +245,10 @@ class FabricTransferReceiveItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
     }
 }
