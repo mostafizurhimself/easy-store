@@ -37,7 +37,7 @@ class DownloadPdf extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        $filename = "service_transfer_items.pdf";
+        $filename = "service_transfer_items_" . time() . ".pdf";
         $subtitle = $fields->subtitle;
 
         ini_set("pcre.backtrack_limit", "10000000000");

@@ -39,7 +39,7 @@ class DownloadExcel extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         // Store on default disk
-        $filename = "assets.xlsx";
+        $filename = "assets_" . time() . ".xlsx";
         Excel::store(new GiftGatePassExport($models), $filename, 'local');
 
         return Action::redirect(route('dump-download', compact('filename')));

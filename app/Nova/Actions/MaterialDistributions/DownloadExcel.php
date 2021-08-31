@@ -39,7 +39,7 @@ class DownloadExcel extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         // Store on default disk
-        $filename = "material_distributions.xlsx";
+        $filename = "material_distributions_" . time() . ".xlsx";
         Excel::store(new MaterialDistributionExport($models), $filename, 'local');
 
         return Action::redirect(route('dump-download', compact('filename')));
