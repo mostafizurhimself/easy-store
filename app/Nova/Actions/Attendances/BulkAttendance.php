@@ -48,9 +48,9 @@ class BulkAttendance extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        $employees = Employee::where('location_id', Auth::user()->locationId)->get();
+        $employees = Employee::where('location_id', Auth::user()->locationId)->withoutResigned()->get();
         if (!empty($fields->department)) {
-            $employees = Employee::where('location_id', Auth::user()->locationId)->where('department_id', $fields->department)->get();
+            $employees = Employee::where('location_id', Auth::user()->locationId)->where('department_id', $fields->department)->withoutResigned()->get();
         }
 
         foreach ($employees as $employee) {

@@ -26,15 +26,27 @@ class Employee extends Model implements HasMedia
      */
     protected $guarded = [];
 
+    // /**
+    //  * The "booted" method of the model.
+    //  *
+    //  * @return void
+    //  */
+    // protected static function booted()
+    // {
+    //     static::addGlobalScope(new ResignedScope);
+    // }
+
     /**
-     * The "booted" method of the model.
+     * Scope a query to only without resigned employees.
      *
-     * @return void
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected static function booted()
+    public function scopeWithoutResigned($query)
     {
-        static::addGlobalScope(new ResignedScope);
+        return $query->where('resign_date', null);
     }
+
 
     /**
      * Register the media collections
@@ -63,7 +75,7 @@ class Employee extends Model implements HasMedia
      *
      * @var array
      */
-    protected $with = ['department', 'designation', 'section', 'shift', 'location'];
+    protected $with = ['department', 'designation', 'section', 'shift', 'location', 'media', 'address'];
 
     /**
      * The accessors to append to the model's array form.

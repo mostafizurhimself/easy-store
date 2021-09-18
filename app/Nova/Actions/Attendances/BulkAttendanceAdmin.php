@@ -53,9 +53,9 @@ class BulkAttendanceAdmin extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        $employees = Employee::where('location_id', $fields->location)->get();
+        $employees = Employee::where('location_id', $fields->location)->withoutResigned()->get();
         if (!empty($fields->department)) {
-            $employees = Employee::where('location_id', $fields->location)->where('department_id', $fields->department)->get();
+            $employees = Employee::where('location_id', $fields->location)->where('department_id', $fields->department)->withoutResigned()->get();
         }
 
         foreach ($employees as $employee) {

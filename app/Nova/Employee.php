@@ -33,6 +33,7 @@ use App\Nova\Actions\Employees\DownloadPdf;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Employees\DownloadExcel;
 use App\Nova\Lenses\Employee\EmployeeHistory;
+use App\Nova\Lenses\Employee\ResignedEmployees;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Titasgailius\SearchRelations\SearchesRelations;
@@ -485,7 +486,8 @@ class Employee extends Resource
     public function lenses(Request $request)
     {
         return [
-            new EmployeeHistory()
+            new EmployeeHistory(),
+            new ResignedEmployees(),
         ];
     }
 
@@ -521,5 +523,27 @@ class Employee extends Resource
                 ->confirmText("Are you sure want to download excel?"),
 
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->withoutResigned();
     }
 }
