@@ -31,7 +31,7 @@
             @foreach ($models as $model)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $loop->location->name }}</td>
+                    <td>{{ $model->location->name }}</td>
                     <td>{{ $model->readableId }}</td>
                     <td>{{ $model->receiverName }}</td>
                     <td>{{ $model->approverName }}</td>
