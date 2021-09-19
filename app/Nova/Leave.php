@@ -6,18 +6,18 @@ use Carbon\Carbon;
 use App\Enums\LeaveStatus;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
+use App\Rules\SameMonthRule;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
+use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Actions\Leaves\Approve;
 use App\Nova\Actions\Leaves\Confirm;
-use App\Rules\SameMonthRule;
-use Illuminate\Validation\Rule;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Leave extends Resource
@@ -140,7 +140,7 @@ class Leave extends Resource
 
             Date::make('To')
                 ->sortable()
-                ->rules('required', 'after:from', new SameMonthRule(request()->get('from'))),
+                ->rules('required', 'after_or_equal:from', new SameMonthRule(request()->get('from'))),
 
             Text::make('Total Days', function () {
                 return $this->totalDays . " days";

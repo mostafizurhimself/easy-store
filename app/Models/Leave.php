@@ -17,7 +17,7 @@ class Leave extends Model
      *
      * @var array
      */
-    protected $with = ['location'];
+    protected $with = ['location', 'employee', 'approve'];
 
 
     /**
