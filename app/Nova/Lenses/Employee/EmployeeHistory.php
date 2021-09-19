@@ -33,6 +33,11 @@ class EmployeeHistory extends Lens
      */
     public static function query(LensRequest $request, $query)
     {
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('employees.location_id', $request->user()->location_id)->whereNull('resign_date');
+        } else {
+            $query->whereNull('resign_date');
+        }
         return $request->withoutTableOrderPrefix()->withOrdering($request->withFilters(
             $query->select(self::columns())
                 ->leftJoin('locations', 'employees.location_id', '=', 'locations.id')

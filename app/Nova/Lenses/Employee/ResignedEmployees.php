@@ -26,7 +26,7 @@ class ResignedEmployees extends Lens
     public static function query(LensRequest $request, $query)
     {
         if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
-            $query->where('location_id', $request->user()->location_id)->whereNotNull('resign_date');;
+            $query->where('location_id', $request->user()->location_id)->whereNotNull('resign_date');
         } else {
             $query->whereNotNull('resign_date');
         }
