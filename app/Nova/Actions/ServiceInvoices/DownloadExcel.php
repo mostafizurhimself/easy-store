@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Nova\Actions\GiftGatePasses;
+namespace App\Nova\Actions\ServiceInvoices;
 
-use App\Exports\GiftGatePassExport;
+use App\Exports\ServiceInvoiceExport;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
@@ -39,8 +39,8 @@ class DownloadExcel extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         // Store on default disk
-        $filename = "assets_" . time() . ".xlsx";
-        Excel::store(new GiftGatePassExport($models), $filename, 'local');
+        $filename = "service_invoices_" . time() . ".xlsx";
+        Excel::store(new ServiceInvoiceExport($models), $filename, 'local');
 
         return Action::redirect(route('dump-download', compact('filename')));
     }

@@ -30,10 +30,10 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\ServiceInvoices\MarkAsDraft;
 use App\Nova\Actions\ServiceInvoices\Recalculate;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
+use App\Nova\Actions\ServiceInvoices\DownloadExcel;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\ServiceInvoices\ConfirmInvoice;
 use App\Nova\Actions\ServiceInvoices\GenerateInvoice;
-use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class ServiceInvoice extends Resource
 {
@@ -59,7 +59,7 @@ class ServiceInvoice extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can confirm', 'can generate', 'can mark as draft', 'can create gate pass of'];
+    public static $permissions = ['can confirm', 'can generate', 'can download', 'can mark as draft', 'can create gate pass of'];
 
     /**
      * The group associated with the resource.
@@ -443,9 +443,12 @@ class ServiceInvoice extends Resource
                 ->onlyOnDetail()
                 ->confirmButtonText('Create Or Update'),
 
-            (new DownloadExcel)
-                ->withHeadings()
-                ->confirmButtonText('Download'),
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service invoices') || $request->user()->isSuperAdmin());
+            })->canRun(function ($request) {
+                return ($request->user()->hasPermissionTo('can download service invoices') || $request->user()->isSuperAdmin());
+            })->confirmButtonText('Download')
+                ->confirmText("Are you sure want to download excel?"),
         ];
     }
 }

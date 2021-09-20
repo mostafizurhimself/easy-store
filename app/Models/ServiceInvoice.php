@@ -30,7 +30,7 @@ class ServiceInvoice extends Model
      *
      * @var array
      */
-    protected $with = ['location'];
+    protected $with = ['location', 'provider'];
 
 
     /**
