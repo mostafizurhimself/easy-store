@@ -37,6 +37,8 @@ use App\Nova\Lenses\Employee\EmployeeHistory;
 use App\Nova\Actions\Employees\MakeAsInactive;
 use App\Nova\Actions\Employees\MarkAsActive;
 use App\Nova\Actions\Employees\MarkAsInactive;
+use App\Nova\Actions\Employees\MarkAsResigned;
+use App\Nova\Actions\Employees\MarkForVacation;
 use App\Nova\Lenses\Employee\ResignedEmployees;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -71,7 +73,7 @@ class Employee extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can mark as active', 'can mark as inactive', 'can mark for vacation'];
+    public static $permissions = ['can download', 'can mark as active', 'can mark as inactive', 'can mark for vacation', 'can mark as resigned'];
 
     /**
      * The icon of the resource.
@@ -366,7 +368,7 @@ class Employee extends Resource
                         ->hideFromIndex(),
 
                     Date::make('Resign Date')
-                        ->hideFromIndex(),
+                        ->onlyOnDetail(),
 
                     Currency::make('Salary')
                         ->currency('BDT')
@@ -518,6 +520,14 @@ class Employee extends Resource
 
             (new MarkAsInactive)->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can mark as inactive employees') || $request->user()->isSuperAdmin());
+            }),
+
+            (new MarkForVacation)->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can mark for vacation employees') || $request->user()->isSuperAdmin());
+            }),
+
+            (new MarkAsResigned)->canSee(function ($request) {
+                return ($request->user()->hasPermissionTo('can mark as resigned employees') || $request->user()->isSuperAdmin());
             }),
 
             (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
