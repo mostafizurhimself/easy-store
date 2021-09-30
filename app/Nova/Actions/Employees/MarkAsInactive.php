@@ -2,24 +2,24 @@
 
 namespace App\Nova\Actions\Employees;
 
+use App\Enums\EmployeeStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ActionFields;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class EisForm extends Action
+class MarkAsInactive extends Action
 {
     use InteractsWithQueue, Queueable;
 
     /**
-     * The displayable name of the action.
+     * The number of models that should be included in each chunk.
      *
-     * @var string
+     * @var int
      */
-    public $name = "EIS Form";
+    public static $chunkCount = 200000000;
 
     /**
      * Disables action log events for this action.
@@ -37,16 +37,12 @@ class EisForm extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        $employee = $models->first();
-        $filename = "eis_form_{$employee->readableId}." . time() . ".pdf";
+        foreach ($models as $model) {
+            $model->status = EmployeeStatus::INACTIVE();
+            $model->save();
+        }
 
-        ini_set("pcre.backtrack_limit", "10000000000");
-        $pdf = \PDF::loadView('others.eis-form', compact('employee'), [], [
-            'mode' => 'utf-8',
-        ]);
-        $pdf->save(Storage::path($filename));
-
-        return Action::redirect(route('dump-download', compact('filename')));
+        return Action::message('Employees marked as inactive.');
     }
 
     /**

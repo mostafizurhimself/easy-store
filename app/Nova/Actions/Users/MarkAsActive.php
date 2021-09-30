@@ -10,7 +10,7 @@ use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MakeAsActive extends Action
+class MarkAsActive extends Action
 {
     use InteractsWithQueue, Queueable;
 

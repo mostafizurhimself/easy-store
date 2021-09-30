@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Nova\Actions\Users;
+namespace App\Nova\Actions\Employees;
 
-use App\Enums\ActiveStatus;
+use App\Enums\EmployeeStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
@@ -10,9 +10,23 @@ use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MakeAsInactive extends Action
+class MarkAsActive extends Action
 {
     use InteractsWithQueue, Queueable;
+
+    /**
+     * The number of models that should be included in each chunk.
+     *
+     * @var int
+     */
+    public static $chunkCount = 200000000;
+
+    /**
+     * Disables action log events for this action.
+     *
+     * @var bool
+     */
+    public $withoutActionEvents = true;
 
     /**
      * Perform the action on the given models.
@@ -24,11 +38,11 @@ class MakeAsInactive extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            $model->status = ActiveStatus::INACTIVE();
+            $model->status = EmployeeStatus::ACTIVE();
             $model->save();
         }
 
-        return Action::message('Users marked as inactive.');
+        return Action::message('Employees marked as active.');
     }
 
     /**

@@ -13,16 +13,13 @@ use Laravel\Nova\Fields\Text;
 use Eminiarts\Tabs\TabsOnEdit;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Boolean;
-use Yassi\NestedForm\NestedForm;
 use Laravel\Nova\Fields\MorphOne;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Laravel\Nova\Fields\MorphToMany;
-use App\Nova\Actions\Users\MakeAsActive;
-use Eminiarts\NovaPermissions\Checkboxes;
-use App\Nova\Actions\Users\MakeAsInactive;
+use App\Nova\Actions\Users\MarkAsActive;
+use App\Nova\Actions\Users\MarkAsInactive;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\PasswordConfirmation;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -252,10 +249,10 @@ class User extends Resource
     public function actions(Request $request)
     {
         return [
-            (new MakeAsActive)->canSee(function ($request) {
+            (new MarkAsActive)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can mark as active users');
             }),
-            (new MakeAsInactive)->canSee(function ($request) {
+            (new MarkAsInactive)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can mark as inactive users');
             }),
         ];

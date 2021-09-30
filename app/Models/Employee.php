@@ -8,6 +8,7 @@ use App\Enums\AddressType;
 use App\Enums\LeaveStatus;
 use App\Facades\Timesheet;
 use App\Enums\ConfirmStatus;
+use App\Enums\EmployeeStatus;
 use App\Enums\GatePassStatus;
 use App\Scopes\ResignedScope;
 use Spatie\MediaLibrary\HasMedia;
@@ -44,7 +45,7 @@ class Employee extends Model implements HasMedia
      */
     public function scopeWithoutResigned($query)
     {
-        return $query->where('resign_date', null);
+        return $query->where('status', "!=", EmployeeStatus::RESIGNED());
     }
 
 

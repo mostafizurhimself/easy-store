@@ -2,6 +2,12 @@
 
 namespace App\Enums;
 
+/**
+ * @method static EmployeeStatus ACTIVE()
+ * @method static EmployeeStatus INACTIVE()
+ * @method static EmployeeStatus RESIGNED()
+ * @method static EmployeeStatus VACATION()
+ */
 class EmployeeStatus extends Enum
 {
     private const ACTIVE    = 'active';

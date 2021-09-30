@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\EmployeeStatus;
 use Exception;
 use App\Facades\Helper;
 use App\Models\Employee;
@@ -17,7 +18,7 @@ class EmployeeObserver
      */
     public function created(Employee $employee)
     {
-        if(empty($employee->designation->code)){
+        if (empty($employee->designation->code)) {
             throw new Exception("Designation code in not defined.");
         }
         $employee->readableId = Helper::generateEmployeeId($employee->id, $employee->designation->code);
@@ -32,7 +33,13 @@ class EmployeeObserver
      */
     public function updating(Employee $employee)
     {
-        if(empty($employee->designation->code)){
+        if ($employee->resignDate) {
+            $employee->status = EmployeeStatus::RESIGNED();
+        } else {
+            $employee->status = EmployeeStatus::ACTIVE();
+        }
+
+        if (empty($employee->designation->code)) {
             throw new Exception("Designation code in not defined.");
         }
         $employee->readableId = Helper::generateEmployeeId($employee->id, $employee->designation->code);
