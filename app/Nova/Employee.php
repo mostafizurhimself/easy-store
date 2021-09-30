@@ -32,10 +32,10 @@ use Bissolli\NovaPhoneField\PhoneNumber;
 use App\Nova\Actions\Employees\DownloadPdf;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Employees\MakeAsActive;
+use App\Nova\Actions\Employees\MarkAsActive;
 use App\Nova\Actions\Employees\DownloadExcel;
 use App\Nova\Lenses\Employee\EmployeeHistory;
 use App\Nova\Actions\Employees\MakeAsInactive;
-use App\Nova\Actions\Employees\MarkAsActive;
 use App\Nova\Actions\Employees\MarkAsInactive;
 use App\Nova\Actions\Employees\MarkAsResigned;
 use App\Nova\Actions\Employees\MarkForVacation;
@@ -73,7 +73,7 @@ class Employee extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can download', 'can mark as active', 'can mark as inactive', 'can mark for vacation', 'can mark as resigned'];
+    public static $permissions = ['can download'];
 
     /**
      * The icon of the resource.
@@ -185,11 +185,11 @@ class Employee extends Resource
                         ->hideFromIndex()
                         ->singleImageRules('max:5000', 'mimes:jpg,jpeg,png'),
 
-                    // Select::make('Status')
-                    //     ->options(EmployeeStatus::titleCaseOptions())
-                    //     ->rules('required')
-                    //     ->default(EmployeeStatus::ACTIVE())
-                    //     ->onlyOnForms(),
+                    Select::make('Status')
+                        ->options(EmployeeStatus::titleCaseOptions())
+                        ->rules('required')
+                        ->default(EmployeeStatus::ACTIVE())
+                        ->onlyOnForms(),
 
                 ],
 
@@ -368,7 +368,7 @@ class Employee extends Resource
                         ->hideFromIndex(),
 
                     Date::make('Resign Date')
-                        ->onlyOnDetail(),
+                        ->hideFromIndex(),
 
                     Currency::make('Salary')
                         ->currency('BDT')
@@ -514,22 +514,6 @@ class Employee extends Resource
                 })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download?"),
 
-            (new MarkAsActive)->canSee(function ($request) {
-                return ($request->user()->hasPermissionTo('can mark as active employees') || $request->user()->isSuperAdmin());
-            }),
-
-            (new MarkAsInactive)->canSee(function ($request) {
-                return ($request->user()->hasPermissionTo('can mark as inactive employees') || $request->user()->isSuperAdmin());
-            }),
-
-            (new MarkForVacation)->canSee(function ($request) {
-                return ($request->user()->hasPermissionTo('can mark for vacation employees') || $request->user()->isSuperAdmin());
-            }),
-
-            (new MarkAsResigned)->canSee(function ($request) {
-                return ($request->user()->hasPermissionTo('can mark as resigned employees') || $request->user()->isSuperAdmin());
-            }),
-
             (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
             })->canRun(function ($request) {
@@ -543,7 +527,6 @@ class Employee extends Resource
                 return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download excel?"),
-
         ];
     }
 

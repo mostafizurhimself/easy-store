@@ -179,7 +179,7 @@ class AuthServiceProvider extends ServiceProvider
         Section::class                      => SectionPolicy::class,
         SubSection::class                   => SubSectionPolicy::class,
         Designation::class                  => DesignationPolicy::class,
-        Employee::class                     => EmployeePolicy::class,
+        // Employee::class                     => EmployeePolicy::class,
         Shift::class                        => ShiftPolicy::class,
         Leave::class                        => LeavePolicy::class,
         Holiday::class                      => HolidayPolicy::class,

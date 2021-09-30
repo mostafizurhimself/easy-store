@@ -31,8 +31,8 @@ class EmployeePolicy
     public function view(User $user, Employee $employee)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('view employees') && $user->locationId == $employee->locationId ) ||
-                $user->hasPermissionTo('view all locations data');
+            ($user->hasPermissionTo('view employees') && $user->locationId == $employee->locationId) ||
+            $user->hasPermissionTo('view all locations data');
     }
 
     /**
@@ -55,9 +55,10 @@ class EmployeePolicy
      */
     public function update(User $user, Employee $employee)
     {
-        return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('update employees') && $user->locationId == $employee->locationId ) ||
-                $user->hasPermissionTo('update all locations data');
+        return true;
+        // return $user->isSuperAdmin() ||
+        //         ($user->hasPermissionTo('update employees') && $user->locationId == $employee->locationId ) ||
+        //         $user->hasPermissionTo('update all locations data');
     }
 
     /**
@@ -70,8 +71,8 @@ class EmployeePolicy
     public function delete(User $user, Employee $employee)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('delete employees') && $user->locationId == $employee->locationId ) ||
-                $user->hasPermissionTo('delete all locations data');
+            ($user->hasPermissionTo('delete employees') && $user->locationId == $employee->locationId) ||
+            $user->hasPermissionTo('delete all locations data');
     }
 
     /**
@@ -84,8 +85,8 @@ class EmployeePolicy
     public function restore(User $user, Employee $employee)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('restore employees') && $user->locationId == $employee->locationId ) ||
-                $user->hasPermissionTo('restore all locations data');
+            ($user->hasPermissionTo('restore employees') && $user->locationId == $employee->locationId) ||
+            $user->hasPermissionTo('restore all locations data');
     }
 
     /**
@@ -98,7 +99,7 @@ class EmployeePolicy
     public function forceDelete(User $user, Employee $employee)
     {
         return $user->isSuperAdmin() ||
-                ($user->hasPermissionTo('force delete employees') && $user->locationId == $employee->locationId ) ||
-                $user->hasPermissionTo('force delete all locations data');
+            ($user->hasPermissionTo('force delete employees') && $user->locationId == $employee->locationId) ||
+            $user->hasPermissionTo('force delete all locations data');
     }
 }

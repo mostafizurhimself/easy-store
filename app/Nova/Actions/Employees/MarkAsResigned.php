@@ -39,7 +39,7 @@ class MarkAsResigned extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            $model->resignDate = $fields->resignDate;
+            $model->resign_date = $fields->resignDate;
             $model->status = EmployeeStatus::RESIGNED();
             $model->save();
         }

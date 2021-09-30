@@ -38,6 +38,7 @@ class MarkForVacation extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
+            $model->resign_date = null;
             $model->status = EmployeeStatus::VACATION();
             $model->save();
         }

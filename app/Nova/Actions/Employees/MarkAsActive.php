@@ -37,10 +37,11 @@ class MarkAsActive extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach ($models as $model) {
-            $model->status = EmployeeStatus::ACTIVE();
-            $model->save();
-        }
+        // foreach ($models as $model) {
+        //     $model->resign_date = null;
+        //     $model->status = EmployeeStatus::ACTIVE();
+        //     $model->save();
+        // }
 
         return Action::message('Employees marked as active.');
     }

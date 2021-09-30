@@ -33,12 +33,6 @@ class EmployeeObserver
      */
     public function updating(Employee $employee)
     {
-        if ($employee->resignDate) {
-            $employee->status = EmployeeStatus::RESIGNED();
-        } else {
-            $employee->status = EmployeeStatus::ACTIVE();
-        }
-
         if (empty($employee->designation->code)) {
             throw new Exception("Designation code in not defined.");
         }
