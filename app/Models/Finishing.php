@@ -22,7 +22,7 @@ class Finishing extends Model
     *
     * @var array
     */
-   protected $with = ['product', 'location'];
+   protected $with = ['product'];
 
    /**
     * The accessors to append to the model's array form.
