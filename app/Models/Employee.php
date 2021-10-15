@@ -262,7 +262,7 @@ class Employee extends Model implements HasMedia
     public function getImageUrlAttribute()
     {
         return !empty($this->getFirstMediaUrl('employee-images')) ?
-            $this->getFirstMediaUrl('employee-images') : asset('images/logo.png');
+            $this->getFirstMediaUrl('employee-images') : asset('images/avatar.png');
     }
 
     /**

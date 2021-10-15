@@ -168,6 +168,7 @@ return [
         Easystore\NovaTheme\ThemeServiceProvider::class,
         Akaunting\Money\Provider::class,
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+        Milon\Barcode\BarcodeServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -235,7 +236,9 @@ return [
         'Money' => App\Helpers\Money::class,
         'Helper' => App\Facades\Helper::class,
         'Settings' => App\Facades\Settings::class,
-        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
+        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
+        'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
+        'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
 
     ],
 

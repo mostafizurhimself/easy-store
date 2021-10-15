@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\License;
+use App\Models\Employee;
 use App\Models\Finishing;
 use App\Models\EmployeeGatePass;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmployeeIdCardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,6 +108,8 @@ Route::group(['middleware' => 'nova'], function () {
     });
 });
 
+Route::get('employee-ids', 'EmployeeIdCardController')->name('generate-ids');
+
 
 // Test routes
 // Route::get('/employee-gate-passes', function () {
@@ -116,9 +120,9 @@ Route::group(['middleware' => 'nova'], function () {
 // });
 
 // Route::get('employees/{employee}/eis-form', 'EisFormController@index')->name('employees.eis-form');
-Route::get('finishing-history', function () {
-    $history = Finishing::query();
-    return view('pdf.pages.finishing-history', [
-        'models' => $history
-    ]);
-});
+// Route::get('finishing-history', function () {
+//     $history = Finishing::query();
+//     return view('pdf.pages.finishing-history', [
+//         'models' => $history
+//     ]);
+// });

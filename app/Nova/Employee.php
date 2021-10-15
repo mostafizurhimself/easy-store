@@ -17,7 +17,6 @@ use Laravel\Nova\Fields\Text;
 use Eminiarts\Tabs\TabsOnEdit;
 use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
@@ -31,14 +30,9 @@ use AwesomeNova\Filters\DependentFilter;
 use Bissolli\NovaPhoneField\PhoneNumber;
 use App\Nova\Actions\Employees\DownloadPdf;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use App\Nova\Actions\Employees\MakeAsActive;
-use App\Nova\Actions\Employees\MarkAsActive;
 use App\Nova\Actions\Employees\DownloadExcel;
+use App\Nova\Actions\Employees\GenerateIdCard;
 use App\Nova\Lenses\Employee\EmployeeHistory;
-use App\Nova\Actions\Employees\MakeAsInactive;
-use App\Nova\Actions\Employees\MarkAsInactive;
-use App\Nova\Actions\Employees\MarkAsResigned;
-use App\Nova\Actions\Employees\MarkForVacation;
 use App\Nova\Lenses\Employee\ResignedEmployees;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -513,6 +507,14 @@ class Employee extends Resource
                     return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
                 })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download?"),
+
+            // (new GenerateIdCard)->onlyOnIndex()
+            //     ->canSee(function ($request) {
+            //         return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+            //     })->canRun(function ($request) {
+            //         return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+            //     })->confirmButtonText('Generate')
+            //     ->confirmText("Are you sure want to generate?"),
 
             (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());

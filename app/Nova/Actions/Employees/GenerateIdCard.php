@@ -2,7 +2,6 @@
 
 namespace App\Nova\Actions\Employees;
 
-use App\Enums\EmployeeStatus;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
@@ -10,9 +9,16 @@ use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MarkAsActive extends Action
+class GenerateIdCard extends Action
 {
     use InteractsWithQueue, Queueable;
+
+    /**
+     * The displayable name of the action.
+     *
+     * @var string
+     */
+    public $name = "Generate IDs";
 
     /**
      * The number of models that should be included in each chunk.
@@ -37,13 +43,8 @@ class MarkAsActive extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        // foreach ($models as $model) {
-        //     $model->resign_date = null;
-        //     $model->status = EmployeeStatus::ACTIVE();
-        //     $model->save();
-        // }
-
-        return Action::message('Employees marked as active.');
+        $ids = implode(',', $models->pluck('id')->toArray());
+        return Action::openInNewTab(route('generate-ids', ['ids' => encrypt($ids)]));
     }
 
     /**
