@@ -86,6 +86,21 @@
             justify-content: space-between;
         }
 
+        .info-wrapper::before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.2;
+            background-image: url('{{ asset('images/easy-logo.jpg') }}');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 120px;
+        }
+
         .right-section {
             display: flex;
             flex-direction: column;
@@ -110,7 +125,6 @@
             align-items: center;
             justify-content: space-between;
         }
-
 
         .toolbar {
             display: flex;
@@ -161,6 +175,26 @@
             white-space: nowrap;
         }
 
+        .relative {
+            position: relative;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
         @media print {
             body {
                 font-family: 'Nunito', sans-serif !important;
@@ -199,40 +233,42 @@
                         </div>
                         <div class="id-card__body">
                             <div class="left-section">
-                                <div>
-                                    <p class="text-uppercase font-bold">Easy Fashion Ltd</p>
-                                    <table>
-                                        <tr>
-                                            <th class="text-left">Name</th>
-                                            <th>:</th>
-                                            <td>{{ $employee->name }}</td>
-                                        </tr>
+                                <div class="info-wrapper relative">
+                                    <div class="relative">
+                                        <p class="text-uppercase font-bold">Easy Fashion Ltd</p>
+                                        <table>
+                                            <tr>
+                                                <th class="text-left">Name</th>
+                                                <th>:</th>
+                                                <td>{{ $employee->name }}</td>
+                                            </tr>
 
-                                        <tr>
-                                            <th class="text-left">Designation</th>
-                                            <th>:</th>
-                                            <td>{{ $employee->designation->name }}</td>
-                                        </tr>
+                                            <tr>
+                                                <th class="text-left">Designation</th>
+                                                <th>:</th>
+                                                <td>{{ $employee->designation->name }}</td>
+                                            </tr>
 
-                                        <tr>
-                                            <th class="text-left">Location</th>
-                                            <th>:</th>
-                                            <td>{{ $employee->location->name }}</td>
-                                        </tr>
+                                            <tr>
+                                                <th class="text-left">Location</th>
+                                                <th>:</th>
+                                                <td>{{ $employee->location->name }}</td>
+                                            </tr>
 
 
-                                        <tr>
-                                            <th class="text-left">Section</th>
-                                            <th>:</th>
-                                            <td>{{ $employee->section ? $employee->section->name : 'N/A' }}</td>
-                                        </tr>
+                                            <tr>
+                                                <th class="text-left">Section</th>
+                                                <th>:</th>
+                                                <td>{{ $employee->section ? $employee->section->name : 'N/A' }}</td>
+                                            </tr>
 
-                                        <tr>
-                                            <th class="text-left">Joining Date</th>
-                                            <th>:</th>
-                                            <td>{{ $employee->joiningDate->format('d M, Y') }}</td>
-                                        </tr>
-                                    </table>
+                                            <tr>
+                                                <th class="text-left">Joining Date</th>
+                                                <th>:</th>
+                                                <td>{{ $employee->joiningDate->format('d M, Y') }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
 
                                 <div class="d-flex flex-col font-bold" style="max-width: 120px;">
