@@ -514,7 +514,7 @@ class Employee extends Resource
                 })->canRun(function ($request) {
                     return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
                 })->confirmButtonText('Generate')
-                ->confirmText("Are you sure want to generate?"),
+                ->confirmText("Are you sure want to generate ids?"),
 
             (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());

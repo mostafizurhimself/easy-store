@@ -77,7 +77,7 @@
             flex-grow: 1;
             display: flex;
             justify-content: space-between;
-            padding: 10px;
+            padding: 5px 10px;
         }
 
         .left-section {
@@ -106,7 +106,7 @@
         .id-card__body--back {
             flex-grow: 1;
             display: flex;
-            padding: 10px;
+            padding: 5px 10px;
             align-items: center;
             justify-content: space-between;
         }
@@ -235,10 +235,14 @@
                                     </table>
                                 </div>
 
-                                <div class="font-bold">
-                                    <span style="border-top: 1px solid black;">
+                                <div class="d-flex flex-col font-bold" style="max-width: 120px;">
+                                    <div class="text-center">
+                                        <img src="{{ asset('images/signature.jpg') }}" style="height: 20px;"
+                                            alt="signature">
+                                    </div>
+                                    <div class="text-center" style="border-top: 1px solid black;">
                                         Authorized Signature
-                                    </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="right-section">
