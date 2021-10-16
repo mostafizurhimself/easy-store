@@ -67,7 +67,8 @@
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/opening-hours": "^2.10",
         "titasgailius/search-relations": "^1.0",
-        "treestoneit/text-wrap": "^1.1"
+        "treestoneit/text-wrap": "^1.1",
+        "easystore/scan-attendance": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
@@ -148,6 +149,10 @@
         {
             "type": "path",
             "url": "./nova-components/ScanGatepass"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/ScanAttendance"
         }
     ]
 }

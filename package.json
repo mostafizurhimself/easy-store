@@ -39,7 +39,9 @@
         "build-profile-tool": "cd nova-components/ProfileTool && npm run dev",
         "build-profile-tool-prod": "cd nova-components/ProfileTool && npm run prod",
         "build-scan-gatepass": "cd nova-components/ScanGatepass && npm run dev",
-        "build-scan-gatepass-prod": "cd nova-components/ScanGatepass && npm run prod"
+        "build-scan-gatepass-prod": "cd nova-components/ScanGatepass && npm run prod",
+        "build-scan-attendance": "cd nova-components/ScanAttendance && npm run dev",
+        "build-scan-attendance-prod": "cd nova-components/ScanAttendance && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.19",

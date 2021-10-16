@@ -4,18 +4,11 @@ namespace App\Nova;
 
 use Carbon\Carbon;
 use App\Models\Employee;
-use Michielfb\Time\Time;
-use App\Models\Department;
-use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
-use App\Enums\ConfirmStatus;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Badge;
 use NovaAjaxSelect\AjaxSelect;
-use App\Enums\AttendanceStatus;
-use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\EmployeeFilter;
 use App\Nova\Filters\LocationFilter;
@@ -23,9 +16,9 @@ use Laraning\NovaTimeField\TimeField;
 use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Actions\Attendances\Confirm;
 use App\Nova\Actions\Attendances\CheckOut;
+use App\Nova\Actions\Attendances\QuickScan;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\AttendanceStatusFilter;
-use PosLifestyle\DateRangeFilter\Enums\Config;
 use App\Nova\Lenses\Attendance\DailyAttendance;
 use App\Nova\Actions\Attendances\BulkAttendance;
 use App\Nova\Filters\DepartmentFilterViaEmployee;
@@ -66,7 +59,7 @@ class Attendance extends Resource
      *
      * @var array
      */
-    public static $permissions = ['can take bulk', 'can confirm', 'can download'];
+    public static $permissions = ['can scan', 'can confirm', 'can download', 'can take bulk'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -362,6 +355,14 @@ class Attendance extends Resource
                 return $request->user()->hasPermissionTo('update attendances') || $request->user()->isSuperAdmin();
             })
                 ->confirmButtonText('Check Out'),
+
+            (new QuickScan)->canSee(function ($request) {
+                return $request->user()->hasPermissionTo('can scan attendances') || $request->user()->isSuperAdmin();
+            })->canRun(function ($request) {
+                return $request->user()->hasPermissionTo('can scan attendances') || $request->user()->isSuperAdmin();
+            })
+                ->withoutConfirmation()
+                ->standalone(),
 
             (new BulkAttendance)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can take bulk attendances') && !$request->user()->isSuperAdmin();

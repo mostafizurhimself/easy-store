@@ -16,6 +16,7 @@ use Laravel\Nova\Events\ServingNova;
 use Easystore\ProfileTool\ProfileTool;
 use Easystore\ScanGatepass\ScanGatepass;
 use App\Nova\Dashboards\GarmentsDashboard;
+use Easystore\ScanAttendance\ScanAttendance;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -127,7 +128,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
             ProfileTool::make(),
 
-            ScanGatepass::make()
+            ScanGatepass::make(),
+
+            ScanAttendance::make(),
         ];
     }
 

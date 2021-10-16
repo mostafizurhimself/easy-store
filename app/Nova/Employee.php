@@ -508,13 +508,13 @@ class Employee extends Resource
                 })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download?"),
 
-            // (new GenerateIdCard)->onlyOnIndex()
-            //     ->canSee(function ($request) {
-            //         return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
-            //     })->canRun(function ($request) {
-            //         return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
-            //     })->confirmButtonText('Generate')
-            //     ->confirmText("Are you sure want to generate?"),
+            (new GenerateIdCard)->onlyOnIndex()
+                ->canSee(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+                })->canRun(function ($request) {
+                    return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());
+                })->confirmButtonText('Generate')
+                ->confirmText("Are you sure want to generate?"),
 
             (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download employees') || $request->user()->isSuperAdmin());

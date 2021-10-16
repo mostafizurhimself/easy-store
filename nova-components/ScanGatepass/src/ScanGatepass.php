@@ -14,8 +14,8 @@ class ScanGatepass extends Tool
      */
     public function boot()
     {
-        Nova::script('scan-gatepass', __DIR__.'/../dist/js/tool.js');
-        Nova::style('scan-gatepass', __DIR__.'/../dist/css/tool.css');
+        Nova::script('scan-gatepass', __DIR__ . '/../dist/js/tool.js');
+        Nova::style('scan-gatepass', __DIR__ . '/../dist/css/tool.css');
     }
 
     /**
