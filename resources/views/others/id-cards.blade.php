@@ -37,6 +37,7 @@
         .id-card {
             display: flex;
             margin-bottom: 10px;
+            overflow: hidden;
         }
 
         .id-card:nth-child(5n) {
@@ -77,7 +78,7 @@
             flex-grow: 1;
             display: flex;
             justify-content: space-between;
-            padding: 5px 10px;
+            padding: 10px;
         }
 
         .left-section {
@@ -107,10 +108,14 @@
             align-items: center;
         }
 
+        .employee-photo {
+            flex-grow: 1;
+        }
+
         .employee-photo img {
             height: 100px;
             width: 100px;
-            border: 1px solid black
+            border: 1px solid black;
         }
 
         .id-card__footer {
@@ -121,7 +126,7 @@
         .id-card__body--back {
             flex-grow: 1;
             display: flex;
-            padding: 5px 10px;
+            padding: 10px;
             align-items: center;
             justify-content: space-between;
         }
@@ -162,8 +167,16 @@
             color: red;
         }
 
+        .text-green {
+            color: #1dbf73;
+        }
+
         .font-bold {
             font-weight: bold !important;
+        }
+
+        .font-bolder {
+            font-weight: 800 !important;
         }
 
         .btn-primary {
@@ -172,7 +185,7 @@
         }
 
         .no-wrap {
-            white-space: nowrap;
+            white-space: nowrap !important;
         }
 
         .relative {
@@ -235,7 +248,7 @@
                             <div class="left-section">
                                 <div class="info-wrapper relative">
                                     <div class="relative">
-                                        <p class="text-uppercase font-bold">Easy Fashion Ltd</p>
+                                        <p class="text-uppercase font-bolder">Easy Fashion Ltd</p>
                                         <table>
                                             <tr>
                                                 <th class="text-left">Name</th>
@@ -263,7 +276,7 @@
                                             </tr>
 
                                             <tr>
-                                                <th class="text-left">Joining Date</th>
+                                                <th class="text-left no-wrap">Joining Date</th>
                                                 <th>:</th>
                                                 <td>{{ $employee->joiningDate->format('d M, Y') }}</td>
                                             </tr>
@@ -290,7 +303,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="id-card__footer"></div>
                     </div>
                     <div class="id-card__right">
                         <div class="id-card__header">
@@ -301,13 +313,14 @@
                             <div class="back-left-section">
                                 <div>
                                     <p class="font-bold text-red">If found, please return to this address:</p>
-                                    <p class="text-uppercase font-bold">Easy Fashion Ltd</p>
+                                    <br>
+                                    <p class="text-uppercase font-bolder">Easy Fashion Ltd</p>
                                     <div>
                                         <p>34/B, Malibagh Chowdhurypara, <br> Dhaka-1219</p>
                                         <p><span class="font-bold">Tel:</span> 880-02-9349397, 9332709</p>
                                         <p><span class="font-bold">Email</span> easyfashionwears@gmail.com</p>
                                         <p><span class="font-bold">Website:</span> www.easyfashion.com.bd</p>
-                                        <p><span class="font-bold">Hotline:</span> 01711-104489</p>
+                                        <p><span class="font-bold">Hotline:</span> 01711-104489, 01713-429300</p>
                                     </div>
                                 </div>
                             </div>
@@ -315,7 +328,6 @@
                                 <img src="{{ asset('images/qr.png') }}" style="height: 70px; width:70px;" alt="">
                             </div>
                         </div>
-                        <div class="id-card__footer"></div>
                     </div>
                 </div>
             @endforeach
