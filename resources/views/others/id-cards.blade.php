@@ -60,7 +60,8 @@
 
         .id-card__header {
             height: 20px;
-            background: #273983;
+            /* background: #273983; */
+            background: #129457;
             text-transform: uppercase;
             font-weight: bold;
             color: white;
@@ -120,7 +121,7 @@
 
         .id-card__footer {
             height: 10px;
-            background: #273983;
+            background: #129457;
         }
 
         .id-card__body--back {
@@ -180,7 +181,7 @@
         }
 
         .btn-primary {
-            background: #1dbf73;
+            background: #129457;
             color: white;
         }
 
