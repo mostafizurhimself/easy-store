@@ -325,7 +325,7 @@
                                         <img src="{{ asset('images/signature.jpg') }}" style="height: 20px;"
                                             alt="signature">
                                     </div>
-                                    <div class="text-center" style="border-top: 1px solid black;">
+                                    <div class="text-center" style="border-top: 1px solid black; font-size: 10px">
                                         Authorized Signature
                                     </div>
                                 </div>
