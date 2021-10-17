@@ -109,10 +109,6 @@
             align-items: center;
         }
 
-        .employee-photo {
-            flex-grow: 1;
-        }
-
         .employee-photo img {
             height: 100px;
             width: 100px;
@@ -299,7 +295,7 @@
                                 <div class="employee-photo">
                                     <img src="{{ $employee->imageUrl }}" alt="">
                                 </div>
-                                <div>
+                                <div style="margin-top: 10px;">
                                     {!! DNS1D::getBarcodeHTML($employee->id, 'EAN5') !!}
                                 </div>
                             </div>
