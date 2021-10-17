@@ -34,7 +34,7 @@ export default {
 	methods: {
 		handleChange: debounce(function () {
 			this.takeAttendance();
-		}, 500),
+		}, 200),
 		takeAttendance() {
 			if (!this.employeeId) {
 				return;
