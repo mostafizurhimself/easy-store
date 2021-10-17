@@ -111,7 +111,7 @@
 
         .employee-photo img {
             height: 100px;
-            width: 100px;
+            width: 90px;
             border: 1px solid black;
         }
 
@@ -126,6 +126,25 @@
             padding: 10px;
             align-items: center;
             justify-content: space-between;
+        }
+
+        .back-left-section {
+            position: relative;
+        }
+
+        .back-left-section::before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.2;
+            background-image: url('{{ asset('images/easy-logo.jpg') }}');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 120px;
         }
 
         .toolbar {
@@ -245,7 +264,6 @@
                             <div class="left-section">
                                 <div class="info-wrapper relative">
                                     <div class="relative">
-                                        <p class="text-uppercase font-bolder">Easy Fashion Ltd</p>
                                         <table>
                                             <tr>
                                                 <th class="text-left">Name</th>
@@ -276,6 +294,19 @@
                                                 <th class="text-left no-wrap">Joining Date</th>
                                                 <th>:</th>
                                                 <td>{{ $employee->joiningDate->format('d M, Y') }}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <th class="text-left no-wrap">Blood Group</th>
+                                                <th>:</th>
+                                                <td>
+                                                    @if ($employee->bloodGroup)
+                                                        <span
+                                                            class="text-red">{{ $employee->bloodGroup }}</span>
+                                                    @else
+                                                        <span>N/A</span>
+                                                    @endif
+                                                </td>
                                             </tr>
                                         </table>
                                     </div>
@@ -308,16 +339,17 @@
 
                         <div class="id-card__body--back" style="font-size: 10px;">
                             <div class="back-left-section">
-                                <div>
+                                <div class="relative">
                                     <p class="font-bold text-red">If found, please return to this address:</p>
-                                    <br>
-                                    <p class="text-uppercase font-bolder">Easy Fashion Ltd</p>
+                                    <p class="text-uppercase font-bolder" style="font-size: 11px">Easy Fashion Ltd</p>
                                     <div>
                                         <p>34/B, Malibagh Chowdhurypara, <br> Dhaka-1219</p>
                                         <p><span class="font-bold">Tel:</span> 880-02-9349397, 9332709</p>
                                         <p><span class="font-bold">Email</span> easyfashionwears@gmail.com</p>
                                         <p><span class="font-bold">Website:</span> www.easyfashion.com.bd</p>
                                         <p><span class="font-bold">Hotline:</span> 01711-104489, 01713-429300</p>
+                                        <p><span class="font-bold">Emg. Contact:</span> {{ $employee->mobile }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
