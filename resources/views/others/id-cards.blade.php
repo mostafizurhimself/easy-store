@@ -76,10 +76,9 @@
         }
 
         .id-card__body {
-            flex-grow: 1;
             display: flex;
             justify-content: space-between;
-            padding: 10px;
+            padding: 5px 10px;
         }
 
         .left-section {
@@ -232,7 +231,7 @@
             @page {
                 size: auto;
                 /* auto is the initial value */
-                margin: 0.5in 1in;
+                margin: 0.5in 0.8in;
                 padding: 0;
                 /* this affects the margin in the printer settings */
             }
@@ -312,6 +311,15 @@
                                     </div>
                                 </div>
 
+
+                                <div style="margin-top: 10px;">
+                                    {!! DNS1D::getBarcodeHTML("$employee->id", 'C128') !!}
+                                </div>
+                            </div>
+                            <div class="right-section">
+                                <div class="employee-photo">
+                                    <img src="{{ $employee->imageUrl }}" alt="">
+                                </div>
                                 <div class="d-flex flex-col font-bold" style="max-width: 120px;">
                                     <div class="text-center">
                                         <img src="{{ asset('images/signature.jpg') }}" style="height: 20px;"
@@ -320,14 +328,6 @@
                                     <div class="text-center" style="border-top: 1px solid black;">
                                         Authorized Signature
                                     </div>
-                                </div>
-                            </div>
-                            <div class="right-section">
-                                <div class="employee-photo">
-                                    <img src="{{ $employee->imageUrl }}" alt="">
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    {!! DNS1D::getBarcodeHTML($employee->id, 'EAN5') !!}
                                 </div>
                             </div>
                         </div>
