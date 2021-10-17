@@ -64,6 +64,8 @@ export default {
 							type: "error",
 						});
 					}
+					this.employeeId = "";
+					this.$refs.input.focus();
 				});
 		},
 	},
