@@ -18,18 +18,11 @@ class Finishing extends Model
    protected $guarded = [];
 
    /**
-    * The relations to eager load on every query.
-    *
-    * @var array
-    */
-   protected $with = ['product'];
-
-   /**
     * The accessors to append to the model's array form.
     *
     * @var array
     */
-   protected $appends = ['unit'];
+   protected $appends = ['unitName'];
 
 
    /**

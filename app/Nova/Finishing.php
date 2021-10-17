@@ -116,9 +116,9 @@ class Finishing extends Resource
                 ->rules('required', 'numeric', 'min:0')
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
                 ->sortable()
                 ->exceptOnForms(),
 
@@ -135,12 +135,12 @@ class Finishing extends Resource
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
-                    FinishingStatus::DRAFT()->getValue()     => 'warning',
-                    FinishingStatus::CONFIRMED()->getValue() => 'info',
-                    FinishingStatus::ADDED()->getValue()   => 'success',
-                ])
+                FinishingStatus::DRAFT()->getValue()     => 'warning',
+                FinishingStatus::CONFIRMED()->getValue() => 'info',
+                FinishingStatus::ADDED()->getValue()   => 'success',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -192,15 +192,15 @@ class Finishing extends Resource
     public function actions(Request $request)
     {
         return [
-            (new DownloadPdf)->onlyOnIndex()->canSee(function($request){
+            (new DownloadPdf)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download'),
 
-            (new DownloadExcel)->onlyOnIndex()->canSee(function($request){
+            (new DownloadExcel)->onlyOnIndex()->canSee(function ($request) {
                 return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
-            })->canRun(function($request){
+            })->canRun(function ($request) {
                 return ($request->user()->hasPermissionTo('can download finishings') || $request->user()->isSuperAdmin());
             })->confirmButtonText('Download')
                 ->confirmText("Are you sure want to download Excel?"),
@@ -219,20 +219,20 @@ class Finishing extends Resource
     public static function relatableProducts(NovaRequest $request, $query)
     {
         if ($request->isResourceIndexRequest() || $request->isResourceDetailRequest()) {
-            return ;
+            return;
         }
 
         $invoice = \App\Models\FinishingInvoice::find($request->viaResourceId);
-        if(empty($invoice)){
+        if (empty($invoice)) {
             $invoice = $request->findResourceOrFail()->invoice;
         }
         try {
             $productId = $request->findResourceOrFail()->productId;
         } catch (\Throwable $th) {
-           $productId = null;
+            $productId = null;
         }
         return $query->where('location_id', $invoice->locationId)
-                    ->whereNotIn('id', $invoice->productIds($productId));
+            ->whereNotIn('id', $invoice->productIds($productId));
     }
 
     /**
@@ -247,11 +247,11 @@ class Finishing extends Resource
     public static function relatableStyles(NovaRequest $request, $query)
     {
         if ($request->isResourceIndexRequest() || $request->isResourceDetailRequest()) {
-            return ;
+            return;
         }
 
         $invoice = \App\Models\FinishingInvoice::find($request->viaResourceId);
-        if(empty($invoice)){
+        if (empty($invoice)) {
             $invoice = $request->findResourceOrFail()->invoice;
         }
         return $query->where('location_id', $invoice->locationId);
@@ -266,7 +266,7 @@ class Finishing extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -278,10 +278,32 @@ class Finishing extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->with('product', 'unit')->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->with('product', 'unit')->where('location_id', $request->user()->location_id);
+        }
+
+        return $query;
     }
 }
