@@ -21,7 +21,7 @@ class AttendanceController extends Controller
             'employeeId' => ['required']
         ]);
 
-        $employee = Employee::find($request->employeeId);
+        $employee = Employee::where('readable_id',  $request->employeeId)->first();
 
 
         if ($employee) {

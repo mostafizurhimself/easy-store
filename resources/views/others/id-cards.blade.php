@@ -313,7 +313,7 @@
 
 
                                 <div style="margin-top: 10px;">
-                                    {!! DNS1D::getBarcodeHTML("$employee->id", 'C128') !!}
+                                    {!! DNS1D::getBarcodeHTML("$employee->readableId", 'C128', 1, 33) !!}
                                 </div>
                             </div>
                             <div class="right-section">
