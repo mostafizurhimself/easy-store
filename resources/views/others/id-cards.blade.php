@@ -322,7 +322,7 @@
                                 </div>
                                 <div class="d-flex flex-col font-bold" style="max-width: 120px;">
                                     <div class="text-center">
-                                        <img src="{{ asset('images/signature.jpg') }}" style="height: 20px;"
+                                        <img src="{{ asset('images/signature.jpg') }}" style="height: 25px;"
                                             alt="signature">
                                     </div>
                                     <div class="text-center no-wrap"

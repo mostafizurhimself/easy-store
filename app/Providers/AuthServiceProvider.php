@@ -147,6 +147,7 @@ use App\Policies\FabricReturnInvoicePolicy;
 use App\Policies\MaterialReceiveItemPolicy;
 use App\Policies\ServiceTransferItemPolicy;
 use App\Models\AssetDistributionReceiveItem;
+use App\Models\GiftGatePass;
 use App\Policies\AssetRequisitionItemPolicy;
 use App\Policies\MaterialDistributionPolicy;
 use App\Policies\MaterialPurchaseItemPolicy;
@@ -163,6 +164,7 @@ use App\Policies\FabricTransferReceiveItemPolicy;
 use App\Policies\ServiceTransferReceiveItemPolicy;
 use App\Policies\MaterialTransferReceiveItemPolicy;
 use App\Policies\AssetDistributionReceiveItemPolicy;
+use App\Policies\GiftGatePassPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -250,6 +252,7 @@ class AuthServiceProvider extends ServiceProvider
         VisitorGatePass::class              => VisitorGatePassPolicy::class,
         EmployeeGatePass::class             => EmployeeGatePassPolicy::class,
         ManualGatePass::class               => ManualGatePassPolicy::class,
+        GiftGatePass::class                 => GiftGatePassPolicy::class,
         Activity::class                     => ActivityLogPolicy::class,
         Setting::class                      => SettingPolicy::class,
         AdjustQuantity::class               => AdjustQuantityPolicy::class,
