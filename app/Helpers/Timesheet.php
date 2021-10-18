@@ -118,10 +118,10 @@ class Timesheet
     {
         $range = $this->getWorkingRange($shiftId, $date);
         if ($range) {
-            $start = Carbon::parse($range[0]);
+            $start = Carbon::parse($range[0])->addMinutes(15);
             $inTime = Carbon::parse($in);
             if ($inTime->greaterThan($start)) {
-                return $inTime->diffInSeconds($start);
+                return $inTime->diffInSeconds($start) + (15 * 60);
             }
         }
 
