@@ -205,16 +205,16 @@ class GoodsGatePass extends Resource
                 ->rules('nullable', 'max:500'),
 
             Text::make('Approved By', function () {
-                return $this->approve()->exists() ? $this->approve->employee->name : null;
+                return $this->approve ? $this->approve->employee->name : null;
             })
                 ->canSee(function () {
-                    return $this->approve()->exists();
+                    return $this->approve;
                 })
                 ->onlyOnDetail()
                 ->sortable(),
 
             DateTime::make('Approved At', function () {
-                return $this->approve()->exists() ? $this->approve->createdAt : null;
+                return $this->approve ? $this->approve->createdAt : null;
             })
                 ->exceptOnForms()
                 ->sortable(),
@@ -365,5 +365,27 @@ class GoodsGatePass extends Resource
     {
         return $query->where('status', DispatchStatus::CONFIRMED())
             ->doesntHave('goodsGatePass');
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'approve.employee', 'invoice');
     }
 }

@@ -41,8 +41,6 @@ class VisitorGatePass extends Model
      */
     protected $dates = ['in', 'out'];
 
-
-
     /**
      * The accessors to append to the model's array form.
      *
