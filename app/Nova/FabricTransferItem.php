@@ -104,19 +104,21 @@ class FabricTransferItem extends Resource
                 ->rules('required', 'numeric', 'min:0')
                 ->sortable()
                 ->creationRules(function ($request) {
-                    if (!$request->isResourceIndexRequest()) {
-                        return new DistributionQuantityRule(\App\Nova\FabricTransferItem::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'));
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new DistributionQuantityRule(\App\Nova\FabricTransferItem::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'))];
                     }
+                    return [];
                 })
                 ->updateRules(function ($request) {
-                    if (!$request->isResourceIndexRequest()) {
-                        return new DistributionQuantityRuleForUpdate(
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new DistributionQuantityRuleForUpdate(
                             \App\Nova\FabricTransferItem::uriKey(),
                             $request->get('fabric_id'),
                             $this->resource->transferQuantity,
                             $this->resource->fabricId
-                        );
+                        )];
                     }
+                    return [];
                 })
                 ->onlyOnForms(),
 

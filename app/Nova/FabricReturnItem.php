@@ -107,14 +107,16 @@ class FabricReturnItem extends Resource
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
                 ->creationRules(function ($request) {
-                    if (!$request->isResourceIndexRequest()) {
-                        return new ReturnQuantityRule(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'));
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new ReturnQuantityRule(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'))];
                     }
+                    return [];
                 })
                 ->updateRules(function ($request) {
-                    if (!$request->isResourceIndexRequest()) {
-                        return new ReturnQuantityRuleForUpdate(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId);
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new ReturnQuantityRuleForUpdate(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId)];
                     }
+                    return [];
                 })
                 ->onlyOnForms(),
 

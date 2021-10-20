@@ -172,14 +172,16 @@ class FabricDistribution extends Resource
 
             Number::make('Quantity')
                 ->creationRules(function ($request) {
-                    if (!$request->isResourceIndexRequest()) {
-                        return new DistributionQuantityRule(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'));
+                    if ($request->creationRules()) {
+                        return [new DistributionQuantityRule(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'))];
                     }
+                    return [];
                 })
                 ->updateRules(function ($request) {
-                    if (!$request->isResourceIndexRequest()) {
-                        return new DistributionQuantityRuleForUpdate(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId);
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new DistributionQuantityRuleForUpdate(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId)];
                     }
+                    return [];
                 })
                 ->rules('required', 'numeric', 'min:1')
                 ->onlyOnForms(),
