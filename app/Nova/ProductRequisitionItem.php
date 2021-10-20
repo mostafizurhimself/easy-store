@@ -7,7 +7,6 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use App\Enums\RequisitionStatus;
@@ -19,7 +18,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 
 class ProductRequisitionItem extends Resource
 {
-    use WithOutLocation, SearchesRelations;
+    use SearchesRelations;
 
     /**
      * The model the resource corresponds to.
@@ -113,23 +112,25 @@ class ProductRequisitionItem extends Resource
 
             Select::make('Product', 'product_id')
                 ->options(function () {
-                    //Get the requisition from request on create
-                    $requisition = \App\Models\ProductRequisition::find(request()->viaResourceId);
+                    if (!$request->isResourceIndexRequest()) {
+                        //Get the requisition from request on create
+                        $requisition = \App\Models\ProductRequisition::find(request()->viaResourceId);
 
-                    //Get the requisition without request/after create
-                    if (empty($requisition)) {
-                        $requisition = \App\Models\ProductRequisition::find($this->resource->requisitionId);
-                    }
+                        //Get the requisition without request/after create
+                        if (empty($requisition)) {
+                            $requisition = \App\Models\ProductRequisition::find($this->resource->requisitionId);
+                        }
 
-                    try {
-                        $productId = request()->findResourceOrFail()->productId;
-                    } catch (\Throwable $th) {
-                        $productId = null;
+                        try {
+                            $productId = request()->findResourceOrFail()->productId;
+                        } catch (\Throwable $th) {
+                            $productId = null;
+                        }
+                        return \App\Models\Product::where('location_id', $requisition->receiverId)
+                            ->whereNotIn('id', $requisition->productIds($productId))->get()->map(function ($product) {
+                                return ['value' => $product->id, 'label' => $product->name . "({$product->code})"];
+                            });
                     }
-                    return \App\Models\Product::where('location_id', $requisition->receiverId)
-                        ->whereNotIn('id', $requisition->productIds($productId))->get()->map(function ($product) {
-                            return ['value' => $product->id, 'label' => $product->name . "({$product->code})"];
-                        });
                 })
                 ->rules('required')
                 ->sortable()
@@ -243,5 +244,23 @@ class ProductRequisitionItem extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('requisition', 'product', 'unit');
     }
 }

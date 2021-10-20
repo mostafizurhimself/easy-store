@@ -15,8 +15,6 @@ class ProductCategory extends Model
      */
     protected $guarded = [];
 
-
-
     /**
      * Determines one-to-many relation
      *

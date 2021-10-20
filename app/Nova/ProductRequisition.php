@@ -14,7 +14,6 @@ use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Select;
 use App\Enums\RequisitionStatus;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
@@ -24,6 +23,7 @@ use App\Nova\Lenses\RequisitionItems;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\RequisitionStatusFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Lenses\ProductRequisition\Requisitions;
 use App\Nova\Actions\ProductRequisitions\ConfirmRequisition;
 use App\Nova\Actions\ProductRequisitions\GenerateRequisition;
@@ -251,5 +251,27 @@ class ProductRequisition extends Resource
                 ->confirmText('Are you sure want to generate requisition now?')
                 ->onlyOnDetail(),
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'receiver');
     }
 }

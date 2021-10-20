@@ -53,13 +53,6 @@ class FabricTransferReceiveItem extends Model implements HasMedia
    protected $dates = ['date'];
 
    /**
-    * The relations to eager load on every query.
-    *
-    * @var array
-    */
-   protected $with = [];
-
-   /**
     * Register the media collections
     *
     * @return void
