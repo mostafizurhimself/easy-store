@@ -27,8 +27,6 @@ class AssetPurchaseOrder extends Model implements HasMedia
      */
     protected static $logUnguarded = true;
 
-
-
     /**
      * The attributes that should be mutated to dates.
      *

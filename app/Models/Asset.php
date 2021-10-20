@@ -20,8 +20,6 @@ class Asset extends Model implements HasMedia
      */
     protected $guarded = [];
 
-
-
     /**
      * Add all attributes that are not listed in $guarded for log
      *

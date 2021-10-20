@@ -35,9 +35,9 @@ use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetDistributionInvoices\AutoReceive;
-use App\Nova\Actions\AssetDistributionInvoices\AutoReceiveItems;
 use App\Nova\Actions\AssetDistributionInvoices\ConfirmInvoice;
 use App\Nova\Actions\AssetDistributionInvoices\GenerateInvoice;
+use App\Nova\Actions\AssetDistributionInvoices\AutoReceiveItems;
 use App\Nova\Lenses\AssetDistributionInvoice\DistributionInvoices;
 
 class AssetDistributionInvoice extends Resource
@@ -200,7 +200,7 @@ class AssetDistributionInvoice extends Resource
                         ->exceptOnForms(),
 
                     Number::make('Item', function () {
-                        return $this->resource->distributionItems->count();
+                        return $this->resource->distributionItemsCount;
                     })
                         ->exceptOnForms()
                         ->sortable(),
@@ -218,8 +218,10 @@ class AssetDistributionInvoice extends Resource
                         ->hideFromIndex(),
 
                     Select::make('Receiver', 'receiver_id')
-                        ->options(function () {
-                            return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                        ->options(function () use ($request) {
+                            if (!$request->isResourceIndexRequest()) {
+                                return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                            }
                         })
                         ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
                         ->searchable()
@@ -452,5 +454,27 @@ class AssetDistributionInvoice extends Resource
                 ->onlyOnDetail()
                 ->confirmButtonText('Create Or Update'),
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'receiver')->withCount('distributionItems');
     }
 }

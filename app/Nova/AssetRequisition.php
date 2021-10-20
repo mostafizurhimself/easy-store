@@ -71,7 +71,7 @@ class AssetRequisition extends Resource
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
@@ -81,7 +81,7 @@ class AssetRequisition extends Resource
      */
     public static function label()
     {
-      return "Requisitions";
+        return "Requisitions";
     }
 
     /**
@@ -91,7 +91,7 @@ class AssetRequisition extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-comment-alt';
+        return 'fas fa-comment-alt';
     }
 
     /**
@@ -160,25 +160,27 @@ class AssetRequisition extends Resource
                 ->sortable(),
 
             Select::make('Receiver', 'receiver_id')
-                ->options(function(){
-                    return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                ->options(function () use ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                    }
                 })
                 ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
                 ->searchable()
                 ->onlyOnForms(),
 
-            Text::make('Receiver', function(){
+            Text::make('Receiver', function () {
                 return $this->receiver->name;
             })->sortable(),
 
             Badge::make('Status')->map([
-                    RequisitionStatus::DRAFT()->getValue()     => 'warning',
-                    RequisitionStatus::CONFIRMED()->getValue() => 'info',
-                    RequisitionStatus::PARTIAL()->getValue()   => 'danger',
-                    RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
-                ])
+                RequisitionStatus::DRAFT()->getValue()     => 'warning',
+                RequisitionStatus::CONFIRMED()->getValue() => 'info',
+                RequisitionStatus::PARTIAL()->getValue()   => 'danger',
+                RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -206,7 +208,7 @@ class AssetRequisition extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -237,19 +239,41 @@ class AssetRequisition extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmRequisition)->canSee(function($request){
+            (new ConfirmRequisition)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm asset requisitions');
             }),
 
-            (new GenerateRequisition)->canSee(function($request){
+            (new GenerateRequisition)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate asset requisitions');
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate asset requisitions') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate requisition now?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate asset requisitions') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate requisition now?')
+                ->onlyOnDetail(),
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'receiver');
     }
 }

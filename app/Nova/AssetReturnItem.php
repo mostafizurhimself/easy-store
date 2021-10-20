@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use App\Rules\ReturnQuantityRule;
 use Laravel\Nova\Fields\Currency;
@@ -23,7 +22,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 
 class AssetReturnItem extends Resource
 {
-    use SearchesRelations, WithOutLocation;
+    use SearchesRelations;
 
     /**
      * The model the resource corresponds to.
@@ -76,7 +75,7 @@ class AssetReturnItem extends Resource
      */
     public static function label()
     {
-      return "Return Items";
+        return "Return Items";
     }
 
     /**
@@ -111,9 +110,9 @@ class AssetReturnItem extends Resource
                 ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\AssetReturnItem::uriKey(), $request->get('asset'), $this->resource->quantity, $this->resource->assetId))
                 ->onlyOnForms(),
 
-            Text::make('Quantity', function(){
-                    return $this->quantity." ".$this->unitName;
-                })
+            Text::make('Quantity', function () {
+                return $this->quantity . " " . $this->unitName;
+            })
                 ->sortable()
                 ->exceptOnForms(),
 
@@ -136,12 +135,12 @@ class AssetReturnItem extends Resource
                 ->rules('nullable', 'max:500'),
 
             Badge::make('Status')->map([
-                    ReturnStatus::DRAFT()->getValue()     => 'warning',
-                    ReturnStatus::CONFIRMED()->getValue() => 'info',
-                    ReturnStatus::BILLED()->getValue()    => 'danger',
-                ])
+                ReturnStatus::DRAFT()->getValue()     => 'warning',
+                ReturnStatus::CONFIRMED()->getValue() => 'info',
+                ReturnStatus::BILLED()->getValue()    => 'danger',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
@@ -205,22 +204,24 @@ class AssetReturnItem extends Resource
      */
     public static function relatableAssets(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\AssetReturnInvoice::find($request->viaResourceId);
-        if(empty($invoice)){
-            $invoice = \App\Models\AssetReturnItem::find($request->resourceId)->invoice;
-        }
-        try {
-            $assetId = $request->findResourceOrFail()->assetId;
-        } catch (\Throwable $th) {
-           $assetId = null;
-        }
-        return $query->whereHas('suppliers', function($supplier) use($invoice){
+        if (!$request->isResourceIndexRequest()) {
+            $invoice = \App\Models\AssetReturnInvoice::find($request->viaResourceId);
+            if (empty($invoice)) {
+                $invoice = \App\Models\AssetReturnItem::find($request->resourceId)->invoice;
+            }
+            try {
+                $assetId = $request->findResourceOrFail()->assetId;
+            } catch (\Throwable $th) {
+                $assetId = null;
+            }
+            return $query->whereHas('suppliers', function ($supplier) use ($invoice) {
                 $supplier->where('supplier_id', $invoice->supplierId)
-                        ->where('location_id', $invoice->locationId);
-        })->whereNotIn('id', $invoice->assetIds($assetId));
+                    ->where('location_id', $invoice->locationId);
+            })->whereNotIn('id', $invoice->assetIds($assetId));
+        }
     }
 
-      /**
+    /**
      * Return the location to redirect the user after creation.
      *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
@@ -229,7 +230,7 @@ class AssetReturnItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -241,10 +242,28 @@ class AssetReturnItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('invoice', 'asset', 'unit');
     }
 }

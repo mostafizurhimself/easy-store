@@ -25,8 +25,8 @@ class TransferInvoices extends Lens
     public static function query(LensRequest $request, $query)
     {
         return $request->withOrdering($request->withFilters(
-            $query->where('receiver_id', $request->user()->locationId)
-                ->where('status','!=', TransferStatus::DRAFT())
+            $query->with('location', 'receiver')->where('receiver_id', $request->user()->locationId)
+                ->where('status', '!=', TransferStatus::DRAFT())
                 ->orderBy('id', 'DESC')
         ));
     }
