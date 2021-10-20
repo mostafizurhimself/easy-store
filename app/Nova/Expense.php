@@ -223,8 +223,18 @@ class Expense extends Resource
                 ->currency('BDT')
                 ->rules('required', 'numeric', 'min:0')
                 ->onlyOnForms()
-                ->creationRules(new ExpenseAmountRule($request->get('expenser_id') ?? $request->get('expenser')))
-                ->updateRules(new ExpenseAmountRuleForUpdate($request->get('expenser_id'), $this->resource->amount, $this->resource->expenserId))
+                ->creationRules(function ($request) {
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new ExpenseAmountRule($request->get('expenser_id') ?? $request->get('expenser'))];
+                    }
+                    return [];
+                })
+                ->updateRules(function ($request) {
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new ExpenseAmountRuleForUpdate($request->get('expenser_id'), $this->resource->amount, $this->resource->expenserId)];
+                    }
+                    return [];
+                })
                 ->canSee(function ($request) {
                     if ($request->user()->hasPermissionTo('view any locations data') || $request->user()->isSuperAdmin()) {
                         return true;
@@ -342,6 +352,6 @@ class Expense extends Resource
             $query->where('location_id', $request->user()->location_id);
         }
 
-        return $query;
+        return $query->with('location', 'expenser', 'category');
     }
 }

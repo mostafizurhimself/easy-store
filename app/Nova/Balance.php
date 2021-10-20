@@ -295,6 +295,6 @@ class Balance extends Resource
             $query->where('location_id', $request->user()->location_id);
         }
 
-        return $query;
+        return $query->with('location', 'expenser');
     }
 }
