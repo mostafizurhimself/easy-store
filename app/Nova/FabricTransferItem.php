@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Enums\TransferStatus;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
@@ -20,8 +19,6 @@ use App\Rules\DistributionQuantityRuleForUpdate;
 
 class FabricTransferItem extends Resource
 {
-    use WithOutLocation;
-
     /**
      * The model the resource corresponds to.
      *

@@ -25,7 +25,7 @@ use App\Nova\Actions\FabricPurchaseItems\DownloadExcel;
 
 class FabricPurchaseItem extends Resource
 {
-    use WithOutLocation, SearchesRelations;
+    use SearchesRelations;
 
     /**
      * The model the resource corresponds to.

@@ -27,8 +27,6 @@ class Material extends Model implements HasMedia
      */
     protected static $logUnguarded = true;
 
-
-
     /**
      * Register the media collections
      *

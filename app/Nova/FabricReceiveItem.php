@@ -39,7 +39,7 @@ use App\Nova\Actions\FabricReceiveItems\ConfirmReceiveItem;
 
 class FabricReceiveItem extends Resource
 {
-    use WithOutLocation, SearchesRelations;
+    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *

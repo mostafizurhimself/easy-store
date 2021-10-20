@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Enums\TransferStatus;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
@@ -20,8 +19,6 @@ use App\Rules\DistributionQuantityRuleForUpdate;
 
 class MaterialTransferItem extends Resource
 {
-    use WithOutLocation;
-
     /**
      * The model the resource corresponds to.
      *
@@ -104,13 +101,23 @@ class MaterialTransferItem extends Resource
             Number::make('Quantity', 'transfer_quantity')
                 ->rules('required', 'numeric', 'min:0')
                 ->sortable()
-                ->creationRules(new DistributionQuantityRule(\App\Nova\MaterialTransferItem::uriKey(), $request->get('material_id') ?? $request->get('material')))
-                ->updateRules(new DistributionQuantityRuleForUpdate(
-                    \App\Nova\MaterialTransferItem::uriKey(),
-                    $request->get('material_id'),
-                    $this->resource->transferQuantity,
-                    $this->resource->materialId
-                ))
+                ->creationRules(function ($request) {
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new DistributionQuantityRule(\App\Nova\MaterialTransferItem::uriKey(), $request->get('material_id') ?? $request->get('material'))];
+                    }
+                    return [];
+                })
+                ->updateRules(function ($request) {
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new DistributionQuantityRuleForUpdate(
+                            \App\Nova\MaterialTransferItem::uriKey(),
+                            $request->get('material_id'),
+                            $this->resource->transferQuantity,
+                            $this->resource->materialId
+                        )];
+                    }
+                    return [];
+                })
                 ->onlyOnForms(),
 
             Text::make('Transfer Quantity', function () {
@@ -258,5 +265,23 @@ class MaterialTransferItem extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('invoice', 'material', 'unit');
     }
 }

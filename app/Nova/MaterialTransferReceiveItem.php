@@ -11,10 +11,8 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Laravel\Nova\Fields\Currency;
 use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
@@ -22,12 +20,11 @@ use App\Nova\Filters\TransferStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Actions\MaterialTransferReceiveItems\ConfirmReceiveItem;
 
 class MaterialTransferReceiveItem extends Resource
 {
-    use WithOutLocation;
-
     /**
      * The model the resource corresponds to.
      *
@@ -129,8 +126,18 @@ class MaterialTransferReceiveItem extends Resource
                 })
                 ->sortable()
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
-                ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\MaterialTransferItem::uriKey(), $this->resource->transferItemId, $this->resource->quantity))
+                ->creationRules(function ($request) {
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new ReceiveQuantityRule($request->viaResource, $request->viaResourceId)];
+                    }
+                    return [];
+                })
+                ->updateRules(function ($request) {
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new ReceiveQuantityRuleForUpdate(\App\Nova\MaterialTransferItem::uriKey(), $this->resource->transferItemId, $this->resource->quantity)];
+                    }
+                    return [];
+                })
                 ->onlyOnForms(),
 
             Text::make('Quantity', function () {
@@ -217,10 +224,10 @@ class MaterialTransferReceiveItem extends Resource
     public function actions(Request $request)
     {
         return [
-            (new ConfirmReceiveItem)->canSee(function($request){
+            (new ConfirmReceiveItem)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm material transfer receive items');
             })
-            ->confirmButtonText('Confirm'),
+                ->confirmButtonText('Confirm'),
         ];
     }
 
@@ -233,7 +240,7 @@ class MaterialTransferReceiveItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -245,10 +252,28 @@ class MaterialTransferReceiveItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('invoice', 'material', 'unit');
     }
 }
