@@ -12,7 +12,6 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
@@ -33,7 +32,6 @@ use App\Nova\Filters\BelongsToDependentLocationFilter;
 
 class ServiceReceive extends Resource
 {
-    use WithOutLocation;
     /**
      * The model the resource corresponds to.
      *
@@ -136,8 +134,18 @@ class ServiceReceive extends Resource
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ServiceReceiveQuantityRule($request->viaResource, $request->viaResourceId))
-                ->updateRules(new ServiceReceiveQuantityRuleForUpdate(\App\Nova\ServiceDispatch::uriKey(), $this->resource->dispatchId, $this->resource->quantity))
+                ->creationRules(function ($request) {
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new ServiceReceiveQuantityRule($request->viaResource, $request->viaResourceId)];
+                    }
+                    return [];
+                })
+                ->updateRules(function ($request) {
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new ServiceReceiveQuantityRuleForUpdate(\App\Nova\ServiceDispatch::uriKey(), $this->resource->dispatchId, $this->resource->quantity)];
+                    }
+                    return [];
+                })
                 ->onlyOnForms()
                 ->default(function ($request) {
                     if ($request->viaResource == \App\Nova\ServiceDispatch::uriKey() && !empty($request->viaResourceId)) {
@@ -304,5 +312,23 @@ class ServiceReceive extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('invoice.location', 'service', 'unit');
     }
 }

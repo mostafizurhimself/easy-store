@@ -27,7 +27,7 @@ class ServiceReceiveObserver
             $serviceReceive->rate = $dispatch->rate;
         }
 
-        if(empty($serviceReceive->unitId)){
+        if (empty($serviceReceive->unitId)) {
             $serviceReceive->unitId = $dispatch->service->unitId;
         }
         //Set Amount
@@ -44,6 +44,7 @@ class ServiceReceiveObserver
     {
         // Update the invoice  Receive Amount
         $serviceReceive->invoice->updateReceiveAmount();
+        $serviceReceive->invoice->updateReceiveQuantity();
 
         //Update the dispatch receive quantity
         $serviceReceive->dispatch->updateReceiveQuantity();
@@ -68,6 +69,7 @@ class ServiceReceiveObserver
     {
         // Update the invoice  Receive Amount
         $serviceReceive->invoice->updateReceiveAmount();
+        $serviceReceive->invoice->updateReceiveQuantity();
 
         //Update the dispatch receive quantity
         $serviceReceive->dispatch->updateReceiveQuantity();
@@ -92,6 +94,7 @@ class ServiceReceiveObserver
     {
         // Update the invoice  Receive Amount
         $serviceReceive->invoice->updateReceiveAmount();
+        $serviceReceive->invoice->updateReceiveQuantity();
 
         //Update the dispatch receive quantity
         $serviceReceive->dispatch->updateReceiveQuantity();
@@ -116,6 +119,7 @@ class ServiceReceiveObserver
     {
         // Update the invoice  Receive Amount
         $serviceReceive->invoice->updateReceiveAmount();
+        $serviceReceive->invoice->updateReceiveQuantity();
 
         //Update the dispatch receive quantity
         $serviceReceive->dispatch->updateReceiveQuantity();

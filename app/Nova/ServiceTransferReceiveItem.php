@@ -11,16 +11,15 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Rules\ServiceReceiveQuantityRule;
 use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Rules\ServiceReceiveQuantityRuleForUpdate;
 use App\Nova\Actions\ServiceTransferReceiveItems\DownloadPdf;
 use App\Nova\Actions\ServiceTransferReceiveItem\ConfirmReceive;
@@ -28,8 +27,6 @@ use App\Nova\Actions\ServiceTransferReceiveItems\DownloadExcel;
 
 class ServiceTransferReceiveItem extends Resource
 {
-    use WithOutLocation;
-
     /**
      * The model the resource corresponds to.
      *
@@ -124,8 +121,18 @@ class ServiceTransferReceiveItem extends Resource
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ServiceReceiveQuantityRule($request->viaResource, $request->viaResourceId))
-                ->updateRules(new ServiceReceiveQuantityRuleForUpdate(\App\Nova\ServiceTransferItem::uriKey(), $this->resource->dispatchId, $this->resource->quantity))
+                ->creationRules(function ($request) {
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new ServiceReceiveQuantityRule($request->viaResource, $request->viaResourceId)];
+                    }
+                    return [];
+                })
+                ->updateRules(function ($request) {
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new ServiceReceiveQuantityRuleForUpdate(\App\Nova\ServiceTransferItem::uriKey(), $this->resource->dispatchId, $this->resource->quantity)];
+                    }
+                    return [];
+                })
                 ->onlyOnForms()
                 ->default(function ($request) {
                     if ($request->viaResource == \App\Nova\ServiceTransferItem::uriKey() && !empty($request->viaResourceId)) {
@@ -270,5 +277,23 @@ class ServiceTransferReceiveItem extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('invoice', 'service', 'unit');
     }
 }
