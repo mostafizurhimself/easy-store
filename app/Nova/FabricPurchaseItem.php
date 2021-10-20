@@ -109,8 +109,8 @@ class FabricPurchaseItem extends Resource
     {
         return [
             // ID::make()->sortable(),
-            Text::make("Location", function () {
-                return $this->location->name;
+            Text::make("Location Name", function () {
+                return $this->purchaseOrder->location->name;
             })
                 ->sortable()
                 ->exceptOnForms()
@@ -146,8 +146,6 @@ class FabricPurchaseItem extends Resource
             })
                 ->sortable()
                 ->exceptOnForms(),
-
-
 
             Text::make('Receive Quantity', function () {
                 return $this->receiveQuantity . " " . $this->unitName;
@@ -309,5 +307,23 @@ class FabricPurchaseItem extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('fabric', 'unit', 'purchaseOrder.location');
     }
 }

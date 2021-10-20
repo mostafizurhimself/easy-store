@@ -23,19 +23,19 @@ use App\Rules\ReceiveQuantityRule;
 use Laravel\Nova\Fields\BelongsTo;
 use Treestoneit\TextWrap\TextWrap;
 use Easystore\RouterLink\RouterLink;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use AwesomeNova\Filters\DependentFilter;
 use App\Nova\Filters\PurchaseStatusFilter;
 use App\Rules\ReceiveQuantityRuleForUpdate;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Filters\BelongsToLocationFilter;
+use App\Nova\Filters\BelongsToSupplierFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReceiveItems\DownloadPdf;
 use App\Nova\Actions\FabricReceiveItems\DownloadExcel;
 use App\Nova\Filters\BelongsToDependentLocationFilter;
 use App\Nova\Actions\FabricReceiveItems\ConfirmReceiveItem;
-use App\Nova\Filters\BelongsToSupplierFilter;
 
 class FabricReceiveItem extends Resource
 {
@@ -121,7 +121,7 @@ class FabricReceiveItem extends Resource
     {
         return [
             Text::make("Location", function () {
-                return $this->location->name;
+                return $this->purchaseOrder->location->name;
             })
                 ->sortable()
                 ->exceptOnForms()
@@ -151,8 +151,16 @@ class FabricReceiveItem extends Resource
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
-                ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\FabricPurchaseItem::uriKey(), $this->resource->purchaseItemId, $this->resource->quantity))
+                ->creationRules(function ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        return new ReceiveQuantityRule($request->viaResource, $request->viaResourceId);
+                    }
+                })
+                ->updateRules(function ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        return new ReceiveQuantityRuleForUpdate(\App\Nova\FabricPurchaseItem::uriKey(), $this->resource->purchaseItemId, $this->resource->quantity);
+                    }
+                })
                 ->onlyOnForms()
                 ->default(function ($request) {
                     if ($request->viaResource == \App\Nova\FabricPurchaseItem::uriKey() && !empty($request->viaResourceId)) {
@@ -326,5 +334,23 @@ class FabricReceiveItem extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('purchaseOrder.location', 'purchaseOrder.supplier', 'purchaseItem', 'fabric', 'unit');
     }
 }

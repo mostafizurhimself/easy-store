@@ -106,8 +106,16 @@ class FabricReturnItem extends Resource
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ReturnQuantityRule(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric')))
-                ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId))
+                ->creationRules(function ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        return new ReturnQuantityRule(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'));
+                    }
+                })
+                ->updateRules(function ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        return new ReturnQuantityRuleForUpdate(\App\Nova\FabricReturnItem::uriKey(), $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId);
+                    }
+                })
                 ->onlyOnForms(),
 
             Text::make('Quantity', function () {
@@ -203,7 +211,7 @@ class FabricReturnItem extends Resource
      */
     public static function relatableFabrics(NovaRequest $request, $query)
     {
-        if(!$request->isResourceIndexRequest()){
+        if (!$request->isResourceIndexRequest()) {
             $invoice = \App\Models\FabricReturnInvoice::find($request->viaResourceId);
             if (empty($invoice)) {
                 $invoice = \App\Models\FabricReturnItem::find($request->resourceId)->invoice;
@@ -215,7 +223,7 @@ class FabricReturnItem extends Resource
             }
             return $query->whereHas('suppliers', function ($supplier) use ($invoice) {
                 $supplier->where('supplier_id', $invoice->supplierId)
-                ->where('location_id', $invoice->locationId);
+                    ->where('location_id', $invoice->locationId);
             })->whereNotIn('id', $invoice->fabricIds($fabricId));
         }
     }
@@ -246,5 +254,23 @@ class FabricReturnItem extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('invoice', 'fabric', 'unit');
     }
 }

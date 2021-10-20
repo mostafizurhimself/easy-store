@@ -137,7 +137,11 @@ class FabricDistribution extends Resource
                 ->sortable(),
 
             Select::make('Fabric', 'fabric_id')
-                ->options(\App\Models\Fabric::where('location_id', $request->user()->locationId)->pluck('name', 'id'))
+                ->options(function () use ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        return \App\Models\Fabric::where('location_id', $request->user()->locationId)->pluck('name', 'id');
+                    }
+                })
                 ->searchable()
                 ->onlyOnForms()
                 ->canSee(function ($request) {
@@ -167,8 +171,16 @@ class FabricDistribution extends Resource
                 ->hideFromIndex(),
 
             Number::make('Quantity')
-                ->creationRules(new DistributionQuantityRule(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric')))
-                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId))
+                ->creationRules(function ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        return new DistributionQuantityRule(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'));
+                    }
+                })
+                ->updateRules(function ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        return new DistributionQuantityRuleForUpdate(\App\Nova\FabricDistribution::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'), $this->resource->quantity, $this->resource->fabricId);
+                    }
+                })
                 ->rules('required', 'numeric', 'min:1')
                 ->onlyOnForms(),
 
@@ -305,5 +317,27 @@ class FabricDistribution extends Resource
                 ->onlyOnTableRow()
                 ->withoutConfirmation(),
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'receiver', 'fabric', 'unit');
     }
 }

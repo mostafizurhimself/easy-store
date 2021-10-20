@@ -22,10 +22,10 @@ use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use App\Nova\Filters\ReceiverFilter;
 use Easystore\RouterLink\RouterLink;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Filters\TransferStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Actions\FabricTransferInvoices\MarkAsDraft;
 use App\Nova\Actions\FabricTransferInvoices\ConfirmInvoice;
 use App\Nova\Lenses\FabricTransferInvoice\TransferInvoices;
@@ -171,10 +171,17 @@ class FabricTransferInvoice extends Resource
                         ->hideFromIndex(),
 
                     Select::make('Receiver', 'receiver_id')
-                        ->options(function () {
-                            return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                        ->options(function () use ($request) {
+                            if (!$request->isResourceIndexRequest()) {
+                                return \App\Models\Location::all()->whereNotIn('id', [request()->user()->locationId])->pluck('name', 'id');
+                            }
                         })
-                        ->rules('required', new ReceiverRule($request->get('location') ?? $request->user()->locationId))
+                        ->required()
+                        ->rules(function ($request) {
+                            if (!$request->isResourceIndexRequest()) {
+                                return new ReceiverRule($request->get('location') ?? $request->user()->locationId);
+                            }
+                        })
                         ->searchable()
                         ->onlyOnForms(),
 
@@ -262,12 +269,12 @@ class FabricTransferInvoice extends Resource
             (new MarkAsDraft)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can mark as draft fabric transfer invoices') || $request->user()->isSuperAdmin();
             })
-            ->canRun(function ($request) {
-                return $request->user()->hasPermissionTo('can mark as draft fabric transfer invoices') || $request->user()->isSuperAdmin();
-            })
-            ->onlyOnDetail()
-            ->confirmButtonText('Mark As Draft')
-            ->confirmText('Are you sure want to mark the transfer invoice as draft?'),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can mark as draft fabric transfer invoices') || $request->user()->isSuperAdmin();
+                })
+                ->onlyOnDetail()
+                ->confirmButtonText('Mark As Draft')
+                ->confirmText('Are you sure want to mark the transfer invoice as draft?'),
 
             (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm fabric transfer invoices');
@@ -284,5 +291,27 @@ class FabricTransferInvoice extends Resource
                 ->confirmText('Are you sure want to generate invoice now?')
                 ->onlyOnDetail(),
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'receiver');
     }
 }

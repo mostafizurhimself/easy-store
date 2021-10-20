@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits;
+
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 trait WithOutLocation

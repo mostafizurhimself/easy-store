@@ -18,9 +18,9 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Filters\ReturnStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\FabricReturnInvoices\MarkAsDraft;
 use App\Nova\Actions\FabricReturnInvoices\Recalculate;
@@ -280,5 +280,27 @@ class FabricReturnInvoice extends Resource
                 ->confirmText('Are you sure want to generate invoice now?')
                 ->onlyOnDetail(),
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'supplier');
     }
 }
