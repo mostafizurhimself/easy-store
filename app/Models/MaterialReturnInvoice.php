@@ -27,12 +27,7 @@ class MaterialReturnInvoice extends Model implements HasMedia
      */
     protected static $logUnguarded = true;
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['supplier', 'location'];
+
 
     /**
      * The attributes that should be mutated to dates.

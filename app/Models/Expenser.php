@@ -18,12 +18,7 @@ class Expenser extends Model implements HasMedia
      */
     protected $guarded = [];
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['location'];
+
 
 
     /**

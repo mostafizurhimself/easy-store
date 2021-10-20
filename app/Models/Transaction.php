@@ -12,11 +12,4 @@ class Transaction extends Model
      * @var array
      */
     protected $guarded = [];
-
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['location'];
 }

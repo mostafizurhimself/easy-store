@@ -11,12 +11,7 @@ class Education extends Model
      */
     protected $guarded = [];
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['location'];
+
 
 
     /**

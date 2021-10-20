@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Asset;
+use App\Models\Leave;
 use App\Models\Fabric;
 use App\Models\Expense;
 use App\Models\Product;
 use App\Models\Service;
+use App\Models\Setting;
 use App\Models\Employee;
 use App\Models\Expenser;
 use App\Models\Material;
@@ -28,6 +30,7 @@ use App\Models\EmployeeGatePass;
 use App\Models\FabricReturnItem;
 use App\Models\FinishingInvoice;
 use App\Observers\AssetObserver;
+use App\Observers\LeaveObserver;
 use App\Models\AssetPurchaseItem;
 use App\Models\FabricReceiveItem;
 use App\Observers\FabricObserver;
@@ -41,6 +44,7 @@ use App\Models\ProductRequisition;
 use App\Observers\ExpenseObserver;
 use App\Observers\ProductObserver;
 use App\Observers\ServiceObserver;
+use App\Observers\SettingObserver;
 use App\Models\FabricPurchaseOrder;
 use App\Models\FabricReturnInvoice;
 use App\Models\MaterialReceiveItem;
@@ -82,7 +86,8 @@ use App\Observers\EmployeeGatePassObserver;
 use App\Observers\FabricReturnItemObserver;
 use App\Observers\FinishingInvoiceObserver;
 use App\Models\AssetDistributionReceiveItem;
-use App\Models\Leave;
+use App\Models\Location;
+use App\Models\Unit;
 use App\Observers\AssetPurchaseItemObserver;
 use App\Observers\FabricReceiveItemObserver;
 use App\Observers\AssetPurchaseOrderObserver;
@@ -112,7 +117,8 @@ use App\Observers\FabricTransferReceiveItemObserver;
 use App\Observers\ServiceTransferReceiveItemObserver;
 use App\Observers\MaterialTransferReceiveItemObserver;
 use App\Observers\AssetDistributionReceiveItemObserver;
-use App\Observers\LeaveObserver;
+use App\Observers\LocationObserver;
+use App\Observers\UnitObserver;
 
 class ObserverServiceProvider extends ServiceProvider
 {
@@ -133,6 +139,7 @@ class ObserverServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Location::observe(LocationObserver::class);
         Employee::observe(EmployeeObserver::class);
         Attendance::observe(AttendanceObserver::class);
         Leave::observe(LeaveObserver::class);
@@ -188,5 +195,7 @@ class ObserverServiceProvider extends ServiceProvider
         GoodsGatePass::observe(GoodsGatePassObserver::class);
         ManualGatePass::observe(ManualGatePassObserver::class);
         EmployeeGatePass::observe(EmployeeGatePassObserver::class);
+        Unit::observe(UnitObserver::class);
+        Setting::observe(SettingObserver::class);
     }
 }

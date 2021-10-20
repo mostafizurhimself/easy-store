@@ -11,10 +11,10 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Laravel\Nova\Fields\BelongsTo;
 
 class AttendanceReportAdmin extends Action
 {
@@ -69,7 +69,7 @@ class AttendanceReportAdmin extends Action
                 ->searchable()
                 ->required()
                 ->options(function () {
-                    return Location::pluck('name', 'id')->toArray();
+                    return Location::filterOptions();
                 }),
 
             Date::make('Date', 'date')

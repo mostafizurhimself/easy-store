@@ -18,12 +18,7 @@ class GiftGatePass extends Model
      */
     protected $guarded = [];
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['location'];
+
 
     /**
      * The attributes that should be mutated to dates.

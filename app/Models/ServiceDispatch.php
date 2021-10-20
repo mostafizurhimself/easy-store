@@ -27,12 +27,7 @@ class ServiceDispatch extends Model
      */
     protected static $logUnguarded = true;
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['unit'];
+
 
 
     /**

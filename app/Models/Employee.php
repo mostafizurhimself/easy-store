@@ -27,16 +27,6 @@ class Employee extends Model implements HasMedia
      */
     protected $guarded = [];
 
-    // /**
-    //  * The "booted" method of the model.
-    //  *
-    //  * @return void
-    //  */
-    // protected static function booted()
-    // {
-    //     static::addGlobalScope(new ResignedScope);
-    // }
-
     /**
      * Scope a query to only without resigned employees.
      *
@@ -47,7 +37,6 @@ class Employee extends Model implements HasMedia
     {
         return $query->where('status', "!=", EmployeeStatus::RESIGNED());
     }
-
 
     /**
      * Register the media collections
@@ -70,13 +59,6 @@ class Employee extends Model implements HasMedia
         'joining_date',
         'resign_date',
     ];
-
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['department', 'designation', 'section', 'shift', 'location', 'media', 'address'];
 
     /**
      * The accessors to append to the model's array form.
@@ -415,39 +397,6 @@ class Employee extends Model implements HasMedia
         return static::all()->map(function ($employee) {
             return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
         });
-    }
-
-
-    /**
-     * Get the approvers list
-     *
-     * @return array
-     */
-    public static function approvers()
-    {
-        if (Settings::approvers()) {
-            return static::whereIn('id', Settings::approvers())->get()->map(function ($employee) {
-                return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
-            });
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the get pass approvers list
-     *
-     * @return array
-     */
-    public static function gatePassApprovers()
-    {
-        if (Settings::gatePassApprovers()) {
-            return static::whereIn('id', Settings::gatePassApprovers())->get()->map(function ($employee) {
-                return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
-            });
-        }
-
-        return null;
     }
 
     /**

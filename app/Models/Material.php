@@ -27,12 +27,7 @@ class Material extends Model implements HasMedia
      */
     protected static $logUnguarded = true;
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['unit', 'location', 'category'];
+
 
     /**
      * Register the media collections

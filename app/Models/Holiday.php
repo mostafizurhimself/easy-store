@@ -19,11 +19,4 @@ class Holiday extends Model
      * @var array
      */
     protected $dates = ['start', 'end'];
-
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['location'];
 }

@@ -27,19 +27,14 @@ class AssetPurchaseItem extends Model
      */
     protected static $logUnguarded = true;
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['unit'];
+
 
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $appends = ['date', 'location', 'unitName'];
+    protected $appends = ['date', 'unitName'];
 
     /**
      * Set the model readable id prefix

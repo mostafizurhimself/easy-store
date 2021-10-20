@@ -20,12 +20,7 @@ class FabricPurchaseOrder extends Model implements HasMedia
      */
     protected $guarded = [];
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['supplier', 'location'];
+
 
     /**
      * The attributes that should be mutated to dates.

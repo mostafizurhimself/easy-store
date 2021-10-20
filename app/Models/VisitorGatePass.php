@@ -41,12 +41,7 @@ class VisitorGatePass extends Model
      */
     protected $dates = ['in', 'out'];
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['employee', 'location'];
+
 
     /**
      * The accessors to append to the model's array form.

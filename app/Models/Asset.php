@@ -20,12 +20,7 @@ class Asset extends Model implements HasMedia
      */
     protected $guarded = [];
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['unit', 'location'];
+
 
     /**
      * Add all attributes that are not listed in $guarded for log

@@ -3,6 +3,7 @@
 namespace App\Nova\Actions\GoodsGatePasses;
 
 use App\Enums\GatePassStatus;
+use App\Facades\Helper;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
@@ -24,25 +25,24 @@ class ConfirmGatePass extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
-           if($model->status == GatePassStatus::DRAFT()){
+        foreach ($models as $model) {
+            if ($model->status == GatePassStatus::DRAFT()) {
                 // Add approver
                 $model->approve()->create(['employee_id' => $fields->approved_by]);
                 //Update the model status
                 $model->status = GatePassStatus::CONFIRMED();
                 $model->save();
-           }else{
-               return Action::danger('Already Confirmed.');
-           }
+            } else {
+                return Action::danger('Already Confirmed.');
+            }
         }
 
 
-        if($models->count() > 1){
+        if ($models->count() > 1) {
             return Action::message('Gate passes confirmed successfully.');
         }
 
         return Action::message('Gate pass confirmed successfully.');
-
     }
 
     /**
@@ -55,7 +55,7 @@ class ConfirmGatePass extends Action
         return [
             Select::make('Approved By')
                 ->rules('required')
-                ->options(\App\Models\Employee::gatePassApprovers())
+                ->options(Helper::gatePassApprovers())
         ];
     }
 }

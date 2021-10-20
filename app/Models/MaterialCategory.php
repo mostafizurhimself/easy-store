@@ -16,12 +16,7 @@ class MaterialCategory extends Model
      */
     protected $guarded = [];
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['location'];
+
 
     /**
      * Determines one-to-many relation

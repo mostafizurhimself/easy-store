@@ -140,7 +140,7 @@ class SubSection extends Resource
             BelongsTo::make('Department')
                 ->onlyOnForms()
                 ->canSee(function ($request) {
-                    if (!($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data'))) {
+                    if ($request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data')) {
                         return false;
                     }
                     return true;
@@ -258,5 +258,28 @@ class SubSection extends Resource
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
         return '/resources/' . static::uriKey();
+    }
+
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'department', 'section', 'employee');
     }
 }

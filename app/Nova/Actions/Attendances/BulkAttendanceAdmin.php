@@ -4,20 +4,17 @@ namespace App\Nova\Actions\Attendances;
 
 use Carbon\Carbon;
 use App\Models\Employee;
-use App\Models\Location;
-use Michielfb\Time\Time;
 use App\Models\Attendance;
+use App\Models\Location;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Fields\Date;
 use NovaAjaxSelect\AjaxSelect;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
-use Laravel\Nova\Fields\BelongsTo;
 use Laraning\NovaTimeField\TimeField;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class BulkAttendanceAdmin extends Action
 {
@@ -83,7 +80,7 @@ class BulkAttendanceAdmin extends Action
                 ->default(Carbon::now()),
 
             Select::make('Location')
-                ->options(Location::pluck('name', 'id')->toArray())
+                ->options(Location::filterOptions())
                 ->searchable(),
 
             AjaxSelect::make('Department')

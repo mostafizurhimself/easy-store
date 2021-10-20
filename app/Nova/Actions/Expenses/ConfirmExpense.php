@@ -25,7 +25,7 @@ class ConfirmExpense extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
+        foreach ($models as $model) {
 
             //Update the expenser balance
             $model->expenser->decrement('balance', $model->amount);
@@ -47,7 +47,7 @@ class ConfirmExpense extends Action
         return [
             Select::make('Approved By')
                 ->rules('required')
-                ->options(\App\Models\Employee::approvers())
+                ->options(\App\Facades\Helper::approvers())
         ];
     }
 }
