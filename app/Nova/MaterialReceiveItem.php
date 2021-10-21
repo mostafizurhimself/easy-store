@@ -39,7 +39,7 @@ use App\Nova\Actions\MaterialReceiveItems\ConfirmReceiveItem;
 
 class MaterialReceiveItem extends Resource
 {
-    use WithOutLocation, SearchesRelations;
+    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
@@ -152,8 +152,18 @@ class MaterialReceiveItem extends Resource
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
                 ->sortable()
-                ->creationRules(new ReceiveQuantityRule($request->viaResource, $request->viaResourceId))
-                ->updateRules(new ReceiveQuantityRuleForUpdate(\App\Nova\MaterialPurchaseItem::uriKey(), $this->resource->purchaseItemId, $this->resource->quantity))
+                ->creationRules(function ($request) {
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new ReceiveQuantityRule($request->viaResource, $request->viaResourceId)];
+                    }
+                    return [];
+                })
+                ->updateRules(function ($request) {
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new ReceiveQuantityRuleForUpdate(\App\Nova\MaterialPurchaseItem::uriKey(), $this->resource->purchaseItemId, $this->resource->quantity)];
+                    }
+                    return [];
+                })
                 ->onlyOnForms()
                 ->default(function ($request) {
                     if ($request->viaResource == \App\Nova\MaterialPurchaseItem::uriKey() && !empty($request->viaResourceId)) {
@@ -325,5 +335,23 @@ class MaterialReceiveItem extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('purchaseOrder.location', 'purchaseItem', 'material', 'unit', 'purchaseOrder.supplier');
     }
 }

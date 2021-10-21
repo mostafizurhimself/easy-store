@@ -25,21 +25,20 @@ class ConvertUnit extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model)
-        {
-            if($model->unitId == $fields->unit){
+        foreach ($models as $model) {
+            if ($model->unitId == $fields->unit) {
                 return Action::danger('Same unit value, conversion failed!');
-            }else{
-                if($model->openingQuantity != 0){
+            } else {
+                if ($model->openingQuantity != 0) {
                     $model->openingQuantity = round($model->openingQuantity / $fields->conversion_rate, 2);
                 }
 
-                if($model->quantity != 0){
+                if ($model->quantity != 0) {
 
                     $model->quantity = round($model->quantity / $fields->conversion_rate, 2);
                 }
 
-                if($model->alertQuantity != 0){
+                if ($model->alertQuantity != 0) {
 
                     $model->alertQuantity = round($model->alertQuantity / $fields->conversion_rate, 2);
                 }
@@ -62,7 +61,7 @@ class ConvertUnit extends Action
         return [
             Select::make("Unit")
                 ->rules('required')
-                ->options(Unit::all()->pluck('name', 'id')),
+                ->options(Unit::selectOptions()),
 
             Number::make('Conversion Rate')
                 ->rules('required', 'numeric'),

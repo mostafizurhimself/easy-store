@@ -37,12 +37,7 @@ class FabricTransferItem extends Model
         return "FT";
     }
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['unit'];
+
 
     /**
      * Set the model readable id length
@@ -58,7 +53,7 @@ class FabricTransferItem extends Model
      */
     public function invoice()
     {
-       return $this->belongsTo(FabricTransferInvoice::class, 'invoice_id')->withTrashed();
+        return $this->belongsTo(FabricTransferInvoice::class, 'invoice_id')->withTrashed();
     }
 
     /**
@@ -68,7 +63,7 @@ class FabricTransferItem extends Model
      */
     public function fabric()
     {
-       return $this->belongsTo(Fabric::class)->withTrashed();
+        return $this->belongsTo(Fabric::class)->withTrashed();
     }
 
     /**
@@ -78,7 +73,7 @@ class FabricTransferItem extends Model
      */
     public function receiveItems()
     {
-       return $this->hasMany(FabricTransferReceiveItem::class, 'transfer_item_id');
+        return $this->hasMany(FabricTransferReceiveItem::class, 'transfer_item_id');
     }
 
     /**
@@ -102,14 +97,14 @@ class FabricTransferItem extends Model
         return $query->where('status', TransferStatus::DRAFT());
     }
 
-        /**
+    /**
      * Determines one-to-many relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function unit()
     {
-       return $this->belongsTo(Unit::class)->withTrashed();
+        return $this->belongsTo(Unit::class)->withTrashed();
     }
 
     /**
@@ -134,7 +129,7 @@ class FabricTransferItem extends Model
         $this->save();
     }
 
-     /**
+    /**
      * Update total receive amount
      *
      * @return void
@@ -152,21 +147,18 @@ class FabricTransferItem extends Model
      */
     public function updateStatus()
     {
-        if($this->receiveItems()->exists() && ($this->transferQuantity == $this->receiveQuantity)){
-            $this->status= TransferStatus::RECEIVED();
+        if ($this->receiveItems()->exists() && ($this->transferQuantity == $this->receiveQuantity)) {
+            $this->status = TransferStatus::RECEIVED();
         }
 
-        if($this->receiveItems()->exists() && ($this->transferQuantity != $this->receiveQuantity)){
-            $this->status= TransferStatus::PARTIAL();
+        if ($this->receiveItems()->exists() && ($this->transferQuantity != $this->receiveQuantity)) {
+            $this->status = TransferStatus::PARTIAL();
         }
 
-        if(!$this->receiveItems()->exists()){
-            $this->status= TransferStatus::CONFIRMED();
+        if (!$this->receiveItems()->exists()) {
+            $this->status = TransferStatus::CONFIRMED();
         }
 
         $this->save();
-
     }
-
-
 }

@@ -46,13 +46,6 @@ class AssetReceiveItem extends Model implements HasMedia
    protected $dates = ['date'];
 
    /**
-    * The relations to eager load on every query.
-    *
-    * @var array
-    */
-   protected $with = ['unit'];
-
-   /**
     * The accessors to append to the model's array form.
     *
     * @var array

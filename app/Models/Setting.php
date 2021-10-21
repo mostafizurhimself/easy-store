@@ -54,7 +54,6 @@ class Setting extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-       $this->addMediaCollection('settings')->singleFile();
+        $this->addMediaCollection('settings')->singleFile();
     }
-
 }

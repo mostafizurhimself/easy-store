@@ -28,12 +28,7 @@ class Fabric extends Model implements HasMedia
      */
     protected static $logUnguarded = true;
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['unit', 'location', 'category'];
+
 
     /**
      * The accessors to append to the model's array form.

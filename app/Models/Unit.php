@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CamelCasing;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,4 +25,17 @@ class Unit extends Model
      * @var boolean
      */
     protected static $logUnguarded = true;
+
+    /**
+     * Get the filter options of locations
+     *
+     * @return array
+     */
+    public static function selectOptions()
+    {
+        // Cache::forget('nova-unit-select-options');
+        return Cache::remember('nova-unit-select-options', 3600 * 24, function () {
+            return self::pluck('name', 'id')->toArray();
+        });
+    }
 }

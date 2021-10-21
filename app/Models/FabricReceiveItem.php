@@ -46,18 +46,11 @@ class FabricReceiveItem extends Model implements HasMedia
    protected $dates = ['date'];
 
    /**
-    * The relations to eager load on every query.
-    *
-    * @var array
-    */
-   protected $with = ['unit'];
-
-   /**
     * The accessors to append to the model's array form.
     *
     * @var array
     */
-   protected $appends = ['location', 'unitName'];
+   protected $appends = ['unitName'];
 
    /**
     * Add all attributes that are not listed in $guarded for log
@@ -124,15 +117,5 @@ class FabricReceiveItem extends Model implements HasMedia
    public function getUnitNameAttribute()
    {
       return $this->unit->name;
-   }
-
-   /**
-    * Get the location of the model
-    *
-    * @return string
-    */
-   public function getLocationAttribute()
-   {
-      return $this->purchaseOrder->location;
    }
 }

@@ -9,11 +9,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
-use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
-use App\Enums\RequisitionStatus;
 use Laravel\Nova\Fields\HasMany;
 use App\Enums\DistributionStatus;
 use App\Nova\Filters\AssetFilter;
@@ -36,7 +32,6 @@ use App\Rules\DistributionQuantityRuleOnRequisitionForUpdate;
 
 class AssetDistributionItem extends Resource
 {
-    use WithOutLocation;
     /**
      * The model the resource corresponds to.
      *
@@ -149,23 +144,37 @@ class AssetDistributionItem extends Resource
                 ->rules('required', 'numeric', 'min:0')
                 ->sortable()
                 ->creationRules(
-                    new DistributionQuantityRule(\App\Nova\AssetDistributionItem::uriKey(), $request->get('asset_id') ?? $request->get('asset')),
-                    new DistributionQuantityRuleOnRequisition($request->viaResource, $request->viaResourceId, $request->get('asset_id') ?? $request->get('asset')),
+                    function ($request) {
+                        if ($request->isCreateOrAttachRequest()) {
+                            return [
+                                new DistributionQuantityRule(\App\Nova\AssetDistributionItem::uriKey(), $request->get('asset_id') ?? $request->get('asset')),
+                                new DistributionQuantityRuleOnRequisition($request->viaResource, $request->viaResourceId, $request->get('asset_id') ?? $request->get('asset')),
+                            ];
+                        }
+                        return [];
+                    }
                 )
                 ->updateRules(
-                    new DistributionQuantityRuleForUpdate(
-                        \App\Nova\AssetDistributionItem::uriKey(),
-                        $request->get('asset_id') ?? $request->get('asset'),
-                        $this->resource->distributionQuantity,
-                        $this->resource->assetId
-                    ),
-                    new DistributionQuantityRuleOnRequisitionForUpdate(
-                        $request->viaResource,
-                        $request->viaResourceId,
-                        $request->get('asset_id') ?? $request->get('asset'),
-                        $this->resource->assetId,
-                        $this->resource->distributionQuantity
-                    ),
+                    function ($request) {
+                        if ($request->isUpdateOrUpdateAttachedRequest()) {
+                            return [
+                                new DistributionQuantityRuleForUpdate(
+                                    \App\Nova\AssetDistributionItem::uriKey(),
+                                    $request->get('asset_id') ?? $request->get('asset'),
+                                    $this->resource->distributionQuantity,
+                                    $this->resource->assetId
+                                ),
+                                new DistributionQuantityRuleOnRequisitionForUpdate(
+                                    $request->viaResource,
+                                    $request->viaResourceId,
+                                    $request->get('asset_id') ?? $request->get('asset'),
+                                    $this->resource->assetId,
+                                    $this->resource->distributionQuantity
+                                ),
+                            ];
+                        }
+                        return [];
+                    }
                 )
                 ->onlyOnForms(),
 
@@ -373,5 +382,23 @@ class AssetDistributionItem extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('invoice.location', 'asset', 'unit', 'invoice.receiver');
     }
 }

@@ -25,27 +25,27 @@ class ReceiveQuantityRule implements Rule
      */
     public function __construct($viaResource, $itemId)
     {
-        if($viaResource == \App\Nova\FabricPurchaseItem::uriKey()){
+        if ($viaResource == \App\Nova\FabricPurchaseItem::uriKey()) {
             $this->item = FabricPurchaseItem::find($itemId);
         }
 
-        if($viaResource == \App\Nova\FabricTransferItem::uriKey()){
+        if ($viaResource == \App\Nova\FabricTransferItem::uriKey()) {
             $this->item = FabricTransferItem::find($itemId);
         }
 
-        if($viaResource == \App\Nova\MaterialPurchaseItem::uriKey()){
+        if ($viaResource == \App\Nova\MaterialPurchaseItem::uriKey()) {
             $this->item = MaterialPurchaseItem::find($itemId);
         }
 
-        if($viaResource == \App\Nova\MaterialTransferItem::uriKey()){
+        if ($viaResource == \App\Nova\MaterialTransferItem::uriKey()) {
             $this->item = MaterialTransferItem::find($itemId);
         }
 
-        if($viaResource == \App\Nova\AssetPurchaseItem::uriKey()){
+        if ($viaResource == \App\Nova\AssetPurchaseItem::uriKey()) {
             $this->item = AssetPurchaseItem::find($itemId);
         }
 
-        if($viaResource == \App\Nova\AssetDistributionItem::uriKey()){
+        if ($viaResource == \App\Nova\AssetDistributionItem::uriKey()) {
             $this->item = AssetDistributionItem::find($itemId);
         }
     }

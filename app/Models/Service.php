@@ -20,12 +20,7 @@ class Service extends Model implements HasMedia
      */
     protected $guarded = ['totalRemainingQuantity'];
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['unit', 'location'];
+
 
     /**
      * Add all attributes that are not listed in $guarded for log

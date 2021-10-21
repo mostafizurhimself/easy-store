@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
 
 class Settings
 {
@@ -13,7 +14,9 @@ class Settings
      */
     public function application()
     {
-        return json_decode(Setting::where('name', Setting::APPLICATION_SETTINGS)->first()->settings);
+        return Cache::remember('application-settings', 3600 * 24, function () {
+            return json_decode(Setting::where('name', Setting::APPLICATION_SETTINGS)->first()->settings);
+        });
     }
 
     /**

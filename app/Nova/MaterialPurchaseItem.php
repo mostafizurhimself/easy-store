@@ -24,7 +24,7 @@ use App\Nova\Actions\MaterialPurchaseItems\DownloadExcel;
 
 class MaterialPurchaseItem extends Resource
 {
-    use WithOutLocation, SearchesRelations;
+    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
@@ -302,5 +302,23 @@ class MaterialPurchaseItem extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('purchaseOrder.location', 'material', 'unit');
     }
 }

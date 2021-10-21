@@ -29,7 +29,7 @@ class AlertQuantities extends Lens
     public static function query(LensRequest $request, $query)
     {
         return $request->withOrdering($request->withFilters(
-            $query->where('alert_quantity', '>=', 'quantity')
+            $query->with('location', 'category', 'unit')->where('alert_quantity', '>=', 'quantity')
         ));
     }
 

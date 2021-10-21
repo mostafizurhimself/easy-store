@@ -25,12 +25,7 @@ class ServiceInvoice extends Model
      */
     protected static $logUnguarded = true;
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['location', 'provider'];
+
 
 
     /**
@@ -63,7 +58,7 @@ class ServiceInvoice extends Model
      *
      * @var array
      */
-    protected $appends = ['totalDispatchQuantity', 'totalReceiveQuantity', 'totalRemainingQuantity'];
+    protected $appends = ['totalRemainingQuantity'];
 
     /**
      * Get the model goodsGatePass
@@ -116,6 +111,17 @@ class ServiceInvoice extends Model
     }
 
     /**
+     * Update the total dispatch quantity
+     *
+     * @return void
+     */
+    public function updateDispatchQuantity()
+    {
+        $this->totalDispatchQuantity = $this->dispatches->sum('dispatch_quantity');
+        $this->save();
+    }
+
+    /**
      * Update the total dispatch amount
      *
      * @return void
@@ -123,6 +129,17 @@ class ServiceInvoice extends Model
     public function updateDispatchAmount()
     {
         $this->totalDispatchAmount = $this->dispatches->sum('dispatch_amount');
+        $this->save();
+    }
+
+    /**
+     * Update the total receive quantity
+     *
+     * @return void
+     */
+    public function updateReceiveQuantity()
+    {
+        $this->totalReceiveQuantity = $this->receives->sum('quantity');
         $this->save();
     }
 
@@ -208,26 +225,6 @@ class ServiceInvoice extends Model
             $this->status = DispatchStatus::DRAFT();
             $this->save();
         }
-    }
-
-    /**
-     * Get total dispatch quantity
-     * 
-     * @return double
-     */
-    public function getTotalDispatchQuantityAttribute()
-    {
-        return $this->dispatches()->sum('dispatch_quantity');
-    }
-
-    /**
-     * Get total receive quantity
-     * 
-     * @return double
-     */
-    public function getTotalReceiveQuantityAttribute()
-    {
-        return $this->receives()->sum('quantity');
     }
 
     /**

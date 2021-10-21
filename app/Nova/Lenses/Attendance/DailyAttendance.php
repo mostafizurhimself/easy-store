@@ -27,7 +27,7 @@ class DailyAttendance extends Lens
     public static function query(LensRequest $request, $query)
     {
         return $request->withOrdering($request->withFilters(
-            $query->where('date', Carbon::now()->format('Y-m-d'))
+            $query->with('location', 'employee')->where('date', Carbon::now()->format('Y-m-d'))
         ));
     }
 

@@ -31,7 +31,7 @@ class ResignedEmployees extends Lens
             $query->where('status', EmployeeStatus::RESIGNED());
         }
         return $request->withOrdering($request->withFilters(
-            $query
+            $query->with('location', 'department', 'designation')
         ));
     }
 

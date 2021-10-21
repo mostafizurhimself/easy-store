@@ -25,12 +25,7 @@ class EmployeeGatePass extends Model
      */
     protected $dates = ['in', 'out', 'approved_in', 'approved_out'];
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['employee', 'location'];
+
 
     /**
      * The accessors to append to the model's array form.

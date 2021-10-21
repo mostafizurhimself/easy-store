@@ -204,22 +204,27 @@ class Role extends Resource
             //Permissions for super-admin
             PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
                 ->withGroups()
-                ->options(Permission::whereIn('id', request()->user()->getAllPermissions()->pluck('id'))
-                    ->show()
-                    ->get()->sortBy('group_order')->map(function ($permission, $key) {
-                        return [
-                            'group'  => __(Str::title($permission->group)),
-                            'option' => $permission->name,
-                            'label'  => __(Str::title($permission->name)),
-                        ];
-                    })
-                    ->groupBy('group')->toArray())
+                ->options(function () use ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        return Permission::whereIn('id', request()->user()->getAllPermissions()->pluck('id'))
+                            ->show()
+                            ->get()->sortBy('group_order')->map(function ($permission, $key) {
+                                return [
+                                    'group'  => __(Str::title($permission->group)),
+                                    'option' => $permission->name,
+                                    'label'  => __(Str::title($permission->name)),
+                                ];
+                            })
+                            ->groupBy('group')->toArray();
+                    }
+                })
                 ->canSee(function ($request) {
                     return $request->user()->hasPermissionTo('assign permissions') || $request->user()->isSuperAdmin();
-                }),
+                })
+                ->hideFromIndex(),
 
             Text::make(__('Users'), function () {
-                return count($this->users);
+                return $this->users->count();
             })
                 ->sortable()
                 ->exceptOnForms(),
@@ -270,6 +275,6 @@ class Role extends Resource
             return $query->orderBy(key(static::$sort), reset(static::$sort));
         }
 
-        return $query;
+        return $query->with('users');
     }
 }

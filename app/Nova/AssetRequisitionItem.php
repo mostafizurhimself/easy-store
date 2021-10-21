@@ -7,7 +7,6 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use App\Enums\RequisitionStatus;
@@ -19,7 +18,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 
 class AssetRequisitionItem extends Resource
 {
-    use WithOutLocation, SearchesRelations;
+    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
@@ -69,7 +68,7 @@ class AssetRequisitionItem extends Resource
      */
     public static function label()
     {
-      return "Requisition Items";
+        return "Requisition Items";
     }
 
     /**
@@ -103,31 +102,33 @@ class AssetRequisitionItem extends Resource
                 ->onlyOnDetail()
                 ->sortable(),
 
-            Text::make('Asset', function(){
-                return $this->asset->name."({$this->asset->code})";
+            Text::make('Asset', function () {
+                return $this->asset->name . "({$this->asset->code})";
             })
                 ->exceptOnForms()
                 ->sortable(),
 
             Select::make('Asset', 'asset_id')
-                ->options(function(){
-                    //Get the requisition from request on create
-                    $requisition = \App\Models\AssetRequisition::find(request()->viaResourceId);
+                ->options(function () use ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        //Get the requisition from request on create
+                        $requisition = \App\Models\AssetRequisition::find(request()->viaResourceId);
 
-                    //Get the requisition without request/after create
-                    if(empty($requisition)){
-                        $requisition = \App\Models\AssetRequisition::find($this->resource->requisitionId);
-                    }
+                        //Get the requisition without request/after create
+                        if (empty($requisition)) {
+                            $requisition = \App\Models\AssetRequisition::find($this->resource->requisitionId);
+                        }
 
-                    try {
-                        $assetId = request()->findResourceOrFail()->assetId;
-                    } catch (\Throwable $th) {
-                        $assetId = null;
+                        try {
+                            $assetId = request()->findResourceOrFail()->assetId;
+                        } catch (\Throwable $th) {
+                            $assetId = null;
+                        }
+                        return \App\Models\Asset::where('location_id', $requisition->receiverId)
+                            ->whereNotIn('id', $requisition->assetIds($assetId))->get()->map(function ($asset) {
+                                return ['value' => $asset->id, 'label' => $asset->name . "({$asset->code})"];
+                            });
                     }
-                    return \App\Models\Asset::where('location_id', $requisition->receiverId)
-                        ->whereNotIn('id', $requisition->assetIds($assetId))->get()->map(function($asset){
-                            return [ 'value' => $asset->id, 'label' => $asset->name."({$asset->code})" ];
-                        });
                 })
                 ->rules('required')
                 ->searchable()
@@ -140,17 +141,17 @@ class AssetRequisitionItem extends Resource
 
 
 
-            Text::make('Requisition Quantity', function(){
-                return $this->requisitionQuantity." ".$this->unitName;
+            Text::make('Requisition Quantity', function () {
+                return $this->requisitionQuantity . " " . $this->unitName;
             })
-            ->sortable()
-            ->exceptOnForms(),
+                ->sortable()
+                ->exceptOnForms(),
 
-            Text::make('Distribution Quantity', function(){
-                return $this->distributionQuantity." ".$this->unitName;
+            Text::make('Distribution Quantity', function () {
+                return $this->distributionQuantity . " " . $this->unitName;
             })
-            ->sortable()
-            ->exceptOnForms(),
+                ->sortable()
+                ->exceptOnForms(),
 
             Currency::make('Requisition Rate')
                 ->currency('BDT')
@@ -168,13 +169,13 @@ class AssetRequisitionItem extends Resource
                 ->onlyOnDetail(),
 
             Badge::make('Status')->map([
-                    RequisitionStatus::DRAFT()->getValue()     => 'warning',
-                    RequisitionStatus::CONFIRMED()->getValue() => 'info',
-                    RequisitionStatus::PARTIAL()->getValue()   => 'danger',
-                    RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
-                ])
+                RequisitionStatus::DRAFT()->getValue()     => 'warning',
+                RequisitionStatus::CONFIRMED()->getValue() => 'info',
+                RequisitionStatus::PARTIAL()->getValue()   => 'danger',
+                RequisitionStatus::DISTRIBUTED()->getValue()  => 'success',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
         ];
@@ -235,7 +236,7 @@ class AssetRequisitionItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -247,10 +248,28 @@ class AssetRequisitionItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('requisition', 'asset', 'unit');
     }
 }

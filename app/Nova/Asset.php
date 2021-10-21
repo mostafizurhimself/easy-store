@@ -30,13 +30,13 @@ use App\Nova\Lenses\Asset\StockSummary;
 use App\Nova\Actions\Assets\DownloadPdf;
 use App\Nova\Filters\ActiveStatusFilter;
 use AwesomeNova\Filters\DependentFilter;
+use App\Nova\Filters\AssetCategoryFilter;
 use App\Nova\Actions\Assets\DownloadExcel;
 use App\Nova\Lenses\Asset\AlertQuantities;
 use Easystore\TextUppercase\TextUppercase;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Actions\Assets\MassUpdateQuantity;
 use App\Nova\Actions\Assets\GenerateStockSummary;
-use App\Nova\Filters\AssetCategoryFilter;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Titasgailius\SearchRelations\SearchesRelations;
@@ -421,5 +421,27 @@ class Asset extends Resource
                 ->confirmText("Are you sure want to generate stock summary?")
                 ->onlyOnDetail(),
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('category', 'location', 'unit');
     }
 }

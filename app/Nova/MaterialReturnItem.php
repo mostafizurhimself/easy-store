@@ -22,7 +22,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 
 class MaterialReturnItem extends Resource
 {
-    use WithOutLocation, SearchesRelations;
+    use SearchesRelations;
     /**
      * The model the resource corresponds to.
      *
@@ -105,8 +105,18 @@ class MaterialReturnItem extends Resource
 
             Number::make('Quantity')
                 ->rules('required', 'numeric', 'min:0')
-                ->creationRules(new ReturnQuantityRule(\App\Nova\MaterialReturnItem::uriKey(), $request->get('material')))
-                ->updateRules(new ReturnQuantityRuleForUpdate(\App\Nova\MaterialReturnItem::uriKey(), $request->get('material'), $this->resource->quantity, $this->resource->materialId))
+                ->creationRules(function ($request) {
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new ReturnQuantityRule(\App\Nova\MaterialReturnItem::uriKey(), $request->get('material'))];
+                    }
+                    return [];
+                })
+                ->updateRules(function ($request) {
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new ReturnQuantityRuleForUpdate(\App\Nova\MaterialReturnItem::uriKey(), $request->get('material'), $this->resource->quantity, $this->resource->materialId)];
+                    }
+                    return [];
+                })
                 ->onlyOnForms(),
 
             Text::make('Quantity', function () {
@@ -203,20 +213,22 @@ class MaterialReturnItem extends Resource
      */
     public static function relatableMaterials(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\MaterialReturnInvoice::find($request->viaResourceId);
+        if (!$request->isResourceIndexRequest()) {
+            $invoice = \App\Models\MaterialReturnInvoice::find($request->viaResourceId);
 
-        if (empty($invoice)) {
-            $invoice = \App\Models\MaterialReturnItem::find($request->resourceId)->invoice;
+            if (empty($invoice)) {
+                $invoice = \App\Models\MaterialReturnItem::find($request->resourceId)->invoice;
+            }
+            try {
+                $materialId = $request->findResourceOrFail()->materialId;
+            } catch (\Throwable $th) {
+                $materialId = null;
+            }
+            return $query->whereHas('suppliers', function ($supplier) use ($invoice) {
+                $supplier->where('supplier_id', $invoice->supplierId)
+                    ->where('location_id', $invoice->locationId);
+            })->whereNotIn('id', $invoice->materialIds($materialId));
         }
-        try {
-            $materialId = $request->findResourceOrFail()->materialId;
-        } catch (\Throwable $th) {
-            $materialId = null;
-        }
-        return $query->whereHas('suppliers', function ($supplier) use ($invoice) {
-            $supplier->where('supplier_id', $invoice->supplierId)
-                ->where('location_id', $invoice->locationId);
-        })->whereNotIn('id', $invoice->materialIds($materialId));
     }
 
     /**
@@ -245,5 +257,23 @@ class MaterialReturnItem extends Resource
         }
 
         return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('invoice', 'material', 'unit');
     }
 }

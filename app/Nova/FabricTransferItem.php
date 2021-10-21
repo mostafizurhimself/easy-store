@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Enums\TransferStatus;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Badge;
-use App\Traits\WithOutLocation;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Currency;
@@ -20,8 +19,6 @@ use App\Rules\DistributionQuantityRuleForUpdate;
 
 class FabricTransferItem extends Resource
 {
-    use WithOutLocation;
-
     /**
      * The model the resource corresponds to.
      *
@@ -103,13 +100,23 @@ class FabricTransferItem extends Resource
             Number::make('Quantity', 'transfer_quantity')
                 ->rules('required', 'numeric', 'min:0')
                 ->sortable()
-                ->creationRules(new DistributionQuantityRule(\App\Nova\FabricTransferItem::uriKey(), $request->get('fabric_id') ?? $request->get('fabric')))
-                ->updateRules(new DistributionQuantityRuleForUpdate(
-                    \App\Nova\FabricTransferItem::uriKey(),
-                    $request->get('fabric_id'),
-                    $this->resource->transferQuantity,
-                    $this->resource->fabricId
-                ))
+                ->creationRules(function ($request) {
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new DistributionQuantityRule(\App\Nova\FabricTransferItem::uriKey(), $request->get('fabric_id') ?? $request->get('fabric'))];
+                    }
+                    return [];
+                })
+                ->updateRules(function ($request) {
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new DistributionQuantityRuleForUpdate(
+                            \App\Nova\FabricTransferItem::uriKey(),
+                            $request->get('fabric_id'),
+                            $this->resource->transferQuantity,
+                            $this->resource->fabricId
+                        )];
+                    }
+                    return [];
+                })
                 ->onlyOnForms(),
 
             Text::make('Transfer Quantity', function () {
@@ -211,22 +218,24 @@ class FabricTransferItem extends Resource
      */
     public static function relatableFabrics(NovaRequest $request, $query)
     {
-        $invoice = \App\Models\FabricTransferInvoice::find($request->viaResourceId);
+        if (!$request->isResourceIndexRequest()) {
+            $invoice = \App\Models\FabricTransferInvoice::find($request->viaResourceId);
 
-        if(empty($invoice)){
-            $invoice = $request->findResourceOrFail()->invoice;
-        }
+            if (empty($invoice)) {
+                $invoice = $request->findResourceOrFail()->invoice;
+            }
 
-        try {
-            $fabricId = $request->findResourceOrFail()->fabricId;
-        } catch (\Throwable $th) {
-           $fabricId = null;
-        }
+            try {
+                $fabricId = $request->findResourceOrFail()->fabricId;
+            } catch (\Throwable $th) {
+                $fabricId = null;
+            }
 
-        return $query->where('location_id', $invoice->locationId)
-                ->whereNotIn('id', $invoice->fabricIds($fabricId))->get()->map(function($fabric){
-                    return [ 'value' => $fabric->id, 'label' => $fabric->name."({$fabric->code})" ];
+            return $query->where('location_id', $invoice->locationId)
+                ->whereNotIn('id', $invoice->fabricIds($fabricId))->get()->map(function ($fabric) {
+                    return ['value' => $fabric->id, 'label' => $fabric->name . "({$fabric->code})"];
                 });
+        }
     }
 
     /**
@@ -238,7 +247,7 @@ class FabricTransferItem extends Resource
      */
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
     }
 
     /**
@@ -250,10 +259,28 @@ class FabricTransferItem extends Resource
      */
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        if(isset($request->viaResource) && isset($request->viaResourceId)){
-            return '/resources/'.$request->viaResource."/".$request->viaResourceId;
+        if (isset($request->viaResource) && isset($request->viaResourceId)) {
+            return '/resources/' . $request->viaResource . "/" . $request->viaResourceId;
         }
 
-        return '/resources/'.$resource->uriKey()."/".$resource->id;
+        return '/resources/' . $resource->uriKey() . "/" . $resource->id;
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        return $query->with('invoice.location', 'fabric', 'unit');
     }
 }

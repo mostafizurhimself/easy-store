@@ -5,8 +5,11 @@ namespace App\Helpers;
 use Carbon\Carbon;
 use App\Models\Shift;
 use App\Models\Holiday;
+use App\Models\Employee;
 use App\Models\Location;
 use Carbon\CarbonPeriod;
+use App\Facades\Settings;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use League\Flysystem\Config;
 use Spatie\OpeningHours\OpeningHours;
@@ -133,5 +136,39 @@ class Helper
         }
 
         return $dates;
+    }
+
+    /**
+     * Get the get pass approvers list
+     *
+     * @return array
+     */
+    public function gatePassApprovers()
+    {
+        return Cache::remember('gatepass-approvers', 3600 * 24, function () {
+            if (Settings::gatePassApprovers()) {
+                return Employee::whereIn('id', Settings::gatePassApprovers())->get()->map(function ($employee) {
+                    return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
+                });
+            }
+            return null;
+        });
+    }
+
+    /**
+     * Get the approvers list
+     *
+     * @return array
+     */
+    public function approvers()
+    {
+        return Cache::remember('approvers', 3600 * 24, function () {
+            if (Settings::approvers()) {
+                return Employee::whereIn('id', Settings::approvers())->get()->map(function ($employee) {
+                    return ['value' => $employee->id, 'label' => "{$employee->name}({$employee->employeeId})"];
+                });
+            }
+            return null;
+        });
     }
 }

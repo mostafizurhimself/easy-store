@@ -551,6 +551,6 @@ class Employee extends Resource
             $query->where('location_id', $request->user()->location_id);
         }
 
-        return $query->withoutResigned();
+        return $query->with('location', 'department', 'designation')->withoutResigned();
     }
 }

@@ -24,19 +24,18 @@ class ConfirmInvoice extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach($models as $model){
+        foreach ($models as $model) {
             //Check model has relation items
-            if($model->returnItems()->count() == 0)
-            {
+            if ($model->returnItems()->count() == 0) {
                 return Action::danger("No retun item added.");
             }
 
-            if($model->status == ReturnStatus::DRAFT()){
+            if ($model->status == ReturnStatus::DRAFT()) {
 
                 //Update the relate return items status
-                foreach($model->returnItems as $returnItem){
+                foreach ($model->returnItems as $returnItem) {
 
-                    if($returnItem->status == ReturnStatus::DRAFT()){
+                    if ($returnItem->status == ReturnStatus::DRAFT()) {
 
                         //Decrease the item quantity
                         $returnItem->material->decrement('quantity', $returnItem->quantity);
@@ -50,7 +49,7 @@ class ConfirmInvoice extends Action
                 $model->approve()->create(['employee_id' => $fields->approved_by]);
                 $model->status = ReturnStatus::CONFIRMED();
                 $model->save();
-            }else{
+            } else {
                 return Action::danger('Already confirmed.');
             }
         }
@@ -68,7 +67,7 @@ class ConfirmInvoice extends Action
         return [
             Select::make('Approved By')
                 ->rules('required')
-                ->options(\App\Models\Employee::approvers())
+                ->options(\App\Facades\Helper::approvers())
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Nova\Actions\ManualGatePasses;
 
 use App\Enums\GatePassStatus;
+use App\Facades\Helper;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Actions\Action;
@@ -54,7 +55,7 @@ class ConfirmGatePass extends Action
         return [
             Select::make('Approved By')
                 ->rules('required')
-                ->options(\App\Models\Employee::gatePassApprovers())
+                ->options(Helper::gatePassApprovers())
         ];
     }
 }

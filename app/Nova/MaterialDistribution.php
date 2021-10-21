@@ -139,7 +139,12 @@ class MaterialDistribution extends Resource
                 ->sortable(),
 
             Select::make('Material', 'material_id')
-                ->options(\App\Models\Material::where('location_id', $request->user()->locationId)->pluck('name', 'id'))
+                ->options(function () use ($request) {
+                    if (!$request->isResourceIndexRequest()) {
+                        return \App\Models\Material::where('location_id', $request->user()->locationId)->pluck('name', 'id');
+                    }
+                    return [];
+                })
                 ->searchable()
                 ->onlyOnForms()
                 ->canSee(function ($request) {
@@ -169,8 +174,18 @@ class MaterialDistribution extends Resource
                 ->hideFromIndex(),
 
             Number::make('Quantity')
-                ->creationRules(new DistributionQuantityRule(\App\Nova\MaterialDistribution::uriKey(), $request->get('material_id') ?? $request->get('material')))
-                ->updateRules(new DistributionQuantityRuleForUpdate(\App\Nova\MaterialDistribution::uriKey(), $request->get('material_id') ?? $request->get('material'), $this->resource->quantity, $this->resource->materialId))
+                ->creationRules(function ($request) {
+                    if ($request->isCreateOrAttachRequest()) {
+                        return [new DistributionQuantityRule(\App\Nova\MaterialDistribution::uriKey(), $request->get('material_id') ?? $request->get('material'))];
+                    }
+                    return [];
+                })
+                ->updateRules(function ($request) {
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return [new DistributionQuantityRuleForUpdate(\App\Nova\MaterialDistribution::uriKey(), $request->get('material_id') ?? $request->get('material'), $this->resource->quantity, $this->resource->materialId)];
+                    }
+                    return [];
+                })
                 ->rules('required', 'numeric', 'min:1')
                 ->sortable()
                 ->onlyOnForms(),
@@ -346,5 +361,27 @@ class MaterialDistribution extends Resource
             }),
 
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'material', 'unit', 'receiver');
     }
 }

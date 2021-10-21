@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Traits;
 
 use Illuminate\Support\Str;
@@ -70,7 +71,7 @@ trait CamelCasing
      */
     public function getHidden()
     {
-        return array_map(Str::class.'::snake', $this->hidden);
+        return array_map(Str::class . '::snake', $this->hidden);
     }
 
     /**
@@ -82,7 +83,7 @@ trait CamelCasing
     public function getDates()
     {
         $dates = parent::getDates();
-        return array_map(Str::class.'::snake', $dates);
+        return array_map(Str::class . '::snake', $dates);
     }
 
     /**

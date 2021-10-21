@@ -177,17 +177,22 @@ class User extends Resource
                     //Permissions for super-admin
                     PermissionCheckbox::make(__('Permissions'), 'prepared_permissions')
                         ->withGroups()
-                        ->options(Permission::whereIn('id', request()->user()->getAllPermissions()->pluck('id'))
-                            ->show()
-                            ->get()->sortBy('group_order')->map(function ($permission, $key) {
-                                return [
-                                    'group'  => __(Str::title($permission->group)),
-                                    'option' => $permission->name,
-                                    'label'  => __(Str::title($permission->name)),
-                                ];
-                            })
-                            ->groupBy('group')
-                            ->toArray())
+                        ->options(function () use ($request) {
+                            if (!$request->isResourceIndexRequest()) {
+                                return Permission::whereIn('id', request()->user()->getAllPermissions()->pluck('id'))
+                                    ->show()
+                                    ->get()->sortBy('group_order')->map(function ($permission, $key) {
+                                        return [
+                                            'group'  => __(Str::title($permission->group)),
+                                            'option' => $permission->name,
+                                            'label'  => __(Str::title($permission->name)),
+                                        ];
+                                    })
+                                    ->groupBy('group')
+                                    ->toArray();
+                            }
+                            return [];
+                        })
                         ->hideFromIndex()
                         ->canSee(function ($request) {
                             return $request->user()->hasPermissionTo('assign permissions') || $request->user()->isSuperAdmin();
@@ -270,5 +275,27 @@ class User extends Resource
     public static function relatableRoles(NovaRequest $request, $query)
     {
         return $query->whereNotIn('name', [\App\Models\Role::SUPER_ADMIN, \App\Models\Role::SYSTEM_ADMIN, \App\Models\Role::EXPENSER]);
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'media', 'roles');
     }
 }

@@ -20,9 +20,9 @@ class PermissionCheckbox extends Field
      * @param  array  $options
      * @return self
      */
-    public function options(array $options)
+    public function options($options)
     {
-        return $this->withMeta(['options' => $options]);
+        return $this->withMeta(['options' => is_array($options) ? $options : call_user_func($options)]);
     }
 
     /**

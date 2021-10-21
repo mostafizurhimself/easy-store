@@ -18,9 +18,9 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\LocationFilter;
 use Easystore\RouterLink\RouterLink;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use App\Nova\Filters\ReturnStatusFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use App\Nova\Actions\AssetReturnInvoices\MarkAsDraft;
 use App\Nova\Actions\AssetReturnInvoices\Recalculate;
@@ -66,14 +66,14 @@ class AssetReturnInvoice extends Resource
      */
     public static $title = 'readable_id';
 
-     /**
+    /**
      * Get the search result subtitle for the resource.
      *
      * @return string
      */
     public function subtitle()
     {
-      return "Location: {$this->location->name}";
+        return "Location: {$this->location->name}";
     }
 
     /**
@@ -83,7 +83,7 @@ class AssetReturnInvoice extends Resource
      */
     public static function label()
     {
-      return "Return Invoices";
+        return "Return Invoices";
     }
 
     /**
@@ -103,7 +103,7 @@ class AssetReturnInvoice extends Resource
      */
     public static function icon()
     {
-      return 'fas fa-undo-alt';
+        return 'fas fa-undo-alt';
     }
 
     /**
@@ -160,8 +160,8 @@ class AssetReturnInvoice extends Resource
                 }),
 
             BelongsTo::make('Supplier', 'supplier', "App\Nova\Supplier")
-                    ->searchable()
-                    ->sortable(),
+                ->searchable()
+                ->sortable(),
 
             Currency::make('Total Amount', 'total_return_amount')
                 ->currency('BDT')
@@ -169,22 +169,22 @@ class AssetReturnInvoice extends Resource
                 ->exceptOnForms(),
 
             Badge::make('Status')->map([
-                    ReturnStatus::DRAFT()->getValue()     => 'warning',
-                    ReturnStatus::CONFIRMED()->getValue() => 'info',
-                    ReturnStatus::BILLED()->getValue()    => 'danger',
-                ])
+                ReturnStatus::DRAFT()->getValue()     => 'warning',
+                ReturnStatus::CONFIRMED()->getValue() => 'info',
+                ReturnStatus::BILLED()->getValue()    => 'danger',
+            ])
                 ->sortable()
-                ->label(function(){
+                ->label(function () {
                     return Str::title(Str::of($this->status)->replace('_', " "));
                 }),
 
             Trix::make('Note')
                 ->rules('nullable', 'max:500'),
 
-            Text::make('Approved By', function(){
-                    return $this->approve ? $this->approve->employee->name : null;
-                })
-                ->canSee(function(){
+            Text::make('Approved By', function () {
+                return $this->approve ? $this->approve->employee->name : null;
+            })
+                ->canSee(function () {
                     return $this->approve()->exists();
                 })
                 ->onlyOnDetail(),
@@ -213,7 +213,7 @@ class AssetReturnInvoice extends Resource
     public function filters(Request $request)
     {
         return [
-              LocationFilter::make('Location', 'location_id')->canSee(function($request){
+            LocationFilter::make('Location', 'location_id')->canSee(function ($request) {
                 return $request->user()->isSuperAdmin() || $request->user()->hasPermissionTo('view any locations data');
             }),
 
@@ -264,19 +264,41 @@ class AssetReturnInvoice extends Resource
                 ->confirmButtonText('Mark As Draft')
                 ->confirmText('Are you sure want to mark the return invoice as draft?'),
 
-            (new ConfirmInvoice)->canSee(function($request){
+            (new ConfirmInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can confirm asset return invoices');
             }),
 
-            (new GenerateInvoice)->canSee(function($request){
+            (new GenerateInvoice)->canSee(function ($request) {
                 return $request->user()->hasPermissionTo('can generate asset return invoices');
             })
-            ->canRun(function($request){
-                return $request->user()->hasPermissionTo('can generate asset return invoices') || $request->user()->isSuperAdmin();
-            })
-            ->confirmButtonText('Generate')
-            ->confirmText('Are you sure want to generate invoice now?')
-            ->onlyOnDetail(),
+                ->canRun(function ($request) {
+                    return $request->user()->hasPermissionTo('can generate asset return invoices') || $request->user()->isSuperAdmin();
+                })
+                ->confirmButtonText('Generate')
+                ->confirmText('Are you sure want to generate invoice now?')
+                ->onlyOnDetail(),
         ];
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+
+        if ($request->user()->locationId && !$request->user()->hasPermissionTo('view any locations data')) {
+            $query->where('location_id', $request->user()->location_id);
+        }
+
+        return $query->with('location', 'supplier');
     }
 }

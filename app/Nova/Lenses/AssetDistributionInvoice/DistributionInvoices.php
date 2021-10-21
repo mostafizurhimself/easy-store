@@ -30,7 +30,7 @@ class DistributionInvoices extends Lens
     public static function query(LensRequest $request, $query)
     {
         return $request->withOrdering($request->withFilters(
-            $query->where('receiver_id', $request->user()->locationId)
+            $query->with('location', 'receiver')->where('receiver_id', $request->user()->locationId)
                 ->where('status', '!=', DistributionStatus::DRAFT())
                 ->orderBy('id', 'DESC')
         ));

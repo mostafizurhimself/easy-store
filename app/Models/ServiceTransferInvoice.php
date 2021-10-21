@@ -32,12 +32,7 @@ class ServiceTransferInvoice extends Model
      */
     protected $dates = ['date'];
 
-    /**
-     * The relations to eager load on every query.
-     *
-     * @var array
-     */
-    protected $with = ['location'];
+
 
 
     /**
