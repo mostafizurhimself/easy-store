@@ -349,7 +349,8 @@
                                         <p><span class="font-bold">Email</span> easyfashionwears@gmail.com</p>
                                         <p><span class="font-bold">Website:</span> www.easyfashion.com.bd</p>
                                         <p><span class="font-bold">Hotline:</span> 01711-104489, 01713-429300</p>
-                                        <p><span class="font-bold">Emg. Contact:</span> {{ $employee->mobile }}
+                                        <p><span class="font-bold">Emg. Contact:</span>
+                                            {{ $employee->emergencyMobile }}
                                         </p>
                                     </div>
                                 </div>
