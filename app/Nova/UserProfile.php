@@ -65,7 +65,7 @@ class UserProfile extends Resource
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255', 'alpha_space', 'multi_space')
-                ->fillUsing(function($request, $model){
+                ->fillUsing(function ($request, $model) {
                     $model['name'] = Str::title($request->name);
                 })
                 ->help('Your input will be converted to title case. Exp: "title case" to "Title Case".'),
@@ -78,10 +78,16 @@ class UserProfile extends Resource
 
             Password::make('Password')
                 ->onlyOnForms()
+                ->readonly(function ($request) {
+                    return $request->user()->isSuperAdmin();
+                })
                 ->creationRules('required', 'string', 'min:4', 'max:20', 'confirmed')
                 ->updateRules('nullable', 'string', 'min:4', 'max:20', 'confirmed'),
 
-            PasswordConfirmation::make('Password Confirmation'),
+            PasswordConfirmation::make('Password Confirmation')
+                ->readonly(function ($request) {
+                    return $request->user()->isSuperAdmin();
+                }),
         ];
     }
 
