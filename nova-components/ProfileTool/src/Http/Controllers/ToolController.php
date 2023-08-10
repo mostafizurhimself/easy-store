@@ -67,7 +67,12 @@ class ToolController extends Controller
             'password' => 'nullable|string|confirmed'
         ]);
 
-        if(request()->has('password') && !empty(request('password'))) {
+        if (request()->has('password') && !empty(request('password'))) {
+
+            if (auth()->user()->isSuperAdmin()) {
+                return response()->json("You can't change the password of a super admin!");
+            }
+
             auth()->user()->update([
                 'name' => request('name'),
                 'email' => request('email'),

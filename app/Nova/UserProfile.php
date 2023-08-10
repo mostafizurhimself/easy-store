@@ -78,16 +78,16 @@ class UserProfile extends Resource
 
             Password::make('Password')
                 ->onlyOnForms()
-                ->readonly(function ($request) {
-                    return $request->user()->isSuperAdmin();
-                })
+                // ->readonly(function ($request) {
+                //     return $request->user()->isSuperAdmin();
+                // })
                 ->creationRules('required', 'string', 'min:4', 'max:20', 'confirmed')
                 ->updateRules('nullable', 'string', 'min:4', 'max:20', 'confirmed'),
 
             PasswordConfirmation::make('Password Confirmation')
-                ->readonly(function ($request) {
-                    return $request->user()->isSuperAdmin();
-                }),
+            // ->readonly(function ($request) {
+            //     return $request->user()->isSuperAdmin();
+            // }),
         ];
     }
 
