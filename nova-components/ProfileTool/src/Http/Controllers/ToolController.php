@@ -61,6 +61,11 @@ class ToolController extends Controller
      */
     public function store()
     {
+
+        if (auth()->user()->isSuperAdmin()) {
+            return response()->json("You can't change the super admin's profile!");
+        }
+
         request()->validate([
             'name' => 'required|string',
             'email' => 'required|email',
@@ -68,10 +73,6 @@ class ToolController extends Controller
         ]);
 
         if (request()->has('password') && !empty(request('password'))) {
-
-            if (auth()->user()->isSuperAdmin()) {
-                return response()->json("You can't change the password of a super admin!");
-            }
 
             auth()->user()->update([
                 'name' => request('name'),
